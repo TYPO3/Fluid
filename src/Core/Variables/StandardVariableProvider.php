@@ -222,30 +222,6 @@ class StandardVariableProvider implements VariableProviderInterface
 
     /**
      * @param string $propertyPath
-     * @return array
-     */
-    public function getAccessorsForPath($propertyPath)
-    {
-        $subject = $this->variables;
-        $accessors = [];
-        $propertyPathSegments = explode('.', $propertyPath);
-        foreach ($propertyPathSegments as $index => $pathSegment) {
-            $accessor = $this->detectAccessor($subject, $pathSegment);
-            if ($accessor === null) {
-                // Note: this may include cases of sub-variable references. When such
-                // a reference is encountered the accessor chain is stopped and new
-                // accessors will be detected for the sub-variable and all following
-                // path segments since the variable is now fully dynamic.
-                break;
-            }
-            $accessors[] = $accessor;
-            $subject = $this->extractSingleValue($subject, $pathSegment);
-        }
-        return $accessors;
-    }
-
-    /**
-     * @param string $propertyPath
      * @return string
      */
     protected function resolveSubVariableReferences($propertyPath)
