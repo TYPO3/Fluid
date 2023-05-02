@@ -48,8 +48,7 @@ class ArrayNode extends AbstractNode
     }
 
     /**
-     * INTERNAL; DO NOT CALL DIRECTLY!
-     *
+     * @internal DO NOT CALL DIRECTLY!
      * @return array
      */
     public function getInternalArray()
