@@ -123,8 +123,7 @@ class StandardVariableProvider implements VariableProviderInterface
         $subject = $this->variables;
         $subVariableReferences = explode('.', $this->resolveSubVariableReferences($path));
         foreach ($subVariableReferences as $pathSegment) {
-            $accessor = $this->detectAccessor($subject, $pathSegment);
-            $subject = $this->extractWithAccessor($subject, $pathSegment, $accessor);
+            $subject = $this->extract($subject, $pathSegment);
             if ($subject === null) {
                 break;
             }
@@ -239,86 +238,33 @@ class StandardVariableProvider implements VariableProviderInterface
     /**
      * @param mixed $subject
      * @param string $propertyName
-     * @param string $accessor
      * @return mixed
      */
-    protected function extractWithAccessor($subject, $propertyName, $accessor)
+    protected function extract($subject, $propertyName)
     {
-        if ($accessor === self::ACCESSOR_ARRAY && is_array($subject) && array_key_exists($propertyName, $subject)
-            || $subject instanceof \ArrayAccess && $subject->offsetExists($propertyName)
+        if ((is_array($subject) && array_key_exists($propertyName, $subject))
+            || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName))
         ) {
             return $subject[$propertyName];
         }
         if (is_object($subject)) {
-            if ($accessor === self::ACCESSOR_GETTER) {
-                return call_user_func_array([$subject, 'get' . ucfirst($propertyName)], []);
+            $upperCasePropertyName = ucfirst($propertyName);
+            $getMethod = 'get' . $upperCasePropertyName;
+            if (method_exists($subject, $getMethod)) {
+                return call_user_func_array([$subject, $getMethod], []);
             }
-            if ($accessor === self::ACCESSOR_ASSERTER) {
-                return $this->extractThroughAsserter($subject, $propertyName);
+            $isMethod = 'is' . $upperCasePropertyName;
+            if (method_exists($subject, $isMethod)) {
+                return call_user_func_array([$subject, $isMethod], []);
             }
-            if ($accessor === self::ACCESSOR_PUBLICPROPERTY && property_exists($subject, $propertyName)) {
+            $hasMethod = 'has' . $upperCasePropertyName;
+            if (method_exists($subject, $hasMethod)) {
+                return call_user_func_array([$subject, $hasMethod], []);
+            }
+            if (property_exists($subject, $propertyName)) {
                 return $subject->$propertyName;
             }
         }
         return null;
-    }
-
-    /**
-     * Detect which type of accessor to use when extracting
-     * $propertyName from $subject.
-     *
-     * @param mixed $subject
-     * @param string $propertyName
-     * @return string|null
-     */
-    protected function detectAccessor($subject, $propertyName)
-    {
-        if (is_array($subject) || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName))) {
-            return self::ACCESSOR_ARRAY;
-        }
-        if (is_object($subject)) {
-            $upperCasePropertyName = ucfirst($propertyName);
-            $getter = 'get' . $upperCasePropertyName;
-            if (method_exists($subject, $getter)) {
-                return self::ACCESSOR_GETTER;
-            }
-            if ($this->isExtractableThroughAsserter($subject, $propertyName)) {
-                return self::ACCESSOR_ASSERTER;
-            }
-            if (property_exists($subject, $propertyName)) {
-                return self::ACCESSOR_PUBLICPROPERTY;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Tests whether a property can be extracted through `is*` or `has*` methods.
-     *
-     * @param mixed $subject
-     * @param string $propertyName
-     * @return bool
-     */
-    protected function isExtractableThroughAsserter($subject, $propertyName)
-    {
-        return method_exists($subject, 'is' . ucfirst($propertyName))
-            || method_exists($subject, 'has' . ucfirst($propertyName));
-    }
-
-    /**
-     * Extracts a property through `is*` or `has*` methods.
-     *
-     * @param object $subject
-     * @param string $propertyName
-     * @return mixed
-     */
-    protected function extractThroughAsserter($subject, $propertyName)
-    {
-        if (method_exists($subject, 'is' . ucfirst($propertyName))) {
-            return call_user_func_array([$subject, 'is' . ucfirst($propertyName)], []);
-        }
-
-        return call_user_func_array([$subject, 'has' . ucfirst($propertyName)], []);
     }
 }
