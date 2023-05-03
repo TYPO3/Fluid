@@ -192,26 +192,4 @@ class StandardVariableProviderTest extends UnitTestCase
         $result = $provider->getByPath($path);
         self::assertEquals($expected, $result);
     }
-
-    public static function getByPathRedetectsAccessorIfUnusableAccessorPassedDataProvider(): array
-    {
-        return [
-            [['test' => 'test'], 'test', null, 'test'],
-            [['test' => 'test'], 'test', 'garbageextractionname', 'test'],
-            [['test' => 'test'], 'test', StandardVariableProvider::ACCESSOR_PUBLICPROPERTY, 'test'],
-            [['test' => 'test'], 'test', StandardVariableProvider::ACCESSOR_GETTER, 'test'],
-            [['test' => 'test'], 'test', StandardVariableProvider::ACCESSOR_ASSERTER, 'test'],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider getByPathRedetectsAccessorIfUnusableAccessorPassedDataProvider
-     */
-    public function getByPathRedetectsAccessorIfUnusableAccessorPassed(array $subject, string $path, ?string $accessor, string $expected): void
-    {
-        $provider = new StandardVariableProvider($subject);
-        $result = $provider->getByPath($path, [$accessor]);
-        self::assertEquals($expected, $result);
-    }
 }

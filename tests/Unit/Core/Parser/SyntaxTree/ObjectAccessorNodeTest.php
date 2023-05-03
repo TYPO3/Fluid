@@ -52,7 +52,7 @@ class ObjectAccessorNodeTest extends UnitTestCase
         $node = new ObjectAccessorNode('foo.bar');
         $renderingContext = $this->getMock(RenderingContextInterface::class);
         $variableContainer = $this->getMock(StandardVariableProvider::class);
-        $variableContainer->expects(self::once())->method('getByPath')->with('foo.bar', [])->willReturn('foo');
+        $variableContainer->expects(self::once())->method('getByPath')->with('foo.bar')->willReturn('foo');
         $renderingContext->expects(self::any())->method('getVariableProvider')->willReturn($variableContainer);
         $value = $node->evaluate($renderingContext);
         self::assertEquals('foo', $value);

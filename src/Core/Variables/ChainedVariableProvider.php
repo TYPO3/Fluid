@@ -59,17 +59,16 @@ class ChainedVariableProvider extends StandardVariableProvider implements Variab
 
     /**
      * @param string $path
-     * @param array $accessors
      * @return mixed|null
      */
-    public function getByPath($path, array $accessors = [])
+    public function getByPath($path)
     {
         if (array_key_exists($path, $this->variables)) {
             return $this->variables[$path];
         }
         // We did not resolve with native StandardVariableProvider. Let's try the chain.
         foreach ($this->variableProviders as $provider) {
-            $value = $provider->getByPath($path, $accessors);
+            $value = $provider->getByPath($path);
             if ($value !== null) {
                 return $value;
             }

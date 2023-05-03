@@ -71,7 +71,7 @@ class VariableExtractor
     public function getByPath($subject, $propertyPath, array $accessors = [])
     {
         if ($subject instanceof StandardVariableProvider) {
-            return $subject->getByPath($propertyPath, $accessors);
+            return $subject->getByPath($propertyPath);
         }
 
         $propertyPath = $this->resolveSubVariableReferences($subject, $propertyPath);
