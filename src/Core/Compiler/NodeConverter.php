@@ -18,7 +18,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 
 class NodeConverter
 {
@@ -213,47 +212,20 @@ class NodeConverter
         return $initializationArray;
     }
 
-    /**
-     * @param ObjectAccessorNode $node
-     * @return array
-     * @see convert()
-     */
-    protected function convertObjectAccessorNode(ObjectAccessorNode $node)
+    protected function convertObjectAccessorNode(ObjectAccessorNode $node): array
     {
-        $arrayVariableName = $this->variableName('array');
-        $accessors = $node->getAccessors();
         $path = $node->getObjectPath();
-        $pathSegments = explode('.', $path);
         if ($path === '_all') {
             return [
                 'initialization' => '',
                 'execution' => '$renderingContext->getVariableProvider()->getAll()',
             ];
         }
-        if (1 === count(array_unique($accessors))
-            && reset($accessors) === StandardVariableProvider::ACCESSOR_ARRAY
-            && count($accessors) === count($pathSegments)
-            && false === strpos($path, '{')
-        ) {
-            // every extractor used in this path is a straight-forward arrayaccess.
-            // Create the compiled code as a plain old variable assignment:
-            return [
-                'initialization' => '',
-                'execution' => sprintf(
-                    'isset($renderingContext->getVariableProvider()[\'%s\']) ? $renderingContext->getVariableProvider()[\'%s\'] : NULL',
-                    str_replace('.', '\'][\'', $path),
-                    str_replace('.', '\'][\'', $path)
-                )
-            ];
-        }
-        $accessorsVariable = var_export($accessors, true);
-        $initialization = sprintf('%s = %s;', $arrayVariableName, $accessorsVariable);
         return [
-            'initialization' => $initialization,
+            'initialization' => '',
             'execution' => sprintf(
-                '$renderingContext->getVariableProvider()->getByPath(\'%s\', %s)',
-                $path,
-                $arrayVariableName
+                '$renderingContext->getVariableProvider()->getByPath(\'%s\')',
+                $path
             )
         ];
     }

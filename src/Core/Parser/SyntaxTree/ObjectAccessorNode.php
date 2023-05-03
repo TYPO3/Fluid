@@ -23,26 +23,16 @@ class ObjectAccessorNode extends AbstractNode
     protected $objectPath;
 
     /**
-     * Accessor names, one per segment in the object path.
-     * Use constants from StandardVariableProvider.
-     *
-     * @var array
-     */
-    protected $accessors = [];
-
-    /**
      * Constructor. Takes an object path as input.
      *
      * The first part of the object path has to be a variable in the
      * VariableProvider.
      *
      * @param string $objectPath An Object Path, like object1.object2.object3
-     * @param array $accessors Optional list of accessor strategies; starting from beginning of dotted path. Incomplete allowed.
      */
-    public function __construct($objectPath, array $accessors = [])
+    public function __construct($objectPath)
     {
         $this->objectPath = $objectPath;
-        $this->accessors = $accessors;
     }
 
     /**
@@ -55,11 +45,11 @@ class ObjectAccessorNode extends AbstractNode
     }
 
     /**
-     * @return array
+     * @deprecated Unused. Will be removed.
      */
-    public function getAccessors()
+    public function getAccessors(): array
     {
-        return $this->accessors;
+        return [];
     }
 
     /**
@@ -83,6 +73,6 @@ class ObjectAccessorNode extends AbstractNode
         if ($objectPath === '_all') {
             return $variableProvider->getAll();
         }
-        return $variableProvider->getByPath($this->objectPath, $this->accessors);
+        return $variableProvider->getByPath($this->objectPath);
     }
 }
