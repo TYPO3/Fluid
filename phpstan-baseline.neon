@@ -81,6 +81,11 @@ parameters:
 			path: src/Core/Rendering/RenderingContext.php
 
 		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Variables\\\\VariableProviderInterface\\:\\:getByPath\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			count: 1
+			path: src/Core/Variables/ChainedVariableProvider.php
+
+		-
 			message: "#^Unsafe call to private method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\AbstractConditionViewHelper\\:\\:evaluateElseClosures\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Core/ViewHelper/AbstractConditionViewHelper.php
