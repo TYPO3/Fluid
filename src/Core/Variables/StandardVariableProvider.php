@@ -116,18 +116,14 @@ class StandardVariableProvider implements VariableProviderInterface
      * which indicate how each value is extracted.
      *
      * @param string $path
-     * @param array $accessors Optional list of accessors (see class constants)
      * @return mixed
      */
-    public function getByPath($path, array $accessors = [])
+    public function getByPath($path)
     {
         $subject = $this->variables;
         $subVariableReferences = explode('.', $this->resolveSubVariableReferences($path));
-        foreach ($subVariableReferences as $index => $pathSegment) {
-            $accessor = $accessors[$index] ?? null;
-            if ($accessor === null || !$this->canExtractWithAccessor($subject, $pathSegment, $accessor)) {
-                $accessor = $this->detectAccessor($subject, $pathSegment);
-            }
+        foreach ($subVariableReferences as $pathSegment) {
+            $accessor = $this->detectAccessor($subject, $pathSegment);
             $subject = $this->extractWithAccessor($subject, $pathSegment, $accessor);
             if ($subject === null) {
                 break;
@@ -238,33 +234,6 @@ class StandardVariableProvider implements VariableProviderInterface
             }
         }
         return $propertyPath;
-    }
-
-    /**
-     * Returns TRUE if the data type of $subject is potentially compatible
-     * with the $accessor.
-     *
-     * @param mixed $subject
-     * @param string $propertyName
-     * @param string $accessor
-     * @return bool
-     */
-    protected function canExtractWithAccessor($subject, $propertyName, $accessor)
-    {
-        if ($accessor === self::ACCESSOR_ARRAY) {
-            return is_array($subject) || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName));
-        }
-        $class = is_object($subject) ? get_class($subject) : false;
-        if ($accessor === self::ACCESSOR_GETTER) {
-            return $class !== false && method_exists($subject, 'get' . ucfirst($propertyName));
-        }
-        if ($accessor === self::ACCESSOR_ASSERTER) {
-            return $class !== false && $this->isExtractableThroughAsserter($subject, $propertyName);
-        }
-        if ($accessor === self::ACCESSOR_PUBLICPROPERTY) {
-            return $class !== false && property_exists($subject, $propertyName);
-        }
-        return false;
     }
 
     /**
