@@ -222,13 +222,12 @@ class NodeConverter
     {
         $arrayVariableName = $this->variableName('array');
         $accessors = $node->getAccessors();
-        $providerReference = '$renderingContext->getVariableProvider()';
         $path = $node->getObjectPath();
         $pathSegments = explode('.', $path);
         if ($path === '_all') {
             return [
                 'initialization' => '',
-                'execution' => sprintf('%s->getAll()', $providerReference)
+                'execution' => '$renderingContext->getVariableProvider()->getAll()',
             ];
         }
         if (1 === count(array_unique($accessors))
@@ -241,10 +240,8 @@ class NodeConverter
             return [
                 'initialization' => '',
                 'execution' => sprintf(
-                    'isset(%s[\'%s\']) ? %s[\'%s\'] : NULL',
-                    $providerReference,
+                    'isset($renderingContext->getVariableProvider()[\'%s\']) ? $renderingContext->getVariableProvider()[\'%s\'] : NULL',
                     str_replace('.', '\'][\'', $path),
-                    $providerReference,
                     str_replace('.', '\'][\'', $path)
                 )
             ];
@@ -254,8 +251,7 @@ class NodeConverter
         return [
             'initialization' => $initialization,
             'execution' => sprintf(
-                '%s->getByPath(\'%s\', %s)',
-                $providerReference,
+                '$renderingContext->getVariableProvider()->getByPath(\'%s\', %s)',
                 $path,
                 $arrayVariableName
             )
