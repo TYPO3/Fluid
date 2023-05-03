@@ -697,7 +697,7 @@ class TemplateParserTest extends UnitTestCase
         yield 'Single identifier' => [
             'string' => 'identifier: some.identifier',
             'expected' => [
-                'identifier' => new ObjectAccessorNode('some.identifier', [])
+                'identifier' => new ObjectAccessorNode('some.identifier')
             ]
         ];
 
@@ -707,7 +707,7 @@ class TemplateParserTest extends UnitTestCase
                 'array' => new ArrayNode([
                     'number' => 123,
                     'string' => new TextNode('some.string'),
-                    'identifier' => new ObjectAccessorNode('some.identifier', [])
+                    'identifier' => new ObjectAccessorNode('some.identifier')
                 ])
             ]
         ];
@@ -718,7 +718,7 @@ class TemplateParserTest extends UnitTestCase
                 'array' => new ArrayNode([
                     123,
                     new TextNode('some.string'),
-                    new ObjectAccessorNode('some.identifier', [])
+                    new ObjectAccessorNode('some.identifier')
                 ])
             ]
         ];
@@ -728,7 +728,7 @@ class TemplateParserTest extends UnitTestCase
             'expected' => [
                 'number' => 234,
                 'string' => new TextNode('some.string'),
-                'identifier' => new ObjectAccessorNode('some.identifier', [])
+                'identifier' => new ObjectAccessorNode('some.identifier')
             ]
         ];
 
@@ -738,7 +738,7 @@ class TemplateParserTest extends UnitTestCase
                 'number' => 123,
                 234,
                 new TextNode('some.string'),
-                new ObjectAccessorNode('some.identifier', [])
+                new ObjectAccessorNode('some.identifier')
             ]
         ];
 
@@ -748,11 +748,11 @@ class TemplateParserTest extends UnitTestCase
                 'array' => new ArrayNode([
                     'number' => 123,
                     'string' => new TextNode('some.string'),
-                    'identifier' => new ObjectAccessorNode('some.identifier', []),
+                    'identifier' => new ObjectAccessorNode('some.identifier'),
                     'array' => new ArrayNode([
                         'number' => 123,
                         'string' => new TextNode('some.string'),
-                        'identifier' => new ObjectAccessorNode('some.identifier', [])
+                        'identifier' => new ObjectAccessorNode('some.identifier')
                     ])
                 ])
             ]
@@ -763,11 +763,11 @@ class TemplateParserTest extends UnitTestCase
             'expected' => [
                 'number' => 123,
                 'string' => new TextNode('some.string'),
-                'identifier' => new ObjectAccessorNode('some.identifier', []),
+                'identifier' => new ObjectAccessorNode('some.identifier'),
                 'array' => new ArrayNode([
                     'number' => 123,
                     'string' => new TextNode('some.string'),
-                    'identifier' => new ObjectAccessorNode('some.identifier', [])
+                    'identifier' => new ObjectAccessorNode('some.identifier')
                 ])
             ]
         ];
