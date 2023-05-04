@@ -10,33 +10,190 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithoutToString;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\StandardVariableProviderModelFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class StandardVariableProviderTest extends UnitTestCase
 {
-    public static function getOperabilityTestValues(): array
+    /**
+     * @test
+     */
+    public function getSourceReturnsEmptyArray(): void
     {
-        return [
-            [[], []],
-            [['foo' => 'bar'], ['foo' => 'bar']]
-        ];
+        $subject = new StandardVariableProvider();
+        self::assertSame([], $subject->getSource());
     }
 
     /**
-     * @dataProvider getOperabilityTestValues
      * @test
      */
-    public function testOperability(array $input, array $expected): void
+    public function getSourceReturnsPreviouslySetSource(): void
     {
-        $provider = new StandardVariableProvider();
-        $provider->setSource($input);
-        self::assertEquals($input, $provider->getSource());
-        self::assertEquals($expected, $provider->getAll());
-        self::assertEquals(array_keys($expected), $provider->getAllIdentifiers());
-        foreach ($expected as $key => $value) {
-            self::assertEquals($value, $provider->get($key));
-        }
+        $subject = new StandardVariableProvider();
+        $subject->setSource(['foo' => 'bar']);
+        self::assertSame(['foo' => 'bar'], $subject->getSource());
+    }
+
+    /**
+     * @test
+     */
+    public function getSourceReturnsPreviouslyAddedVariables(): void
+    {
+        $subject = new StandardVariableProvider();
+        $subject->add('name', 'Simon');
+        $subject->add('org', 'TYPO3');
+        self::assertSame(['name' => 'Simon', 'org' => 'TYPO3'], $subject->getSource());
+    }
+
+    /**
+     * @test
+     */
+    public function getAllReturnsEmptyArray(): void
+    {
+        $subject = new StandardVariableProvider();
+        self::assertSame([], $subject->getAll());
+    }
+
+    /**
+     * @test
+     */
+    public function getAllReturnsPreviouslySetSource(): void
+    {
+        $subject = new StandardVariableProvider();
+        $subject->setSource(['foo' => 'bar']);
+        self::assertSame(['foo' => 'bar'], $subject->getAll());
+    }
+
+    /**
+     * @test
+     */
+    public function getAllReturnsPreviouslyAddedVariables(): void
+    {
+        $subject = new StandardVariableProvider();
+        $subject->add('name', 'Simon');
+        $subject->add('org', 'TYPO3');
+        self::assertSame(['name' => 'Simon', 'org' => 'TYPO3'], $subject->getAll());
+    }
+
+    /**
+     * @test
+     */
+    public function getAllIdentifiersReturnsEmptyArray(): void
+    {
+        $subject = new StandardVariableProvider();
+        self::assertSame([], $subject->getAllIdentifiers());
+    }
+
+    /**
+     * @test
+     */
+    public function getAllIdentifiersReturnsKeysOfPreviouslySetSource(): void
+    {
+        $subject = new StandardVariableProvider();
+        $subject->setSource(['foo' => 'bar']);
+        self::assertSame(['foo'], $subject->getAllIdentifiers());
+    }
+
+    /**
+     * @test
+     */
+    public function getAllIdentifiersReturnsKeysOfPreviouslyAddedVariables(): void
+    {
+        $subject = new StandardVariableProvider();
+        $subject->add('name', 'Simon');
+        $subject->add('org', 'TYPO3');
+        self::assertSame(['name', 'org'], $subject->getAllIdentifiers());
+    }
+
+    /**
+     * @test
+     */
+    public function getReturnsNullWithNotExistingVariable(): void
+    {
+        $variableProvider = new StandardVariableProvider();
+        self::assertNull($variableProvider->get('nonexistent'));
+    }
+
+    /**
+     * @test
+     */
+    public function getReturnsPreviouslyAddedVariable(): void
+    {
+        $subject = new StandardVariableProvider();
+        $subject->add('variable', 'someString');
+        self::assertSame($subject->get('variable'), 'someString');
+    }
+
+    /**
+     * @test
+     */
+    public function getAsArrayAccessReturnsPreviouslySetVariable(): void
+    {
+        $subject = new StandardVariableProvider();
+        $subject['variable'] = 'someString';
+        self::assertSame($subject['variable'], 'someString');
+    }
+
+    /**
+     * @test
+     */
+    public function existsReturnsTrueWithPreviouslyAddedVariable(): void
+    {
+        $subject = new StandardVariableProvider();
+        $subject->add('variable', 'someString');
+        self::assertTrue($subject->exists('variable'));
+    }
+
+    /**
+     * @test
+     */
+    public function existsAsArrayAccessReturnsTrueWithPreviouslyAddedVariable(): void
+    {
+        $subject = new StandardVariableProvider();
+        $subject->add('variable', 'someString');
+        self::assertTrue(isset($subject['variable']));
+    }
+
+    /**
+     * @test
+     */
+    public function unsetAsArrayAccessRemovesVariable(): void
+    {
+        $subject = new StandardVariableProvider();
+        $subject->add('variable', 'test');
+        unset($subject['variable']);
+        self::assertFalse($subject->exists('variable'));
+    }
+
+    /**
+     * @test
+     */
+    public function removeReallyRemovesVariables(): void
+    {
+        $subject = new StandardVariableProvider();
+        $subject->add('variable', 'string1');
+        $subject->remove('variable');
+        self::assertNull($subject->get('variable'));
+    }
+
+    /**
+     * @test
+     */
+    public function sleepReturnsArrayWithVariableKey(): void
+    {
+        $subject = new StandardVariableProvider();
+        $properties = $subject->__sleep();
+        self::assertContains('variables', $properties);
+    }
+
+    /**
+     * @test
+     */
+    public function getScopeCopyReturnsCopyWithSettings(): void
+    {
+        $subject = new StandardVariableProvider(['foo' => 'bar', 'settings' => ['baz' => 'bam']]);
+        $copy = $subject->getScopeCopy(['bar' => 'foo']);
+        self::assertAttributeEquals(['settings' => ['baz' => 'bam'], 'bar' => 'foo'], 'variables', $copy);
     }
 
     /**
@@ -50,134 +207,112 @@ class StandardVariableProviderTest extends UnitTestCase
         self::assertEquals('baz', $result);
     }
 
-    /**
-     * @test
-     */
-    public function testUnsetAsArrayAccess(): void
-    {
-        $variableProvider = $this->getMock(StandardVariableProvider::class, []);
-        $variableProvider->add('variable', 'test');
-        unset($variableProvider['variable']);
-        self::assertFalse($variableProvider->exists('variable'));
-    }
-
-    /**
-     * @test
-     */
-    public function addedObjectsCanBeRetrievedAgain(): void
-    {
-        $object = 'StringObject';
-        $variableProvider = $this->getMock(StandardVariableProvider::class, []);
-        $variableProvider->add('variable', $object);
-        self::assertSame($variableProvider->get('variable'), $object, 'The retrieved object from the context is not the same as the stored object.');
-    }
-
-    /**
-     * @test
-     */
-    public function addedObjectsCanBeRetrievedAgainUsingArrayAccess(): void
-    {
-        $object = 'StringObject';
-        $variableProvider = $this->getMock(StandardVariableProvider::class, []);
-        $variableProvider['variable'] = $object;
-        self::assertSame($variableProvider->get('variable'), $object);
-        self::assertSame($variableProvider['variable'], $object);
-    }
-
-    /**
-     * @test
-     */
-    public function addedObjectsExistInArray(): void
-    {
-        $object = 'StringObject';
-        $variableProvider = $this->getMock(StandardVariableProvider::class, []);
-        $variableProvider->add('variable', $object);
-        self::assertTrue($variableProvider->exists('variable'));
-        self::assertTrue(isset($variableProvider['variable']));
-    }
-
-    /**
-     * @test
-     */
-    public function addedObjectsExistInAllIdentifiers(): void
-    {
-        $object = 'StringObject';
-        $variableProvider = $this->getMock(StandardVariableProvider::class, []);
-        $variableProvider->add('variable', $object);
-        self::assertEquals($variableProvider->getAllIdentifiers(), ['variable'], 'Added key is not visible in getAllIdentifiers');
-    }
-
-    /**
-     * @test
-     */
-    public function gettingNonexistentValueReturnsNull(): void
-    {
-        $variableProvider = $this->getMock(StandardVariableProvider::class, []);
-        $result = $variableProvider->get('nonexistent');
-        self::assertNull($result);
-    }
-
-    /**
-     * @test
-     */
-    public function removeReallyRemovesVariables(): void
-    {
-        $variableProvider = $this->getMock(StandardVariableProvider::class, []);
-        $variableProvider->add('variable', 'string1');
-        $variableProvider->remove('variable');
-        $result = $variableProvider->get('variable');
-        self::assertNull($result);
-    }
-
-    /**
-     * @test
-     */
-    public function getAllShouldReturnAllVariables(): void
-    {
-        $variableProvider = $this->getMock(StandardVariableProvider::class, []);
-        $variableProvider->add('name', 'Simon');
-        self::assertSame(['name' => 'Simon'], $variableProvider->getAll());
-    }
-
-    /**
-     * @test
-     */
-    public function testSleepReturnsExpectedPropertyNames(): void
-    {
-        $subject = new StandardVariableProvider();
-        $properties = $subject->__sleep();
-        self::assertContains('variables', $properties);
-    }
-
-    /**
-     * @test
-     */
-    public function testGetScopeCopyReturnsCopyWithSettings(): void
-    {
-        $subject = new StandardVariableProvider(['foo' => 'bar', 'settings' => ['baz' => 'bam']]);
-        $copy = $subject->getScopeCopy(['bar' => 'foo']);
-        self::assertAttributeEquals(['settings' => ['baz' => 'bam'], 'bar' => 'foo'], 'variables', $copy);
-    }
-
     public static function getPathTestValues(): array
     {
-        $namedUser = new UserWithoutToString('Foobar Name');
-        $unnamedUser = new UserWithoutToString('');
         return [
-            [['foo' => 'bar'], 'foo', 'bar'],
-            [['foo' => 'bar'], 'foo.invalid', null],
-            [['user' => $namedUser], 'user.name', 'Foobar Name'],
-            [['user' => $unnamedUser], 'user.name', ''],
-            [['user' => $namedUser], 'user.named', true],
-            [['user' => $unnamedUser], 'user.named', false],
-            [['user' => $namedUser], 'user.invalid', null],
-            [['foodynamicbar' => 'test', 'dyn' => 'dynamic'], 'foo{dyn}bar', 'test'],
-            [['foo' => ['dynamic' => ['bar' => 'test']], 'dyn' => 'dynamic'], 'foo.{dyn}.bar', 'test'],
-            [['foo' => ['bar' => 'test'], 'dynamic' => ['sub' => 'bar'], 'baz' => 'sub'], 'foo.{dynamic.{baz}}', 'test'],
-            [['user' => $namedUser], 'user.hasAccessor', true],
-            [['user' => $namedUser], 'user.isAccessor', true],
-            [['user' => $unnamedUser], 'user.hasAccessor', false],
-            [['user' => $unnamedUser], 'user.isAccessor', false],
+            'access string variable' => [
+                [
+                    'foo' => 'bar'
+                ],
+                'foo',
+                'bar'
+            ],
+            'access not existing sub array on string value returns null' => [
+                [
+                    'foo' => 'bar'
+                ],
+                'foo.invalid',
+                null
+            ],
+            'access object getter' => [
+                [
+                    'user' => new StandardVariableProviderModelFixture('Foobar Name')
+                ],
+                'user.name',
+                'Foobar Name'
+            ],
+            'access object getter that returns empty string' => [
+                [
+                    'user' => new StandardVariableProviderModelFixture('')
+                ],
+                'user.name',
+                ''
+            ],
+            'access object isser' => [
+                [
+                    'user' => new StandardVariableProviderModelFixture('Foobar Name')
+                ],
+                'user.named',
+                true
+            ],
+            'access object isser that returns false' => [
+                [
+                    'user' => new StandardVariableProviderModelFixture('')
+                ],
+                'user.named',
+                false
+            ],
+            'access object hasser' => [
+                [
+                    'user' => new StandardVariableProviderModelFixture('Foobar Name')
+                ],
+                'user.someName',
+                true
+            ],
+            'access object hasser that returns false' => [
+                [
+                    'user' => new StandardVariableProviderModelFixture('')
+                ],
+                'user.someName',
+                false
+            ],
+            'access public object property' => [
+                [
+                    'user' => new StandardVariableProviderModelFixture('')
+                ],
+                'user.existingPublicProperty',
+                'existingPublicPropertyValue'
+            ],
+            'access not existing object detail returns null' => [
+                [
+                    'user' => new StandardVariableProviderModelFixture('')
+                ],
+                'user.invalid',
+                null
+            ],
+            'access dynamic variable using sub variable reference' => [
+                [
+                    'foodynamicbar' => 'test',
+                    'dyn' => 'dynamic'
+                ],
+                'foo{dyn}bar',
+                'test'
+            ],
+            'access dynamic variable with dotted path using sub variable reference' => [
+                [
+                    'foo' => [
+                        'dynamic' => [
+                            'bar' => 'test'
+                        ]
+                    ],
+                    'dyn' => 'dynamic'
+                ],
+                'foo.{dyn}.bar',
+                'test'
+            ],
+            'access nested dynamic variable with dotted path using sub variable reference' => [
+                [
+                    'foo' => [
+                        'bar' => 'test'
+                    ],
+                    'dynamic' => [
+                        'sub' => 'bar'
+                    ],
+                    'baz' => 'sub'
+                ],
+                'foo.{dynamic.{baz}}',
+                'test'
+            ],
         ];
     }
 
@@ -186,10 +321,11 @@ class StandardVariableProviderTest extends UnitTestCase
      * @test
      * @dataProvider getPathTestValues
      */
-    public function testGetByPath(array $subject, string $path, $expected): void
+    public function getByPathReturnsExpectedValues(array $variables, string $path, $expected): void
     {
-        $provider = new StandardVariableProvider($subject);
-        $result = $provider->getByPath($path);
+        $subject = new StandardVariableProvider();
+        $subject->setSource($variables);
+        $result = $subject->getByPath($path);
         self::assertEquals($expected, $result);
     }
 }
