@@ -256,17 +256,16 @@ class StandardVariableProvider implements VariableProviderInterface
         return $this->get($identifier);
     }
 
-    /**
-     * @param string $propertyPath
-     * @return string
-     */
-    protected function resolveSubVariableReferences($propertyPath)
+    protected function resolveSubVariableReferences(string $propertyPath): string
     {
         if (strpos($propertyPath, '{') !== false) {
             preg_match_all('/(\{.*\})/', $propertyPath, $matches);
             foreach ($matches[1] as $match) {
                 $subPropertyPath = substr($match, 1, -1);
-                $propertyPath = str_replace($match, $this->getByPath($subPropertyPath), $propertyPath);
+                $subPropertyValue = $this->getByPath($subPropertyPath);
+                if ($subPropertyValue !== null) {
+                    $propertyPath = str_replace($match, $subPropertyValue, $propertyPath);
+                }
             }
         }
         return $propertyPath;

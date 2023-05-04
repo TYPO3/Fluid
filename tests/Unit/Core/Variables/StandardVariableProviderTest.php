@@ -288,7 +288,37 @@ class StandardVariableProviderTest extends UnitTestCase
                 'foo{dyn}bar',
                 'test'
             ],
-            'access dynamic variable with dotted path using sub variable reference' => [
+            'access dynamic variable using invalid variable reference' => [
+                [],
+                '{invalid}',
+                null
+            ],
+            'access dynamic variable using invalid sub variable reference' => [
+                [],
+                '{{invalid}}',
+                null
+            ],
+            'access dynamic variable using invalid variable reference in string' => [
+                [],
+                'foo{invalid}bar',
+                null
+            ],
+            'access dynamic variable using invalid sub variable reference in string' => [
+                [],
+                'foo{{invalid}}bar',
+                null
+            ],
+            'access dynamic variable using invalid variable reference in dotted string' => [
+                [],
+                'foo.{invalid}.bar',
+                null
+            ],
+            'access dynamic variable using invalid sub variable reference in dotted string' => [
+                [],
+                'foo.{{invalid}}.bar',
+                null
+            ],
+            'access dynamic variable with dotted path using variable reference' => [
                 [
                     'foo' => [
                         'dynamic' => [
