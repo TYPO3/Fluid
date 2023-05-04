@@ -318,6 +318,16 @@ class StandardVariableProviderTest extends UnitTestCase
                 'foo{dyn}bar',
                 'test'
             ],
+            'access dynamic variable using variable reference that resolves to zero' => [
+                [
+                    'foo' => [
+                        0 => 'bar'
+                    ],
+                    'dynamic' => 0
+                ],
+                'foo.{dynamic}',
+                'bar'
+            ],
             'access dynamic variable with dotted path using variable reference' => [
                 [
                     'foo' => [
