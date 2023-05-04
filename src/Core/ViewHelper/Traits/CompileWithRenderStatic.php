@@ -20,7 +20,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
  */
 trait CompileWithRenderStatic
 {
-
     /**
      * Default render method - simply calls renderStatic() with a
      * prepared set of arguments.

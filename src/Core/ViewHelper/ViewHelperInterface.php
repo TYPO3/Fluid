@@ -19,7 +19,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 interface ViewHelperInterface
 {
-
     /**
      * @return ArgumentDefinition[]
      */

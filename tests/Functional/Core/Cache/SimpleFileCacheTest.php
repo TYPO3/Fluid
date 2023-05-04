@@ -107,12 +107,7 @@ class SimpleFileCacheTest extends AbstractFunctionalTestCase
         $cache->set('test2', '<?php' . PHP_EOL . 'class MyOtherCachedClass {}' . PHP_EOL);
         $cache->flush('test');
         self::assertFileExists(self::$cachePath . '/' . 'test2.php');
-        if (method_exists($this, 'assertFileDoesNotExist')) {
-            self::assertFileDoesNotExist(self::$cachePath . '/' . 'test.php');
-        } else {
-            // @todo: Remove fallback when phpunit >= 9 is required.
-            self::assertFileNotExists(self::$cachePath . '/' . 'test.php');
-        }
+        self::assertFileDoesNotExist(self::$cachePath . '/' . 'test.php');
     }
 
     /**

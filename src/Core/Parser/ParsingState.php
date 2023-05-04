@@ -21,7 +21,6 @@ use TYPO3Fluid\Fluid\View;
  */
 class ParsingState implements ParsedTemplateInterface
 {
-
     /**
      * @var string
      */

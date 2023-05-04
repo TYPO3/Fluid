@@ -15,7 +15,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class NumericNode extends AbstractNode
 {
-
     /**
      * Contents of the numeric node
      * @var number

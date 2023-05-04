@@ -15,7 +15,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class CastingExpressionNode extends AbstractExpressionNode
 {
-
     /**
      * @var array
      */

@@ -15,7 +15,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class EscapingNode extends AbstractNode
 {
-
     /**
      * Node to be escaped
      *

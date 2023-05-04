@@ -30,7 +30,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class ViewHelperInvoker
 {
-
     /**
      * Invoke the ViewHelper described by the ViewHelperNode, the properties
      * of which will already have been filled by the ViewHelperResolver.

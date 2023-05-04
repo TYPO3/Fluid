@@ -32,7 +32,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  */
 class BooleanParser
 {
-
     /**
      * List of comparators to check in the parseCompareToken if the current
      * part of the expression is a comparator and needs to be compared

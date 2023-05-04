@@ -48,7 +48,6 @@ use TYPO3Fluid\Fluid\View\TemplatePaths;
  */
 class StandardCacheWarmer implements FluidCacheWarmerInterface
 {
-
     /**
      * Template file formats (file extensions) supported by this
      * cache warmer implementation.

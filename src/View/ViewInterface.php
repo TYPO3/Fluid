@@ -14,7 +14,6 @@ namespace TYPO3Fluid\Fluid\View;
  */
 interface ViewInterface
 {
-
     /**
      * Add a variable to the view data collection.
      * Can be chained, so $this->view->assign(..., ...)->assign(..., ...); is possible

@@ -39,7 +39,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class ElseViewHelper extends AbstractViewHelper
 {
-
     /**
      * @var bool
      */

@@ -15,7 +15,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 abstract class AbstractNode implements NodeInterface
 {
-
     /**
      * List of Child Nodes.
      *

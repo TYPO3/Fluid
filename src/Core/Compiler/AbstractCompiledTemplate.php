@@ -19,7 +19,6 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
  */
 abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
 {
-
     /**
      * @param string $identifier
      */

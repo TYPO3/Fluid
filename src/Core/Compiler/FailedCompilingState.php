@@ -18,7 +18,6 @@ use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
  */
 class FailedCompilingState extends ParsingState implements ParsedTemplateInterface
 {
-
     /**
      * @var string
      */

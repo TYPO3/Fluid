@@ -19,7 +19,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 interface FluidCacheWarmerInterface
 {
-
     /**
      * Warm up an entire collection of templates based on the
      * provided RenderingContext. Returns a FluidCacheWarmupResult

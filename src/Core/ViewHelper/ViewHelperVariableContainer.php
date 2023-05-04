@@ -16,7 +16,6 @@ use TYPO3Fluid\Fluid\View\ViewInterface;
  */
 class ViewHelperVariableContainer
 {
-
     /**
      * Two-dimensional object array storing the values. The first dimension is the fully qualified ViewHelper name,
      * and the second dimension is the identifier for the data the ViewHelper wants to store.

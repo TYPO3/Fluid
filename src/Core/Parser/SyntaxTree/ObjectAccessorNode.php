@@ -14,7 +14,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class ObjectAccessorNode extends AbstractNode
 {
-
     /**
      * Object path which will be called. Is a list like "post.name.email"
      *

@@ -21,7 +21,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class DefaultCaseViewHelper extends AbstractViewHelper
 {
-
     /**
      * @var bool
      */

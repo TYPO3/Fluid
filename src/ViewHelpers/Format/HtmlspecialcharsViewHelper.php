@@ -45,7 +45,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class HtmlspecialcharsViewHelper extends AbstractViewHelper
 {
-
     /**
      * @var bool
      */
