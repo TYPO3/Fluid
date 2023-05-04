@@ -14,7 +14,6 @@ namespace TYPO3Fluid\Fluid\View;
  */
 abstract class AbstractView implements ViewInterface
 {
-
     /**
      * View variables and their values
      * @var array

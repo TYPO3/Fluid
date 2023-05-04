@@ -15,7 +15,6 @@ namespace TYPO3Fluid\Fluid\Core\Cache;
  */
 interface FluidCacheInterface
 {
-
     /**
      * Gets an entry from the cache or NULL if the
      * entry does not exist.

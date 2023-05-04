@@ -61,7 +61,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class DisableViewHelper extends AbstractViewHelper
 {
-
     /**
      * @var bool
      */

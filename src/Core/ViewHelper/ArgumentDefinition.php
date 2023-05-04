@@ -12,7 +12,6 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  */
 class ArgumentDefinition
 {
-
     /**
      * Name of argument
      *

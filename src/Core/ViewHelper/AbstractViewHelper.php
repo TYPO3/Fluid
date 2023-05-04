@@ -21,7 +21,6 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
  */
 abstract class AbstractViewHelper implements ViewHelperInterface
 {
-
     /**
      * Stores all \TYPO3Fluid\Fluid\ArgumentDefinition instances
      * @var ArgumentDefinition[]

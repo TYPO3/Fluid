@@ -14,7 +14,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class MathExpressionNode extends AbstractExpressionNode
 {
-
     /**
      * Pattern which detects the mathematical expressions with either
      * object accessor expressions or numbers on left and right hand

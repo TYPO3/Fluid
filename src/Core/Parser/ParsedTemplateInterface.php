@@ -16,7 +16,6 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
  */
 interface ParsedTemplateInterface
 {
-
     /**
      * @param string $identifier
      */

@@ -23,7 +23,6 @@ use TYPO3Fluid\Fluid\Core\Parser\Patterns;
  */
 class ViewHelperResolver
 {
-
     /**
      * @var array
      */

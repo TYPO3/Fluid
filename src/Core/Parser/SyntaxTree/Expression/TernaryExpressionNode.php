@@ -17,7 +17,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class TernaryExpressionNode extends AbstractExpressionNode
 {
-
     /**
      * Pattern which detects ternary conditions written in shorthand
      * syntax, e.g. {checkvar ? thenvar : elsevar}.

@@ -15,7 +15,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class BooleanNode extends AbstractNode
 {
-
     /**
      * Stack of expression nodes to be evaluated
      *

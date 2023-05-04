@@ -65,7 +65,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class WarmupViewHelper extends AbstractViewHelper
 {
-
     /**
      * @var bool
      */

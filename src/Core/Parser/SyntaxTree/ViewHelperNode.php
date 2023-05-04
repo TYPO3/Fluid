@@ -17,7 +17,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
  */
 class ViewHelperNode extends AbstractNode
 {
-
     /**
      * @var string
      */

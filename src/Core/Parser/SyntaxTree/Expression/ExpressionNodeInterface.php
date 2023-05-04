@@ -16,7 +16,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 interface ExpressionNodeInterface extends NodeInterface
 {
-
     /**
      * Evaluates the expression by delegating it to the
      * resolved ExpressionNode type.

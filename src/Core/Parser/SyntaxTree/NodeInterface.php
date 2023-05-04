@@ -14,7 +14,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 interface NodeInterface
 {
-
     /**
      * Evaluate all child nodes and return the evaluated results.
      *

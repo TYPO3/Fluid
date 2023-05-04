@@ -29,7 +29,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
  */
 class TemplateParser
 {
-
     /**
      * The following two constants are used for tracking whether we are currently
      * parsing ViewHelper arguments or not. This is used to parse arrays only as

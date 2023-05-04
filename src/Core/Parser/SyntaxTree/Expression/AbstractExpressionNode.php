@@ -18,7 +18,6 @@ use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
  */
 abstract class AbstractExpressionNode extends AbstractNode implements ExpressionNodeInterface
 {
-
     /**
      * Contents of the text node
      *

@@ -14,7 +14,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class ArrayNode extends AbstractNode
 {
-
     /**
      * An associative array. Each key is a string. Each value is either a literal, or an AbstractNode.
      *

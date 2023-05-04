@@ -14,7 +14,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class RootNode extends AbstractNode
 {
-
     /**
      * Evaluate the root node, by evaluating the subtree.
      *

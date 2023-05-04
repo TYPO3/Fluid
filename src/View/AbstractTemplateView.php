@@ -25,7 +25,6 @@ use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
  */
 abstract class AbstractTemplateView extends AbstractView implements TemplateAwareViewInterface
 {
-
     /**
      * Constants defining possible rendering types
      */

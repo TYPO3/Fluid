@@ -28,7 +28,6 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
  */
 class StopCompilingChildrenException extends \TYPO3Fluid\Fluid\Core\Exception
 {
-
     /**
      * @var string
      */

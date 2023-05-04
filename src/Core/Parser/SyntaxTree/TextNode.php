@@ -15,7 +15,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class TextNode extends AbstractNode
 {
-
     /**
      * Contents of the text node
      *

@@ -17,7 +17,6 @@ namespace TYPO3Fluid\Fluid\Core\Cache;
  */
 class SimpleFileCache implements FluidCacheInterface
 {
-
     /**
      * Default cache directory is in "cache/"
      * relative to the point of script execution.

@@ -14,7 +14,6 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  */
 class TagBuilder
 {
-
     /**
      * Name of the Tag to be rendered
      *
