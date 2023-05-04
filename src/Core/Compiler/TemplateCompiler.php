@@ -19,7 +19,11 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class TemplateCompiler
 {
+    /**
+     * @deprecated Unused. Will be removed.
+     */
     const SHOULD_GENERATE_VIEWHELPER_INVOCATION = '##should_gen_viewhelper##';
+
     const MODE_NORMAL = 'normal';
     const MODE_WARMUP = 'warmup';
 
