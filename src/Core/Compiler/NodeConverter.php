@@ -163,7 +163,7 @@ class NodeConverter
             );
 
             $arguments = $node->getArgumentDefinitions();
-            $argumentInitializationCode = sprintf('%s = array();', $argumentsVariableName) . chr(10);
+            $argumentInitializationCode = sprintf('%s = [];', $argumentsVariableName) . chr(10);
             foreach ($arguments as $argumentName => $argumentDefinition) {
                 $argumentInitializationCode .= sprintf(
                     '%s[\'%s\'] = %s;%s',
@@ -240,7 +240,7 @@ class NodeConverter
         $initializationPhpCode = '// Rendering Array' . chr(10);
         $arrayVariableName = $this->variableName('array');
 
-        $initializationPhpCode .= sprintf('%s = array();', $arrayVariableName) . chr(10);
+        $initializationPhpCode .= sprintf('%s = [];', $arrayVariableName) . chr(10);
 
         foreach ($node->getInternalArray() as $key => $value) {
             if ($value instanceof NodeInterface) {
