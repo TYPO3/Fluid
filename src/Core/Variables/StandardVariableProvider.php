@@ -259,8 +259,14 @@ class StandardVariableProvider implements VariableProviderInterface
     protected function resolveSubVariableReferences(string $propertyPath): string
     {
         if (strpos($propertyPath, '{') !== false) {
-            preg_match_all('/(\{.*\})/', $propertyPath, $matches);
-            foreach ($matches[1] as $match) {
+            // https://www.pcre.org/original/doc/html/pcrepattern.html#SEC1
+            // https://stackoverflow.com/questions/546433/regular-expression-to-match-balanced-parentheses
+            // https://stackoverflow.com/questions/524548/regular-expression-to-detect-semi-colon-terminated-c-for-while-loops/524624#524624
+            // @todo: We're dealing with both *parallel* and *nested* curly braces here. It *might* be better to
+            //        substitute the regex with a char-based parser that counts opening vs. closing braces as
+            //        mentioned in the links above. Instead, we're currently using a backtracking recursive regex.
+            preg_match_all('/{[^}{]*+(?:(?R)[^}{]*)*+}/', $propertyPath, $matches);
+            foreach ($matches[0] as $match) {
                 $subPropertyPath = substr($match, 1, -1);
                 $subPropertyValue = $this->getByPath($subPropertyPath);
                 if ($subPropertyValue !== null) {

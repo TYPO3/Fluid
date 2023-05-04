@@ -340,6 +340,29 @@ class StandardVariableProviderTest extends UnitTestCase
                 'foo.{dyn}.bar',
                 'test'
             ],
+            'access nested dynamic variable with dotted path using double sub variable reference' => [
+                [
+                    'foo' => [
+                        'sub2' => 'test'
+                    ],
+                    'baz' => 'sub1',
+                    'sub1' => 'sub2'
+                ],
+                'foo.{{baz}}',
+                'test'
+            ],
+            'access nested dynamic variable with dotted path using triple sub variable reference' => [
+                [
+                    'foo' => [
+                        'sub3' => 'test'
+                    ],
+                    'baz' => 'sub1',
+                    'sub1' => 'sub2',
+                    'sub2' => 'sub3'
+                ],
+                'foo.{{{baz}}}',
+                'test'
+            ],
             'access nested dynamic variable with dotted path using sub variable reference' => [
                 [
                     'foo' => [
@@ -351,6 +374,85 @@ class StandardVariableProviderTest extends UnitTestCase
                     'baz' => 'sub'
                 ],
                 'foo.{dynamic.{baz}}',
+                'test'
+            ],
+            'access nested dynamic variable with dotted path using sub variable reference and suffix' => [
+                [
+                    'foo' => [
+                        'bar' => [
+                            'baz' => 'test',
+                        ],
+                    ],
+                    'dynamic' => [
+                        'dyn1' => 'bar'
+                    ],
+                    'baz' => 'dyn1'
+                ],
+                'foo.{dynamic.{baz}}.baz',
+                'test'
+            ],
+            'access nested dynamic variable with dotted path using sub variable reference and double suffix' => [
+                [
+                    'foo' => [
+                        'bar' => [
+                            'baz' => 'test',
+                        ],
+                    ],
+                    'dynamic' => [
+                        'dyn1foo' => 'bar'
+                    ],
+                    'baz' => 'dyn1'
+                ],
+                'foo.{dynamic.{baz}foo}.baz',
+                'test'
+            ],
+            'access with multiple dynamic variables' => [
+                [
+                    'foodynamic1dynamic2' => 'test',
+                    'dyn1' => 'dynamic1',
+                    'dyn2' => 'dynamic2'
+                ],
+                'foo{dyn1}{dyn2}',
+                'test'
+            ],
+            'access with multiple dynamic variables and dotted path' => [
+                [
+                    'foo' => [
+                        'dynamic1' => [
+                            'dynamic2' => [
+                                'bar' => 'test'
+                            ]
+                        ]
+                    ],
+                    'dyn1' => 'dynamic1',
+                    'dyn2' => 'dynamic2'
+                ],
+                'foo.{dyn1}.{dyn2}.bar',
+                'test'
+            ],
+            'access with multiple nested dynamic variables and dotted path' => [
+                [
+                    'foo' => [
+                        'dynamic1-1' => [
+                            'dynamic3-1dynamic4-1' => [
+                                'dynamic5-1' => [
+                                    'bar' => 'test'
+                                ]
+                            ]
+                        ]
+                    ],
+                    'dyn1' => [
+                        'dyn1-1' => 'dynamic1-1',
+                    ],
+                    'dyn2' => 'dyn1-1',
+                    'dyn3' => 'dynamic3-1',
+                    'dyn4' => 'dynamic4-1',
+                    'dyn5' => [
+                        'dyn5-1' => 'dynamic5-1',
+                    ],
+                    'dyn6' => 'dyn5-1'
+                ],
+                'foo.{dyn1.{dyn2}}.{dyn3}{dyn4}.{dyn5.{dyn6}}.bar',
                 'test'
             ],
         ];
