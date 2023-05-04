@@ -135,10 +135,35 @@ class StandardVariableProvider implements VariableProviderInterface
         $subject = $this->variables;
         $subVariableReferences = explode('.', $this->resolveSubVariableReferences($path));
         foreach ($subVariableReferences as $pathSegment) {
-            $subject = $this->extract($subject, $pathSegment);
-            if ($subject === null) {
-                break;
+            if ((is_array($subject) && array_key_exists($pathSegment, $subject))
+                || ($subject instanceof \ArrayAccess && $subject->offsetExists($pathSegment))
+            ) {
+                $subject = $subject[$pathSegment];
+                continue;
             }
+            if (is_object($subject)) {
+                $upperCasePropertyName = ucfirst($pathSegment);
+                $getMethod = 'get' . $upperCasePropertyName;
+                if (method_exists($subject, $getMethod)) {
+                    $subject = $subject->$getMethod();
+                    continue;
+                }
+                $isMethod = 'is' . $upperCasePropertyName;
+                if (method_exists($subject, $isMethod)) {
+                    $subject = $subject->$isMethod();
+                    continue;
+                }
+                $hasMethod = 'has' . $upperCasePropertyName;
+                if (method_exists($subject, $hasMethod)) {
+                    $subject = $subject->$hasMethod();
+                    continue;
+                }
+                if (property_exists($subject, $pathSegment)) {
+                    $subject = $subject->$pathSegment;
+                    continue;
+                }
+            }
+            return null;
         }
         return $subject;
     }
@@ -245,38 +270,5 @@ class StandardVariableProvider implements VariableProviderInterface
             }
         }
         return $propertyPath;
-    }
-
-    /**
-     * @param mixed $subject
-     * @param string $propertyName
-     * @return mixed
-     */
-    protected function extract($subject, $propertyName)
-    {
-        if ((is_array($subject) && array_key_exists($propertyName, $subject))
-            || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName))
-        ) {
-            return $subject[$propertyName];
-        }
-        if (is_object($subject)) {
-            $upperCasePropertyName = ucfirst($propertyName);
-            $getMethod = 'get' . $upperCasePropertyName;
-            if (method_exists($subject, $getMethod)) {
-                return call_user_func_array([$subject, $getMethod], []);
-            }
-            $isMethod = 'is' . $upperCasePropertyName;
-            if (method_exists($subject, $isMethod)) {
-                return call_user_func_array([$subject, $isMethod], []);
-            }
-            $hasMethod = 'has' . $upperCasePropertyName;
-            if (method_exists($subject, $hasMethod)) {
-                return call_user_func_array([$subject, $hasMethod], []);
-            }
-            if (property_exists($subject, $propertyName)) {
-                return $subject->$propertyName;
-            }
-        }
-        return null;
     }
 }
