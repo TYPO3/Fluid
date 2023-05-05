@@ -7,26 +7,17 @@ declare(strict_types=1);
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various;
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables\Fixtures;
 
 /**
  * Used by StandardVariableProviderTest
  */
 class StandardVariableProviderModelFixture
 {
-    /**
-     * @var string
-     */
-    protected $name;
+    public string $existingPublicProperty = 'existingPublicPropertyValue';
 
-    /**
-     * @var string
-     */
-    public $existingPublicProperty = 'existingPublicPropertyValue';
-
-    public function __construct(string $name)
+    public function __construct(private readonly string $name)
     {
-        $this->name = $name;
     }
 
     public function getName(): string
