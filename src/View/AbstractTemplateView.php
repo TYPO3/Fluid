@@ -28,9 +28,9 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
     /**
      * Constants defining possible rendering types
      */
-    const RENDERING_TEMPLATE = 1;
-    const RENDERING_PARTIAL = 2;
-    const RENDERING_LAYOUT = 3;
+    public const RENDERING_TEMPLATE = 1;
+    public const RENDERING_PARTIAL = 2;
+    public const RENDERING_LAYOUT = 3;
 
     /**
      * The initial rendering context for this template view.

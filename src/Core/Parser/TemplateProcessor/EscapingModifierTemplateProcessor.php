@@ -21,7 +21,7 @@ class EscapingModifierTemplateProcessor implements TemplateProcessorInterface
      */
     protected $renderingContext;
 
-    const SCAN_PATTERN_ESCAPINGMODIFIER = '/{(escaping|escapingEnabled)\s*=*\s*(true|false|on|off)\s*}/i';
+    public const SCAN_PATTERN_ESCAPINGMODIFIER = '/{(escaping|escapingEnabled)\s*=*\s*(true|false|on|off)\s*}/i';
 
     /**
      * @param RenderingContextInterface $renderingContext

@@ -21,7 +21,7 @@ class SimpleFileCache implements FluidCacheInterface
      * Default cache directory is in "cache/"
      * relative to the point of script execution.
      */
-    const DIRECTORY_DEFAULT = 'cache';
+    public const DIRECTORY_DEFAULT = 'cache';
 
     /**
      * @var string

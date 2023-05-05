@@ -36,12 +36,12 @@ class BooleanParser
      * List of comparators to check in the parseCompareToken if the current
      * part of the expression is a comparator and needs to be compared
      */
-    const COMPARATORS = '==,===,!==,!=,<=,>=,<,>,%';
+    public const COMPARATORS = '==,===,!==,!=,<=,>=,<,>,%';
 
     /**
      * Regex to parse a expression into tokens
      */
-    const TOKENREGEX = '/
+    public const TOKENREGEX = '/
 			\s*(
 				\\\\\'
 			|

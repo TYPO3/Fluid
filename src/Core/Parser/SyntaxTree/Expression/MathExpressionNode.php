@@ -82,7 +82,7 @@ class MathExpressionNode extends AbstractExpressionNode
             return $left * $right;
         }
         if ($operator === '/') {
-            return (integer)$right !== 0 ? $left / $right : 0;
+            return (int)$right !== 0 ? $left / $right : 0;
         }
         if ($operator === '^') {
             return pow($left, $right);

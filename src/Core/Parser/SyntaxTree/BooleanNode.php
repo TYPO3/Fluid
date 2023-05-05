@@ -152,7 +152,7 @@ class BooleanNode extends AbstractNode
             return $value;
         }
         if (is_numeric($value)) {
-            return (boolean)((float)$value);
+            return (bool)((float)$value);
         }
         if (is_string($value)) {
             if (strlen($value) === 0) {

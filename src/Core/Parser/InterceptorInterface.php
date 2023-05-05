@@ -15,11 +15,11 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
  */
 interface InterceptorInterface
 {
-    const INTERCEPT_OPENING_VIEWHELPER = 1;
-    const INTERCEPT_CLOSING_VIEWHELPER = 2;
-    const INTERCEPT_TEXT = 3;
-    const INTERCEPT_OBJECTACCESSOR = 4;
-    const INTERCEPT_EXPRESSION = 5;
+    public const INTERCEPT_OPENING_VIEWHELPER = 1;
+    public const INTERCEPT_CLOSING_VIEWHELPER = 2;
+    public const INTERCEPT_TEXT = 3;
+    public const INTERCEPT_OBJECTACCESSOR = 4;
+    public const INTERCEPT_EXPRESSION = 5;
 
     /**
      * The interceptor can process the given node at will and must return a node

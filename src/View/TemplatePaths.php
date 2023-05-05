@@ -39,17 +39,17 @@ use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
  */
 class TemplatePaths
 {
-    const DEFAULT_FORMAT = 'html';
-    const DEFAULT_TEMPLATES_DIRECTORY = 'Resources/Private/Templates/';
-    const DEFAULT_LAYOUTS_DIRECTORY = 'Resources/Private/Layouts/';
-    const DEFAULT_PARTIALS_DIRECTORY = 'Resources/Private/Partials/';
-    const CONFIG_TEMPLATEROOTPATHS = 'templateRootPaths';
-    const CONFIG_LAYOUTROOTPATHS = 'layoutRootPaths';
-    const CONFIG_PARTIALROOTPATHS = 'partialRootPaths';
-    const CONFIG_FORMAT = 'format';
-    const NAME_TEMPLATES = 'templates';
-    const NAME_LAYOUTS = 'layouts';
-    const NAME_PARTIALS = 'partials';
+    public const DEFAULT_FORMAT = 'html';
+    public const DEFAULT_TEMPLATES_DIRECTORY = 'Resources/Private/Templates/';
+    public const DEFAULT_LAYOUTS_DIRECTORY = 'Resources/Private/Layouts/';
+    public const DEFAULT_PARTIALS_DIRECTORY = 'Resources/Private/Partials/';
+    public const CONFIG_TEMPLATEROOTPATHS = 'templateRootPaths';
+    public const CONFIG_LAYOUTROOTPATHS = 'layoutRootPaths';
+    public const CONFIG_PARTIALROOTPATHS = 'partialRootPaths';
+    public const CONFIG_FORMAT = 'format';
+    public const NAME_TEMPLATES = 'templates';
+    public const NAME_LAYOUTS = 'layouts';
+    public const NAME_PARTIALS = 'partials';
 
     /**
      * Holds already resolved identifiers for template files

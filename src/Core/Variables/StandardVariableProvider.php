@@ -15,19 +15,19 @@ class StandardVariableProvider implements VariableProviderInterface
     /**
      * @deprecated Unused. Will be removed.
      */
-    const ACCESSOR_ARRAY = 'array';
+    public const ACCESSOR_ARRAY = 'array';
     /**
      * @deprecated Unused. Will be removed.
      */
-    const ACCESSOR_GETTER = 'getter';
+    public const ACCESSOR_GETTER = 'getter';
     /**
      * @deprecated Unused. Will be removed.
      */
-    const ACCESSOR_ASSERTER = 'asserter';
+    public const ACCESSOR_ASSERTER = 'asserter';
     /**
      * @deprecated Unused. Will be removed.
      */
-    const ACCESSOR_PUBLICPROPERTY = 'public';
+    public const ACCESSOR_PUBLICPROPERTY = 'public';
 
     /**
      * Variables stored in context
