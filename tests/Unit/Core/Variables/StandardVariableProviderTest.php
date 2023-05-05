@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\StandardVariableProviderModelFixture;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Variables\Fixtures\StandardVariableProviderModelFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class StandardVariableProviderTest extends UnitTestCase
