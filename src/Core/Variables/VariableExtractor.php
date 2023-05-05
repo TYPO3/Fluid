@@ -15,10 +15,10 @@ namespace TYPO3Fluid\Fluid\Core\Variables;
  */
 class VariableExtractor
 {
-    const ACCESSOR_ARRAY = 'array';
-    const ACCESSOR_GETTER = 'getter';
-    const ACCESSOR_ASSERTER = 'asserter';
-    const ACCESSOR_PUBLICPROPERTY = 'public';
+    public const ACCESSOR_ARRAY = 'array';
+    public const ACCESSOR_GETTER = 'getter';
+    public const ACCESSOR_ASSERTER = 'asserter';
+    public const ACCESSOR_PUBLICPROPERTY = 'public';
 
     /**
      * Static interface for instantiating and extracting

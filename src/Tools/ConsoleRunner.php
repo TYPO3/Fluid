@@ -24,19 +24,19 @@ use TYPO3Fluid\Fluid\View\ViewInterface;
  */
 class ConsoleRunner
 {
-    const ARGUMENT_HELP = 'help';
-    const ARGUMENT_SOCKET = 'socket';
-    const ARGUMENT_WARMUP = 'warmup';
-    const ARGUMENT_TEMPLATEFILE = 'template';
-    const ARGUMENT_CACHEDIRECTORY = 'cacheDirectory';
-    const ARGUMENT_VARIABLES = 'variables';
-    const ARGUMENT_CONTROLLERNAME = 'controller';
-    const ARGUMENT_CONTROLLERACTION = 'action';
-    const ARGUMENT_BOOTSTRAP = 'bootstrap';
-    const ARGUMENT_TEMPLATEROOTPATHS = 'templateRootPaths';
-    const ARGUMENT_LAYOUTROOTPATHS = 'layoutRootPaths';
-    const ARGUMENT_PARTIALROOTPATHS = 'partialRootPaths';
-    const ARGUMENT_RENDERINGCONTEXT = 'renderingContext';
+    public const ARGUMENT_HELP = 'help';
+    public const ARGUMENT_SOCKET = 'socket';
+    public const ARGUMENT_WARMUP = 'warmup';
+    public const ARGUMENT_TEMPLATEFILE = 'template';
+    public const ARGUMENT_CACHEDIRECTORY = 'cacheDirectory';
+    public const ARGUMENT_VARIABLES = 'variables';
+    public const ARGUMENT_CONTROLLERNAME = 'controller';
+    public const ARGUMENT_CONTROLLERACTION = 'action';
+    public const ARGUMENT_BOOTSTRAP = 'bootstrap';
+    public const ARGUMENT_TEMPLATEROOTPATHS = 'templateRootPaths';
+    public const ARGUMENT_LAYOUTROOTPATHS = 'layoutRootPaths';
+    public const ARGUMENT_PARTIALROOTPATHS = 'partialRootPaths';
+    public const ARGUMENT_RENDERINGCONTEXT = 'renderingContext';
 
     /**
      * @var array

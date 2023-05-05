@@ -12,8 +12,8 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  */
 abstract class Patterns
 {
-    const NAMESPACEPREFIX = 'http://typo3.org/ns/';
-    const NAMESPACESUFFIX = '/ViewHelpers';
+    public const NAMESPACEPREFIX = 'http://typo3.org/ns/';
+    public const NAMESPACESUFFIX = '/ViewHelpers';
 
     /**
      * This regular expression splits the input string at all dynamic tags, AND

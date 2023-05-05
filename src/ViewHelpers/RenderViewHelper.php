@@ -136,7 +136,7 @@ class RenderViewHelper extends AbstractViewHelper
         $section = $arguments['section'];
         $partial = $arguments['partial'];
         $variables = (array)$arguments['arguments'];
-        $optional = (boolean)$arguments['optional'];
+        $optional = (bool)$arguments['optional'];
         $delegate = $arguments['delegate'];
         /** @var RenderableInterface $renderable */
         $renderable = $arguments['renderable'];

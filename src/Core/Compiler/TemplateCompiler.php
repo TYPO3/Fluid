@@ -22,10 +22,10 @@ class TemplateCompiler
     /**
      * @deprecated Unused. Will be removed.
      */
-    const SHOULD_GENERATE_VIEWHELPER_INVOCATION = '##should_gen_viewhelper##';
+    public const SHOULD_GENERATE_VIEWHELPER_INVOCATION = '##should_gen_viewhelper##';
 
-    const MODE_NORMAL = 'normal';
-    const MODE_WARMUP = 'warmup';
+    public const MODE_NORMAL = 'normal';
+    public const MODE_WARMUP = 'warmup';
 
     /**
      * @var array
@@ -149,7 +149,7 @@ class TemplateCompiler
             return false;
         }
         if (!empty($identifier)) {
-            return (boolean)$this->renderingContext->getCache()->get($identifier);
+            return (bool)$this->renderingContext->getCache()->get($identifier);
         }
         return false;
     }

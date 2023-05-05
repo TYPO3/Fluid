@@ -74,9 +74,9 @@ class CastingExpressionNode extends AbstractExpressionNode
     {
         $value = null;
         if ($type === 'integer') {
-            $value = (integer)$variable;
+            $value = (int)$variable;
         } elseif ($type === 'boolean') {
-            $value = (boolean)$variable;
+            $value = (bool)$variable;
         } elseif ($type === 'string') {
             $value = (string)$variable;
         } elseif ($type === 'float') {
@@ -98,7 +98,7 @@ class CastingExpressionNode extends AbstractExpressionNode
         if (preg_match_all('/[a-z]+/i', $variable)) {
             return new \DateTime($variable);
         }
-        return \DateTime::createFromFormat('U', (integer)$variable);
+        return \DateTime::createFromFormat('U', (int)$variable);
     }
 
     /**

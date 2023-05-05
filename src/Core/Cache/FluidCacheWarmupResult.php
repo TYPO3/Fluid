@@ -15,12 +15,12 @@ use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
  */
 class FluidCacheWarmupResult
 {
-    const RESULT_COMPILABLE = 'compilable';
-    const RESULT_COMPILED = 'compiled';
-    const RESULT_HASLAYOUT = 'hasLayout';
-    const RESULT_COMPILEDCLASS = 'compiledClassName';
-    const RESULT_FAILURE = 'failure';
-    const RESULT_MITIGATIONS = 'mitigations';
+    public const RESULT_COMPILABLE = 'compilable';
+    public const RESULT_COMPILED = 'compiled';
+    public const RESULT_HASLAYOUT = 'hasLayout';
+    public const RESULT_COMPILEDCLASS = 'compiledClassName';
+    public const RESULT_FAILURE = 'failure';
+    public const RESULT_MITIGATIONS = 'mitigations';
 
     /**
      * @var array

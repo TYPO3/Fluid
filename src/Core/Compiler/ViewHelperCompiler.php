@@ -46,8 +46,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
  */
 class ViewHelperCompiler
 {
-    const RENDER_STATIC = 'renderStatic';
-    const DEFAULT_INIT = '';
+    public const RENDER_STATIC = 'renderStatic';
+    public const DEFAULT_INIT = '';
 
     /**
      * Factory method to create an instance; since this class is
