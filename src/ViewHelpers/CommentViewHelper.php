@@ -7,8 +7,9 @@
 
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
 
 /**
  * This ViewHelper prevents rendering of any content inside the tag.
@@ -60,8 +61,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
  */
 class CommentViewHelper extends AbstractViewHelper
 {
-    use ParserRuntimeOnly;
-
     /**
      * @var bool
      */
@@ -71,4 +70,20 @@ class CommentViewHelper extends AbstractViewHelper
      * @var bool
      */
     protected $escapeOutput = false;
+
+    public function render()
+    {
+        return null;
+    }
+
+    /**
+     * @param string $argumentsName
+     * @param string $closureName
+     * @param string $initializationPhpCode
+     * @return string
+     */
+    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    {
+        return '';
+    }
 }

@@ -7,10 +7,10 @@
 
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
 
 /**
  * With this tag, you can select a layout to be used for the current template.
@@ -30,8 +30,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
  */
 class LayoutViewHelper extends AbstractViewHelper
 {
-    use ParserRuntimeOnly;
-
     /**
      * Initialize arguments
      *
@@ -40,6 +38,22 @@ class LayoutViewHelper extends AbstractViewHelper
     public function initializeArguments()
     {
         $this->registerArgument('name', 'string', 'Name of layout to use. If none given, "Default" is used.');
+    }
+
+    public function render()
+    {
+        return null;
+    }
+
+    /**
+     * @param string $argumentsName
+     * @param string $closureName
+     * @param string $initializationPhpCode
+     * @return string
+     */
+    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    {
+        return '';
     }
 
     /**

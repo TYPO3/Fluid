@@ -14,6 +14,9 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Traits\Fixtures\ParserRuntimeOnlyFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
+/**
+ * @deprecated remove together with ParserRuntimeOnly.
+ */
 class ParserRuntimeOnlyTest extends UnitTestCase
 {
     /**

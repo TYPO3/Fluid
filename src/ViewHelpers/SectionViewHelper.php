@@ -7,11 +7,11 @@
 
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
 
 /**
  * A ViewHelper to declare sections in templates for later use with e.g. the ``f:render`` ViewHelper.
@@ -66,8 +66,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
  */
 class SectionViewHelper extends AbstractViewHelper
 {
-    use ParserRuntimeOnly;
-
     /**
      * @var bool
      */
@@ -81,6 +79,33 @@ class SectionViewHelper extends AbstractViewHelper
     public function initializeArguments()
     {
         $this->registerArgument('name', 'string', 'Name of the section', true);
+    }
+
+    /**
+     * Rendering directly returns all child nodes.
+     *
+     * @return string HTML String of all child nodes.
+     * @api
+     */
+    public function render()
+    {
+        $content = '';
+        if ($this->viewHelperVariableContainer->exists(SectionViewHelper::class, 'isCurrentlyRenderingSection')) {
+            $this->viewHelperVariableContainer->remove(SectionViewHelper::class, 'isCurrentlyRenderingSection');
+            $content = $this->renderChildren();
+        }
+        return $content;
+    }
+
+    /**
+     * @param string $argumentsName
+     * @param string $closureName
+     * @param string $initializationPhpCode
+     * @return string
+     */
+    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    {
+        return '';
     }
 
     /**
@@ -98,21 +123,5 @@ class SectionViewHelper extends AbstractViewHelper
         $sections = $variableContainer['1457379500_sections'] ? $variableContainer['1457379500_sections'] : [];
         $sections[$sectionName] = $node;
         $variableContainer['1457379500_sections'] = $sections;
-    }
-
-    /**
-     * Rendering directly returns all child nodes.
-     *
-     * @return string HTML String of all child nodes.
-     * @api
-     */
-    public function render()
-    {
-        $content = '';
-        if ($this->viewHelperVariableContainer->exists(SectionViewHelper::class, 'isCurrentlyRenderingSection')) {
-            $this->viewHelperVariableContainer->remove(SectionViewHelper::class, 'isCurrentlyRenderingSection');
-            $content = $this->renderChildren();
-        }
-        return $content;
     }
 }
