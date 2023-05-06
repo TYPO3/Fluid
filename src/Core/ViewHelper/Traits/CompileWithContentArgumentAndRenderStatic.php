@@ -8,7 +8,6 @@
 namespace TYPO3Fluid\Fluid\Core\ViewHelper\Traits;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Compiler\ViewHelperCompiler;
 use TYPO3Fluid\Fluid\Core\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 
@@ -92,13 +91,13 @@ trait CompileWithContentArgumentAndRenderStatic
         ViewHelperNode $node,
         TemplateCompiler $compiler
     ) {
-        list($initialization, $execution) = ViewHelperCompiler::getInstance()->compileWithCallToStaticMethod(
-            $this,
+        $execution = sprintf(
+            '%s::renderStatic(%s, %s, $renderingContext)',
+            static::class,
             $argumentsName,
-            $closureName,
-            ViewHelperCompiler::RENDER_STATIC,
-            static::class
+            $closureName
         );
+
         $contentArgumentName = $this->resolveContentArgumentName();
         $initializationPhpCode .= sprintf(
             '%s = (%s[\'%s\'] !== null) ? function() use (%s) { return %s[\'%s\']; } : %s;',
@@ -110,7 +109,6 @@ trait CompileWithContentArgumentAndRenderStatic
             $contentArgumentName,
             $closureName
         );
-        $initializationPhpCode .= $initialization;
         return $execution;
     }
 

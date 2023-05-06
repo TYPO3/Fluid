@@ -43,6 +43,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
  * it is recommended that you append the `$initialization` code
  * string variable anyway since special implementations or future
  * changes in Fluid may cause initialisation code to be generated.
+ *
+ * @deprecated Unused. Will be removed. Inline access to the constants and compileWithCallToStaticMethod() instead.
  */
 class ViewHelperCompiler
 {
@@ -81,13 +83,8 @@ class ViewHelperCompiler
      * @param string|null $onClass Class name which contains the method; null means use ViewHelper's class name.
      * @return array
      */
-    public function compileWithCallToStaticMethod(
-        ViewHelperInterface $viewHelper,
-        $argumentsName,
-        $renderChildrenClosureName,
-        $method = self::RENDER_STATIC,
-        $onClass = null
-    ) {
+    public function compileWithCallToStaticMethod(ViewHelperInterface $viewHelper, $argumentsName, $renderChildrenClosureName, $method = self::RENDER_STATIC, $onClass = null)
+    {
         $onClass = $onClass ?: get_class($viewHelper);
         return [
             self::DEFAULT_INIT,
