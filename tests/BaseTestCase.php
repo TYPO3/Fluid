@@ -71,6 +71,9 @@ abstract class BaseTestCase extends TestCase
         self::assertSame($expected, $value);
     }
 
+    /**
+     * @deprecated Unused. Will be removed.
+     */
     protected static function assertAttributeContains($needle, string $haystackAttributeName, $haystackClassOrObject): void
     {
         $reflection = new \ReflectionClass($haystackClassOrObject);
