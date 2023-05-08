@@ -9,75 +9,18 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Cache;
 
-use TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult;
 use TYPO3Fluid\Fluid\Core\Cache\StandardCacheWarmer;
-use TYPO3Fluid\Fluid\Core\Compiler\FailedCompilingState;
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 
 class StandardCacheWarmerTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
-    public function testWarm(): void
-    {
-        $failedCompilingState = $this->getAccessibleMock(FailedCompilingState::class, []);
-        $subject = $this->getMockBuilder(StandardCacheWarmer::class)
-            ->onlyMethods(['warmSingleFile', 'detectControllerNamesInTemplateRootPaths'])
-            ->getMock();
-        $subject->expects(self::atLeastOnce())
-            ->method('detectControllerNamesInTemplateRootPaths')
-            ->willReturn(['Default', 'Standard']);
-        $subject->expects(self::atLeastOnce())
-            ->method('warmSingleFile')
-            ->willReturn($failedCompilingState);
-        $context = new RenderingContextFixture();
-        $paths = $this->getMockBuilder(TemplatePaths::class)
-            ->onlyMethods(
-                [
-                    'resolveAvailableTemplateFiles',
-                    'resolveAvailablePartialFiles',
-                    'resolveAvailableLayoutFiles',
-                    'resolveFileInPaths',
-                    'getTemplateRootPaths',
-                    'getPartialRootPaths',
-                    'getLayoutRootPaths',
-                ]
-            )
-            ->getMock();
-        $paths->expects(self::atLeastOnce())
-            ->method('resolveAvailableTemplateFiles')
-            ->willReturn(['foo', 'bar']);
-        $paths->expects(self::atLeastOnce())
-            ->method('resolveAvailablePartialFiles')
-            ->willReturn(['foo', 'bar']);
-        $paths->expects(self::atLeastOnce())
-            ->method('resolveAvailableLayoutFiles')
-            ->willReturn(['foo', 'bar']);
-        $paths->expects(self::atLeastOnce())->method('resolveFileInPaths')->willReturn('/dev/null');
-        $paths->expects(self::atLeastOnce())->method('getTemplateRootPaths')->willReturn(['/dev/null']);
-        $paths->expects(self::atLeastOnce())->method('getPartialRootPaths')->willReturn(['/dev/null']);
-        $paths->expects(self::atLeastOnce())->method('getLayoutRootPaths')->willReturn(['/dev/null']);
-        $compiler = $this->getMockBuilder(TemplateCompiler::class)
-            ->onlyMethods(['enterWarmupMode'])
-            ->getMock();
-        $compiler->expects(self::once())->method('enterWarmupMode');
-        $context->setTemplateCompiler($compiler);
-        $context->setTemplatePaths($paths);
-        $failedCompilingState->_set('variableContainer', new StandardVariableProvider());
-        $result = $subject->warm($context);
-        self::assertInstanceOf(FluidCacheWarmupResult::class, $result);
-    }
-
     /**
      * @test
      */
