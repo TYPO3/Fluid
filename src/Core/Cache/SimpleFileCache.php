@@ -106,7 +106,6 @@ class SimpleFileCache implements FluidCacheInterface
     }
 
     /**
-     * @codeCoverageIgnore
      * @return array
      */
     protected function getCachedFilenames()
