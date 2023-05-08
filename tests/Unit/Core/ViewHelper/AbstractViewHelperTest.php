@@ -292,7 +292,6 @@ class AbstractViewHelperTest extends UnitTestCase
     {
         $subject = new RenderMethodFreeViewHelper();
         $method = new \ReflectionMethod($subject, 'callRenderMethod');
-        $method->setAccessible(true);
         $subject->setRenderingContext(new RenderingContextFixture());
         $result = $method->invoke($subject);
         self::assertSame('I was rendered', $result);
@@ -306,7 +305,6 @@ class AbstractViewHelperTest extends UnitTestCase
         $this->expectException(Exception::class);
         $subject = new RenderMethodFreeDefaultRenderStaticViewHelper();
         $method = new \ReflectionMethod($subject, 'callRenderMethod');
-        $method->setAccessible(true);
         $subject->setRenderingContext(new RenderingContextFixture());
         $method->invoke($subject);
     }

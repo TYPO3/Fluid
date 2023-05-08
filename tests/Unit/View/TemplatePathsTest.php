@@ -41,7 +41,6 @@ class TemplatePathsTest extends BaseTestCase
     {
         $instance = new TemplatePaths();
         $method = new \ReflectionMethod($instance, 'sanitizePath');
-        $method->setAccessible(true);
         $output = $method->invokeArgs($instance, [$input]);
         self::assertEquals($expected, $output);
     }
@@ -63,7 +62,6 @@ class TemplatePathsTest extends BaseTestCase
     {
         $instance = new TemplatePaths();
         $method = new \ReflectionMethod($instance, 'sanitizePaths');
-        $method->setAccessible(true);
         $output = $method->invokeArgs($instance, [$input]);
         self::assertEquals($expected, $output);
     }
@@ -184,7 +182,6 @@ class TemplatePathsTest extends BaseTestCase
     {
         $instance = new TemplatePaths();
         $method = new \ReflectionMethod($instance, 'resolveFilesInFolders');
-        $method->setAccessible(true);
         $result = $method->invokeArgs(
             $instance,
             [['examples/Resources/Private/Layouts/', 'examples/Resources/Private/Templates/Default/'], 'html']
@@ -234,7 +231,6 @@ class TemplatePathsTest extends BaseTestCase
         $this->expectException(InvalidTemplateResourceException::class);
         $instance = new TemplatePaths();
         $method = new \ReflectionMethod($instance, 'resolveFileInPaths');
-        $method->setAccessible(true);
         $method->invokeArgs($instance, [['/not/', '/found/'], 'notfound.html']);
     }
 

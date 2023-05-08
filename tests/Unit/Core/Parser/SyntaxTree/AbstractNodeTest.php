@@ -55,7 +55,6 @@ class AbstractNodeTest extends UnitTestCase
         $this->expectException(Exception::class);
         $this->childNode->expects(self::once())->method('evaluate')->with($this->renderingContext)->willReturn(new \DateTime('now'));
         $method = new \ReflectionMethod($this->abstractNode, 'evaluateChildNode');
-        $method->setAccessible(true);
         $method->invokeArgs($this->abstractNode, [$this->childNode, $this->renderingContext, true]);
     }
 
@@ -67,7 +66,6 @@ class AbstractNodeTest extends UnitTestCase
         $withToString = new UserWithToString('foobar');
         $this->childNode->expects(self::once())->method('evaluate')->with($this->renderingContext)->willReturn($withToString);
         $method = new \ReflectionMethod($this->abstractNode, 'evaluateChildNode');
-        $method->setAccessible(true);
         $result = $method->invokeArgs($this->abstractNode, [$this->childNode, $this->renderingContext, true]);
         self::assertEquals('foobar', $result);
     }
@@ -82,7 +80,6 @@ class AbstractNodeTest extends UnitTestCase
         $this->childNode->expects(self::once())->method('evaluate')->with($this->renderingContext)->willReturn('foo');
         $this->abstractNode->addChildNode($child2);
         $method = new \ReflectionMethod($this->abstractNode, 'evaluateChildNodes');
-        $method->setAccessible(true);
         $result = $method->invokeArgs($this->abstractNode, [$this->renderingContext, true]);
         self::assertEquals('foobar', $result);
     }

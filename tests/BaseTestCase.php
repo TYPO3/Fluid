@@ -84,7 +84,6 @@ abstract class BaseTestCase extends TestCase
     {
         $reflection = new \ReflectionClass($actualClassOrObject);
         $attribute = $reflection->getProperty($actualAttributeName);
-        $attribute->setAccessible(true);
         return $attribute->getValue($actualClassOrObject);
     }
 

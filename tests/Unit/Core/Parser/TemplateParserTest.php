@@ -54,7 +54,6 @@ class TemplateParserTest extends UnitTestCase
         $templateParser = new TemplateParser();
         $templateParser->setRenderingContext($context);
         $method = new \ReflectionMethod($templateParser, 'initializeViewHelperAndAddItToStack');
-        $method->setAccessible(true);
         $result = $method->invokeArgs($templateParser, [new ParsingState(), 'f', 'render', []]);
         self::assertNull($result);
     }
@@ -73,7 +72,6 @@ class TemplateParserTest extends UnitTestCase
         $templateParser = new TemplateParser();
         $templateParser->setRenderingContext($context);
         $method = new \ReflectionMethod($templateParser, 'initializeViewHelperAndAddItToStack');
-        $method->setAccessible(true);
         $result = $method->invokeArgs($templateParser, [new ParsingState(), 'f', 'render', []]);
         self::assertNull($result);
     }
@@ -90,7 +88,6 @@ class TemplateParserTest extends UnitTestCase
         $templateParser = new TemplateParser();
         $templateParser->setRenderingContext($context);
         $method = new \ReflectionMethod($templateParser, 'closingViewHelperTagHandler');
-        $method->setAccessible(true);
         $result = $method->invokeArgs($templateParser, [new ParsingState(), 'f', 'render']);
         self::assertFalse($result);
     }
@@ -109,7 +106,6 @@ class TemplateParserTest extends UnitTestCase
         $templateParser = new TemplateParser();
         $templateParser->setRenderingContext($context);
         $method = new \ReflectionMethod($templateParser, 'closingViewHelperTagHandler');
-        $method->setAccessible(true);
         $result = $method->invokeArgs($templateParser, [new ParsingState(), 'f', 'render']);
         self::assertFalse($result);
     }
@@ -136,7 +132,6 @@ class TemplateParserTest extends UnitTestCase
         $templateParser = new TemplateParser();
         $templateParser->setRenderingContext($renderingContext);
         $method = new \ReflectionMethod($templateParser, 'buildObjectTree');
-        $method->setAccessible(true);
         $method->invokeArgs($templateParser, [['<f:render>'], TemplateParser::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS]);
     }
 
@@ -578,7 +573,6 @@ class TemplateParserTest extends UnitTestCase
 
         $text = ' {someThing.absolutely} "fishy" is \'going\' {on: "here"}';
         $method = new \ReflectionMethod(TemplateParser::class, 'textAndShorthandSyntaxHandler');
-        $method->setAccessible(true);
         $method->invokeArgs($templateParser, [$mockState, $text, TemplateParser::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS]);
     }
 
@@ -808,7 +802,6 @@ class TemplateParserTest extends UnitTestCase
         $templateParser = new TemplateParser();
         $templateParser->setRenderingContext($context);
         $method = new \ReflectionMethod($templateParser, 'recursiveArrayHandler');
-        $method->setAccessible(true);
         $result = $method->invokeArgs($templateParser, [$state, $string]);
 
         self::assertEquals($expected, $result);
