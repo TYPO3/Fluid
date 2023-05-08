@@ -87,6 +87,9 @@ abstract class BaseTestCase extends TestCase
         self::assertNotEmpty($value);
     }
 
+    /**
+     * @deprecated Unused. Will be removed.
+     */
     protected static function assertAttributeInstanceOf(string $expected, string $attributeName, $classOrObject): void
     {
         $reflection = new \ReflectionClass($classOrObject);

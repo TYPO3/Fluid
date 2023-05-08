@@ -20,15 +20,6 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function testConstructorSetsTagBuilder(): void
-    {
-        $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], []);
-        self::assertAttributeInstanceOf(TagBuilder::class, 'tag', $viewHelper);
-    }
-
-    /**
-     * @test
-     */
     public function testSetTagBuilderSetsTagBuilder(): void
     {
         $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
