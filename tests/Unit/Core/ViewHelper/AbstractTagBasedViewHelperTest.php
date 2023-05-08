@@ -43,7 +43,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     public function testRenderCallsRenderOnTagBuilder(): void
     {
         $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
-        $tagBuilder = $this->getMock(TagBuilder::class, ['render']);
+        $tagBuilder = $this->getMockBuilder(TagBuilder::class)->onlyMethods(['render'])->getMock();
         $tagBuilder->expects(self::once())->method('render')->willReturn('foobar');
         $viewHelper->setTagBuilder($tagBuilder);
         self::assertEquals('foobar', $viewHelper->render());
@@ -57,7 +57,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
         $viewHelper->setRenderingContext(new RenderingContextFixture());
 
-        $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], false, false);
+        $mockTagBuilder = $this->getMockBuilder(TagBuilder::class)->onlyMethods(['addAttribute'])->getMock();
         $mockTagBuilder->expects(self::once())->method('addAttribute')->with('foo', 'bar');
         $viewHelper->setTagBuilder($mockTagBuilder);
 
@@ -72,17 +72,17 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
      */
     public function additionalTagAttributesAreRenderedCorrectly(): void
     {
-        $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
-        $viewHelper->setRenderingContext(new RenderingContextFixture());
+        $subject = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
+        $subject->setRenderingContext(new RenderingContextFixture());
 
-        $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], false, false);
+        $mockTagBuilder = $this->getMockBuilder(TagBuilder::class)->onlyMethods(['addAttribute'])->getMock();
         $mockTagBuilder->expects(self::once())->method('addAttribute')->with('foo', 'bar');
-        $viewHelper->setTagBuilder($mockTagBuilder);
+        $subject->setTagBuilder($mockTagBuilder);
 
-        $viewHelper->_call('registerTagAttribute', 'foo', 'string', 'Description', false);
+        $subject->_call('registerTagAttribute', 'foo', 'string', 'Description', false);
         $arguments = ['additionalAttributes' => ['foo' => 'bar']];
-        $viewHelper->setArguments($arguments);
-        $viewHelper->initialize();
+        $subject->setArguments($arguments);
+        $subject->initialize();
     }
 
     /**
@@ -93,7 +93,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
         $viewHelper->setRenderingContext(new RenderingContextFixture());
 
-        $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], false, false);
+        $mockTagBuilder = $this->getMockBuilder(TagBuilder::class)->onlyMethods(['addAttribute'])->getMock();
         $series = [
             ['data-foo', 'fooValue'],
             ['data-bar', 'barValue'],
@@ -118,7 +118,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
         $viewHelper->setRenderingContext(new RenderingContextFixture());
 
-        $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], false, false);
+        $mockTagBuilder = $this->getMockBuilder(TagBuilder::class)->onlyMethods(['addAttribute'])->getMock();
         $series = [
             ['aria-foo', 'fooValue'],
             ['aria-bar', 'barValue'],
@@ -153,7 +153,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     {
         $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
         $viewHelper->setRenderingContext(new RenderingContextFixture());
-        $tagBuilder = $this->getMock(TagBuilder::class, ['addAttribute']);
+        $tagBuilder = $this->getMockBuilder(TagBuilder::class)->onlyMethods(['addAttribute'])->getMock();
         $series = [
             ['data-foo', 'fooValue'],
             ['data-bar', 'barValue'],
@@ -175,7 +175,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     {
         $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
         $viewHelper->setRenderingContext(new RenderingContextFixture());
-        $tagBuilder = $this->getMock(TagBuilder::class, ['addAttribute']);
+        $tagBuilder = $this->getMockBuilder(TagBuilder::class)->onlyMethods(['addAttribute'])->getMock();
         $series = [
             ['aria-foo', 'fooValue'],
             ['aria-bar', 'barValue'],
@@ -198,7 +198,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
         $viewHelper->setRenderingContext(new RenderingContextFixture());
 
-        $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], false, false);
+        $mockTagBuilder = $this->getMockBuilder(TagBuilder::class)->onlyMethods(['addAttribute'])->getMock();
         $series = [
             ['class', 'classAttribute'],
             ['dir', 'dirAttribute'],

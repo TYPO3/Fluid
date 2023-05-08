@@ -71,11 +71,11 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function setsLayoutPathAndFilename(): void
     {
-        $instance = $this->getMock(TemplatePaths::class, ['sanitizePath']);
-        $instance->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
-        $instance->setLayoutPathAndFilename('foobar');
-        self::assertAttributeEquals('foobar', 'layoutPathAndFilename', $instance);
-        self::assertEquals('foobar', $instance->getLayoutPathAndFilename());
+        $subject = $this->getMockBuilder(TemplatePaths::class)->onlyMethods(['sanitizePath'])->getMock();
+        $subject->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
+        $subject->setLayoutPathAndFilename('foobar');
+        self::assertAttributeEquals('foobar', 'layoutPathAndFilename', $subject);
+        self::assertEquals('foobar', $subject->getLayoutPathAndFilename());
     }
 
     /**
@@ -83,10 +83,10 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function setsTemplatePathAndFilename(): void
     {
-        $instance = $this->getMock(TemplatePaths::class, ['sanitizePath']);
-        $instance->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
-        $instance->setTemplatePathAndFilename('foobar');
-        self::assertAttributeEquals('foobar', 'templatePathAndFilename', $instance);
+        $subject = $this->getMockBuilder(TemplatePaths::class)->onlyMethods(['sanitizePath'])->getMock();
+        $subject->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
+        $subject->setTemplatePathAndFilename('foobar');
+        self::assertAttributeEquals('foobar', 'templatePathAndFilename', $subject);
     }
 
     public static function getGetterAndSetterTestValues(): array
@@ -106,10 +106,10 @@ class TemplatePathsTest extends BaseTestCase
     {
         $getter = 'get' . ucfirst($property);
         $setter = 'set' . ucfirst($property);
-        $instance = $this->getMock(TemplatePaths::class, ['sanitizePath']);
-        $instance->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
-        $instance->$setter($value);
-        self::assertEquals($value, $instance->$getter());
+        $subject = $this->getMockBuilder(TemplatePaths::class)->onlyMethods(['sanitizePath'])->getMock();
+        $subject->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
+        $subject->$setter($value);
+        self::assertEquals($value, $subject->$getter());
     }
 
     /**
@@ -150,10 +150,10 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function testResolveFilesMethodCallsResolveFilesInFolders(string $method, string $pathsMethod): void
     {
-        $instance = $this->getMock(TemplatePaths::class, ['resolveFilesInFolders']);
-        $instance->$pathsMethod(['foo']);
-        $instance->expects(self::once())->method('resolveFilesInFolders')->with(self::anything(), 'format');
-        $instance->$method('format', 'format');
+        $subject = $this->getMockBuilder(TemplatePaths::class)->onlyMethods(['resolveFilesInFolders'])->getMock();
+        $subject->$pathsMethod(['foo']);
+        $subject->expects(self::once())->method('resolveFilesInFolders')->with(self::anything(), 'format');
+        $subject->$method('format', 'format');
     }
 
     /**
@@ -161,12 +161,12 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function testToArray(): void
     {
-        $instance = $this->getMock(TemplatePaths::class, ['sanitizePath']);
-        $instance->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
-        $instance->setTemplateRootPaths(['1']);
-        $instance->setLayoutRootPaths(['2']);
-        $instance->setPartialRootPaths(['3']);
-        $result = $instance->toArray();
+        $subject = $this->getMockBuilder(TemplatePaths::class)->onlyMethods(['sanitizePath'])->getMock();
+        $subject->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
+        $subject->setTemplateRootPaths(['1']);
+        $subject->setLayoutRootPaths(['2']);
+        $subject->setPartialRootPaths(['3']);
+        $result = $subject->toArray();
         $expected = [
             TemplatePaths::CONFIG_TEMPLATEROOTPATHS => [1],
             TemplatePaths::CONFIG_LAYOUTROOTPATHS => [2],

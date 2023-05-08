@@ -565,10 +565,10 @@ class BooleanNodeTest extends UnitTestCase
 
         $rootNode = new RootNode();
 
-        $object1Node = $this->getMock(ObjectAccessorNode::class, ['evaluate'], ['foo']);
+        $object1Node = $this->createMock(ObjectAccessorNode::class);
         $object1Node->expects(self::any())->method('evaluate')->willReturn($object1);
 
-        $object2Node = $this->getMock(ObjectAccessorNode::class, ['evaluate'], ['foo']);
+        $object2Node = $this->createMock(ObjectAccessorNode::class);
         $object2Node->expects(self::any())->method('evaluate')->willReturn($object2);
 
         $rootNode->addChildNode($object1Node);
@@ -590,10 +590,10 @@ class BooleanNodeTest extends UnitTestCase
 
         $rootNode = new RootNode();
 
-        $object1Node = $this->getMock(ObjectAccessorNode::class, ['evaluate'], ['foo']);
+        $object1Node = $this->createMock(ObjectAccessorNode::class);
         $object1Node->expects(self::any())->method('evaluate')->willReturn($object1);
 
-        $object2Node = $this->getMock(ObjectAccessorNode::class, ['evaluate'], ['foo']);
+        $object2Node = $this->createMock(ObjectAccessorNode::class);
         $object2Node->expects(self::any())->method('evaluate')->willReturn($object2);
 
         $rootNode->addChildNode($object1Node);

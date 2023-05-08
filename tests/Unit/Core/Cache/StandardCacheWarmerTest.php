@@ -113,7 +113,7 @@ class StandardCacheWarmerTest extends UnitTestCase
     {
         $subject = new StandardCacheWarmer();
         $context = new RenderingContextFixture();
-        $parser = $this->getMock(TemplateParser::class, ['getOrParseAndStoreTemplate']);
+        $parser = $this->createMock(TemplateParser::class);
         $parser->expects(self::once())->method('getOrParseAndStoreTemplate')->willThrowException($error);
         $variableProvider = new StandardVariableProvider(['foo' => 'bar']);
         $context->setVariableProvider($variableProvider);

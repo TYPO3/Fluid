@@ -11,31 +11,24 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class AbstractNodeTest extends UnitTestCase
 {
-    private $renderingContext;
-    private $abstractNode;
-    private $childNode;
-
-    public function setUp(): void
-    {
-        $this->renderingContext = $this->getMock(RenderingContext::class, [], [], false, false);
-        $this->abstractNode = $this->getMock(AbstractNode::class, ['evaluate']);
-        $this->childNode = $this->getMock(AbstractNode::class);
-        $this->abstractNode->addChildNode($this->childNode);
-    }
-
     /**
      * @test
      */
     public function evaluateChildNodesPassesRenderingContextToChildNodes(): void
     {
-        $this->childNode->expects(self::once())->method('evaluate')->with($this->renderingContext);
-        $this->abstractNode->evaluateChildNodes($this->renderingContext);
+        $renderingContextMock = $this->createMock(RenderingContextInterface::class);
+        $childNode = $this->createMock(NodeInterface::class);
+        $childNode->expects(self::once())->method('evaluate')->with($renderingContextMock);
+        $subject = $this->getMockBuilder(AbstractNode::class)->onlyMethods(['evaluate'])->getMock();
+        $subject->addChildNode($childNode);
+        $subject->evaluateChildNodes($renderingContextMock);
     }
 
     /**
@@ -43,8 +36,9 @@ class AbstractNodeTest extends UnitTestCase
      */
     public function evaluateChildNodesReturnsNullIfNoChildNodesExist(): void
     {
-        $abstractNode = $this->getMock(AbstractNode::class, ['evaluate']);
-        self::assertNull($abstractNode->evaluateChildNodes($this->renderingContext));
+        $renderingContextMock = $this->createMock(RenderingContextInterface::class);
+        $subject = $this->createMock(AbstractNode::class);
+        self::assertNull($subject->evaluateChildNodes($renderingContextMock));
     }
 
     /**
@@ -53,9 +47,14 @@ class AbstractNodeTest extends UnitTestCase
     public function evaluateChildNodeThrowsExceptionIfChildNodeCannotBeCastToString(): void
     {
         $this->expectException(Exception::class);
-        $this->childNode->expects(self::once())->method('evaluate')->with($this->renderingContext)->willReturn(new \DateTime('now'));
-        $method = new \ReflectionMethod($this->abstractNode, 'evaluateChildNode');
-        $method->invokeArgs($this->abstractNode, [$this->childNode, $this->renderingContext, true]);
+
+        $renderingContextMock = $this->createMock(RenderingContextInterface::class);
+        $childNode = $this->createMock(NodeInterface::class);
+        $childNode->expects(self::once())->method('evaluate')->with($renderingContextMock)->willReturn(new \DateTime('now'));
+        $subject = $this->getMockBuilder(AbstractNode::class)->onlyMethods(['evaluate'])->getMock();
+        $subject->addChildNode($childNode);
+        $method = new \ReflectionMethod($subject, 'evaluateChildNode');
+        $method->invokeArgs($subject, [$childNode, $renderingContextMock, true]);
     }
 
     /**
@@ -63,10 +62,14 @@ class AbstractNodeTest extends UnitTestCase
      */
     public function evaluateChildNodeCanCastToString(): void
     {
+        $renderingContextMock = $this->createMock(RenderingContextInterface::class);
+        $childNode = $this->createMock(NodeInterface::class);
         $withToString = new UserWithToString('foobar');
-        $this->childNode->expects(self::once())->method('evaluate')->with($this->renderingContext)->willReturn($withToString);
-        $method = new \ReflectionMethod($this->abstractNode, 'evaluateChildNode');
-        $result = $method->invokeArgs($this->abstractNode, [$this->childNode, $this->renderingContext, true]);
+        $childNode->expects(self::once())->method('evaluate')->with($renderingContextMock)->willReturn($withToString);
+        $subject = $this->getMockBuilder(AbstractNode::class)->onlyMethods(['evaluate'])->getMock();
+        $subject->addChildNode($childNode);
+        $method = new \ReflectionMethod($subject, 'evaluateChildNode');
+        $result = $method->invokeArgs($subject, [$childNode, $renderingContextMock, true]);
         self::assertEquals('foobar', $result);
     }
 
@@ -75,12 +78,16 @@ class AbstractNodeTest extends UnitTestCase
      */
     public function evaluateChildNodesConcatenatesOutputs(): void
     {
-        $child2 = clone $this->childNode;
-        $child2->expects(self::once())->method('evaluate')->with($this->renderingContext)->willReturn('bar');
-        $this->childNode->expects(self::once())->method('evaluate')->with($this->renderingContext)->willReturn('foo');
-        $this->abstractNode->addChildNode($child2);
-        $method = new \ReflectionMethod($this->abstractNode, 'evaluateChildNodes');
-        $result = $method->invokeArgs($this->abstractNode, [$this->renderingContext, true]);
+        $renderingContextMock = $this->createMock(RenderingContextInterface::class);
+        $childNode = $this->createMock(NodeInterface::class);
+        $subject = $this->getMockBuilder(AbstractNode::class)->onlyMethods(['evaluate'])->getMock();
+        $subject->addChildNode($childNode);
+        $child2 = clone $childNode;
+        $child2->expects(self::once())->method('evaluate')->with($renderingContextMock)->willReturn('bar');
+        $childNode->expects(self::once())->method('evaluate')->with($renderingContextMock)->willReturn('foo');
+        $subject->addChildNode($child2);
+        $method = new \ReflectionMethod($subject, 'evaluateChildNodes');
+        $result = $method->invokeArgs($subject, [$renderingContextMock, true]);
         self::assertEquals('foobar', $result);
     }
 
@@ -89,6 +96,9 @@ class AbstractNodeTest extends UnitTestCase
      */
     public function childNodeCanBeReadOutAgain(): void
     {
-        self::assertSame($this->abstractNode->getChildNodes(), [$this->childNode]);
+        $childNode = $this->createMock(NodeInterface::class);
+        $subject = $this->getMockBuilder(AbstractNode::class)->onlyMethods(['evaluate'])->getMock();
+        $subject->addChildNode($childNode);
+        self::assertSame($subject->getChildNodes(), [$childNode]);
     }
 }

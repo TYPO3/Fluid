@@ -16,7 +16,7 @@ use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class TemplateCompilerTest extends UnitTestCase
@@ -24,112 +24,88 @@ class TemplateCompilerTest extends UnitTestCase
     /**
      * @test
      */
-    public function testConstructorCreatesNodeConverter(): void
+    public function constructorCreatesNodeConverter(): void
     {
-        $instance = new TemplateCompiler();
-        self::assertAttributeInstanceOf(NodeConverter::class, 'nodeConverter', $instance);
+        $subject = new TemplateCompiler();
+        self::assertInstanceOf(NodeConverter::class, $subject->getNodeConverter());
     }
 
     /**
      * @test
      */
-    public function testWarmupModeToggle(): void
+    public function isWarmupModeReturnsTrueAfterEnterWarmupModeHasBeenCalled(): void
     {
-        $instance = new TemplateCompiler();
-        $instance->enterWarmupMode();
-        self::assertAttributeSame(TemplateCompiler::MODE_WARMUP, 'mode', $instance);
-        self::assertTrue($instance->isWarmupMode());
+        $subject = new TemplateCompiler();
+        self::assertFalse($subject->isWarmupMode());
+        $subject->enterWarmupMode();
+        self::assertTrue($subject->isWarmupMode());
     }
 
     /**
      * @test
      */
-    public function testSetRenderingContext(): void
+    public function getRenderingContextReturnsPreviouslySetRenderingContext(): void
     {
-        $instance = new TemplateCompiler();
-        $renderingContext = new RenderingContextFixture();
-        $instance->setRenderingContext($renderingContext);
-        self::assertAttributeSame($renderingContext, 'renderingContext', $instance);
+        $subject = new TemplateCompiler();
+        $renderingContextMock = $this->createMock(RenderingContextInterface::class);
+        $subject->setRenderingContext($renderingContextMock);
+        self::assertSame($renderingContextMock, $subject->getRenderingContext());
     }
 
     /**
      * @test
      */
-    public function testHasReturnsFalseWithoutCache(): void
+    public function hasReturnsFalseWithoutCache(): void
     {
-        $instance = $this->getMock(TemplateCompiler::class, ['sanitizeIdentifier']);
-        $renderingContext = $this->getMock(RenderingContextFixture::class, ['getCache']);
-        $renderingContext->cacheDisabled = true;
-        $renderingContext->expects(self::never())->method('getCache');
-        $instance->setRenderingContext($renderingContext);
-        $instance->expects(self::once())->method('sanitizeIdentifier')->willReturn('');
-        $result = $instance->has('test');
-        self::assertFalse($result);
+        $renderingContextMock = $this->createMock(RenderingContextInterface::class);
+        $renderingContextMock->expects(self::never())->method('getCache');
+        $renderingContextMock->expects(self::once())->method('isCacheEnabled')->willReturn(false);
+        $subject = new TemplateCompiler();
+        $subject->setRenderingContext($renderingContextMock);
+        self::assertFalse($subject->has('test'));
     }
 
     /**
      * @test
      */
-    public function testHasAsksCache(): void
+    public function hasReturnsTrueWithCache(): void
     {
-        $cache = $this->getMock(SimpleFileCache::class, ['get']);
-        $cache->expects(self::once())->method('get')->with('test')->willReturn(true);
-        $renderingContext = new RenderingContextFixture();
-        $renderingContext->setCache($cache);
-        $instance = $this->getMock(TemplateCompiler::class, ['sanitizeIdentifier']);
-        $instance->expects(self::once())->method('sanitizeIdentifier')->willReturnArgument(0);
-        $instance->setRenderingContext($renderingContext);
-        $result = $instance->has('test');
-        self::assertTrue($result);
+        $cacheMock = $this->createMock(SimpleFileCache::class);
+        $cacheMock->expects(self::once())->method('get')->with('test')->willReturn(true);
+        $renderingContextMock = $this->createMock(RenderingContextInterface::class);
+        $renderingContextMock->expects(self::once())->method('getCache')->willReturn($cacheMock);
+        $renderingContextMock->expects(self::once())->method('isCacheEnabled')->willReturn(true);
+        $subject = new TemplateCompiler();
+        $subject->setRenderingContext($renderingContextMock);
+        self::assertTrue($subject->has('test'));
     }
 
     /**
      * @test
      */
-    public function testWrapViewHelperNodeArgumentEvaluationInClosure(): void
+    public function wrapViewHelperNodeArgumentEvaluationInClosureCreatesExpectedString(): void
     {
-        $instance = new TemplateCompiler();
         $arguments = ['value' => new TextNode('sometext')];
-        $renderingContext = new RenderingContextFixture();
-        $viewHelperNode = new ViewHelperNode($renderingContext, 'f', 'format.raw', $arguments, new ParsingState());
-        $result = $instance->wrapViewHelperNodeArgumentEvaluationInClosure($viewHelperNode, 'value');
+        $viewHelperNodeMock = $this->createMock(ViewHelperNode::class);
+        $viewHelperNodeMock->expects(self::once())->method('getArguments')->willReturn($arguments);
         $expected = 'function() use ($renderingContext) {' . chr(10);
         $expected .= chr(10);
         $expected .= 'return \'sometext\';' . chr(10);
         $expected .= '}';
-        self::assertEquals($expected, $result);
+        $subject = new TemplateCompiler();
+        self::assertEquals($expected, $subject->wrapViewHelperNodeArgumentEvaluationInClosure($viewHelperNodeMock, 'value'));
     }
 
     /**
      * @test
      */
-    public function testStoreReturnsEarlyIfDisabled(): void
+    public function storeReturnsNullIfDisabled(): void
     {
-        $renderingContext = new RenderingContextFixture();
-        $renderingContext->cacheDisabled = true;
-        $instance = $this->getMock(TemplateCompiler::class, ['generateSectionCodeFromParsingState']);
-        $instance->setRenderingContext($renderingContext);
-        $instance->expects(self::never())->method('generateSectionCodeFromParsingState');
-        $instance->store('foobar', new ParsingState());
-    }
-
-    /**
-     * @test
-     */
-    public function testSupportsDisablingCompiler(): void
-    {
-        $this->expectException(StopCompilingException::class);
-        $instance = new TemplateCompiler();
-        $instance->disable();
-    }
-
-    /**
-     * @test
-     */
-    public function testGetNodeConverterReturnsNodeConverterInstance(): void
-    {
-        $instance = new TemplateCompiler();
-        self::assertInstanceOf(NodeConverter::class, $instance->getNodeConverter());
+        $renderingContextMock = $this->createMock(RenderingContextInterface::class);
+        $renderingContextMock->expects(self::once())->method('isCacheEnabled')->willReturn(false);
+        $subject = new TemplateCompiler();
+        $subject->setRenderingContext($renderingContextMock);
+        self::assertNull($subject->store('foobar', new ParsingState()));
     }
 
     /**
@@ -137,37 +113,47 @@ class TemplateCompilerTest extends UnitTestCase
      */
     public function testStoreSavesUncompilableState(): void
     {
-        $cacheMock = $this->getMockBuilder(SimpleFileCache::class)->onlyMethods(['set'])->getMock();
+        $cacheMock = $this->createMock(SimpleFileCache::class);
         $cacheMock->expects(self::once())->method('set')->with('fakeidentifier', self::anything());
-        $renderingContext = new RenderingContextFixture();
-        $renderingContext->setCache($cacheMock);
-        $state = new ParsingState();
-        $state->setCompilable(false);
-        $instance = new TemplateCompiler();
-        $instance->setRenderingContext($renderingContext);
-        $instance->store('fakeidentifier', $state);
+        $renderingContextMock = $this->createMock(RenderingContextInterface::class);
+        $renderingContextMock->expects(self::once())->method('getCache')->willReturn($cacheMock);
+        $renderingContextMock->expects(self::once())->method('isCacheEnabled')->willReturn(true);
+        $parsingStateMock = $this->createMock(ParsingState::class);
+        $parsingStateMock->expects(self::once())->method('isCompilable')->willReturn(false);
+        $subject = new TemplateCompiler();
+        $subject->setRenderingContext($renderingContextMock);
+        $subject->store('fakeidentifier', $parsingStateMock);
     }
 
     /**
      * @test
      */
-    public function testVariableNameDelegatesToNodeConverter(): void
+    public function disableThrowsException(): void
     {
-        $instance = new TemplateCompiler();
-        $nodeConverter = $this->getMock(NodeConverter::class, ['variableName'], [$instance]);
-        $nodeConverter->expects(self::once())->method('variableName')->willReturnArgument(0);
-        $instance->setNodeConverter($nodeConverter);
-        self::assertEquals('foobar', $instance->variableName('foobar'));
+        $this->expectException(StopCompilingException::class);
+        (new TemplateCompiler())->disable();
     }
 
     /**
      * @test
      */
-    public function testGetRenderingContextGetsRenderingContext(): void
+    public function variableNameDelegatesToNodeConverter(): void
     {
-        $context = new RenderingContextFixture();
-        $instance = new TemplateCompiler();
-        $instance->setRenderingContext($context);
-        self::assertSame($context, $instance->getRenderingContext());
+        $subject = new TemplateCompiler();
+        $nodeConverterMock = $this->createMock(NodeConverter::class);
+        $nodeConverterMock->expects(self::once())->method('variableName')->with('foo')->willReturn('bar');
+        $subject->setNodeConverter($nodeConverterMock);
+        self::assertEquals('bar', $subject->variableName('foo'));
+    }
+
+    /**
+     * @test
+     */
+    public function getRenderingContextGetsPreviouslySetRenderingContext(): void
+    {
+        $renderingContextMock = $this->createMock(RenderingContextInterface::class);
+        $subject = new TemplateCompiler();
+        $subject->setRenderingContext($renderingContextMock);
+        self::assertSame($renderingContextMock, $subject->getRenderingContext());
     }
 }
