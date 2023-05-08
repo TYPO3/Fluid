@@ -15,9 +15,9 @@ use TYPO3Fluid\Fluid\Core\Compiler\FailedCompilingState;
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
-use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
@@ -92,7 +92,7 @@ class StandardCacheWarmerTest extends UnitTestCase
         }
     }
 
-    public static function getWarmSingleFileExceptionTestValues(): array
+    public static function warmupSingleFileHandlesExceptionDataProvider(): array
     {
         return [
             [new StopCompilingException('StopCompiling exception')],
@@ -106,23 +106,20 @@ class StandardCacheWarmerTest extends UnitTestCase
     }
 
     /**
-     * @dataProvider getWarmSingleFileExceptionTestValues
+     * @dataProvider warmupSingleFileHandlesExceptionDataProvider
      * @test
      */
-    public function testWarmupSingleFileHandlesException(\RuntimeException $error): void
+    public function warmupSingleFileHandlesException(\RuntimeException $error): void
     {
-        $subject = new StandardCacheWarmer();
-        $context = new RenderingContextFixture();
-        $parser = $this->createMock(TemplateParser::class);
-        $parser->expects(self::once())->method('getOrParseAndStoreTemplate')->willThrowException($error);
-        $variableProvider = new StandardVariableProvider(['foo' => 'bar']);
-        $context->setVariableProvider($variableProvider);
-        $context->setTemplateParser($parser);
-        $method = new \ReflectionMethod($subject, 'warmSingleFile');
-        $result = $method->invokeArgs($subject, ['/some/file', 'some_file', $context]);
-        self::assertInstanceOf(ParsedTemplateInterface::class, $result);
-        self::assertAttributeNotEmpty('failureReason', $result);
-        self::assertAttributeNotEmpty('mitigations', $result);
+        $templateParserMock = $this->createMock(TemplateParser::class);
+        $templateParserMock->expects(self::once())->method('getOrParseAndStoreTemplate')->willThrowException($error);
+        $renderingContextMock = $this->createMock(RenderingContextInterface::class);
+        $renderingContextMock->expects(self::once())->method('getVariableProvider')->willReturn(new StandardVariableProvider());
+        $renderingContextMock->expects(self::once())->method('getTemplateParser')->willReturn($templateParserMock);
+        $subject = $this->getAccessibleMock(StandardCacheWarmer::class, []);
+        $result = $subject->_call('warmSingleFile', '/some/file', 'some_file', $renderingContextMock);
+        self::assertNotEmpty($result->getFailureReason());
+        self::assertNotEmpty($result->getMitigations());
     }
 
     /**
