@@ -85,7 +85,6 @@ class StandardCacheWarmerTest extends UnitTestCase
     {
         $subject = new StandardCacheWarmer();
         $method = new \ReflectionMethod($subject, 'detectControllerNamesInTemplateRootPaths');
-        $method->setAccessible(true);
         $directory = realpath(__DIR__ . '/../../../../examples/Resources/Private/Templates/');
         $generator = $method->invokeArgs($subject, [[$directory]]);
         foreach ($generator as $resolvedControllerName) {
@@ -120,7 +119,6 @@ class StandardCacheWarmerTest extends UnitTestCase
         $context->setVariableProvider($variableProvider);
         $context->setTemplateParser($parser);
         $method = new \ReflectionMethod($subject, 'warmSingleFile');
-        $method->setAccessible(true);
         $result = $method->invokeArgs($subject, ['/some/file', 'some_file', $context]);
         self::assertInstanceOf(ParsedTemplateInterface::class, $result);
         self::assertAttributeNotEmpty('failureReason', $result);
@@ -134,7 +132,6 @@ class StandardCacheWarmerTest extends UnitTestCase
     {
         $subject = new StandardCacheWarmer();
         $method = new \ReflectionMethod($subject, 'createClosure');
-        $method->setAccessible(true);
         $closure = $method->invokeArgs($subject, [__FILE__]);
         self::assertNotEmpty($closure(new TemplateParser(), new TemplatePaths()));
     }
