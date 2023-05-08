@@ -127,6 +127,7 @@ abstract class BaseTestCase extends TestCase
      * @template T of object
      * @param class-string<T> $originalClassName Full qualified name of the original class
      * @return MockObject&AccessibleObjectInterface&T
+     * @deprecated Unused. Will be removed.
      */
     protected function getAccessibleMockForAbstractClass(
         string $originalClassName,
