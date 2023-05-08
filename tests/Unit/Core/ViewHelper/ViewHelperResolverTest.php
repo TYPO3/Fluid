@@ -18,31 +18,31 @@ class ViewHelperResolverTest extends UnitTestCase
     /**
      * @test
      */
-    public function testAddNamespaceWithStringRecordsNamespace(): void
+    public function addNamespaceWithStringRecordsNamespace(): void
     {
         $subject = new ViewHelperResolver();
         $subject->addNamespace('t', 'test');
-        self::assertAttributeContains(['test'], 'namespaces', $subject);
+        self::assertEquals(['test'], $subject->getNamespaces()['t']);
     }
 
     /**
      * @test
      */
-    public function testAddNamespaceWithArrayRecordsNamespace(): void
+    public function addNamespaceWithArrayRecordsNamespace(): void
     {
         $subject = new ViewHelperResolver();
         $subject->addNamespace('t', ['test']);
-        self::assertAttributeContains(['test'], 'namespaces', $subject);
+        self::assertEquals(['test'], $subject->getNamespaces()['t']);
     }
 
     /**
      * @test
      */
-    public function testSetNamespacesSetsNamespaces(): void
+    public function setNamespacesSetsNamespaces(): void
     {
         $subject = new ViewHelperResolver();
         $subject->setNamespaces(['t' => ['test']]);
-        self::assertAttributeEquals(['t' => ['test']], 'namespaces', $subject);
+        self::assertEquals(['t' => ['test']], $subject->getNamespaces());
     }
 
     /**
