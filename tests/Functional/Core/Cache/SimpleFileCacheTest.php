@@ -68,13 +68,11 @@ class SimpleFileCacheTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function flushAll(): void
+    public function flushWithoutNameCallsGetCachedFilenamesAndFlushByFilename(): void
     {
-        $cache = $this->getMock(
-            SimpleFileCache::class,
-            ['getCachedFilenames', 'flushByFilename', 'flushByname'],
-            [self::$cachePath]
-        );
+        $cache = $this->getMockBuilder(SimpleFileCache::class)
+            ->onlyMethods(['getCachedFilenames', 'flushByFilename', 'flushByName'])
+            ->getMock();
         $cache->expects(self::never())->method('flushByName');
         $cache->expects(self::once())->method('getCachedFilenames')->willReturn(['foo']);
         $cache->expects(self::once())->method('flushByFilename')->with('foo');
@@ -84,13 +82,11 @@ class SimpleFileCacheTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function flushByName(): void
+    public function flushWithNameCallsFlushByName(): void
     {
-        $cache = $this->getMock(
-            SimpleFileCache::class,
-            ['getCachedFilenames', 'flushByFilename', 'flushByname'],
-            [self::$cachePath]
-        );
+        $cache = $this->getMockBuilder(SimpleFileCache::class)
+            ->onlyMethods(['getCachedFilenames', 'flushByFilename', 'flushByName'])
+            ->getMock();
         $cache->expects(self::once())->method('flushByName')->with('foo');
         $cache->expects(self::never())->method('getCachedFilenames');
         $cache->expects(self::never())->method('flushByFilename');

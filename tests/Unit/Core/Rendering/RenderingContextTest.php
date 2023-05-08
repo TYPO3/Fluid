@@ -9,12 +9,14 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
 
+use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
@@ -29,7 +31,7 @@ class RenderingContextTest extends UnitTestCase
      */
     public function getTemplateProcessorsReturnsExpectedResult(): void
     {
-        $get = [$this->getMock(TemplateProcessorInterface::class), $this->getMock(TemplateProcessorInterface::class)];
+        $get = [$this->createMock(TemplateProcessorInterface::class), $this->createMock(TemplateProcessorInterface::class)];
         $view = new TemplateView();
         $subject = $this->getAccessibleMock(RenderingContext::class, [], [$view]);
         $subject->_set('templateProcessors', $get);
@@ -42,7 +44,7 @@ class RenderingContextTest extends UnitTestCase
      */
     public function setTemplateProcessorsSetsAttribute(): void
     {
-        $set = [$this->getMock(TemplateProcessorInterface::class), $this->getMock(TemplateProcessorInterface::class)];
+        $set = [$this->createMock(TemplateProcessorInterface::class), $this->createMock(TemplateProcessorInterface::class)];
         $subject = new RenderingContext();
         $setter = 'set' . ucfirst('templateProcessors');
         $subject->$setter($set);
@@ -104,7 +106,7 @@ class RenderingContextTest extends UnitTestCase
      */
     public function getObjectTypesReturnsExpectedResult(string $property, string $expected): void
     {
-        $expected = $this->getMock($expected);
+        $expected = $this->createMock($expected);
         $view = new TemplateView();
         $subject = $this->getAccessibleMock(RenderingContext::class, [], [$view]);
         $subject->_set($property, $expected);
@@ -118,7 +120,7 @@ class RenderingContextTest extends UnitTestCase
      */
     public function setObjectTypeSetsAttribute(string $property, string $expected): void
     {
-        $expected = $this->getMock($expected);
+        $expected = $this->createMock($expected);
         $subject = new RenderingContext();
         $setter = 'set' . ucfirst($property);
         $subject->$setter($expected);
@@ -130,7 +132,7 @@ class RenderingContextTest extends UnitTestCase
      */
     public function templateVariableContainerCanBeReadCorrectly(): void
     {
-        $templateVariableContainer = $this->getMock(StandardVariableProvider::class);
+        $templateVariableContainer = $this->createMock(VariableProviderInterface::class);
         $renderingContextFixture = new RenderingContextFixture();
         $renderingContextFixture->setVariableProvider($templateVariableContainer);
         self::assertSame($renderingContextFixture->getVariableProvider(), $templateVariableContainer, 'Template Variable Container could not be read out again.');
@@ -141,7 +143,7 @@ class RenderingContextTest extends UnitTestCase
      */
     public function viewHelperVariableContainerCanBeReadCorrectly(): void
     {
-        $viewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class);
+        $viewHelperVariableContainer = $this->createMock(ViewHelperVariableContainer::class);
         $renderingContextFixture = new RenderingContextFixture();
         $renderingContextFixture->setViewHelperVariableContainer($viewHelperVariableContainer);
         self::assertSame($viewHelperVariableContainer, $renderingContextFixture->getViewHelperVariableContainer());
@@ -162,7 +164,7 @@ class RenderingContextTest extends UnitTestCase
     public function isCacheEnabledReturnsTrueIfCacheIsEnabled(): void
     {
         $subject = new RenderingContext();
-        $subject->setCache($this->getMock(SimpleFileCache::class));
+        $subject->setCache($this->createMock(FluidCacheInterface::class));
         self::assertTrue($subject->isCacheEnabled());
     }
 }

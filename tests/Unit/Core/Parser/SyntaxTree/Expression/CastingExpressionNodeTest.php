@@ -23,7 +23,7 @@ class CastingExpressionNodeTest extends UnitTestCase
      */
     public function testEvaluateDelegatesToEvaluteExpression(): void
     {
-        $subject = $this->getMock(CastingExpressionNode::class, [], ['{test as string}', ['test as string']]);
+        $subject = new CastingExpressionNode('{test as string}', ['test as string']);
         $context = new RenderingContext();
         $context->setVariableProvider(new StandardVariableProvider(['test' => 10]));
         $result = $subject->evaluate($context);

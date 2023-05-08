@@ -100,7 +100,7 @@ class EscapeTest extends UnitTestCase
     public function processWrapsCurrentViewHelperInEscapeNode(): void
     {
         $interceptorPosition = InterceptorInterface::INTERCEPT_OBJECTACCESSOR;
-        $mockNode = $this->getMock(ObjectAccessorNode::class, [], [], false, false);
+        $mockNode = $this->createMock(ObjectAccessorNode::class);
         $actualResult = $this->escapeInterceptor->process($mockNode, $interceptorPosition, $this->mockParsingState);
         self::assertInstanceOf(EscapingNode::class, $actualResult);
     }

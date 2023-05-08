@@ -20,7 +20,7 @@ class RootNodeTest extends UnitTestCase
      */
     public function testEvaluateCallsEvaluateChildNodes(): void
     {
-        $subject = $this->getMock(RootNode::class, ['evaluateChildNodes']);
+        $subject = $this->getMockBuilder(RootNode::class)->onlyMethods(['evaluateChildNodes'])->getMock();
         $subject->expects(self::once())->method('evaluateChildNodes');
         $subject->evaluate(new RenderingContext());
     }

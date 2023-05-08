@@ -123,14 +123,14 @@ class ViewHelperResolverTest extends UnitTestCase
      */
     public function testAddNamespaceWithString(): void
     {
-        $resolver = $this->getMock(ViewHelperResolver::class, []);
-        $resolver->addNamespace('f', 'Foo\\Bar');
+        $subject = new ViewHelperResolver();
+        $subject->addNamespace('f', 'Foo\\Bar');
         self::assertAttributeEquals([
             'f' => [
                 'TYPO3Fluid\\Fluid\\ViewHelpers',
                 'Foo\\Bar'
             ]
-        ], 'namespaces', $resolver);
+        ], 'namespaces', $subject);
     }
 
     /**
@@ -138,14 +138,14 @@ class ViewHelperResolverTest extends UnitTestCase
      */
     public function testAddNamespaceWithArray(): void
     {
-        $resolver = $this->getMock(ViewHelperResolver::class, []);
-        $resolver->addNamespace('f', ['Foo\\Bar']);
+        $subject = new ViewHelperResolver();
+        $subject->addNamespace('f', ['Foo\\Bar']);
         self::assertAttributeEquals([
             'f' => [
                 'TYPO3Fluid\\Fluid\\ViewHelpers',
                 'Foo\\Bar'
             ]
-        ], 'namespaces', $resolver);
+        ], 'namespaces', $subject);
     }
 
     /**
@@ -153,9 +153,9 @@ class ViewHelperResolverTest extends UnitTestCase
      */
     public function testAddNamespaceWithNull(): void
     {
-        $resolver = $this->getMock(ViewHelperResolver::class, []);
-        $resolver->addNamespace('ignored', null);
-        self::assertAttributeEquals(['f' => ['TYPO3Fluid\\Fluid\\ViewHelpers'], 'ignored' => null], 'namespaces', $resolver);
+        $subject = new ViewHelperResolver();
+        $subject->addNamespace('ignored', null);
+        self::assertAttributeEquals(['f' => ['TYPO3Fluid\\Fluid\\ViewHelpers'], 'ignored' => null], 'namespaces', $subject);
     }
 
     /**
@@ -163,10 +163,10 @@ class ViewHelperResolverTest extends UnitTestCase
      */
     public function testAddSecondNamespaceWithNullWithExistingNullStillIgnoresNamespace(): void
     {
-        $resolver = $this->getMock(ViewHelperResolver::class, []);
-        $resolver->addNamespace('ignored', null);
-        $resolver->addNamespace('ignored', null);
-        self::assertAttributeEquals(['f' => ['TYPO3Fluid\\Fluid\\ViewHelpers'], 'ignored' => null], 'namespaces', $resolver);
+        $subject = new ViewHelperResolver();
+        $subject->addNamespace('ignored', null);
+        $subject->addNamespace('ignored', null);
+        self::assertAttributeEquals(['f' => ['TYPO3Fluid\\Fluid\\ViewHelpers'], 'ignored' => null], 'namespaces', $subject);
     }
 
     /**
@@ -174,10 +174,10 @@ class ViewHelperResolverTest extends UnitTestCase
      */
     public function testAddSecondNamespaceWithExistingNullConvertsToNotIgnoredNamespace(): void
     {
-        $resolver = $this->getMock(ViewHelperResolver::class, []);
-        $resolver->addNamespace('ignored', null);
-        $resolver->addNamespace('ignored', ['Foo\\Bar']);
-        self::assertAttributeEquals(['f' => ['TYPO3Fluid\\Fluid\\ViewHelpers'], 'ignored' => ['Foo\\Bar']], 'namespaces', $resolver);
+        $subject = new ViewHelperResolver();
+        $subject->addNamespace('ignored', null);
+        $subject->addNamespace('ignored', ['Foo\\Bar']);
+        self::assertAttributeEquals(['f' => ['TYPO3Fluid\\Fluid\\ViewHelpers'], 'ignored' => ['Foo\\Bar']], 'namespaces', $subject);
     }
 
     /**
@@ -185,14 +185,14 @@ class ViewHelperResolverTest extends UnitTestCase
      */
     public function testAddNamespaces(): void
     {
-        $resolver = $this->getMock(ViewHelperResolver::class, []);
-        $resolver->addNamespaces(['f' => 'Foo\\Bar']);
+        $subject = new ViewHelperResolver();
+        $subject->addNamespaces(['f' => 'Foo\\Bar']);
         self::assertAttributeEquals([
             'f' => [
                 'TYPO3Fluid\\Fluid\\ViewHelpers',
                 'Foo\\Bar'
             ]
-        ], 'namespaces', $resolver);
+        ], 'namespaces', $subject);
     }
 
     public static function getResolvePhpNamespaceFromFluidNamespaceTestValues(): array
@@ -219,13 +219,12 @@ class ViewHelperResolverTest extends UnitTestCase
      */
     public function testCreateViewHelperInstance(): void
     {
-        $resolver = $this->getMock(
-            ViewHelperResolver::class,
-            ['resolveViewHelperClassName', 'createViewHelperInstanceFromClassName']
-        );
-        $resolver->expects(self::once())->method('resolveViewHelperClassName')->with('foo', 'bar')->willReturn('foobar');
-        $resolver->expects(self::once())->method('createViewHelperInstanceFromClassName')->with('foobar')->willReturn('baz');
-        self::assertEquals('baz', $resolver->createViewHelperInstance('foo', 'bar'));
+        $subject = $this->getMockBuilder(ViewHelperResolver::class)
+            ->onlyMethods(['resolveViewHelperClassName', 'createViewHelperInstanceFromClassName'])
+            ->getMock();
+        $subject->expects(self::once())->method('resolveViewHelperClassName')->with('foo', 'bar')->willReturn('foobar');
+        $subject->expects(self::once())->method('createViewHelperInstanceFromClassName')->with('foobar')->willReturn('baz');
+        self::assertEquals('baz', $subject->createViewHelperInstance('foo', 'bar'));
     }
 
     /**

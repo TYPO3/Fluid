@@ -40,8 +40,8 @@ class AbstractTemplateViewTest extends UnitTestCase
 
     public function setUp(): void
     {
-        $this->templateVariableContainer = $this->getMock(StandardVariableProvider::class);
-        $viewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class, ['setView']);
+        $this->templateVariableContainer = $this->createMock(VariableProviderInterface::class);
+        $viewHelperVariableContainer = $this->createMock(ViewHelperVariableContainer::class);
         $this->renderingContext = new RenderingContextFixture();
         $this->renderingContext->viewHelperVariableContainer = $viewHelperVariableContainer;
         $this->renderingContext->variableProvider = $this->templateVariableContainer;
@@ -63,7 +63,7 @@ class AbstractTemplateViewTest extends UnitTestCase
      */
     public function testGetViewHelperResolverReturnsExpectedViewHelperResolver(): void
     {
-        $viewHelperResolver = $this->getMock(ViewHelperResolver::class);
+        $viewHelperResolver = $this->createMock(ViewHelperResolver::class);
         $this->renderingContext->setViewHelperResolver($viewHelperResolver);
         $result = $this->view->getViewHelperResolver();
         self::assertSame($viewHelperResolver, $result);

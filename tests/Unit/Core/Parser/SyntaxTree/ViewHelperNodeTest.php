@@ -35,7 +35,7 @@ class ViewHelperNodeTest extends UnitTestCase
     public function setUp(): void
     {
         $this->renderingContext = new RenderingContextFixture();
-        $this->mockViewHelperResolver = $this->getMock(ViewHelperResolver::class, ['resolveViewHelperClassName', 'createViewHelperInstanceFromClassName', 'getArgumentDefinitionsForViewHelper']);
+        $this->mockViewHelperResolver = $this->createMock(ViewHelperResolver::class);
         $this->mockViewHelperResolver->expects(self::any())->method('resolveViewHelperClassName')->with('f', 'vh')->willReturn(TestViewHelper::class);
         $this->mockViewHelperResolver->expects(self::any())->method('createViewHelperInstanceFromClassName')->with(TestViewHelper::class)->willReturn(new TestViewHelper());
         $this->mockViewHelperResolver->expects(self::any())->method('getArgumentDefinitionsForViewHelper')->willReturn([
@@ -60,7 +60,7 @@ class ViewHelperNodeTest extends UnitTestCase
      */
     public function testEvaluateCallsInvoker(): void
     {
-        $invoker = $this->getMock(ViewHelperInvoker::class, ['invoke']);
+        $invoker = $this->createMock(ViewHelperInvoker::class);
         $invoker->expects(self::once())->method('invoke')->willReturn('test');
         $this->renderingContext->setViewHelperInvoker($invoker);
         $node = new ViewHelperNode($this->renderingContext, 'f', 'vh', ['foo' => 'bar'], new ParsingState());

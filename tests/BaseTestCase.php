@@ -88,12 +88,7 @@ abstract class BaseTestCase extends TestCase
     }
 
     /**
-     * Returns a mock object which allows for calling protected methods and access
-     * of protected properties.
-     *
-     * @template T of object
-     * @param class-string<T> $originalClassName Full qualified name of the original class
-     * @return MockObject&T
+     * @deprecated Unused. Will be removed. Use createMock() or getMockBuilder() directly.
      */
     protected function getMock(
         string $originalClassName,
@@ -121,12 +116,6 @@ abstract class BaseTestCase extends TestCase
     }
 
     /**
-     * Returns a mock object which allows for calling protected methods and access
-     * of protected properties.
-     *
-     * @template T of object
-     * @param class-string<T> $originalClassName Full qualified name of the original class
-     * @return MockObject&AccessibleObjectInterface&T
      * @deprecated Unused. Will be removed.
      */
     protected function getAccessibleMockForAbstractClass(

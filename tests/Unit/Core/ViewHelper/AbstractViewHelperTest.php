@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
-use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
@@ -188,8 +188,8 @@ class AbstractViewHelperTest extends UnitTestCase
      */
     public function setRenderingContextShouldSetInnerVariables(): void
     {
-        $templateVariableContainer = $this->getMock(StandardVariableProvider::class);
-        $viewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class);
+        $templateVariableContainer = $this->createMock(VariableProviderInterface::class);
+        $viewHelperVariableContainer = $this->createMock(ViewHelperVariableContainer::class);
 
         $renderingContext = new RenderingContext();
         $renderingContext->setVariableProvider($templateVariableContainer);

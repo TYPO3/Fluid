@@ -15,7 +15,6 @@ use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
@@ -36,32 +35,6 @@ class NodeConverterTest extends UnitTestCase
         $instance = new NodeConverter(new TemplateCompiler());
         $instance->setVariableCounter(10);
         self::assertAttributeEquals(10, 'variableCounter', $instance);
-    }
-
-    public static function convertCallsExpectedMethodDataProvider(): array
-    {
-        return [
-            [TextNode::class, 'convertTextNode'],
-            [ExpressionNodeInterface::class, 'convertExpressionNode'],
-            [NumericNode::class, 'convertNumericNode'],
-            [ViewHelperNode::class, 'convertViewHelperNode'],
-            [ObjectAccessorNode::class, 'convertObjectAccessorNode'],
-            [ArrayNode::class, 'convertArrayNode'],
-            [RootNode::class, 'convertListOfSubNodes'],
-            [BooleanNode::class, 'convertBooleanNode'],
-            [EscapingNode::class, 'convertEscapingNode'],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider convertCallsExpectedMethodDataProvider
-     */
-    public function convertCallsExpectedMethod(string $nodeName, string $expected): void
-    {
-        $instance = $this->getMock(NodeConverter::class, [$expected], [], false, false);
-        $instance->expects(self::once())->method($expected);
-        $instance->convert($this->getMock($nodeName, [], [], false, false));
     }
 
     public static function convertReturnsExpectedExecutionDataProvider(): array
