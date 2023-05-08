@@ -55,36 +55,44 @@ abstract class BaseTestCase extends TestCase
         return $builder->getMock();
     }
 
-    public static function assertAttributeEquals($expected, string $actualAttributeName, $actualClassOrObject, string $message = '', float $delta = 0.0, int $maxDepth = 10, bool $canonicalize = false, bool $ignoreCase = false): void
-    {
-        self::assertEquals($expected, self::extractNonPublicAttribute($actualClassOrObject, $actualAttributeName));
-    }
-
-    public static function assertAttributeSame($expected, string $actualAttributeName, $actualClassOrObject, string $message = '', float $delta = 0.0, int $maxDepth = 10, bool $canonicalize = false, bool $ignoreCase = false): void
-    {
-        self::assertSame($expected, self::extractNonPublicAttribute($actualClassOrObject, $actualAttributeName));
-    }
-
-    public static function assertAttributeContains($needle, string $haystackAttributeName, $haystackClassOrObject, string $message = '', bool $ignoreCase = false, bool $checkForObjectIdentity = true, bool $checkForNonObjectIdentity = false): void
-    {
-        self::assertContains($needle, self::extractNonPublicAttribute($haystackClassOrObject, $haystackAttributeName));
-    }
-
-    public static function assertAttributeNotEmpty(string $haystackAttributeName, $haystackClassOrObject, string $message = ''): void
-    {
-        self::assertNotEmpty(self::extractNonPublicAttribute($haystackClassOrObject, $haystackAttributeName));
-    }
-
-    public static function assertAttributeInstanceOf(string $expected, string $attributeName, $classOrObject, string $message = ''): void
-    {
-        self::assertInstanceOf($expected, self::extractNonPublicAttribute($classOrObject, $attributeName));
-    }
-
-    private static function extractNonPublicAttribute($actualClassOrObject, string $actualAttributeName)
+    protected static function assertAttributeEquals($expected, string $actualAttributeName, $actualClassOrObject): void
     {
         $reflection = new \ReflectionClass($actualClassOrObject);
         $attribute = $reflection->getProperty($actualAttributeName);
-        return $attribute->getValue($actualClassOrObject);
+        $value = $attribute->getValue($actualClassOrObject);
+        self::assertEquals($expected, $value);
+    }
+
+    protected static function assertAttributeSame($expected, string $actualAttributeName, $actualClassOrObject): void
+    {
+        $reflection = new \ReflectionClass($actualClassOrObject);
+        $attribute = $reflection->getProperty($actualAttributeName);
+        $value = $attribute->getValue($actualClassOrObject);
+        self::assertSame($expected, $value);
+    }
+
+    protected static function assertAttributeContains($needle, string $haystackAttributeName, $haystackClassOrObject): void
+    {
+        $reflection = new \ReflectionClass($haystackClassOrObject);
+        $attribute = $reflection->getProperty($haystackAttributeName);
+        $value = $attribute->getValue($haystackClassOrObject);
+        self::assertContains($needle, $value);
+    }
+
+    protected static function assertAttributeNotEmpty(string $haystackAttributeName, $haystackClassOrObject): void
+    {
+        $reflection = new \ReflectionClass($haystackClassOrObject);
+        $attribute = $reflection->getProperty($haystackAttributeName);
+        $value = $attribute->getValue($haystackClassOrObject);
+        self::assertNotEmpty($value);
+    }
+
+    protected static function assertAttributeInstanceOf(string $expected, string $attributeName, $classOrObject): void
+    {
+        $reflection = new \ReflectionClass($classOrObject);
+        $attribute = $reflection->getProperty($attributeName);
+        $value = $attribute->getValue($classOrObject);
+        self::assertInstanceOf($expected, $value);
     }
 
     /**
