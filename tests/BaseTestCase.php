@@ -79,6 +79,9 @@ abstract class BaseTestCase extends TestCase
         self::assertContains($needle, $value);
     }
 
+    /**
+     * @deprecated Unused. Will be removed.
+     */
     protected static function assertAttributeNotEmpty(string $haystackAttributeName, $haystackClassOrObject): void
     {
         $reflection = new \ReflectionClass($haystackClassOrObject);
