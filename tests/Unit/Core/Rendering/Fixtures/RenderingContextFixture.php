@@ -7,7 +7,7 @@ declare(strict_types=1);
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures;
 
 use PHPUnit\Framework\MockObject\Generator;
 use PHPUnit\Framework\MockObject\MockObject;

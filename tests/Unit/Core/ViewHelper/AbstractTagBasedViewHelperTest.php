@@ -12,22 +12,11 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class AbstractTagBasedViewHelperTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
-    public function testSetTagBuilderSetsTagBuilder(): void
-    {
-        $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
-        $tagBuilder = new TagBuilder('div');
-        $viewHelper->setTagBuilder($tagBuilder);
-        self::assertAttributeSame($tagBuilder, 'tag', $viewHelper);
-    }
-
     /**
      * @test
      */

@@ -63,6 +63,9 @@ abstract class BaseTestCase extends TestCase
         self::assertEquals($expected, $value);
     }
 
+    /**
+     * @deprecated Unused. Will be removed.
+     */
     protected static function assertAttributeSame($expected, string $actualAttributeName, $actualClassOrObject): void
     {
         $reflection = new \ReflectionClass($actualClassOrObject);

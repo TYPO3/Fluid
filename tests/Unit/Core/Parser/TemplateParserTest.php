@@ -30,7 +30,7 @@ use TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\ViewHelpers\CommentViewHelper;
 
@@ -113,12 +113,14 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function testPublicGetAndSetEscapingEnabledWorks(): void
+    public function isEscapingEnabledReturnsPreviouslySetEscapingEnabled(): void
     {
         $subject = new TemplateParser();
-        $default = $subject->isEscapingEnabled();
-        $subject->setEscapingEnabled(!$default);
-        self::assertAttributeSame(!$default, 'escapingEnabled', $subject);
+        self::assertTrue($subject->isEscapingEnabled());
+        $subject->setEscapingEnabled(false);
+        self::assertFalse($subject->isEscapingEnabled());
+        $subject->setEscapingEnabled(true);
+        self::assertTrue($subject->isEscapingEnabled());
     }
 
     /**
