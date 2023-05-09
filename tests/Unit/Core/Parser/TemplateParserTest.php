@@ -52,7 +52,7 @@ class TemplateParserTest extends UnitTestCase
         $subject = new TemplateParser();
         $subject->setRenderingContext($context);
         $method = new \ReflectionMethod($subject, 'initializeViewHelperAndAddItToStack');
-        $result = $method->invokeArgs($subject, [new ParsingState(), 'f', 'render', []]);
+        $result = $method->invoke($subject, new ParsingState(), 'f', 'render', []);
         self::assertNull($result);
     }
 
@@ -70,7 +70,7 @@ class TemplateParserTest extends UnitTestCase
         $subject = new TemplateParser();
         $subject->setRenderingContext($context);
         $method = new \ReflectionMethod($subject, 'initializeViewHelperAndAddItToStack');
-        $result = $method->invokeArgs($subject, [new ParsingState(), 'f', 'render', []]);
+        $result = $method->invoke($subject, new ParsingState(), 'f', 'render', []);
         self::assertNull($result);
     }
 
@@ -86,7 +86,7 @@ class TemplateParserTest extends UnitTestCase
         $subject = new TemplateParser();
         $subject->setRenderingContext($context);
         $method = new \ReflectionMethod($subject, 'closingViewHelperTagHandler');
-        $result = $method->invokeArgs($subject, [new ParsingState(), 'f', 'render']);
+        $result = $method->invoke($subject, new ParsingState(), 'f', 'render');
         self::assertFalse($result);
     }
 
@@ -104,7 +104,7 @@ class TemplateParserTest extends UnitTestCase
         $subject = new TemplateParser();
         $subject->setRenderingContext($context);
         $method = new \ReflectionMethod($subject, 'closingViewHelperTagHandler');
-        $result = $method->invokeArgs($subject, [new ParsingState(), 'f', 'render']);
+        $result = $method->invoke($subject, new ParsingState(), 'f', 'render');
         self::assertFalse($result);
     }
 
@@ -132,7 +132,7 @@ class TemplateParserTest extends UnitTestCase
         $subject = new TemplateParser();
         $subject->setRenderingContext($renderingContext);
         $method = new \ReflectionMethod($subject, 'buildObjectTree');
-        $method->invokeArgs($subject, [['<f:render>'], TemplateParser::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS]);
+        $method->invoke($subject, ['<f:render>'], TemplateParser::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS);
     }
 
     /**
@@ -589,7 +589,7 @@ class TemplateParserTest extends UnitTestCase
         $subject = new TemplateParser();
         $subject->setRenderingContext($context);
         $method = new \ReflectionMethod($subject, 'recursiveArrayHandler');
-        $result = $method->invokeArgs($subject, [$state, $string]);
+        $result = $method->invoke($subject, $state, $string);
 
         self::assertEquals($expected, $result);
     }

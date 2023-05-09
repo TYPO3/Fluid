@@ -54,7 +54,7 @@ class AbstractNodeTest extends UnitTestCase
         $subject = $this->getMockBuilder(AbstractNode::class)->onlyMethods(['evaluate'])->getMock();
         $subject->addChildNode($childNode);
         $method = new \ReflectionMethod($subject, 'evaluateChildNode');
-        $method->invokeArgs($subject, [$childNode, $renderingContextMock, true]);
+        $method->invoke($subject, $childNode, $renderingContextMock, true);
     }
 
     /**
@@ -69,7 +69,7 @@ class AbstractNodeTest extends UnitTestCase
         $subject = $this->getMockBuilder(AbstractNode::class)->onlyMethods(['evaluate'])->getMock();
         $subject->addChildNode($childNode);
         $method = new \ReflectionMethod($subject, 'evaluateChildNode');
-        $result = $method->invokeArgs($subject, [$childNode, $renderingContextMock, true]);
+        $result = $method->invoke($subject, $childNode, $renderingContextMock, true);
         self::assertEquals('foobar', $result);
     }
 
@@ -87,7 +87,7 @@ class AbstractNodeTest extends UnitTestCase
         $childNode->expects(self::once())->method('evaluate')->with($renderingContextMock)->willReturn('foo');
         $subject->addChildNode($child2);
         $method = new \ReflectionMethod($subject, 'evaluateChildNodes');
-        $result = $method->invokeArgs($subject, [$renderingContextMock, true]);
+        $result = $method->invoke($subject, $renderingContextMock, true);
         self::assertEquals('foobar', $result);
     }
 
