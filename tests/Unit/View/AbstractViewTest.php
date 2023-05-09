@@ -9,19 +9,18 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\View;
 
+use TYPO3Fluid\Fluid\Tests\Unit\View\Fixtures\AbstractViewTestFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
-use TYPO3Fluid\Fluid\View\AbstractView;
 
 class AbstractViewTest extends UnitTestCase
 {
     /**
      * @test
      */
-    public function testParentRenderMethodReturnsEmptyString(): void
+    public function renderReturnsEmptyString(): void
     {
-        $instance = $this->getMockForAbstractClass(AbstractView::class);
-        $result = $instance->render();
-        self::assertEquals('', $result);
+        $subject = new AbstractViewTestFixture();
+        self::assertSame('', $subject->render());
     }
 
     /**
@@ -29,9 +28,9 @@ class AbstractViewTest extends UnitTestCase
      */
     public function testAssignsVariableAndReturnsSelf(): void
     {
-        $mock = $this->getMockForAbstractClass(AbstractView::class);
-        $mock->assign('test', 'foobar');
-        self::assertAttributeEquals(['test' => 'foobar'], 'variables', $mock);
+        $subject = new AbstractViewTestFixture();
+        $subject->assign('test', 'foobar');
+        self::assertSame(['test' => 'foobar'], $subject->variables);
     }
 
     /**
@@ -39,8 +38,8 @@ class AbstractViewTest extends UnitTestCase
      */
     public function testAssignsMultipleVariablesAndReturnsSelf(): void
     {
-        $mock = $this->getMockForAbstractClass(AbstractView::class);
-        $mock->assignMultiple(['test' => 'foobar', 'baz' => 'barfoo']);
-        self::assertAttributeEquals(['test' => 'foobar', 'baz' => 'barfoo'], 'variables', $mock);
+        $subject = new AbstractViewTestFixture();
+        $subject->assignMultiple(['test' => 'foobar', 'baz' => 'barfoo']);
+        self::assertSame(['test' => 'foobar', 'baz' => 'barfoo'], $subject->variables);
     }
 }

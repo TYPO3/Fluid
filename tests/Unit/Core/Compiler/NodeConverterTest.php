@@ -30,11 +30,12 @@ class NodeConverterTest extends UnitTestCase
     /**
      * @test
      */
-    public function setVariableCounterSetsVariableCounter(): void
+    public function variableNameReturnsIncrementedName(): void
     {
-        $instance = new NodeConverter(new TemplateCompiler());
-        $instance->setVariableCounter(10);
-        self::assertAttributeEquals(10, 'variableCounter', $instance);
+        $subject = new NodeConverter(new TemplateCompiler());
+        $subject->setVariableCounter(10);
+        self::assertSame('$test10', $subject->variableName('test'));
+        self::assertSame('$test11', $subject->variableName('test'));
     }
 
     public static function convertReturnsExpectedExecutionDataProvider(): array
@@ -120,8 +121,8 @@ class NodeConverterTest extends UnitTestCase
      */
     public function convertReturnsExpectedExecution(NodeInterface $node, string $expected): void
     {
-        $instance = new NodeConverter(new TemplateCompiler());
-        $result = $instance->convert($node);
+        $subject = new NodeConverter(new TemplateCompiler());
+        $result = $subject->convert($node);
         self::assertEquals($expected, $result['execution']);
     }
 
@@ -130,8 +131,8 @@ class NodeConverterTest extends UnitTestCase
      */
     public function instanceOfAbstractMockReturnsEmptyStringConvertExecution(): void
     {
-        $instance = new NodeConverter(new TemplateCompiler());
-        $result = $instance->convert($this->getMockBuilder(NodeInterface::class)->getMockForAbstractClass());
+        $subject = new NodeConverter(new TemplateCompiler());
+        $result = $subject->convert($this->getMockBuilder(NodeInterface::class)->getMockForAbstractClass());
         self::assertEquals('', $result['execution']);
     }
 }
