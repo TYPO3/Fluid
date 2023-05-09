@@ -17,7 +17,7 @@ use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\TestViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers\MutableTestViewHelper;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers\TagBasedTestViewHelper;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
 class ViewHelperEscapingTest extends BaseTestCase

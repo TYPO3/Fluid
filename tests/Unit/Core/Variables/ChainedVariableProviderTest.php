@@ -19,7 +19,6 @@ class ChainedVariableProviderTest extends UnitTestCase
     {
         $a = new StandardVariableProvider(['a' => 'a']);
         $b = new StandardVariableProvider(['a' => 'b', 'b' => 'b']);
-
         return [
             [['a' => 'local'], [$a, $b], 'a', 'local'],
             [[], [$a, $b], 'a', 'a'],
@@ -31,29 +30,28 @@ class ChainedVariableProviderTest extends UnitTestCase
     }
 
     /**
-     * @param mixed $expected
      * @dataProvider getGetTestValues
      * @test
      */
-    public function testGet(array $local, array $chain, string $path, $expected): void
+    public function getReturnsPreviouslySetSourceVariables(array $local, array $chain, string $path, string|null $expected): void
     {
-        $chainedProvider = new ChainedVariableProvider($chain);
-        $chainedProvider->setSource($local);
-        self::assertEquals($expected, $chainedProvider->get($path));
+        $subject = new ChainedVariableProvider($chain);
+        $subject->setSource($local);
+        self::assertEquals($expected, $subject->get($path));
     }
 
     /**
-     * @param mixed $expected
      * @dataProvider getGetTestValues
+     * @test
      */
-    public function testGetByPath(array $local, array $chain, string $path, $expected): void
+    public function getByPathReturnsPreviouslySetSourceVariables(array $local, array $chain, string $path, string|null $expected): void
     {
-        $chainedProvider = new ChainedVariableProvider($chain);
-        $chainedProvider->setSource($local);
-        self::assertEquals($expected, $chainedProvider->getByPath($path));
+        $subject = new ChainedVariableProvider($chain);
+        $subject->setSource($local);
+        self::assertEquals($expected, $subject->getByPath($path));
     }
 
-    public static function getGetAllTestValues(): array
+    public static function getAllReturnsPreviouslySetSourceVariablesDataProvider(): array
     {
         $a = new StandardVariableProvider(['a' => 'a']);
         $b = new StandardVariableProvider(['a' => 'b', 'b' => 'b']);
@@ -66,21 +64,20 @@ class ChainedVariableProviderTest extends UnitTestCase
     }
 
     /**
-     * @dataProvider getGetAllTestValues
+     * @dataProvider getAllReturnsPreviouslySetSourceVariablesDataProvider
      * @test
      */
-    public function testGetAll(array $local, array $chain, array $expected): void
+    public function getAllReturnsPreviouslySetSourceVariables(array $local, array $chain, array $expected): void
     {
-        $chainedProvider = new ChainedVariableProvider($chain);
-        $chainedProvider->setSource($local);
-        self::assertEquals($expected, $chainedProvider->getAll());
+        $subject = new ChainedVariableProvider($chain);
+        $subject->setSource($local);
+        self::assertEquals($expected, $subject->getAll());
     }
 
-    public static function getGetAllIdentifiersTestValues(): array
+    public static function getAllIdentifiersReturnsPreviouslySetSourceIdentifiersDataProvider(): array
     {
         $a = new StandardVariableProvider(['a' => 'a']);
         $b = new StandardVariableProvider(['a' => 'b', 'b' => 'b']);
-
         return [
             [['a' => 'local'], [$a, $b], ['a', 'b']],
             [[], [$a, $b], ['a', 'b']],
@@ -90,24 +87,24 @@ class ChainedVariableProviderTest extends UnitTestCase
     }
 
     /**
-     * @dataProvider getGetAllIdentifiersTestValues
+     * @dataProvider getAllIdentifiersReturnsPreviouslySetSourceIdentifiersDataProvider
      * @test
      */
-    public function testGetAllIdentifiers(array $local, array $chain, array $expected): void
+    public function getAllIdentifiersReturnsPreviouslySetSourceIdentifiers(array $local, array $chain, array $expected): void
     {
-        $chainedProvider = new ChainedVariableProvider($chain);
-        $chainedProvider->setSource($local);
-        self::assertEquals($expected, $chainedProvider->getAllIdentifiers());
+        $subject = new ChainedVariableProvider($chain);
+        $subject->setSource($local);
+        self::assertEquals($expected, $subject->getAllIdentifiers());
     }
 
     /**
      * @test
      */
-    public function testGetScopeCopy(): void
+    public function getScopeCopyKeepsExistingVariableProviders(): void
     {
-        $chain = [new StandardVariableProvider(), new StandardVariableProvider()];
-        $chainedProvider = new ChainedVariableProvider($chain);
-        $copy = $chainedProvider->getScopeCopy([]);
-        self::assertAttributeSame($chain, 'variableProviders', $copy);
+        $chain = [new StandardVariableProvider(['a' => 'a']), new StandardVariableProvider()];
+        $subject = new ChainedVariableProvider($chain);
+        $copy = $subject->getScopeCopy([]);
+        self::assertSame('a', $copy->get('a'));
     }
 }

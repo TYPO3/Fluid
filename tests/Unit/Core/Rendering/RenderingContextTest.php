@@ -15,7 +15,6 @@ use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
-use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
@@ -26,35 +25,9 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 class RenderingContextTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
-    public function getTemplateProcessorsReturnsExpectedResult(): void
-    {
-        $get = [$this->createMock(TemplateProcessorInterface::class), $this->createMock(TemplateProcessorInterface::class)];
-        $view = new TemplateView();
-        $subject = $this->getAccessibleMock(RenderingContext::class, [], [$view]);
-        $subject->_set('templateProcessors', $get);
-        $getter = 'get' . ucfirst('templateProcessors');
-        self::assertSame($get, $subject->$getter());
-    }
-
-    /**
-     * @test
-     */
-    public function setTemplateProcessorsSetsAttribute(): void
-    {
-        $set = [$this->createMock(TemplateProcessorInterface::class), $this->createMock(TemplateProcessorInterface::class)];
-        $subject = new RenderingContext();
-        $setter = 'set' . ucfirst('templateProcessors');
-        $subject->$setter($set);
-        self::assertAttributeSame($set, 'templateProcessors', $subject);
-    }
-
-    public static function simpleTypeDataProvider(): array
+    public static function gettersReturnPreviouslySetValuesDataProvider(): array
     {
         return [
-            ['variableProvider', new StandardVariableProvider(['foo' => 'bar'])],
             ['controllerName', 'foobar-controllerName'],
             ['controllerAction', 'foobar-controllerAction'],
             ['expressionNodeTypes', ['Foo', 'Bar']],
@@ -63,90 +36,55 @@ class RenderingContextTest extends UnitTestCase
 
     /**
      * @test
-     * @param mixed $expected
-     * @dataProvider simpleTypeDataProvider
+     * @dataProvider gettersReturnPreviouslySetValuesDataProvider
      */
-    public function getSimpleTypesReturnsExpectedResult(string $property, $expected): void
+    public function gettersReturnPreviouslySetValues(string $property, string|array $expected): void
     {
         $view = new TemplateView();
         $subject = $this->getAccessibleMock(RenderingContext::class, [], [$view]);
-        $subject->_set($property, $expected);
+        $setter = 'set' . ucfirst($property);
+        $subject->$setter($expected);
         $getter = 'get' . ucfirst($property);
         self::assertSame($expected, $subject->$getter());
     }
 
-    /**
-     * @test
-     * @param mixed $expected
-     * @dataProvider simpleTypeDataProvider
-     */
-    public function setSimpleTypeSetsAttribute(string $property, $expected): void
-    {
-        $subject = new RenderingContext();
-        $setter = 'set' . ucfirst($property);
-        $subject->$setter($expected);
-        self::assertAttributeSame($expected, $property, $subject);
-    }
-
-    public static function objectTypeDataProvider(): array
+    public static function gettersReturnPreviouslySetObjectsDataProvider(): array
     {
         return [
+            ['variableProvider', VariableProviderInterface::class],
             ['viewHelperResolver', ViewHelperResolver::class],
             ['viewHelperInvoker', ViewHelperInvoker::class],
             ['templatePaths', TemplatePaths::class],
             ['cache', SimpleFileCache::class],
             ['templateParser', TemplateParser::class],
             ['templateCompiler', TemplateCompiler::class],
+            ['viewHelperVariableContainer', ViewHelperVariableContainer::class]
         ];
     }
 
     /**
      * @test
-     * @dataProvider objectTypeDataProvider
+     * @dataProvider gettersReturnPreviouslySetObjectsDataProvider
      */
-    public function getObjectTypesReturnsExpectedResult(string $property, string $expected): void
+    public function gettersReturnPreviouslySetObjects(string $property, string $expected): void
     {
         $expected = $this->createMock($expected);
-        $view = new TemplateView();
-        $subject = $this->getAccessibleMock(RenderingContext::class, [], [$view]);
-        $subject->_set($property, $expected);
+        $subject = new RenderingContext();
+        $setter = 'set' . ucfirst($property);
+        $subject->$setter($expected);
         $getter = 'get' . ucfirst($property);
         self::assertSame($expected, $subject->$getter());
     }
 
     /**
      * @test
-     * @dataProvider objectTypeDataProvider
      */
-    public function setObjectTypeSetsAttribute(string $property, string $expected): void
+    public function getTemplateProcessorsReturnsPreviouslySetTemplateProcessor(): void
     {
-        $expected = $this->createMock($expected);
+        $processors = [$this->createMock(TemplateProcessorInterface::class), $this->createMock(TemplateProcessorInterface::class)];
         $subject = new RenderingContext();
-        $setter = 'set' . ucfirst($property);
-        $subject->$setter($expected);
-        self::assertAttributeSame($expected, $property, $subject);
-    }
-
-    /**
-     * @test
-     */
-    public function templateVariableContainerCanBeReadCorrectly(): void
-    {
-        $templateVariableContainer = $this->createMock(VariableProviderInterface::class);
-        $renderingContextFixture = new RenderingContextFixture();
-        $renderingContextFixture->setVariableProvider($templateVariableContainer);
-        self::assertSame($renderingContextFixture->getVariableProvider(), $templateVariableContainer, 'Template Variable Container could not be read out again.');
-    }
-
-    /**
-     * @test
-     */
-    public function viewHelperVariableContainerCanBeReadCorrectly(): void
-    {
-        $viewHelperVariableContainer = $this->createMock(ViewHelperVariableContainer::class);
-        $renderingContextFixture = new RenderingContextFixture();
-        $renderingContextFixture->setViewHelperVariableContainer($viewHelperVariableContainer);
-        self::assertSame($viewHelperVariableContainer, $renderingContextFixture->getViewHelperVariableContainer());
+        $subject->setTemplateProcessors($processors);
+        self::assertSame($processors, $subject->getTemplateProcessors());
     }
 
     /**

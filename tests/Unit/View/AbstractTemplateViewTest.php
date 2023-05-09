@@ -16,7 +16,7 @@ use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\AbstractTemplateView;
 use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;

@@ -12,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\TemplateProcessor;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\EscapingModifierTemplateProcessor;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class EscapingModifierTemplateProcessorTest extends UnitTestCase
