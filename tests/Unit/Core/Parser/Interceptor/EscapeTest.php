@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Interceptor;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
@@ -17,52 +16,24 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Tests\AccessibleObjectInterface;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class EscapeTest extends UnitTestCase
 {
     /**
-     * @var Escape&MockObject&AccessibleObjectInterface
-     */
-    private $escapeInterceptor;
-
-    /**
-     * @var AbstractViewHelper|MockObject
-     */
-    private $mockViewHelper;
-
-    /**
-     * @var ViewHelperNode|MockObject
-     */
-    private $mockNode;
-
-    /**
-     * @var ParsingState|MockObject
-     */
-    private $mockParsingState;
-
-    public function setUp(): void
-    {
-        $this->escapeInterceptor = $this->getAccessibleMock(Escape::class, []);
-        $this->mockViewHelper = $this->getMockBuilder(AbstractViewHelper::class)->disableOriginalConstructor()->getMock();
-        $this->mockNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();
-        $this->mockParsingState = $this->getMockBuilder(ParsingState::class)
-            ->onlyMethods([])->disableOriginalConstructor()->getMock();
-    }
-
-    /**
      * @test
      */
     public function processDoesNotDisableEscapingInterceptorByDefault(): void
     {
-        $interceptorPosition = InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER;
-        $this->mockViewHelper->expects(self::once())->method('isChildrenEscapingEnabled')->willReturn(true);
-        $this->mockNode->expects(self::once())->method('getUninitializedViewHelper')->willReturn($this->mockViewHelper);
-
-        self::assertSame(0, $this->escapeInterceptor->_get('viewHelperNodesWhichDisableTheInterceptor'));
-        $this->escapeInterceptor->process($this->mockNode, $interceptorPosition, $this->mockParsingState);
-        self::assertSame(0, $this->escapeInterceptor->_get('viewHelperNodesWhichDisableTheInterceptor'));
+        $viewHelperMock = $this->createMock(AbstractViewHelper::class);
+        $viewHelperMock->expects(self::once())->method('isChildrenEscapingEnabled')->willReturn(true);
+        $viewHelperNodeMock = $this->createMock(ViewHelperNode::class);
+        $viewHelperNodeMock->expects(self::once())->method('getUninitializedViewHelper')->willReturn($viewHelperMock);
+        $subject = new Escape();
+        $property = new \ReflectionProperty($subject, 'viewHelperNodesWhichDisableTheInterceptor');
+        self::assertSame(0, $property->getValue($subject));
+        $subject->process($viewHelperNodeMock, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, new ParsingState());
+        self::assertSame(0, $property->getValue($subject));
     }
 
     /**
@@ -70,13 +41,15 @@ class EscapeTest extends UnitTestCase
      */
     public function processDisablesEscapingInterceptorIfViewHelperDisablesIt(): void
     {
-        $interceptorPosition = InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER;
-        $this->mockViewHelper->expects(self::once())->method('isChildrenEscapingEnabled')->willReturn(false);
-        $this->mockNode->expects(self::once())->method('getUninitializedViewHelper')->willReturn($this->mockViewHelper);
-
-        self::assertSame(0, $this->escapeInterceptor->_get('viewHelperNodesWhichDisableTheInterceptor'));
-        $this->escapeInterceptor->process($this->mockNode, $interceptorPosition, $this->mockParsingState);
-        self::assertSame(1, $this->escapeInterceptor->_get('viewHelperNodesWhichDisableTheInterceptor'));
+        $viewHelperMock = $this->createMock(AbstractViewHelper::class);
+        $viewHelperMock->expects(self::once())->method('isChildrenEscapingEnabled')->willReturn(false);
+        $viewHelperNodeMock = $this->createMock(ViewHelperNode::class);
+        $viewHelperNodeMock->expects(self::once())->method('getUninitializedViewHelper')->willReturn($viewHelperMock);
+        $subject = new Escape();
+        $property = new \ReflectionProperty($subject, 'viewHelperNodesWhichDisableTheInterceptor');
+        self::assertSame(0, $property->getValue($subject));
+        $subject->process($viewHelperNodeMock, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, new ParsingState());
+        self::assertSame(1, $property->getValue($subject));
     }
 
     /**
@@ -84,14 +57,15 @@ class EscapeTest extends UnitTestCase
      */
     public function processReenablesEscapingInterceptorOnClosingViewHelperTagIfItWasDisabledBefore(): void
     {
-        $interceptorPosition = InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER;
-        $this->mockViewHelper->expects(self::once())->method('isOutputEscapingEnabled')->willReturn(false);
-        $this->mockNode->expects(self::any())->method('getUninitializedViewHelper')->willReturn($this->mockViewHelper);
-
-        $this->escapeInterceptor->_set('viewHelperNodesWhichDisableTheInterceptor', 1);
-
-        $this->escapeInterceptor->process($this->mockNode, $interceptorPosition, $this->mockParsingState);
-        self::assertSame(0, $this->escapeInterceptor->_get('viewHelperNodesWhichDisableTheInterceptor'));
+        $viewHelperMock = $this->createMock(AbstractViewHelper::class);
+        $viewHelperMock->expects(self::once())->method('isOutputEscapingEnabled')->willReturn(false);
+        $viewHelperNodeMock = $this->createMock(ViewHelperNode::class);
+        $viewHelperNodeMock->expects(self::any())->method('getUninitializedViewHelper')->willReturn($viewHelperMock);
+        $subject = new Escape();
+        $property = new \ReflectionProperty($subject, 'viewHelperNodesWhichDisableTheInterceptor');
+        $property->setValue($subject, 1);
+        $subject->process($viewHelperNodeMock, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, new ParsingState());
+        self::assertSame(0, $property->getValue($subject));
     }
 
     /**
@@ -99,9 +73,8 @@ class EscapeTest extends UnitTestCase
      */
     public function processWrapsCurrentViewHelperInEscapeNode(): void
     {
-        $interceptorPosition = InterceptorInterface::INTERCEPT_OBJECTACCESSOR;
         $mockNode = $this->createMock(ObjectAccessorNode::class);
-        $actualResult = $this->escapeInterceptor->process($mockNode, $interceptorPosition, $this->mockParsingState);
-        self::assertInstanceOf(EscapingNode::class, $actualResult);
+        $subject = new Escape();
+        self::assertInstanceOf(EscapingNode::class, $subject->process($mockNode, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, new ParsingState()));
     }
 }

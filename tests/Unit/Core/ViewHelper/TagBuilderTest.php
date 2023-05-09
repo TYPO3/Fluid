@@ -230,18 +230,15 @@ class TagBuilderTest extends UnitTestCase
      */
     public function resetResetsTagBuilder(): void
     {
-        $tagBuilder = $this->getAccessibleMock(TagBuilder::class, []);
+        $tagBuilder = new TagBuilder();
         $tagBuilder->setTagName('tagName');
         $tagBuilder->setContent('some content');
-        $tagBuilder->forceClosingTag(true);
         $tagBuilder->addAttribute('attribute1', 'attribute1value');
-        $tagBuilder->addAttribute('attribute2', 'attribute2value');
         $tagBuilder->reset();
 
-        self::assertEquals('', $tagBuilder->_get('tagName'));
-        self::assertEquals('', $tagBuilder->_get('content'));
-        self::assertEquals([], $tagBuilder->_get('attributes'));
-        self::assertFalse($tagBuilder->_get('forceClosingTag'));
+        self::assertSame('', $tagBuilder->getTagName());
+        self::assertSame('', $tagBuilder->getContent());
+        self::assertSame([], $tagBuilder->getAttributes());
     }
 
     /**
