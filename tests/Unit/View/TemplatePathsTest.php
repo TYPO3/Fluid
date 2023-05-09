@@ -15,7 +15,7 @@ use TYPO3Fluid\Fluid\View\TemplatePaths;
 
 class TemplatePathsTest extends BaseTestCase
 {
-    public static function getSanitizePathTestValues(): array
+    public static function sanitizePathDataProvider(): array
     {
         return [
             ['', ''],
@@ -32,20 +32,18 @@ class TemplatePathsTest extends BaseTestCase
     }
 
     /**
-     * @param string|array $input
-     * @param string|array $expected
      * @test
-     * @dataProvider getSanitizePathTestValues
+     * @dataProvider sanitizePathDataProvider
      */
-    public function testSanitizePath($input, $expected): void
+    public function sanitizePath(string|array $input, string|array $expected): void
     {
-        $instance = new TemplatePaths();
-        $method = new \ReflectionMethod($instance, 'sanitizePath');
-        $output = $method->invokeArgs($instance, [$input]);
-        self::assertEquals($expected, $output);
+        $subject = new TemplatePaths();
+        $method = new \ReflectionMethod($subject, 'sanitizePath');
+        $output = $method->invokeArgs($subject, [$input]);
+        self::assertSame($expected, $output);
     }
 
-    public static function getSanitizePathsTestValues(): array
+    public static function sanitizePathsDataProvider(): array
     {
         return [
             [['/foo/bar/baz', 'C:\\foo\\bar\\baz'], ['/foo/bar/baz', 'C:/foo/bar/baz']],
@@ -56,37 +54,24 @@ class TemplatePathsTest extends BaseTestCase
 
     /**
      * @test
-     * @dataProvider getSanitizePathsTestValues
+     * @dataProvider sanitizePathsDataProvider
      */
-    public function testSanitizePaths(array $input, array $expected): void
+    public function sanitizePaths(array $input, array $expected): void
     {
-        $instance = new TemplatePaths();
-        $method = new \ReflectionMethod($instance, 'sanitizePaths');
-        $output = $method->invokeArgs($instance, [$input]);
-        self::assertEquals($expected, $output);
+        $subject = new TemplatePaths();
+        $method = new \ReflectionMethod($subject, 'sanitizePaths');
+        $output = $method->invokeArgs($subject, [$input]);
+        self::assertSame($expected, $output);
     }
 
     /**
      * @test
      */
-    public function setsLayoutPathAndFilename(): void
+    public function getLayoutPathAndFilenameReturnsPreviouslySetLayoutPathAndFilename(): void
     {
-        $subject = $this->getMockBuilder(TemplatePaths::class)->onlyMethods(['sanitizePath'])->getMock();
-        $subject->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
-        $subject->setLayoutPathAndFilename('foobar');
-        self::assertAttributeEquals('foobar', 'layoutPathAndFilename', $subject);
-        self::assertEquals('foobar', $subject->getLayoutPathAndFilename());
-    }
-
-    /**
-     * @test
-     */
-    public function setsTemplatePathAndFilename(): void
-    {
-        $subject = $this->getMockBuilder(TemplatePaths::class)->onlyMethods(['sanitizePath'])->getMock();
-        $subject->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
-        $subject->setTemplatePathAndFilename('foobar');
-        self::assertAttributeEquals('foobar', 'templatePathAndFilename', $subject);
+        $subject = new TemplatePaths();
+        $subject->setLayoutPathAndFilename('/foobar');
+        self::assertSame('/foobar', $subject->getLayoutPathAndFilename());
     }
 
     public static function getGetterAndSetterTestValues(): array
@@ -109,7 +94,7 @@ class TemplatePathsTest extends BaseTestCase
         $subject = $this->getMockBuilder(TemplatePaths::class)->onlyMethods(['sanitizePath'])->getMock();
         $subject->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
         $subject->$setter($value);
-        self::assertEquals($value, $subject->$getter());
+        self::assertSame($value, $subject->$getter());
     }
 
     /**
@@ -194,7 +179,7 @@ class TemplatePathsTest extends BaseTestCase
         ];
         sort($result);
         sort($expected);
-        self::assertEquals(
+        self::assertSame(
             $expected,
             $result
         );
@@ -219,7 +204,7 @@ class TemplatePathsTest extends BaseTestCase
         $instance = new TemplatePaths();
         $stream = fopen($fixture, 'r');
         $instance->setTemplateSource($stream);
-        self::assertEquals(stream_get_contents($stream), $instance->getTemplateSource());
+        self::assertSame(stream_get_contents($stream), $instance->getTemplateSource());
         fclose($stream);
     }
 
@@ -241,7 +226,7 @@ class TemplatePathsTest extends BaseTestCase
     {
         $instance = new TemplatePaths();
         $instance->setTemplateSource('foobar');
-        self::assertEquals('source_8843d7f92416211de9ebb963ff4ce28125932878_DummyController_dummyAction_html', $instance->getTemplateIdentifier('DummyController', 'dummyAction'));
+        self::assertSame('source_8843d7f92416211de9ebb963ff4ce28125932878_DummyController_dummyAction_html', $instance->getTemplateIdentifier('DummyController', 'dummyAction'));
     }
 
     /**
@@ -253,7 +238,7 @@ class TemplatePathsTest extends BaseTestCase
         $baseTemplatePath = __DIR__ . '/Fixtures';
         $subject->setTemplateRootPaths([$baseTemplatePath]);
         $foundFixture = $subject->resolveTemplateFileForControllerAndActionAndFormat('ARandomController', 'TestTemplate');
-        self::assertEquals($baseTemplatePath . '/ARandomController/TestTemplate.html', $foundFixture);
+        self::assertSame($baseTemplatePath . '/ARandomController/TestTemplate.html', $foundFixture);
         $identifier = $subject->getTemplateIdentifier('ARandomController', 'TestTemplate');
         self::assertStringStartsWith('ARandomController_action_TestTemplate_', $identifier);
     }
@@ -267,7 +252,7 @@ class TemplatePathsTest extends BaseTestCase
         $baseTemplatePath = __DIR__ . '/Fixtures';
         $subject->setTemplateRootPaths([$baseTemplatePath]);
         $foundFixture = $subject->resolveTemplateFileForControllerAndActionAndFormat('', 'UnparsedTemplateFixture');
-        self::assertEquals($baseTemplatePath . '/UnparsedTemplateFixture.html', $foundFixture);
+        self::assertSame($baseTemplatePath . '/UnparsedTemplateFixture.html', $foundFixture);
         $identifier = $subject->getTemplateIdentifier('', 'UnparsedTemplateFixture');
         self::assertStringStartsWith('action_UnparsedTemplateFixture_', $identifier);
     }

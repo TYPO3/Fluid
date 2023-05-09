@@ -55,6 +55,9 @@ abstract class BaseTestCase extends TestCase
         return $builder->getMock();
     }
 
+    /**
+     * @deprecated Unused. Will be removed.
+     */
     protected static function assertAttributeEquals($expected, string $actualAttributeName, $actualClassOrObject): void
     {
         $reflection = new \ReflectionClass($actualClassOrObject);

@@ -193,7 +193,7 @@ class StandardVariableProviderTest extends UnitTestCase
     {
         $subject = new StandardVariableProvider(['foo' => 'bar', 'settings' => ['baz' => 'bam']]);
         $copy = $subject->getScopeCopy(['bar' => 'foo']);
-        self::assertAttributeEquals(['settings' => ['baz' => 'bam'], 'bar' => 'foo'], 'variables', $copy);
+        self::assertSame(['bar' => 'foo', 'settings' => ['baz' => 'bam']], $copy->getAll());
     }
 
     /**
