@@ -39,7 +39,7 @@ class TemplatePathsTest extends BaseTestCase
     {
         $subject = new TemplatePaths();
         $method = new \ReflectionMethod($subject, 'sanitizePath');
-        $output = $method->invokeArgs($subject, [$input]);
+        $output = $method->invoke($subject, $input);
         self::assertSame($expected, $output);
     }
 
@@ -60,7 +60,7 @@ class TemplatePathsTest extends BaseTestCase
     {
         $subject = new TemplatePaths();
         $method = new \ReflectionMethod($subject, 'sanitizePaths');
-        $output = $method->invokeArgs($subject, [$input]);
+        $output = $method->invoke($subject, $input);
         self::assertSame($expected, $output);
     }
 
@@ -165,12 +165,9 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function testResolveFilesInFolders(): void
     {
-        $instance = new TemplatePaths();
-        $method = new \ReflectionMethod($instance, 'resolveFilesInFolders');
-        $result = $method->invokeArgs(
-            $instance,
-            [['examples/Resources/Private/Layouts/', 'examples/Resources/Private/Templates/Default/'], 'html']
-        );
+        $subject = new TemplatePaths();
+        $method = new \ReflectionMethod($subject, 'resolveFilesInFolders');
+        $result = $method->invoke($subject, ['examples/Resources/Private/Layouts/', 'examples/Resources/Private/Templates/Default/'], 'html');
         $expected = [
             'examples/Resources/Private/Layouts/Default.html',
             'examples/Resources/Private/Layouts/Dynamic.html',
@@ -216,7 +213,7 @@ class TemplatePathsTest extends BaseTestCase
         $this->expectException(InvalidTemplateResourceException::class);
         $instance = new TemplatePaths();
         $method = new \ReflectionMethod($instance, 'resolveFileInPaths');
-        $method->invokeArgs($instance, [['/not/', '/found/'], 'notfound.html']);
+        $method->invoke($instance, ['/not/', '/found/'], 'notfound.html');
     }
 
     /**

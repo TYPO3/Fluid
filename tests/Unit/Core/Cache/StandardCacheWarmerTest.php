@@ -27,9 +27,9 @@ class StandardCacheWarmerTest extends UnitTestCase
     public function testDetectControllerNamesInTemplateRootPaths(): void
     {
         $subject = new StandardCacheWarmer();
-        $method = new \ReflectionMethod($subject, 'detectControllerNamesInTemplateRootPaths');
         $directory = realpath(__DIR__ . '/../../../../examples/Resources/Private/Templates/');
-        $generator = $method->invokeArgs($subject, [[$directory]]);
+        $method = new \ReflectionMethod($subject, 'detectControllerNamesInTemplateRootPaths');
+        $generator = $method->invoke($subject, [$directory]);
         foreach ($generator as $resolvedControllerName) {
             self::assertNotEmpty($resolvedControllerName, 'Generator yielded an empty controller name!');
         }
