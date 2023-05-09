@@ -59,8 +59,9 @@ class StandardCacheWarmerTest extends UnitTestCase
         $renderingContextMock = $this->createMock(RenderingContextInterface::class);
         $renderingContextMock->expects(self::once())->method('getVariableProvider')->willReturn(new StandardVariableProvider());
         $renderingContextMock->expects(self::once())->method('getTemplateParser')->willReturn($templateParserMock);
-        $subject = $this->getAccessibleMock(StandardCacheWarmer::class, []);
-        $result = $subject->_call('warmSingleFile', '/some/file', 'some_file', $renderingContextMock);
+        $subject = new StandardCacheWarmer();
+        $method = new \ReflectionMethod($subject, 'warmSingleFile');
+        $result = $method->invoke($subject, '/some/file', 'some_file', $renderingContextMock);
         self::assertNotEmpty($result->getFailureReason());
         self::assertNotEmpty($result->getMitigations());
     }
@@ -72,7 +73,7 @@ class StandardCacheWarmerTest extends UnitTestCase
     {
         $subject = new StandardCacheWarmer();
         $method = new \ReflectionMethod($subject, 'createClosure');
-        $closure = $method->invokeArgs($subject, [__FILE__]);
+        $closure = $method->invoke($subject, __FILE__);
         self::assertNotEmpty($closure(new TemplateParser(), new TemplatePaths()));
     }
 }

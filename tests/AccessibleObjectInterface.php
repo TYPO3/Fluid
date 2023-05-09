@@ -14,6 +14,7 @@ namespace TYPO3Fluid\Fluid\Tests;
  * Do not implement this interface in own classes.
  *
  * @internal
+ * @deprecated Remove together with helper methods in UnitTestCase
  */
 interface AccessibleObjectInterface
 {

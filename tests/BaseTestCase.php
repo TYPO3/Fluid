@@ -27,6 +27,7 @@ abstract class BaseTestCase extends TestCase
      * @template T of object
      * @param class-string<T> $originalClassName Full qualified name of the original class
      * @return MockObject&AccessibleObjectInterface&T
+     * @deprecated Unused. Will be removed.
      */
     protected function getAccessibleMock(
         string $originalClassName,
@@ -159,6 +160,7 @@ abstract class BaseTestCase extends TestCase
      * @template T of object
      * @param class-string<T> $className Full qualified name of the original class
      * @return class-string<AccessibleObjectInterface&T> Full qualified name of the built class
+     * @deprecated Remove together with consuming methods.
      */
     private function buildAccessibleProxy(string $className): string
     {

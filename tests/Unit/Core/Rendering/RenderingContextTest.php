@@ -21,7 +21,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
-use TYPO3Fluid\Fluid\View\TemplateView;
 
 class RenderingContextTest extends UnitTestCase
 {
@@ -40,8 +39,7 @@ class RenderingContextTest extends UnitTestCase
      */
     public function gettersReturnPreviouslySetValues(string $property, string|array $expected): void
     {
-        $view = new TemplateView();
-        $subject = $this->getAccessibleMock(RenderingContext::class, [], [$view]);
+        $subject = new RenderingContext();
         $setter = 'set' . ucfirst($property);
         $subject->$setter($expected);
         $getter = 'get' . ucfirst($property);

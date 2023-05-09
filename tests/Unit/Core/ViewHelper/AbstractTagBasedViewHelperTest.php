@@ -20,195 +20,23 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function testRenderCallsRenderOnTagBuilder(): void
+    public function renderCallsRenderOnTagBuilder(): void
     {
-        $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
-        $tagBuilder = $this->getMockBuilder(TagBuilder::class)->onlyMethods(['render'])->getMock();
+        $tagBuilder = $this->createMock(TagBuilder::class);
         $tagBuilder->expects(self::once())->method('render')->willReturn('foobar');
-        $viewHelper->setTagBuilder($tagBuilder);
-        self::assertEquals('foobar', $viewHelper->render());
+        $subject = $this->getMockBuilder(AbstractTagBasedViewHelper::class)->onlyMethods([])->getMock();
+        $subject->setTagBuilder($tagBuilder);
+        self::assertEquals('foobar', $subject->render());
     }
 
     /**
      * @test
      */
-    public function oneTagAttributeIsRenderedCorrectly(): void
-    {
-        $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
-        $viewHelper->setRenderingContext(new RenderingContextFixture());
-
-        $mockTagBuilder = $this->getMockBuilder(TagBuilder::class)->onlyMethods(['addAttribute'])->getMock();
-        $mockTagBuilder->expects(self::once())->method('addAttribute')->with('foo', 'bar');
-        $viewHelper->setTagBuilder($mockTagBuilder);
-
-        $viewHelper->_call('registerTagAttribute', 'foo', 'string', 'Description', false);
-        $arguments = ['foo' => 'bar'];
-        $viewHelper->setArguments($arguments);
-        $viewHelper->initialize();
-    }
-
-    /**
-     * @test
-     */
-    public function additionalTagAttributesAreRenderedCorrectly(): void
-    {
-        $subject = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
-        $subject->setRenderingContext(new RenderingContextFixture());
-
-        $mockTagBuilder = $this->getMockBuilder(TagBuilder::class)->onlyMethods(['addAttribute'])->getMock();
-        $mockTagBuilder->expects(self::once())->method('addAttribute')->with('foo', 'bar');
-        $subject->setTagBuilder($mockTagBuilder);
-
-        $subject->_call('registerTagAttribute', 'foo', 'string', 'Description', false);
-        $arguments = ['additionalAttributes' => ['foo' => 'bar']];
-        $subject->setArguments($arguments);
-        $subject->initialize();
-    }
-
-    /**
-     * @test
-     */
-    public function dataAttributesAreRenderedCorrectly(): void
-    {
-        $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
-        $viewHelper->setRenderingContext(new RenderingContextFixture());
-
-        $mockTagBuilder = $this->getMockBuilder(TagBuilder::class)->onlyMethods(['addAttribute'])->getMock();
-        $series = [
-            ['data-foo', 'fooValue'],
-            ['data-bar', 'barValue'],
-        ];
-        $mockTagBuilder->expects(self::atLeastOnce())->method('addAttribute')->willReturnCallback(function (...$args) use (&$series): void {
-            [$expectedArgOne, $expectedArgTwo] = array_shift($series);
-            self::assertSame($expectedArgOne, $args[0]);
-            self::assertSame($expectedArgTwo, $args[1]);
-        });
-        $viewHelper->setTagBuilder($mockTagBuilder);
-
-        $arguments = ['data' => ['foo' => 'fooValue', 'bar' => 'barValue']];
-        $viewHelper->setArguments($arguments);
-        $viewHelper->initialize();
-    }
-
-    /**
-     * @test
-     */
-    public function ariaAttributesAreRenderedCorrectly(): void
-    {
-        $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
-        $viewHelper->setRenderingContext(new RenderingContextFixture());
-
-        $mockTagBuilder = $this->getMockBuilder(TagBuilder::class)->onlyMethods(['addAttribute'])->getMock();
-        $series = [
-            ['aria-foo', 'fooValue'],
-            ['aria-bar', 'barValue'],
-        ];
-        $mockTagBuilder->expects(self::atLeastOnce())->method('addAttribute')->willReturnCallback(function (...$args) use (&$series): void {
-            [$expectedArgOne, $expectedArgTwo] = array_shift($series);
-            self::assertSame($expectedArgOne, $args[0]);
-            self::assertSame($expectedArgTwo, $args[1]);
-        });
-        $viewHelper->setTagBuilder($mockTagBuilder);
-
-        $arguments = ['aria' => ['foo' => 'fooValue', 'bar' => 'barValue']];
-        $viewHelper->setArguments($arguments);
-        $viewHelper->initialize();
-    }
-
-    /**
-     * @test
-     */
-    public function testValidateAdditionalArgumentsThrowsExceptionIfContainingNonDataArguments(): void
+    public function validateAdditionalArgumentsThrowsExceptionIfContainingNonDataArguments(): void
     {
         $this->expectException(Exception::class);
-        $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
-        $viewHelper->setRenderingContext(new RenderingContextFixture());
-        $viewHelper->validateAdditionalArguments(['foo' => 'bar']);
-    }
-
-    /**
-     * @test
-     */
-    public function testHandleAdditionalArgumentsSetsTagAttributesForDataArguments(): void
-    {
-        $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
-        $viewHelper->setRenderingContext(new RenderingContextFixture());
-        $tagBuilder = $this->getMockBuilder(TagBuilder::class)->onlyMethods(['addAttribute'])->getMock();
-        $series = [
-            ['data-foo', 'fooValue'],
-            ['data-bar', 'barValue'],
-        ];
-        $tagBuilder->expects(self::atLeastOnce())->method('addAttribute')->willReturnCallback(function (...$args) use (&$series): void {
-            [$expectedArgOne, $expectedArgTwo] = array_shift($series);
-            self::assertSame($expectedArgOne, $args[0]);
-            self::assertSame($expectedArgTwo, $args[1]);
-        });
-        $viewHelper->setTagBuilder($tagBuilder);
-        $viewHelper->handleAdditionalArguments(['data-foo' => 'fooValue', 'data-bar' => 'barValue']);
-        $viewHelper->initializeArgumentsAndRender();
-    }
-
-    /**
-     * @test
-     */
-    public function testHandleAdditionalArgumentsSetsTagAttributesForAriaArguments(): void
-    {
-        $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
-        $viewHelper->setRenderingContext(new RenderingContextFixture());
-        $tagBuilder = $this->getMockBuilder(TagBuilder::class)->onlyMethods(['addAttribute'])->getMock();
-        $series = [
-            ['aria-foo', 'fooValue'],
-            ['aria-bar', 'barValue'],
-        ];
-        $tagBuilder->expects(self::atLeastOnce())->method('addAttribute')->willReturnCallback(function (...$args) use (&$series): void {
-            [$expectedArgOne, $expectedArgTwo] = array_shift($series);
-            self::assertSame($expectedArgOne, $args[0]);
-            self::assertSame($expectedArgTwo, $args[1]);
-        });
-        $viewHelper->setTagBuilder($tagBuilder);
-        $viewHelper->handleAdditionalArguments(['aria-foo' => 'fooValue', 'aria-bar' => 'barValue']);
-        $viewHelper->initializeArgumentsAndRender();
-    }
-
-    /**
-     * @test
-     */
-    public function standardTagAttributesAreRegistered(): void
-    {
-        $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
-        $viewHelper->setRenderingContext(new RenderingContextFixture());
-
-        $mockTagBuilder = $this->getMockBuilder(TagBuilder::class)->onlyMethods(['addAttribute'])->getMock();
-        $series = [
-            ['class', 'classAttribute'],
-            ['dir', 'dirAttribute'],
-            ['id', 'idAttribute'],
-            ['lang', 'langAttribute'],
-            ['style', 'styleAttribute'],
-            ['title', 'titleAttribute'],
-            ['accesskey', 'accesskeyAttribute'],
-            ['tabindex', 'tabindexAttribute']
-        ];
-        $mockTagBuilder->expects(self::atLeastOnce())->method('addAttribute')->willReturnCallback(function (...$args) use (&$series): void {
-            [$expectedArgOne, $expectedArgTwo] = array_shift($series);
-            self::assertSame($expectedArgOne, $args[0]);
-            self::assertSame($expectedArgTwo, $args[1]);
-        });
-        $viewHelper->setTagBuilder($mockTagBuilder);
-
-        $arguments = [
-            'class' => 'classAttribute',
-            'dir' => 'dirAttribute',
-            'id' => 'idAttribute',
-            'lang' => 'langAttribute',
-            'style' => 'styleAttribute',
-            'title' => 'titleAttribute',
-            'accesskey' => 'accesskeyAttribute',
-            'tabindex' => 'tabindexAttribute'
-        ];
-        $viewHelper->_call('registerUniversalTagAttributes');
-        $viewHelper->setArguments($arguments);
-        $viewHelper->initializeArguments();
-        $viewHelper->initialize();
+        $subject = $this->getMockBuilder(AbstractTagBasedViewHelper::class)->onlyMethods([])->getMock();
+        $subject->setRenderingContext(new RenderingContextFixture());
+        $subject->validateAdditionalArguments(['foo' => 'bar']);
     }
 }

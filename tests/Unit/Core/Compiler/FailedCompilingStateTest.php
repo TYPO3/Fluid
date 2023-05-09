@@ -14,50 +14,34 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class FailedCompilingStateTest extends UnitTestCase
 {
-    public static function getPropertyTestValues(): array
-    {
-        return [
-            ['failureReason', 'test reason'],
-            ['mitigations', ['m1', 'm2']]
-        ];
-    }
-
     /**
-     * @param mixed $value
-     * @dataProvider getPropertyTestValues
      * @test
      */
-    public function testGetter(string $property, $value): void
+    public function getFailureReasonReturnsPreviouslySetFailureReason(): void
     {
-        $subject = $this->getAccessibleMock(FailedCompilingState::class, []);
-        $subject->_set($property, $value);
-        $method = 'get' . ucfirst($property);
-        self::assertEquals($value, $subject->$method());
-    }
-
-    /**
-     * @param mixed $value
-     * @dataProvider getPropertyTestValues
-     * @test
-     */
-    public function testSetter(string $property, $value): void
-    {
-        $subject = $this->getAccessibleMock(FailedCompilingState::class, []);
-        $subject->_set($property, $value);
-        $method = 'set' . ucfirst($property);
-        $getter = 'get' . ucfirst($property);
-        $subject->$method($value);
-        self::assertEquals($value, $subject->$getter());
+        $subject = new FailedCompilingState();
+        $subject->setFailureReason('failed');
+        self::assertSame('failed', $subject->getFailureReason());
     }
 
     /**
      * @test
      */
-    public function testAddMitigation(): void
+    public function getMitigationsReturnsPreviouslySetMitigation(): void
     {
-        $subject = $this->getAccessibleMock(FailedCompilingState::class, []);
-        $subject->_set('mitigations', ['m1']);
+        $subject = new FailedCompilingState();
+        $subject->setMitigations(['m1', 'm2']);
+        self::assertSame(['m1', 'm2'], $subject->getMitigations());
+    }
+
+    /**
+     * @test
+     */
+    public function addMitigationAddsAnotherMitigation(): void
+    {
+        $subject = new FailedCompilingState();
+        $subject->setMitigations(['m1']);
         $subject->addMitigation('m2');
-        self::assertEquals(['m1', 'm2'], $subject->getMitigations());
+        self::assertSame(['m1', 'm2'], $subject->getMitigations());
     }
 }
