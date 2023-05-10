@@ -129,10 +129,10 @@ class NodeConverterTest extends UnitTestCase
     /**
      * @test
      */
-    public function instanceOfAbstractMockReturnsEmptyStringConvertExecution(): void
+    public function convertReturnsEmptyExecutionWithNodeOnlyImplementingNodeInterface(): void
     {
         $subject = new NodeConverter(new TemplateCompiler());
-        $result = $subject->convert($this->getMockBuilder(NodeInterface::class)->getMockForAbstractClass());
+        $result = $subject->convert($this->createMock(NodeInterface::class));
         self::assertEquals('', $result['execution']);
     }
 }
