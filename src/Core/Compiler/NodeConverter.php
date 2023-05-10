@@ -171,44 +171,53 @@ class NodeConverter
                 $this->templateCompiler
             );
 
-            $arguments = $node->getArgumentDefinitions();
-            $argumentInitializationCode = sprintf('%s = [];', $argumentsVariableName) . chr(10);
-            foreach ($arguments as $argumentName => $argumentDefinition) {
-                $argumentInitializationCode .= sprintf(
-                    '%s[\'%s\'] = %s;%s',
-                    $argumentsVariableName,
-                    $argumentName,
-                    var_export($argumentDefinition->getDefaultValue(), true),
-                    chr(10)
-                );
+            $accumulatedArgumentInitializationCode = '';
+            $argumentInitializationCode = sprintf('%s = [' . chr(10), $argumentsVariableName);
+
+            $arguments = $node->getArguments();
+            $argumentDefinitions = $node->getArgumentDefinitions();
+            foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
+                if (!array_key_exists($argumentName, $arguments)) {
+                    // Argument *not* given to VH, use default value
+                    $defaultValue = $argumentDefinition->getDefaultValue();
+                    $argumentInitializationCode .= sprintf(
+                        '\'%s\' => %s,' . chr(10),
+                        $argumentName,
+                        is_array($defaultValue) && empty($defaultValue) ? '[]' : var_export($defaultValue, true)
+                    );
+                } else {
+                    // Argument *is* given to VH, resolve
+                    $argumentValue = $arguments[$argumentName];
+                    if ($argumentValue instanceof NodeInterface) {
+                        $converted = $this->convert($argumentValue);
+                        if (!empty($converted['initialization'])) {
+                            $accumulatedArgumentInitializationCode .= $converted['initialization'];
+                        }
+                        $argumentInitializationCode .= sprintf(
+                            '\'%s\' => %s,' . chr(10),
+                            $argumentName,
+                            $converted['execution']
+                        );
+                    } else {
+                        $argumentInitializationCode .= sprintf(
+                            '\'%s\' => %s,' . chr(10),
+                            $argumentName,
+                            $argumentValue
+                        );
+                    }
+                }
             }
 
-            foreach ($node->getArguments() as $argumentName => $argumentValue) {
-                if ($argumentValue instanceof NodeInterface) {
-                    $converted = $this->convert($argumentValue);
-                } else {
-                    $converted = [
-                        'initialization' => '',
-                        'execution' => $argumentValue
-                    ];
-                }
-                $argumentInitializationCode .= $converted['initialization'];
-                $argumentInitializationCode .= sprintf(
-                    '%s[\'%s\'] = %s;',
-                    $argumentsVariableName,
-                    $argumentName,
-                    $converted['execution']
-                ) . chr(10);
-            }
+            $argumentInitializationCode .= '];' . chr(10);
 
             // Build up closure which renders the child nodes
             $initializationPhpCode .= sprintf(
-                '%s = %s;',
+                '%s = %s;' . chr(10),
                 $renderChildrenClosureVariableName,
                 $this->templateCompiler->wrapChildNodesInClosure($node)
-            ) . chr(10);
+            );
 
-            $initializationPhpCode .= $argumentInitializationCode . $viewHelperInitializationPhpCode;
+            $initializationPhpCode .= $accumulatedArgumentInitializationCode . chr(10) . $argumentInitializationCode . $viewHelperInitializationPhpCode;
         } catch (StopCompilingChildrenException $stopCompilingChildrenException) {
             $convertedViewHelperExecutionCode = '\'' . str_replace("'", "\'", $stopCompilingChildrenException->getReplacementString()) . '\'';
         }
