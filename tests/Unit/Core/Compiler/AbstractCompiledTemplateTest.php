@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 
-use TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler\Fixtures\AbstractCompiledTemplateTestFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
@@ -19,92 +19,86 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     /**
      * @test
      */
-    public function testSetIdentifierDoesNotChangeObject(): void
+    public function setIdentifierDoesNotChangeObject(): void
     {
-        $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
-        $before = clone $instance;
-        $instance->setIdentifier('test');
-        self::assertEquals($before, $instance);
+        $subject = new AbstractCompiledTemplateTestFixture();
+        $before = clone $subject;
+        $subject->setIdentifier('test');
+        self::assertEquals($before, $subject);
     }
 
     /**
      * @test
      */
-    public function testGetIdentifierReturnsClassName(): void
+    public function getIdentifierReturnsClassName(): void
     {
-        $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
-        self::assertEquals($instance->getIdentifier(), get_class($instance));
+        $subject = new AbstractCompiledTemplateTestFixture();
+        self::assertEquals($subject->getIdentifier(), get_class($subject));
     }
 
     /**
      * @test
      */
-    public function testParentGetVariableContainerMethodReturnsStandardVariableProvider(): void
+    public function getVariableContainerReturnsStandardVariableProvider(): void
     {
-        $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
-        $result = $instance->getVariableContainer();
-        self::assertInstanceOf(StandardVariableProvider::class, $result);
+        $subject = new AbstractCompiledTemplateTestFixture();
+        self::assertInstanceOf(StandardVariableProvider::class, $subject->getVariableContainer());
     }
 
     /**
      * @test
      */
-    public function testParentRenderMethodReturnsEmptyString(): void
+    public function renderReturnsEmptyString(): void
     {
-        $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
-        $result = $instance->render(new RenderingContextFixture());
-        self::assertEquals('', $result);
+        $subject = new AbstractCompiledTemplateTestFixture();
+        self::assertEquals('', $subject->render(new RenderingContextFixture()));
     }
 
     /**
      * @test
      */
-    public function testParentGetLayoutNameMethodReturnsEmptyString(): void
+    public function getLayoutNameReturnsEmptyString(): void
     {
-        $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
-        $result = $instance->getLayoutName(new RenderingContextFixture());
-        self::assertEquals('', $result);
+        $subject = new AbstractCompiledTemplateTestFixture();
+        self::assertEquals('', $subject->getLayoutName(new RenderingContextFixture()));
     }
 
     /**
      * @test
      */
-    public function testParentHasLayoutMethodReturnsFalse(): void
+    public function hasLayoutReturnsFalse(): void
     {
-        $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
-        $result = $instance->hasLayout();
-        self::assertFalse($result);
+        $subject = new AbstractCompiledTemplateTestFixture();
+        self::assertFalse($subject->hasLayout());
     }
 
     /**
      * @test
      */
-    public function testIsCompilableReturnsFalse(): void
+    public function isCompilableReturnsFalse(): void
     {
-        $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
-        $result = $instance->isCompilable();
-        self::assertFalse($result);
+        $subject = new AbstractCompiledTemplateTestFixture();
+        self::assertFalse($subject->isCompilable());
     }
 
     /**
      * @test
      */
-    public function testIsCompiledReturnsTrue(): void
+    public function isCompiledReturnsTrue(): void
     {
-        $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
-        $result = $instance->isCompiled();
-        self::assertTrue($result);
+        $subject = new AbstractCompiledTemplateTestFixture();
+        self::assertTrue($subject->isCompiled());
     }
 
     /**
      * @test
      */
-    public function testAddCompiledNamespacesDoesNothing(): void
+    public function addCompiledNamespacesDoesNothing(): void
     {
-        $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
+        $subject = new AbstractCompiledTemplateTestFixture();
         $context = new RenderingContextFixture();
         $before = $context->getViewHelperResolver()->getNamespaces();
-        $instance->addCompiledNamespaces($context);
+        $subject->addCompiledNamespaces($context);
         $after = $context->getViewHelperResolver()->getNamespaces();
         self::assertEquals($before, $after);
     }

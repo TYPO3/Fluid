@@ -141,8 +141,8 @@ class TemplateParserTest extends UnitTestCase
     public function testParseCallsPreProcessOnTemplateProcessors(): void
     {
         $subject = new TemplateParser();
-        $processor1 = $this->getMockForAbstractClass(TemplateProcessorInterface::class, [], '', false, false, true, ['preProcessSource']);
-        $processor2 = clone $processor1;
+        $processor1 = $this->createMock(TemplateProcessorInterface::class);
+        $processor2 = $this->createMock(TemplateProcessorInterface::class);
         $processor1->expects(self::once())->method('preProcessSource')->with('source1')->willReturn('source2');
         $processor2->expects(self::once())->method('preProcesssource')->with('source2')->willReturn('final');
         $context = new RenderingContextFixture();
