@@ -19,6 +19,15 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 
+/**
+ * @internal
+ * @todo: Declare final with next major.
+ * @todo: Consider removing this class entirely. NodeInterface could be extended with a
+ *        compile() method so nodes itself "know" how they are compiled. This is already
+ *        partially done with VH's already, which come with a compile method that is
+ *        called in convertViewHelperNode(). The only remaining question is how to move
+ *        the "global" "variable counter" state around when dissolving this class.
+ */
 class NodeConverter
 {
     /**
@@ -230,48 +239,44 @@ class NodeConverter
         ];
     }
 
-    /**
-     * @param ArrayNode $node
-     * @return array
-     * @see convert()
-     */
-    protected function convertArrayNode(ArrayNode $node)
+    protected function convertArrayNode(ArrayNode $node): array
     {
-        $initializationPhpCode = '// Rendering Array' . chr(10);
         $arrayVariableName = $this->variableName('array');
-
-        $initializationPhpCode .= sprintf('%s = [];', $arrayVariableName) . chr(10);
+        $accumulatedInitializationPhpCode = '';
+        $initializationPhpCode = sprintf('%s = [' . chr(10), $arrayVariableName);
 
         foreach ($node->getInternalArray() as $key => $value) {
             if ($value instanceof NodeInterface) {
                 $converted = $this->convert($value);
-                $initializationPhpCode .= $converted['initialization'];
+                if (!empty($converted['initialization'])) {
+                    $accumulatedInitializationPhpCode .= $converted['initialization'];
+                }
                 $initializationPhpCode .= sprintf(
-                    '%s[\'%s\'] = %s;',
-                    $arrayVariableName,
+                    '\'%s\' => %s,' . chr(10),
                     $key,
                     $converted['execution']
-                ) . chr(10);
+                );
             } elseif (is_numeric($value)) {
-                // this case might happen for simple values
+                // handle int, float, numeric strings
                 $initializationPhpCode .= sprintf(
-                    '%s[\'%s\'] = %s;',
-                    $arrayVariableName,
+                    '\'%s\' => %s,' . chr(10),
                     $key,
                     $value
-                ) . chr(10);
+                );
             } else {
-                // this case might happen for simple values
+                // handle strings
                 $initializationPhpCode .= sprintf(
-                    '%s[\'%s\'] = \'%s\';',
-                    $arrayVariableName,
+                    '\'%s\' => \'%s\',' . chr(10),
                     $key,
                     $this->escapeTextForUseInSingleQuotes($value)
-                ) . chr(10);
+                );
             }
         }
+
+        $initializationPhpCode .= '];' . chr(10);
+
         return [
-            'initialization' => $initializationPhpCode,
+            'initialization' => $accumulatedInitializationPhpCode . chr(10) . $initializationPhpCode,
             'execution' => $arrayVariableName
         ];
     }
