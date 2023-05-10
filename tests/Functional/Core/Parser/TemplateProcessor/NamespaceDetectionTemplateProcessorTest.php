@@ -10,13 +10,13 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Parser\TemplateProcessor;
 
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\NamespaceDetectionTemplateProcessor;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
 {
-    public static function getTestValues(): array
+    public static function preProcessSourceExtractsNamespacesDataProvider(): array
     {
         return [
             'does nothing with empty templates' => [
@@ -95,13 +95,13 @@ class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
     }
 
     /**
-     * @dataProvider getTestValues
+     * @dataProvider preProcessSourceExtractsNamespacesDataProvider
      * @test
      */
-    public function testExtractsExpectedNamespaces(string $templateSource, array $expectedNamespaces, string $expectedSource): void
+    public function preProcessSourceExtractsNamespaces(string $templateSource, array $expectedNamespaces, string $expectedSource): void
     {
         $viewHelperResolver = new ViewHelperResolver();
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $renderingContext->setViewHelperResolver($viewHelperResolver);
         $subject = new NamespaceDetectionTemplateProcessor();
         $subject->setRenderingContext($renderingContext);

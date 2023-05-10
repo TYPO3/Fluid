@@ -11,13 +11,13 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Escaping;
 
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\TestViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers\MutableTestViewHelper;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers\TagBasedTestViewHelper;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
 class ViewHelperEscapingTest extends BaseTestCase
@@ -36,7 +36,7 @@ class ViewHelperEscapingTest extends BaseTestCase
         $configuration = new Configuration();
         $configuration->addEscapingInterceptor(new Escape());
 
-        $context = $this->getMockBuilder(RenderingContextFixture::class)->onlyMethods(['buildParserConfiguration'])->getMock();
+        $context = $this->getMockBuilder(RenderingContext::class)->onlyMethods(['buildParserConfiguration'])->getMock();
         $context->expects(self::once())->method('buildParserConfiguration')->willReturn($configuration);
         $context->getTemplateParser()->setRenderingContext($context);
         $context->getTemplateCompiler()->setRenderingContext($context);

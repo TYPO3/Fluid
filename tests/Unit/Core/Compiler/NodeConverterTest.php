@@ -22,7 +22,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class NodeConverterTest extends UnitTestCase
@@ -97,7 +97,7 @@ class NodeConverterTest extends UnitTestCase
             ],
             [
                 new ViewHelperNode(
-                    new RenderingContextFixture(),
+                    new RenderingContext(),
                     'f',
                     'render',
                     ['section' => new TextNode('test'), 'partial' => 'test'],

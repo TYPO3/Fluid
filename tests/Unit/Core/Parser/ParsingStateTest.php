@@ -11,8 +11,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class ParsingStateTest extends UnitTestCase
@@ -56,7 +56,7 @@ class ParsingStateTest extends UnitTestCase
     public function renderCallsTheRightMethodsOnTheRootNode(): void
     {
         $subject = new ParsingState();
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = $this->createMock(RootNode::class);
         $rootNode->expects(self::once())->method('evaluate')->with($renderingContext)->willReturn('T3DD09 Rock!');
         $subject->setRootNode($rootNode);
@@ -71,7 +71,7 @@ class ParsingStateTest extends UnitTestCase
     {
         $subject = new ParsingState();
         $subject->setVariableProvider(new StandardVariableProvider(['layoutName' => 'test']));
-        self::assertEquals('test', $subject->getLayoutName(new RenderingContextFixture()));
+        self::assertEquals('test', $subject->getLayoutName(new RenderingContext()));
     }
 
     /**

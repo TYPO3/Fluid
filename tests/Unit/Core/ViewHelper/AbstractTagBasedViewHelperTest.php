@@ -9,10 +9,10 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class AbstractTagBasedViewHelperTest extends UnitTestCase
@@ -36,7 +36,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     {
         $this->expectException(Exception::class);
         $subject = $this->getMockBuilder(AbstractTagBasedViewHelper::class)->onlyMethods([])->getMock();
-        $subject->setRenderingContext(new RenderingContextFixture());
+        $subject->setRenderingContext(new RenderingContext());
         $subject->validateAdditionalArguments(['foo' => 'bar']);
     }
 }

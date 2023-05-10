@@ -11,7 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class TextNodeTest extends UnitTestCase
@@ -23,7 +23,7 @@ class TextNodeTest extends UnitTestCase
     {
         $string = 'I can work quite effectively in a train!';
         $node = new TextNode($string);
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         self::assertEquals($node->evaluate($renderingContext), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
     }
 
