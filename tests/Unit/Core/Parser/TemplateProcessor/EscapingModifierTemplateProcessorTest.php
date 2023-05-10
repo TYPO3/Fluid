@@ -12,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\TemplateProcessor;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\EscapingModifierTemplateProcessor;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class EscapingModifierTemplateProcessorTest extends UnitTestCase
@@ -43,7 +43,7 @@ class EscapingModifierTemplateProcessorTest extends UnitTestCase
     public function testSetsEscapingToExpectedValueAndStripsModifier(string $templateSource, bool $expected): void
     {
         $subject = new EscapingModifierTemplateProcessor();
-        $context = new RenderingContextFixture();
+        $context = new RenderingContext();
         $parser = $this->getMockBuilder(TemplateParser::class)->onlyMethods(['setEscapingEnabled'])->getMock();
         if (!$expected) {
             $parser->expects(self::once())->method('setEscapingEnabled')->with(false);
@@ -78,7 +78,7 @@ class EscapingModifierTemplateProcessorTest extends UnitTestCase
     {
         $this->expectException(Exception::class);
         $subject = new EscapingModifierTemplateProcessor();
-        $context = new RenderingContextFixture();
+        $context = new RenderingContext();
         $parser = $this->getMockBuilder(TemplateParser::class)->onlyMethods(['setEscapingEnabled'])->getMock();
         $context->setTemplateParser($parser);
         $subject->setRenderingContext($context);

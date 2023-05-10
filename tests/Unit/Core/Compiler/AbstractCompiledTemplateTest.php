@@ -9,9 +9,9 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler\Fixtures\AbstractCompiledTemplateTestFixture;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class AbstractCompiledTemplateTest extends UnitTestCase
@@ -51,7 +51,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     public function renderReturnsEmptyString(): void
     {
         $subject = new AbstractCompiledTemplateTestFixture();
-        self::assertEquals('', $subject->render(new RenderingContextFixture()));
+        self::assertEquals('', $subject->render(new RenderingContext()));
     }
 
     /**
@@ -60,7 +60,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     public function getLayoutNameReturnsEmptyString(): void
     {
         $subject = new AbstractCompiledTemplateTestFixture();
-        self::assertEquals('', $subject->getLayoutName(new RenderingContextFixture()));
+        self::assertEquals('', $subject->getLayoutName(new RenderingContext()));
     }
 
     /**
@@ -96,7 +96,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     public function addCompiledNamespacesDoesNothing(): void
     {
         $subject = new AbstractCompiledTemplateTestFixture();
-        $context = new RenderingContextFixture();
+        $context = new RenderingContext();
         $before = $context->getViewHelperResolver()->getNamespaces();
         $subject->addCompiledNamespaces($context);
         $after = $context->getViewHelperResolver()->getNamespaces();

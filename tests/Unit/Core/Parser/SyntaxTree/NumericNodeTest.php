@@ -11,7 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class NumericNodeTest extends UnitTestCase
@@ -21,7 +21,7 @@ class NumericNodeTest extends UnitTestCase
      */
     public function renderReturnsProperIntegerGivenInConstructor(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $string = '1';
         $node = new NumericNode($string);
         self::assertEquals($node->evaluate($renderingContext), 1, 'The rendered value of a numeric node does not match the string given in the constructor.');
@@ -32,7 +32,7 @@ class NumericNodeTest extends UnitTestCase
      */
     public function renderReturnsProperFloatGivenInConstructor(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $string = '1.1';
         $node = new NumericNode($string);
         self::assertEquals($node->evaluate($renderingContext), 1.1, 'The rendered value of a numeric node does not match the string given in the constructor.');

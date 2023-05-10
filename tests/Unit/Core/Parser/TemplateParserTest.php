@@ -25,10 +25,10 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\ViewHelpers\CommentViewHelper;
 
@@ -47,7 +47,7 @@ class TemplateParserTest extends UnitTestCase
     {
         $resolver = $this->createMock(ViewHelperResolver::class);
         $resolver->expects(self::once())->method('isNamespaceIgnored')->willReturn(true);
-        $context = new RenderingContextFixture();
+        $context = new RenderingContext();
         $context->setViewHelperResolver($resolver);
         $subject = new TemplateParser();
         $subject->setRenderingContext($context);
@@ -65,7 +65,7 @@ class TemplateParserTest extends UnitTestCase
         $resolver = $this->createMock(ViewHelperResolver::class);
         $resolver->expects(self::once())->method('isNamespaceIgnored')->willReturn(false);
         $resolver->expects(self::once())->method('isNamespaceValid')->willReturn(false);
-        $context = new RenderingContextFixture();
+        $context = new RenderingContext();
         $context->setViewHelperResolver($resolver);
         $subject = new TemplateParser();
         $subject->setRenderingContext($context);
@@ -81,7 +81,7 @@ class TemplateParserTest extends UnitTestCase
     {
         $resolver = $this->createMock(ViewHelperResolver::class);
         $resolver->expects(self::once())->method('isNamespaceIgnored')->willReturn(true);
-        $context = new RenderingContextFixture();
+        $context = new RenderingContext();
         $context->setViewHelperResolver($resolver);
         $subject = new TemplateParser();
         $subject->setRenderingContext($context);
@@ -99,7 +99,7 @@ class TemplateParserTest extends UnitTestCase
         $resolver = $this->createMock(ViewHelperResolver::class);
         $resolver->expects(self::once())->method('isNamespaceIgnored')->willReturn(false);
         $resolver->expects(self::once())->method('isNamespaceValid')->willReturn(false);
-        $context = new RenderingContextFixture();
+        $context = new RenderingContext();
         $context->setViewHelperResolver($resolver);
         $subject = new TemplateParser();
         $subject->setRenderingContext($context);
@@ -127,7 +127,7 @@ class TemplateParserTest extends UnitTestCase
     public function testBuildObjectTreeThrowsExceptionOnUnclosedViewHelperTag(): void
     {
         $this->expectException(Exception::class);
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $renderingContext->setVariableProvider(new StandardVariableProvider());
         $subject = new TemplateParser();
         $subject->setRenderingContext($renderingContext);
@@ -145,7 +145,7 @@ class TemplateParserTest extends UnitTestCase
         $processor2 = $this->createMock(TemplateProcessorInterface::class);
         $processor1->expects(self::once())->method('preProcessSource')->with('source1')->willReturn('source2');
         $processor2->expects(self::once())->method('preProcesssource')->with('source2')->willReturn('final');
-        $context = new RenderingContextFixture();
+        $context = new RenderingContext();
         $context->setTemplateProcessors([$processor1, $processor2]);
         $context->setVariableProvider(new StandardVariableProvider());
         $subject->setRenderingContext($context);
@@ -162,7 +162,7 @@ class TemplateParserTest extends UnitTestCase
         $parsedTemplate->setCompilable(true);
         $subject = $this->getMockBuilder(TemplateParser::class)->onlyMethods(['parse'])->getMock();
         $subject->expects(self::once())->method('parse')->willReturn($parsedTemplate);
-        $context = new RenderingContextFixture();
+        $context = new RenderingContext();
         $compiler = $this->createMock(TemplateCompiler::class);
         $compiler->expects(self::never())->method('get');
         $compiler->expects(self::atLeastOnce())->method('has')->willReturn(false);
@@ -238,7 +238,7 @@ class TemplateParserTest extends UnitTestCase
      */
     public function buildObjectTreeCreatesRootNodeAndSetsUpParsingState(): void
     {
-        $context = new RenderingContextFixture();
+        $context = new RenderingContext();
         $context->setVariableProvider(new StandardVariableProvider());
         $subject = new TemplateParser();
         $subject->setRenderingContext($context);
@@ -256,7 +256,7 @@ class TemplateParserTest extends UnitTestCase
         $mockState = $this->createMock(ParsingState::class);
         $mockState->expects(self::once())->method('popNodeFromStack')->willReturn($mockNodeOnStack);
         $subject = new TemplateParser();
-        $subject->setRenderingContext(new RenderingContextFixture());
+        $subject->setRenderingContext(new RenderingContext());
         $method = new \ReflectionMethod($subject, 'closingViewHelperTagHandler');
         $method->invoke($subject, $mockState, 'f', 'render');
     }
@@ -269,7 +269,7 @@ class TemplateParserTest extends UnitTestCase
         $this->expectException(\Exception::class);
         $mockState = $this->createMock(ParsingState::class);
         $subject = new TemplateParser();
-        $subject->setRenderingContext(new RenderingContextFixture());
+        $subject->setRenderingContext(new RenderingContext());
         $method = new \ReflectionMethod($subject, 'closingViewHelperTagHandler');
         $method->invoke($subject, $mockState, 'f', 'render');
     }
@@ -367,7 +367,7 @@ class TemplateParserTest extends UnitTestCase
      */
     public function parseArgumentsWorksAsExpected(string $argumentsString, array $expected): void
     {
-        $context = new RenderingContextFixture();
+        $context = new RenderingContext();
         $viewHelper = $this->getMockBuilder(CommentViewHelper::class)->onlyMethods(['validateAdditionalArguments'])->getMock();
         $viewHelper->expects(self::once())->method('validateAdditionalArguments');
         $subject = $this->getMockBuilder(TemplateParser::class)->onlyMethods(['buildArgumentObjectTree'])->getMock();
@@ -583,7 +583,7 @@ class TemplateParserTest extends UnitTestCase
         $state = new ParsingState();
         $resolver = $this->createMock(ViewHelperResolver::class);
         $resolver->expects(self::any())->method('isNamespaceIgnored')->willReturn(true);
-        $context = new RenderingContextFixture();
+        $context = new RenderingContext();
         $context->setViewHelperResolver($resolver);
         $context->setVariableProvider(new StandardVariableProvider());
         $subject = new TemplateParser();
@@ -640,7 +640,7 @@ class TemplateParserTest extends UnitTestCase
         $viewHelper = $this->createMock(CommentViewHelper::class);
         $resolver = $this->createMock(ViewHelperResolver::class);
         $resolver->expects(self::once())->method('getArgumentDefinitionsForViewHelper')->with($viewHelper)->willReturn($argumentDefinitions);
-        $context = new RenderingContextFixture();
+        $context = new RenderingContext();
         $context->setViewHelperResolver($resolver);
         $subject = new TemplateParser();
         $subject->setRenderingContext($context);

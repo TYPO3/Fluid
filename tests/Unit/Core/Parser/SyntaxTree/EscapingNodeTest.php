@@ -11,7 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class EscapingNodeTest extends UnitTestCase
@@ -24,7 +24,7 @@ class EscapingNodeTest extends UnitTestCase
         $string = '<strong>escape me</strong>';
         $childNode = new TextNode($string);
         $node = new EscapingNode($childNode);
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         self::assertEquals($node->evaluate($renderingContext), htmlspecialchars($string, ENT_QUOTES));
     }
 
@@ -37,7 +37,7 @@ class EscapingNodeTest extends UnitTestCase
         $string2 = '<strong>no, escape me!</strong>';
         $node = new EscapingNode(new TextNode($string1));
         $node->addChildNode(new TextNode($string2));
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         self::assertEquals($node->evaluate($renderingContext), htmlspecialchars($string2, ENT_QUOTES));
     }
 }

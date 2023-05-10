@@ -11,7 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class BooleanParserTest extends UnitTestCase
@@ -112,7 +112,7 @@ class BooleanParserTest extends UnitTestCase
      */
     public function testSomeEvaluations(string $comparison, bool $expected, array $variables = []): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $parser = new BooleanParser();
         self::assertEquals($expected, BooleanNode::convertToBoolean($parser->evaluate($comparison, $variables), $renderingContext), 'Expression: ' . $comparison);
         $compiledEvaluation = $parser->compile($comparison);

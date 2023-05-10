@@ -16,9 +16,9 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class BooleanNodeTest extends UnitTestCase
@@ -28,7 +28,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function convertToBooleanProperlyConvertsValuesOfTypeBoolean(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         self::assertFalse(BooleanNode::convertToBoolean(false, $renderingContext));
         self::assertTrue(BooleanNode::convertToBoolean(true, $renderingContext));
     }
@@ -38,7 +38,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function convertToBooleanProperlyConvertsValuesOfTypeString(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         self::assertFalse(BooleanNode::convertToBoolean('', $renderingContext));
         self::assertFalse(BooleanNode::convertToBoolean('false', $renderingContext));
         self::assertFalse(BooleanNode::convertToBoolean('FALSE', $renderingContext));
@@ -65,7 +65,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function convertToBooleanProperlyConvertsNumericValues($number, bool $expected): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         self::assertEquals($expected, BooleanNode::convertToBoolean($number, $renderingContext));
     }
 
@@ -74,7 +74,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function convertToBooleanProperlyConvertsValuesOfTypeArray(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         self::assertFalse(BooleanNode::convertToBoolean([], $renderingContext));
         self::assertTrue(BooleanNode::convertToBoolean(['foo'], $renderingContext));
         self::assertTrue(BooleanNode::convertToBoolean(['foo' => 'bar'], $renderingContext));
@@ -85,7 +85,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function convertToBooleanProperlyConvertsObjects(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         self::assertFalse(BooleanNode::convertToBoolean(null, $renderingContext));
         self::assertTrue(BooleanNode::convertToBoolean(new \stdClass(), $renderingContext));
     }
@@ -114,7 +114,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function testCreateFromNodeAndEvaluate(NodeInterface $node, bool $expected): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $result = BooleanNode::createFromNodeAndEvaluate($node, $renderingContext);
         self::assertEquals($expected, $result);
     }
@@ -124,7 +124,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function comparingNestedComparisonsWorks(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('('));
         $rootNode->addChildNode(new ArrayNode(['foo' => 'bar']));
@@ -141,7 +141,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function comparingEqualNumbersReturnsTrue(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('5'));
         $rootNode->addChildNode(new TextNode('=='));
@@ -155,7 +155,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function comparingUnequalNumbersReturnsFalse(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('5'));
         $rootNode->addChildNode(new TextNode('=='));
@@ -169,7 +169,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function comparingEqualIdentityReturnsTrue(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('5'));
         $rootNode->addChildNode(new TextNode('==='));
@@ -183,7 +183,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function comparingUnequalIdentityReturnsFalse(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new NumericNode('0'));
         $rootNode->addChildNode(new TextNode('==='));
@@ -197,7 +197,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function notEqualReturnsFalseIfNumbersAreEqual(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('5'));
         $rootNode->addChildNode(new TextNode('!='));
@@ -211,7 +211,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function notEqualReturnsTrueIfNumbersAreNotEqual(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('5'));
         $rootNode->addChildNode(new TextNode('!='));
@@ -225,7 +225,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function oddNumberModulo2ReturnsTrue(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('43'));
         $rootNode->addChildNode(new TextNode('%'));
@@ -239,7 +239,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function evenNumberModulo2ReturnsFalse(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('42'));
         $rootNode->addChildNode(new TextNode('%'));
@@ -253,7 +253,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function greaterThanReturnsTrueIfNumberIsReallyGreater(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('10'));
         $rootNode->addChildNode(new TextNode('>'));
@@ -267,7 +267,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function greaterThanReturnsFalseIfNumberIsEqual(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('10'));
         $rootNode->addChildNode(new TextNode('>'));
@@ -281,7 +281,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function greaterOrEqualsReturnsTrueIfNumberIsReallyGreater(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('10'));
         $rootNode->addChildNode(new TextNode('>='));
@@ -295,7 +295,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function greaterOrEqualsReturnsTrueIfNumberIsEqual(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('10'));
         $rootNode->addChildNode(new TextNode('>='));
@@ -308,7 +308,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function greaterOrEqualsReturnFalseIfNumberIsSmaller(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('10'));
         $rootNode->addChildNode(new TextNode('>='));
@@ -321,7 +321,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function lessThanReturnsTrueIfNumberIsReallyless(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('9'));
         $rootNode->addChildNode(new TextNode('<'));
@@ -334,7 +334,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function lessThanReturnsFalseIfNumberIsEqual(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('10'));
         $rootNode->addChildNode(new TextNode('<'));
@@ -347,7 +347,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function lessOrEqualsReturnsTrueIfNumberIsReallyLess(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('9'));
         $rootNode->addChildNode(new TextNode('<='));
@@ -360,7 +360,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function lessOrEqualsReturnsTrueIfNumberIsEqual(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('10'));
         $rootNode->addChildNode(new TextNode('<='));
@@ -373,7 +373,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function lessOrEqualsReturnFalseIfNumberIsBigger(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('11'));
         $rootNode->addChildNode(new TextNode('<='));
@@ -386,7 +386,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function lessOrEqualsReturnFalseIfComparingWithANegativeNumber(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('11 <= -2.1'));
         self::assertFalse(BooleanNode::createFromNodeAndEvaluate($rootNode, $renderingContext));
@@ -394,7 +394,7 @@ class BooleanNodeTest extends UnitTestCase
 
     private function getDummyRenderingContextWithVariables(array $variables): RenderingContextInterface
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $renderingContext->setVariableProvider(new StandardVariableProvider($variables));
         $renderingContext->getVariableProvider()->setSource($variables);
         return $renderingContext;
@@ -469,7 +469,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function notEqualReturnsFalseIfComparingMatchingStrings(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('\'stringA\' != "stringA"'));
         self::assertFalse(BooleanNode::createFromNodeAndEvaluate($rootNode, $renderingContext));
@@ -480,7 +480,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function notEqualReturnsTrueIfComparingNonMatchingStrings(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('\'stringA\' != \'stringB\''));
         self::assertTrue(BooleanNode::createFromNodeAndEvaluate($rootNode, $renderingContext));
@@ -491,7 +491,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function equalsReturnsFalseIfComparingNonMatchingStrings(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('\'stringA\' == \'stringB\''));
         self::assertFalse(BooleanNode::createFromNodeAndEvaluate($rootNode, $renderingContext));
@@ -502,7 +502,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function equalsReturnsTrueIfComparingMatchingStrings(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('\'stringA\' == "stringA"'));
         self::assertTrue(BooleanNode::createFromNodeAndEvaluate($rootNode, $renderingContext));
@@ -513,7 +513,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function equalsReturnsTrueIfComparingMatchingStringsWithEscapedQuotes(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('\'\\\'stringA\\\'\' == \'\\\'stringA\\\'\''));
         self::assertTrue(BooleanNode::createFromNodeAndEvaluate($rootNode, $renderingContext));
@@ -524,7 +524,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function equalsReturnsFalseIfComparingStringWithNonZero(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('\'stringA\' == 42'));
         self::assertFalse(BooleanNode::createFromNodeAndEvaluate($rootNode, $renderingContext));
@@ -535,7 +535,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function equalsReturnsTrueIfComparingStringWithZero(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         // expected value based on php versions behaviour
         $expected = (PHP_VERSION_ID < 80000 ? true : false);
         $rootNode = new RootNode();
@@ -548,7 +548,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function equalsReturnsFalseIfComparingStringZeroWithZero(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('\'0\' == 0'));
         self::assertTrue(BooleanNode::createFromNodeAndEvaluate($rootNode, $renderingContext));
@@ -559,7 +559,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function objectsAreComparedStrictly(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $object1 = new \stdClass();
         $object2 = new \stdClass();
 
@@ -584,7 +584,7 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function objectsAreComparedStrictlyInUnequalComparison(): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $object1 = new \stdClass();
         $object2 = new \stdClass();
 
@@ -621,13 +621,12 @@ class BooleanNodeTest extends UnitTestCase
     }
 
     /**
-     * @param mixed $input
      * @test
      * @dataProvider getStandardInputTypes
      */
-    public function acceptsStandardTypesAsInput($input, bool $expected): void
+    public function acceptsStandardTypesAsInput(mixed $input, bool $expected): void
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = new RenderingContext();
         $node = new BooleanNode($input);
         self::assertEquals($expected, $node->evaluate($renderingContext));
     }

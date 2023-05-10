@@ -18,7 +18,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\Fixtures\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Fixtures\RenderMethodFreeDefaultRenderStaticViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Fixtures\RenderMethodFreeViewHelper;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
@@ -169,7 +168,7 @@ class AbstractViewHelperTest extends UnitTestCase
     {
         $this->expectException(Exception::class);
         $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods([])->getMock();
-        $subject->setRenderingContext(new RenderingContextFixture());
+        $subject->setRenderingContext(new RenderingContext());
         $subject->validateAdditionalArguments(['foo' => 'bar']);
     }
 
@@ -194,7 +193,7 @@ class AbstractViewHelperTest extends UnitTestCase
     {
         $subject = new RenderMethodFreeViewHelper();
         $method = new \ReflectionMethod($subject, 'callRenderMethod');
-        $subject->setRenderingContext(new RenderingContextFixture());
+        $subject->setRenderingContext(new RenderingContext());
         $result = $method->invoke($subject);
         self::assertSame('I was rendered', $result);
     }
@@ -207,7 +206,7 @@ class AbstractViewHelperTest extends UnitTestCase
         $this->expectException(Exception::class);
         $subject = new RenderMethodFreeDefaultRenderStaticViewHelper();
         $method = new \ReflectionMethod($subject, 'callRenderMethod');
-        $subject->setRenderingContext(new RenderingContextFixture());
+        $subject->setRenderingContext(new RenderingContext());
         $method->invoke($subject);
     }
 }
