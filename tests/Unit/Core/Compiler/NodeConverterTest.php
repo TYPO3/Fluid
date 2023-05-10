@@ -40,11 +40,6 @@ class NodeConverterTest extends UnitTestCase
 
     public static function convertReturnsExpectedExecutionDataProvider(): array
     {
-        $treeBooleanRoot = new RootNode();
-        $treeBooleanRoot->addChildNode(new TextNode('1'));
-        $treeBooleanRoot->addChildNode(new TextNode('!='));
-        $treeBooleanRoot->addChildNode(new TextNode('2'));
-        $treeBoolean = new BooleanNode($treeBooleanRoot);
         $simpleRoot = new RootNode();
         $simpleRoot->addChildNode(new TextNode('foobar'));
         $multiRoot = new RootNode();
@@ -62,30 +57,10 @@ class NodeConverterTest extends UnitTestCase
             ],
             [
                 new BooleanNode(new TextNode('TRUE')),
-                'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(
-					$expression1(
-						TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::gatherContext($renderingContext, $array0)
-					),
-					$renderingContext
-				)'
-            ],
-            [
-                new BooleanNode(new TextNode('1 = 1')),
-                'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(
-					$expression1(
-						TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::gatherContext($renderingContext, $array0)
-					),
-					$renderingContext
-				)'
-            ],
-            [
-                $treeBoolean,
-                'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(
-					$expression1(
-						TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::gatherContext($renderingContext, $array0)
-					),
-					$renderingContext
-				)'
+                'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(' . chr(10) .
+                '    $expression1(TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::gatherContext($renderingContext, $array0)),' . chr(10) .
+                '    $renderingContext' . chr(10) .
+                ')'
             ],
             [
                 new TernaryExpressionNode('1 ? 2 : 3', [1, 2, 3]),
@@ -118,6 +93,9 @@ class NodeConverterTest extends UnitTestCase
     /**
      * @test
      * @dataProvider convertReturnsExpectedExecutionDataProvider
+     * @todo: These tests are pretty much useless since 'initialization' is not checked.
+     *        See if there are good functional tests covering the single nodes in their
+     *        compiled variant already, extend / create if needed, then drop this test.
      */
     public function convertReturnsExpectedExecution(NodeInterface $node, string $expected): void
     {
