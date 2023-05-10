@@ -173,34 +173,38 @@ class NodeConverter
 
             $accumulatedArgumentInitializationCode = '';
             $argumentInitializationCode = sprintf('%s = [' . chr(10), $argumentsVariableName);
-            $arguments = $node->getArguments();
-            foreach ($arguments as $argumentName => $argumentValue) {
-                if ($argumentValue instanceof NodeInterface) {
-                    $converted = $this->convert($argumentValue);
-                } else {
-                    $converted = [
-                        'initialization' => '',
-                        'execution' => $argumentValue
-                    ];
-                }
-                if (!empty($converted['initialization'])) {
-                    $accumulatedArgumentInitializationCode .= $converted['initialization'];
-                }
-                $argumentInitializationCode .= sprintf(
-                    '\'%s\' => %s,' . chr(10),
-                    $argumentName,
-                    $converted['execution']
-                );
-            }
 
-            foreach ($node->getArgumentDefinitions() as $argumentName => $argumentDefinition) {
+            $arguments = $node->getArguments();
+            $defaultArguments = $node->getArgumentDefinitions();
+            foreach ($defaultArguments as $argumentName => $argumentDefinition) {
                 if (!isset($arguments[$argumentName])) {
+                    // Argument *not* given to VH, use default value
                     $defaultValue = $argumentDefinition->getDefaultValue();
                     $argumentInitializationCode .= sprintf(
                         '\'%s\' => %s,' . chr(10),
                         $argumentName,
                         is_array($defaultValue) && empty($defaultValue) ? '[]' : var_export($defaultValue, true)
                     );
+                } else {
+                    // Argument *is* given to VH, resolve
+                    $argumentValue = $arguments[$argumentName];
+                    if ($argumentValue instanceof NodeInterface) {
+                        $converted = $this->convert($argumentValue);
+                        if (!empty($converted['initialization'])) {
+                            $accumulatedArgumentInitializationCode .= $converted['initialization'];
+                        }
+                        $argumentInitializationCode .= sprintf(
+                            '\'%s\' => %s,' . chr(10),
+                            $argumentName,
+                            $converted['execution']
+                        );
+                    } else {
+                        $argumentInitializationCode .= sprintf(
+                            '\'%s\' => %s,' . chr(10),
+                            $argumentName,
+                            $argumentValue
+                        );
+                    }
                 }
             }
 
