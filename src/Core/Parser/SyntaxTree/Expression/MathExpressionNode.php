@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -40,7 +42,7 @@ class MathExpressionNode extends AbstractExpressionNode
      * @param array $matches
      * @return int|float
      */
-    public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches)
+    public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches): int|float
     {
         // Split the expression on all recognized operators
         $matches = [];
@@ -66,13 +68,7 @@ class MathExpressionNode extends AbstractExpressionNode
         return $result;
     }
 
-    /**
-     * @param int|float $left
-     * @param string $operator
-     * @param int|float $right
-     * @return int|float
-     */
-    protected static function evaluateOperation($left, $operator, $right)
+    protected static function evaluateOperation(int|float $left, ?string $operator, int|float $right): int|float
     {
         if ($operator === '%') {
             return $left % $right;
