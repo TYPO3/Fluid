@@ -81,7 +81,16 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => false],
             'bar',
         ];
-        yield 'else if' => [
+        yield 'else if with if verdict true' => [
+            '<f:if condition="{verdict}">' .
+                '<f:then>foo</f:then>' .
+                '<f:else if="{verdictElseIf}">bar</f:else>' .
+                '<f:else>baz</f:else>' .
+            '</f:if>',
+            ['verdict' => true, 'verdictElseIf' => true],
+            'foo',
+        ];
+        yield 'else if with elseif verdict true' => [
             '<f:if condition="{verdict}">' .
                 '<f:then>foo</f:then>' .
                 '<f:else if="{verdictElseIf}">bar</f:else>' .
@@ -89,6 +98,15 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             '</f:if>',
             ['verdict' => false, 'verdictElseIf' => true],
             'bar',
+        ];
+        yield 'else if with elseif verdict false falls back to else' => [
+            '<f:if condition="{verdict}">' .
+                '<f:then>foo</f:then>' .
+                '<f:else if="{verdictElseIf}">bar</f:else>' .
+                '<f:else>baz</f:else>' .
+            '</f:if>',
+            ['verdict' => false, 'verdictElseIf' => false],
+            'baz',
         ];
     }
 
