@@ -81,6 +81,25 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => false],
             'bar',
         ];
+        yield 'with then argument and then child prefers argument' => [
+            '<f:if condition="{verdict}" then="thenArgument"><f:then>thenChild</f:then></f:if>',
+            ['verdict' => true],
+            'thenArgument',
+        ];
+        yield 'with then argument and then child and false verdict' => [
+            '<f:if condition="{verdict}" then="thenArgument"><f:then>thenChild</f:then></f:if>',
+            ['verdict' => false],
+            null,
+        ];
+        // @todo: Bug. Not compiled template returns elseArgument here, while compiled
+        //       template returns elseChild.
+        /*
+        yield 'with then argument and then child and else argument and else child prefers else argument' => [
+            '<f:if condition="{verdict}" then="thenArgument" else="elseArgument"><f:then>thenChild</f:then><f:else>elseChild</f:else></f:if>',
+            ['verdict' => false],
+            'elseChild',
+        ];
+        */
         yield 'else if with if verdict true' => [
             '<f:if condition="{verdict}">' .
                 '<f:then>foo</f:then>' .
