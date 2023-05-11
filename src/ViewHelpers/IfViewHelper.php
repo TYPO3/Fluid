@@ -9,6 +9,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AvoidCompileChildrenViewHelperInterface;
 
 /**
  * This ViewHelper implements an if/else condition.
@@ -96,7 +97,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *
  * @api
  */
-class IfViewHelper extends AbstractConditionViewHelper
+class IfViewHelper extends AbstractConditionViewHelper implements AvoidCompileChildrenViewHelperInterface
 {
     public function initializeArguments()
     {

@@ -18,6 +18,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AvoidCompileChildrenViewHelperInterface;
 
 /**
  * @internal
@@ -211,11 +212,15 @@ class NodeConverter
             $argumentInitializationCode .= '];' . chr(10);
 
             // Build up closure which renders the child nodes
-            $initializationPhpCode .= sprintf(
-                '%s = %s;' . chr(10),
-                $renderChildrenClosureVariableName,
-                $this->templateCompiler->wrapChildNodesInClosure($node)
-            );
+            if (!is_a($node->getViewHelperClassName(), AvoidCompileChildrenViewHelperInterface::class, true)) {
+                $initializationPhpCode .= sprintf(
+                    '%s = %s;' . chr(10),
+                    $renderChildrenClosureVariableName,
+                    $this->templateCompiler->wrapChildNodesInClosure($node)
+                );
+            } else {
+                $initializationPhpCode .= sprintf('%s = static fn () => \'\';', $renderChildrenClosureVariableName);
+            }
 
             $initializationPhpCode .= $accumulatedArgumentInitializationCode . chr(10) . $argumentInitializationCode . $viewHelperInitializationPhpCode;
         } catch (StopCompilingChildrenException $stopCompilingChildrenException) {
