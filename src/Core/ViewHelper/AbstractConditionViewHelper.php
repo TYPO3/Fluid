@@ -70,27 +70,36 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
-        if (static::verdict($arguments, $renderingContext)) {
+        $mainConditionVerdict = static::verdict($arguments, $renderingContext);
+        if ($mainConditionVerdict) {
+            // The condition argument evaluated to true. Return the "then" argument as string,
+            // execute f:then child or general body closure, or return empty string.
             if (isset($arguments['then'])) {
                 return $arguments['then'];
             }
-            if (isset($arguments['__thenClosure'])) {
-                return $arguments['__thenClosure']();
-            }
-        } elseif (!empty($arguments['__elseClosures'])) {
-            $closures = $arguments['__elseClosures'];
-            $elseIfClosures = isset($arguments['__elseifClosures']) ? $arguments['__elseifClosures'] : [];
-            foreach ($closures as $elseNodeIndex => $elseNodeClosure) {
-                if (!isset($elseIfClosures[$elseNodeIndex])) {
-                    return $elseNodeClosure();
-                }
-                if ($elseIfClosures[$elseNodeIndex]()) {
-                    return $elseNodeClosure();
-                }
+            if (isset($arguments['__then'])) {
+                return $arguments['__then']();
             }
             return '';
-        } elseif (array_key_exists('else', $arguments)) {
+        }
+        if (!empty($arguments['__elseIf'])) {
+            // The condition argument evaluated to false. For each "f:else if",
+            // evaluate its condition and return its executed body closure if verdict is true.
+            foreach ($arguments['__elseIf'] as $elseIf) {
+                if ($elseIf['condition']()) {
+                    return $elseIf['body']();
+                }
+            }
+        }
+        if (isset($arguments['else'])) {
+            // The condition argument evaluated to false. If there
+            // is an else argument, return as string.
             return $arguments['else'];
+        }
+        if (!empty($arguments['__else'])) {
+            // The condition argument evaluated to false. If there is
+            // an f:else body closure, return its executed body.
+            return $arguments['__else']();
         }
         return '';
     }
@@ -199,42 +208,67 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
     }
 
     /**
-     * The compiled ViewHelper adds two new ViewHelper arguments: __thenClosure and __elseClosure.
-     * These contain closures which are be executed to render the then(), respectively else() case.
+     * The compiled ViewHelper adds new arguments prefixed with "__" to
+     * take care of then/else/elseif cases.
      *
      * @param string $argumentsName
      * @param string $closureName
      * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
      * @return string
      */
     public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
     {
-        $thenViewHelperEncountered = $elseViewHelperEncountered = false;
+        $thenChildEncountered = false;
+        $elseChildEncountered = false;
+        $elseIfCounter = 0;
         foreach ($node->getChildNodes() as $childNode) {
             if ($childNode instanceof ViewHelperNode) {
                 $viewHelperClassName = $childNode->getViewHelperClassName();
-                if (substr($viewHelperClassName, -14) === 'ThenViewHelper') {
-                    $thenViewHelperEncountered = true;
-                    $childNodesAsClosure = $compiler->wrapChildNodesInClosure($childNode);
-                    $initializationPhpCode .= sprintf('%s[\'__thenClosure\'] = %s;', $argumentsName, $childNodesAsClosure) . chr(10);
-                } elseif (substr($viewHelperClassName, -14) === 'ElseViewHelper') {
-                    $elseViewHelperEncountered = true;
-                    $childNodesAsClosure = $compiler->wrapChildNodesInClosure($childNode);
-                    $initializationPhpCode .= sprintf('%s[\'__elseClosures\'][] = %s;', $argumentsName, $childNodesAsClosure) . chr(10);
-                    $arguments = $childNode->getArguments();
-                    if (isset($arguments['if'])) {
-                        // The "else" has an argument, indicating it has a secondary (elseif) condition.
+                if (!$thenChildEncountered && str_ends_with($viewHelperClassName, 'ThenViewHelper')) {
+                    // If there are multiple f:then children, we pick the first one only.
+                    // This is in line with the non-compiled behavior.
+                    $thenChildEncountered = true;
+                    $initializationPhpCode .= sprintf(
+                        '%s[\'__then\'] = %s;' . chr(10),
+                        $argumentsName,
+                        $compiler->wrapChildNodesInClosure($childNode)
+                    );
+                    continue;
+                }
+                if (str_ends_with($viewHelperClassName, 'ElseViewHelper')) {
+                    if (isset($childNode->getArguments()['if'])) {
+                        // This "f:else" has the "if" argument, indicating this is a secondary (elseif) condition.
                         // Compile a closure which will evaluate the condition.
-                        $elseIfConditionAsClosure = $compiler->wrapViewHelperNodeArgumentEvaluationInClosure($childNode, 'if');
-                        $initializationPhpCode .= sprintf('%s[\'__elseifClosures\'][] = %s;', $argumentsName, $elseIfConditionAsClosure) . chr(10);
+                        $initializationPhpCode .= sprintf(
+                            '%s[\'__elseIf\'][%s] = [' . chr(10) .
+                            '    \'condition\' => %s,' . chr(10) .
+                            '    \'body\' => %s,' . chr(10) .
+                            '];' . chr(10),
+                            $argumentsName,
+                            $elseIfCounter,
+                            $compiler->wrapViewHelperNodeArgumentEvaluationInClosure($childNode, 'if'),
+                            $compiler->wrapChildNodesInClosure($childNode)
+                        );
+                        $elseIfCounter++;
+                        continue;
+                    }
+                    if (!$elseChildEncountered) {
+                        // If there are multiple f:else children, we pick the first one only.
+                        // This is in line with the non-compiled behavior.
+                        $elseChildEncountered = true;
+                        $initializationPhpCode .= sprintf(
+                            '%s[\'__else\'] = %s;' . chr(10),
+                            $argumentsName,
+                            $compiler->wrapChildNodesInClosure($childNode)
+                        );
                     }
                 }
             }
         }
-        if (!$thenViewHelperEncountered && !$elseViewHelperEncountered && !isset($node->getArguments()['then'])) {
-            $initializationPhpCode .= sprintf('%s[\'__thenClosure\'] = %s;', $argumentsName, $closureName) . chr(10);
+        if (!$thenChildEncountered && $elseIfCounter === 0 && !$elseChildEncountered && !isset($node->getArguments()['then'])) {
+            // If there is no then argument, and there are neither "f:then", "f:else" nor "f:else if" children,
+            // then the entire body is considered the "then" child.
+            $initializationPhpCode .= sprintf('%s[\'__then\'] = %s;', $argumentsName, $closureName) . chr(10);
         }
         return parent::compile($argumentsName, $closureName, $initializationPhpCode, $node, $compiler);
     }

@@ -37,7 +37,7 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
         yield 'then argument, verdict false' => [
             '<f:if condition="{verdict}" then="thenArgument" />',
             ['verdict' => false],
-            null,
+            '',
         ];
         yield 'then argument, else argument, verdict true' => [
             '<f:if condition="{verdict}" then="thenArgument" else="elseArgument" />',
@@ -71,7 +71,7 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
                 'thenBody' .
             '</f:if>',
             ['verdict' => false],
-            null,
+            '',
         ];
         yield 'then body, then child, verdict true, prefers child' => [
             '<f:if condition="{verdict}">' .
@@ -87,7 +87,7 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
                 '<f:then>thenChild</f:then>' .
             '</f:if>',
             ['verdict' => false],
-            null,
+            '',
         ];
         yield 'then body, else child, verdict true, ignores then body' => [
             '<f:if condition="{verdict}">' .
@@ -105,8 +105,6 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => false],
             'elseChild',
         ];
-        /*
-         * @todo: broken compiled / non-compiled
         yield 'then child1, then child2, verdict true' => [
             '<f:if condition="{verdict}">' .
                 '<f:then>thenChild1</f:then>' .
@@ -115,9 +113,6 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => true],
             'thenChild1',
         ];
-         */
-        /*
-         * @todo: broken - empty string not compiled, null compiled
         yield 'then child1, then child2, verdict false' => [
             '<f:if condition="{verdict}">' .
                 '<f:then>thenChild1</f:then>' .
@@ -126,7 +121,6 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => false],
             '',
         ];
-        */
         yield 'else child1, else child2, verdict true' => [
             '<f:if condition="{verdict}">' .
                 '<f:else>elseChild1</f:else>' .
@@ -135,8 +129,6 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => true],
             '',
         ];
-        /*
-         * @todo: broken compiled / non-compiled
         yield 'else child1, else child2, verdict false' => [
             '<f:if condition="{verdict}">' .
                 '<f:else>elseChild1</f:else>' .
@@ -145,7 +137,6 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => false],
             'elseChild1',
         ];
-         */
         yield 'then child, else child, verdict true' => [
             '<f:if condition="{verdict}">' .
                 '<f:then>thenChild</f:then>' .
@@ -174,10 +165,8 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
                 '<f:then>thenChild</f:then>' .
             '</f:if>',
             ['verdict' => false],
-            null,
+            '',
         ];
-        /*
-         * @todo: broken compiled / non-compiled
         yield 'then argument, then child, else argument, else child, verdict false, prefers else argument' => [
             '<f:if condition="{verdict}" then="thenArgument" else="elseArgument">' .
                 '<f:then>thenChild</f:then>' .
@@ -186,7 +175,6 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => false],
             'elseArgument',
         ];
-        */
 
         yield 'then child, else if child, if verdict true, elseif verdict true' => [
             '<f:if condition="{verdict}">' .
@@ -282,7 +270,7 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             'elseChild',
         ];
 
-        yield 'then argument, else if child, else child, if verdict true, elseif1 verdict true' => [
+        yield 'then argument, else if child, else child, if verdict true, elseif verdict true' => [
             '<f:if condition="{verdict}" then="thenArgument">' .
                 '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
                 '<f:else>elseChild</f:else>' .
@@ -290,7 +278,7 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => true, 'verdictElseIf' => true],
             'thenArgument',
         ];
-        yield 'then argument, else if child, else child, if verdict false, elseif1 verdict true' => [
+        yield 'then argument, else if child, else child, if verdict false, elseif verdict true' => [
             '<f:if condition="{verdict}" then="thenArgument">' .
                 '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
                 '<f:else>elseChild</f:else>' .
@@ -298,7 +286,7 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => false, 'verdictElseIf' => true],
             'elseIfChild',
         ];
-        yield 'then argument, else if child, else child, if verdict false, elseif1 verdict false' => [
+        yield 'then argument, else if child, else child, if verdict false, elseif verdict false' => [
             '<f:if condition="{verdict}" then="thenArgument">' .
                 '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
                 '<f:else>elseChild</f:else>' .
@@ -307,7 +295,7 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             'elseChild',
         ];
 
-        yield 'then child, else if child, else argument, if verdict true, elseif1 verdict true' => [
+        yield 'then child, else if child, else argument, if verdict true, elseif verdict true' => [
             '<f:if condition="{verdict}" else="elseArgument">' .
                 '<f:then>thenChild</f:then>' .
                 '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
@@ -315,7 +303,7 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => true, 'verdictElseIf' => true],
             'thenChild',
         ];
-        yield 'then child, else if child, else argument, if verdict false, elseif1 verdict true' => [
+        yield 'then child, else if child, else argument, if verdict false, elseif verdict true' => [
             '<f:if condition="{verdict}" else="elseArgument">' .
                 '<f:then>thenChild</f:then>' .
                 '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
@@ -323,15 +311,45 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => false, 'verdictElseIf' => true],
             'elseIfChild',
         ];
-        /*
-         * @todo: broken - else argument not considered.
-        yield 'then child, else if child, else argument, if verdict false, elseif1 verdict false' => [
+        yield 'then child, else if child, else argument, if verdict false, elseif verdict false' => [
             '<f:if condition="{verdict}" else="elseArgument">' .
                 '<f:then>thenChild</f:then>' .
                 '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
             '</f:if>',
             ['verdict' => false, 'verdictElseIf' => false],
             'elseArgument',
+        ];
+
+        yield 'else if child, if verdict true, elseif verdict true' => [
+            '<f:if condition="{verdict}">' .
+                '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
+            '</f:if>',
+            ['verdict' => true, 'verdictElseIf' => true],
+            '',
+        ];
+        yield 'else if child, if verdict false, elseif verdict true' => [
+            '<f:if condition="{verdict}">' .
+                '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
+            '</f:if>',
+            ['verdict' => false, 'verdictElseIf' => true],
+            'elseIfChild',
+        ];
+        yield 'else if child, if verdict false, elseif verdict false' => [
+            '<f:if condition="{verdict}">' .
+                '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
+            '</f:if>',
+            ['verdict' => false, 'verdictElseIf' => false],
+            '',
+        ];
+
+        /*
+         * @todo: broken non-compiled, ok compiled
+        yield 'else argument, else if child, if verdict false, elseif verdict true' => [
+            '<f:if condition="{verdict}" else="elseArgument">' .
+                '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
+            '</f:if>',
+            ['verdict' => false, 'verdictElseIf' => true],
+            'elseIfChild',
         ];
         */
     }
