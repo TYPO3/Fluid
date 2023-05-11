@@ -78,8 +78,17 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                 return $arguments['__thenClosure']();
             }
         } elseif (!empty($arguments['__elseClosures'])) {
+            $closures = $arguments['__elseClosures'];
             $elseIfClosures = isset($arguments['__elseifClosures']) ? $arguments['__elseifClosures'] : [];
-            return static::evaluateElseClosures($arguments['__elseClosures'], $elseIfClosures, $renderingContext);
+            foreach ($closures as $elseNodeIndex => $elseNodeClosure) {
+                if (!isset($elseIfClosures[$elseNodeIndex])) {
+                    return $elseNodeClosure();
+                }
+                if ($elseIfClosures[$elseNodeIndex]()) {
+                    return $elseNodeClosure();
+                }
+            }
+            return '';
         } elseif (array_key_exists('else', $arguments)) {
             return $arguments['else'];
         }
@@ -121,25 +130,6 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
     protected static function evaluateCondition($arguments = null)
     {
         return isset($arguments['condition']) && (bool)($arguments['condition']);
-    }
-
-    /**
-     * @param array $closures
-     * @param array $conditionClosures
-     * @param RenderingContextInterface $renderingContext
-     * @return string
-     */
-    private static function evaluateElseClosures(array $closures, array $conditionClosures, RenderingContextInterface $renderingContext)
-    {
-        foreach ($closures as $elseNodeIndex => $elseNodeClosure) {
-            if (!isset($conditionClosures[$elseNodeIndex])) {
-                return $elseNodeClosure();
-            }
-            if ($conditionClosures[$elseNodeIndex]()) {
-                return $elseNodeClosure();
-            }
-        }
-        return '';
     }
 
     /**
