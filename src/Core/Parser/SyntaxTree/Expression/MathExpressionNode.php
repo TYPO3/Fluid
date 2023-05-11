@@ -58,6 +58,8 @@ class MathExpressionNode extends AbstractExpressionNode
                 $operator = $part;
             } else {
                 $part = static::getTemplateVariableOrValueItself($part, $renderingContext);
+                $part = ($part == (int) $part) ? (int) $part : (float) $part;
+                $result = ($result == (int) $result) ? (int) $result : (float) $result;
                 $result = self::evaluateOperation($result, $operator, $part);
             }
         }
