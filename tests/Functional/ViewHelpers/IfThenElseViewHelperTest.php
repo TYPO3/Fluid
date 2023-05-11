@@ -16,117 +16,324 @@ class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
 {
     public static function renderDataProvider(): \Generator
     {
-        yield 'no condition' => [
-            '<f:if then="foo" else="bar" />',
+        yield 'then argument, else argument, no verdict, prefers else' => [
+            '<f:if then="thenArgument" else="elseArgument" />',
             [],
-            'bar',
+            'elseArgument',
         ];
-        yield 'condition is true' => [
-            '<f:if condition="{verdict}" then="foo" />',
-            ['verdict' => true],
-            'foo',
+        yield 'then body, else body, no verdict, prefers else' => [
+            '<f:if>' .
+                '<f:then>thenBody</f:then>' .
+                '<f:else>elseBody</f:else>' .
+            '</f:if>',
+            [],
+            'elseBody',
         ];
-        yield 'condition is false' => [
-            '<f:if condition="{verdict}" then="foo" />',
-            ['verdict' => false],
-            null,
-        ];
-        yield 'condition is true and else exists' => [
-            '<f:if condition="{verdict}" then="foo" else="bar" />',
-            ['verdict' => true],
-            'foo',
-        ];
-        yield 'condition is false and else exists' => [
-            '<f:if condition="{verdict}" then="foo" else="bar" />',
-            ['verdict' => false],
-            'bar',
-        ];
-        yield 'condition is true and only else exists' => [
-            '<f:if condition="{verdict}" else="bar" />',
-            ['verdict' => true],
-            null,
-        ];
-        yield 'condition is false and only else exists' => [
-            '<f:if condition="{verdict}" else="bar" />',
-            ['verdict' => false],
-            'bar',
-        ];
-        yield 'without then and else and condition is true' => [
-            '<f:if condition="{verdict}">foo</f:if>',
-            ['verdict' => true],
-            'foo',
-        ];
-        yield 'without then and else and condition is false' => [
-            '<f:if condition="{verdict}">foo</f:if>',
-            ['verdict' => false],
-            null,
-        ];
-        yield 'with then viewhelper' => [
-            '<f:if condition="{verdict}">foo<f:then>bar</f:then></f:if>',
-            ['verdict' => true],
-            'bar',
-        ];
-        yield 'with else viewhelper' => [
-            '<f:if condition="{verdict}">foo<f:else>bar</f:else></f:if>',
-            ['verdict' => false],
-            'bar',
-        ];
-        yield 'with then and else viewhelper and condition is true' => [
-            '<f:if condition="{verdict}"><f:then>foo</f:then><f:else>bar</f:else></f:if>',
-            ['verdict' => true],
-            'foo',
-        ];
-        yield 'with then and else viewhelper and condition is false' => [
-            '<f:if condition="{verdict}"><f:then>foo</f:then><f:else>bar</f:else></f:if>',
-            ['verdict' => false],
-            'bar',
-        ];
-        yield 'with then argument and then child prefers argument' => [
-            '<f:if condition="{verdict}" then="thenArgument"><f:then>thenChild</f:then></f:if>',
+        yield 'then argument, verdict true' => [
+            '<f:if condition="{verdict}" then="thenArgument" />',
             ['verdict' => true],
             'thenArgument',
         ];
-        yield 'with then argument and then child and false verdict' => [
-            '<f:if condition="{verdict}" then="thenArgument"><f:then>thenChild</f:then></f:if>',
+        yield 'then argument, verdict false' => [
+            '<f:if condition="{verdict}" then="thenArgument" />',
             ['verdict' => false],
             null,
         ];
-        // @todo: Bug. Not compiled template returns elseArgument here, while compiled
-        //       template returns elseChild.
-        /*
-        yield 'with then argument and then child and else argument and else child prefers else argument' => [
-            '<f:if condition="{verdict}" then="thenArgument" else="elseArgument"><f:then>thenChild</f:then><f:else>elseChild</f:else></f:if>',
+        yield 'then argument, else argument, verdict true' => [
+            '<f:if condition="{verdict}" then="thenArgument" else="elseArgument" />',
+            ['verdict' => true],
+            'thenArgument',
+        ];
+        yield 'then argument, else argument, verdict false' => [
+            '<f:if condition="{verdict}" then="thenArgument" else="elseArgument" />',
+            ['verdict' => false],
+            'elseArgument',
+        ];
+        yield 'else argument, verdict true' => [
+            '<f:if condition="{verdict}" else="elseArgument" />',
+            ['verdict' => true],
+            null,
+        ];
+        yield 'else argument, verdict false' => [
+            '<f:if condition="{verdict}" else="elseArgument" />',
+            ['verdict' => false],
+            'elseArgument',
+        ];
+        yield 'then body, verdict true' => [
+            '<f:if condition="{verdict}">' .
+                'thenBody' .
+            '</f:if>',
+            ['verdict' => true],
+            'thenBody',
+        ];
+        yield 'then body, verdict false' => [
+            '<f:if condition="{verdict}">' .
+                'thenBody' .
+            '</f:if>',
+            ['verdict' => false],
+            null,
+        ];
+        yield 'then body, then child, verdict true, prefers child' => [
+            '<f:if condition="{verdict}">' .
+                'thenBody' .
+                '<f:then>thenChild</f:then>' .
+            '</f:if>',
+            ['verdict' => true],
+            'thenChild',
+        ];
+        yield 'then body, then child, verdict false' => [
+            '<f:if condition="{verdict}">' .
+                'thenBody' .
+                '<f:then>thenChild</f:then>' .
+            '</f:if>',
+            ['verdict' => false],
+            null,
+        ];
+        yield 'then body, else child, verdict true, ignores then body' => [
+            '<f:if condition="{verdict}">' .
+                'thenBody' .
+                '<f:else>elseChild</f:else>' .
+            '</f:if>',
+            ['verdict' => true],
+            '',
+        ];
+        yield 'then body, else child, verdict false' => [
+            '<f:if condition="{verdict}">' .
+                'thenBody' .
+                '<f:else>elseChild</f:else>' .
+            '</f:if>',
             ['verdict' => false],
             'elseChild',
         ];
-        */
-        yield 'else if with if verdict true' => [
+        /*
+         * @todo: broken compiled / non-compiled
+        yield 'then child1, then child2, verdict true' => [
             '<f:if condition="{verdict}">' .
-                '<f:then>foo</f:then>' .
-                '<f:else if="{verdictElseIf}">bar</f:else>' .
-                '<f:else>baz</f:else>' .
+                '<f:then>thenChild1</f:then>' .
+                '<f:then>thenChild2</f:then>' .
+            '</f:if>',
+            ['verdict' => true],
+            'thenChild1',
+        ];
+         */
+        /*
+         * @todo: broken - empty string not compiled, null compiled
+        yield 'then child1, then child2, verdict false' => [
+            '<f:if condition="{verdict}">' .
+                '<f:then>thenChild1</f:then>' .
+                '<f:then>thenChild2</f:then>' .
+            '</f:if>',
+            ['verdict' => false],
+            '',
+        ];
+        */
+        yield 'else child1, else child2, verdict true' => [
+            '<f:if condition="{verdict}">' .
+                '<f:else>elseChild1</f:else>' .
+                '<f:else>elseChild2</f:else>' .
+            '</f:if>',
+            ['verdict' => true],
+            '',
+        ];
+        /*
+         * @todo: broken compiled / non-compiled
+        yield 'else child1, else child2, verdict false' => [
+            '<f:if condition="{verdict}">' .
+                '<f:else>elseChild1</f:else>' .
+                '<f:else>elseChild2</f:else>' .
+            '</f:if>',
+            ['verdict' => false],
+            'elseChild1',
+        ];
+         */
+        yield 'then child, else child, verdict true' => [
+            '<f:if condition="{verdict}">' .
+                '<f:then>thenChild</f:then>' .
+                '<f:else>elseChild</f:else>' .
+            '</f:if>',
+            ['verdict' => true],
+            'thenChild',
+        ];
+        yield 'then child, else child, verdict false' => [
+            '<f:if condition="{verdict}">' .
+                '<f:then>thenChild</f:then>' .
+                '<f:else>elseChild</f:else>' .
+            '</f:if>',
+            ['verdict' => false],
+            'elseChild',
+        ];
+        yield 'then argument, then child, verdict true, prefers then argument' => [
+            '<f:if condition="{verdict}" then="thenArgument">' .
+                '<f:then>thenChild</f:then>' .
+            '</f:if>',
+            ['verdict' => true],
+            'thenArgument',
+        ];
+        yield 'then argument, then child, verdict false' => [
+            '<f:if condition="{verdict}" then="thenArgument">' .
+                '<f:then>thenChild</f:then>' .
+            '</f:if>',
+            ['verdict' => false],
+            null,
+        ];
+        /*
+         * @todo: broken compiled / non-compiled
+        yield 'then argument, then child, else argument, else child, verdict false, prefers else argument' => [
+            '<f:if condition="{verdict}" then="thenArgument" else="elseArgument">' .
+                '<f:then>thenChild</f:then>' .
+                '<f:else>elseChild</f:else>' .
+            '</f:if>',
+            ['verdict' => false],
+            'elseArgument',
+        ];
+        */
+
+        yield 'then child, else if child, if verdict true, elseif verdict true' => [
+            '<f:if condition="{verdict}">' .
+                '<f:then>thenChild</f:then>' .
+                '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
             '</f:if>',
             ['verdict' => true, 'verdictElseIf' => true],
-            'foo',
+            'thenChild',
         ];
-        yield 'else if with elseif verdict true' => [
+        yield 'then child, else if child, if verdict false, elseif verdict true' => [
             '<f:if condition="{verdict}">' .
-                '<f:then>foo</f:then>' .
-                '<f:else if="{verdictElseIf}">bar</f:else>' .
-                '<f:else>baz</f:else>' .
+                '<f:then>thenChild</f:then>' .
+                '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
             '</f:if>',
             ['verdict' => false, 'verdictElseIf' => true],
-            'bar',
+            'elseIfChild',
         ];
-        yield 'else if with elseif verdict false falls back to else' => [
+        yield 'then child, else if child, if verdict false, elseif verdict false' => [
             '<f:if condition="{verdict}">' .
-                '<f:then>foo</f:then>' .
-                '<f:else if="{verdictElseIf}">bar</f:else>' .
-                '<f:else>baz</f:else>' .
+                '<f:then>thenChild</f:then>' .
+                '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
             '</f:if>',
             ['verdict' => false, 'verdictElseIf' => false],
-            'baz',
+            '',
         ];
+
+        yield 'then child, else if child, else child, if verdict true, elseif verdict true' => [
+            '<f:if condition="{verdict}">' .
+                '<f:then>thenChild</f:then>' .
+                '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
+                '<f:else>elseChild</f:else>' .
+            '</f:if>',
+            ['verdict' => true, 'verdictElseIf' => true],
+            'thenChild',
+        ];
+        yield 'then child, else if child, else child, if verdict false, elseif verdict true' => [
+            '<f:if condition="{verdict}">' .
+                '<f:then>thenChild</f:then>' .
+                '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
+                '<f:else>elseChild</f:else>' .
+            '</f:if>',
+            ['verdict' => false, 'verdictElseIf' => true],
+            'elseIfChild',
+        ];
+        yield 'then child, else if child, else child, if verdict false, elseif verdict false' => [
+            '<f:if condition="{verdict}">' .
+                '<f:then>thenChild</f:then>' .
+                '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
+                '<f:else>elseChild</f:else>' .
+            '</f:if>',
+            ['verdict' => false, 'verdictElseIf' => false],
+            'elseChild',
+        ];
+
+        yield 'then child, else if child1, else if child 2, else child, if verdict true, elseif1 verdict true, elseif2 verdict true' => [
+            '<f:if condition="{verdict}">' .
+                '<f:then>thenChild</f:then>' .
+                '<f:else if="{verdictElseIf1}">elseIfChild1</f:else>' .
+                '<f:else if="{verdictElseIf2}">elseIfChild2</f:else>' .
+                '<f:else>elseChild</f:else>' .
+            '</f:if>',
+            ['verdict' => true, 'verdictElseIf1' => true, 'verdictElseIf2' => true],
+            'thenChild',
+        ];
+        yield 'then child, else if child1, else if child 2, else child, if verdict false, elseif1 verdict true, elseif2 verdict true' => [
+            '<f:if condition="{verdict}">' .
+                '<f:then>thenChild</f:then>' .
+                '<f:else if="{verdictElseIf1}">elseIfChild1</f:else>' .
+                '<f:else if="{verdictElseIf2}">elseIfChild2</f:else>' .
+                '<f:else>elseChild</f:else>' .
+            '</f:if>',
+            ['verdict' => false, 'verdictElseIf1' => true, 'verdictElseIf2' => true],
+            'elseIfChild1',
+        ];
+        yield 'then child, else if child1, else if child 2, else child, if verdict false, elseif1 verdict false, elseif2 verdict true' => [
+            '<f:if condition="{verdict}">' .
+                '<f:then>thenChild</f:then>' .
+                '<f:else if="{verdictElseIf1}">elseIfChild1</f:else>' .
+                '<f:else if="{verdictElseIf2}">elseIfChild2</f:else>' .
+                '<f:else>elseChild</f:else>' .
+            '</f:if>',
+            ['verdict' => false, 'verdictElseIf1' => false, 'verdictElseIf2' => true],
+            'elseIfChild2',
+        ];
+        yield 'then child, else if child1, else if child 2, else child, if verdict false, elseif1 verdict false, elseif2 verdict false' => [
+            '<f:if condition="{verdict}">' .
+                '<f:then>thenChild</f:then>' .
+                '<f:else if="{verdictElseIf1}">elseIfChild1</f:else>' .
+                '<f:else if="{verdictElseIf2}">elseIfChild2</f:else>' .
+                '<f:else>elseChild</f:else>' .
+            '</f:if>',
+            ['verdict' => false, 'verdictElseIf1' => false, 'verdictElseIf2' => false],
+            'elseChild',
+        ];
+
+        yield 'then argument, else if child, else child, if verdict true, elseif1 verdict true' => [
+            '<f:if condition="{verdict}" then="thenArgument">' .
+                '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
+                '<f:else>elseChild</f:else>' .
+            '</f:if>',
+            ['verdict' => true, 'verdictElseIf' => true],
+            'thenArgument',
+        ];
+        yield 'then argument, else if child, else child, if verdict false, elseif1 verdict true' => [
+            '<f:if condition="{verdict}" then="thenArgument">' .
+                '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
+                '<f:else>elseChild</f:else>' .
+            '</f:if>',
+            ['verdict' => false, 'verdictElseIf' => true],
+            'elseIfChild',
+        ];
+        yield 'then argument, else if child, else child, if verdict false, elseif1 verdict false' => [
+            '<f:if condition="{verdict}" then="thenArgument">' .
+                '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
+                '<f:else>elseChild</f:else>' .
+            '</f:if>',
+            ['verdict' => false, 'verdictElseIf' => false],
+            'elseChild',
+        ];
+
+        yield 'then child, else if child, else argument, if verdict true, elseif1 verdict true' => [
+            '<f:if condition="{verdict}" else="elseArgument">' .
+                '<f:then>thenChild</f:then>' .
+                '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
+            '</f:if>',
+            ['verdict' => true, 'verdictElseIf' => true],
+            'thenChild',
+        ];
+        yield 'then child, else if child, else argument, if verdict false, elseif1 verdict true' => [
+            '<f:if condition="{verdict}" else="elseArgument">' .
+                '<f:then>thenChild</f:then>' .
+                '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
+            '</f:if>',
+            ['verdict' => false, 'verdictElseIf' => true],
+            'elseIfChild',
+        ];
+        /*
+         * @todo: broken - else argument not considered.
+        yield 'then child, else if child, else argument, if verdict false, elseif1 verdict false' => [
+            '<f:if condition="{verdict}" else="elseArgument">' .
+                '<f:then>thenChild</f:then>' .
+                '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
+            '</f:if>',
+            ['verdict' => false, 'verdictElseIf' => false],
+            'elseArgument',
+        ];
+        */
     }
 
     /**
