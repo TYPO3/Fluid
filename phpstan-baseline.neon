@@ -81,11 +81,6 @@ parameters:
 			path: src/Core/Rendering/RenderingContext.php
 
 		-
-			message: "#^Unsafe call to private method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\AbstractConditionViewHelper\\:\\:evaluateElseClosures\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Core/ViewHelper/AbstractConditionViewHelper.php
-
-		-
 			message: "#^Strict comparison using \\=\\=\\= between array\\|string and null will always evaluate to false\\.$#"
 			count: 1
 			path: src/Core/ViewHelper/ViewHelperResolver.php
