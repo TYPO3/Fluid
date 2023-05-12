@@ -39,7 +39,7 @@ interface RenderableInterface
     /**
      * Sets the parsed RootNode which must be handled by this Renderable. In the
      * default implementation these nodes are evaluated by render() and extracted
-     * by the NodeConverter
+     * by the TemplateCompiler
      *
      * @param NodeInterface $node
      */

@@ -62,7 +62,7 @@ class CastingExpressionNode extends AbstractExpressionNode
                 )
             );
         }
-        return self::convert($variable, $type);
+        return self::convertStatic($variable, $type);
     }
 
     /**
@@ -70,7 +70,7 @@ class CastingExpressionNode extends AbstractExpressionNode
      * @param string $type
      * @return mixed
      */
-    protected static function convert($variable, $type)
+    protected static function convertStatic($variable, $type)
     {
         $value = null;
         if ($type === 'integer') {

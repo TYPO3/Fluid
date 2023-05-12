@@ -7,6 +7,7 @@
 
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -64,5 +65,17 @@ class EscapingNode extends AbstractNode
     public function addChildNode(NodeInterface $childNode)
     {
         $this->node = $childNode;
+    }
+
+    public function convert(TemplateCompiler $templateCompiler): array
+    {
+        $configuration = $this->getNode()->convert($templateCompiler);
+        $configuration['execution'] = sprintf(
+            'call_user_func_array( function ($var) { ' .
+            'return (is_string($var) || (is_object($var) && method_exists($var, \'__toString\')) ' .
+            '? htmlspecialchars((string) $var, ENT_QUOTES) : $var); }, [%s])',
+            $configuration['execution']
+        );
+        return $configuration;
     }
 }

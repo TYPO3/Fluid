@@ -7,6 +7,7 @@
 
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -64,5 +65,13 @@ class TextNode extends AbstractNode
     public function __toString()
     {
         return $this->getText();
+    }
+
+    public function convert(TemplateCompiler $templateCompiler): array
+    {
+        return [
+            'initialization' => '',
+            'execution' => '\'' . str_replace(['\\', '\''], ['\\\\', '\\\''], $this->text) . '\'',
+        ];
     }
 }

@@ -7,6 +7,7 @@
 
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -65,5 +66,13 @@ class NumericNode extends AbstractNode
     public function addChildNode(NodeInterface $childNode)
     {
         throw new Parser\Exception('Numeric nodes may not contain child nodes, tried to add "' . get_class($childNode) . '".');
+    }
+
+    public function convert(TemplateCompiler $templateCompiler): array
+    {
+        return [
+            'initialization' => '',
+            'execution' => $this->value,
+        ];
     }
 }

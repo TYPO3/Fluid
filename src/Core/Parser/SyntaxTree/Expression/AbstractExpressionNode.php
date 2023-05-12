@@ -131,4 +131,9 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
         $suspect = $standardVariableProvider->getByPath($candidate);
         return $suspect ?? $candidate;
     }
+
+    public function convert(TemplateCompiler $templateCompiler): array
+    {
+        return $this->compile($templateCompiler);
+    }
 }

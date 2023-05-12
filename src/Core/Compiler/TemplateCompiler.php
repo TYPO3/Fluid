@@ -15,7 +15,8 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
- * Class TemplateCompiler
+ * @todo: declare final with next major. Nobody should extend / override here
+ *        since compile details can be done in nodes.
  */
 class TemplateCompiler
 {
@@ -33,11 +34,6 @@ class TemplateCompiler
     protected $syntaxTreeInstanceCache = [];
 
     /**
-     * @var NodeConverter
-     */
-    protected $nodeConverter;
-
-    /**
      * @var RenderingContextInterface
      */
     protected $renderingContext;
@@ -52,13 +48,7 @@ class TemplateCompiler
      */
     protected $currentlyProcessingState;
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->nodeConverter = new NodeConverter($this);
-    }
+    private int $variableCounter = 0;
 
     /**
      * Instruct the TemplateCompiler to enter warmup mode, assigning
@@ -103,22 +93,6 @@ class TemplateCompiler
     public function getRenderingContext()
     {
         return $this->renderingContext;
-    }
-
-    /**
-     * @param NodeConverter $nodeConverter
-     */
-    public function setNodeConverter(NodeConverter $nodeConverter)
-    {
-        $this->nodeConverter = $nodeConverter;
-    }
-
-    /**
-     * @return NodeConverter
-     */
-    public function getNodeConverter()
-    {
-        return $this->nodeConverter;
     }
 
     public function disable()
@@ -208,11 +182,14 @@ class TemplateCompiler
         }
 
         $this->currentlyProcessingState = $parsingState;
-        $this->nodeConverter->setVariableCounter(0);
+        $this->variableCounter = 0;
         $generatedRenderFunctions = $this->generateSectionCodeFromParsingState($parsingState);
 
         $generatedRenderFunctions .= $this->generateCodeForSection(
-            $this->nodeConverter->convertListOfSubNodes($parsingState->getRootNode()),
+            // @todo: This is weird. $parsingState->getRootNode() is not always a RootNode
+            //        since it is type hinted to NodeInterface only?! If it would be a
+            //        RootNode, we could just call $parsingState->getRootNode()->compile().
+            $this->convertSubNodes($parsingState->getRootNode()->getChildNodes()),
             'render',
             'Main Render function'
         );
@@ -258,7 +235,7 @@ EOD;
     protected function generateCodeForLayoutName($storedLayoutNameArgument)
     {
         if ($storedLayoutNameArgument instanceof RootNode) {
-            list($initialization, $execution) = array_values($this->nodeConverter->convertListOfSubNodes($storedLayoutNameArgument));
+            list($initialization, $execution) = array_values($storedLayoutNameArgument->convert($this));
             return $initialization . PHP_EOL . 'return ' . $execution;
         }
         return 'return (string) \'' . $storedLayoutNameArgument . '\'';
@@ -276,7 +253,9 @@ EOD;
             $sections = $parsingState->getVariableContainer()->get('1457379500_sections');
             foreach ($sections as $sectionName => $sectionRootNode) {
                 $generatedRenderFunctions .= $this->generateCodeForSection(
-                    $this->nodeConverter->convertListOfSubNodes($sectionRootNode),
+                    // @todo: Verify this is *always* an instance of RootNode
+                    //        and call $node->convert($this) directly.
+                    $this->convertSubNodes($sectionRootNode->getChildNodes()),
                     'section_' . sha1($sectionName),
                     'section ' . $sectionName
                 );
@@ -322,11 +301,10 @@ EOD;
      * Returns a unique variable name by appending a global index to the given prefix
      *
      * @param string $prefix
-     * @return string
      */
-    public function variableName($prefix)
+    public function variableName($prefix): string
     {
-        return $this->nodeConverter->variableName($prefix);
+        return '$' . $prefix . $this->variableCounter++;
     }
 
     /**
@@ -337,7 +315,7 @@ EOD;
     {
         $closure = '';
         $closure .= 'function() use ($renderingContext) {' . chr(10);
-        $convertedSubNodes = $this->nodeConverter->convertListOfSubNodes($node);
+        $convertedSubNodes = $this->convertSubNodes($node->getChildNodes());
         $closure .= $convertedSubNodes['initialization'];
         $closure .= sprintf('return %s;', $convertedSubNodes['execution']) . chr(10);
         $closure .= '}';
@@ -357,10 +335,43 @@ EOD;
         $arguments = $node->getArguments();
         $argument = $arguments[$argumentName];
         $closure = 'function() use ($renderingContext) {' . chr(10);
-        $compiled = $this->nodeConverter->convert($argument);
+        $compiled = $argument->convert($this);
         $closure .= $compiled['initialization'] . chr(10);
         $closure .= 'return ' . $compiled['execution'] . ';' . chr(10);
         $closure .= '}';
         return $closure;
+    }
+
+    private function convertSubNodes(array $nodes): array
+    {
+        switch (count($nodes)) {
+            case 0:
+                return [
+                    'initialization' => '',
+                    'execution' => 'NULL'
+                ];
+            case 1:
+                $childNode = current($nodes);
+                if ($childNode instanceof NodeInterface) {
+                    return $childNode->convert($this);
+                }
+                // @todo: Having no break here does not make sense, does it?
+                //        Shouldn't nodes *always* be instance of NodeInterface anyways?
+                //        Also, convert() is called on them below in any case, so this
+                //        construct can and should be simplified?!
+                // no break
+            default:
+                $outputVariableName = $this->variableName('output');
+                $initializationPhpCode = sprintf('%s = \'\';', $outputVariableName) . chr(10);
+                foreach ($nodes as $childNode) {
+                    $converted = $childNode->convert($this);
+                    $initializationPhpCode .= $converted['initialization'] . chr(10);
+                    $initializationPhpCode .= sprintf('%s .= %s;', $outputVariableName, $converted['execution']) . chr(10);
+                }
+                return [
+                    'initialization' => $initializationPhpCode,
+                    'execution' => $outputVariableName
+                ];
+        }
     }
 }

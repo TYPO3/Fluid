@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
-			count: 1
-			path: src/Core/Compiler/NodeConverter.php
-
-		-
 			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\TemplateCompiler\\:\\:get\\(\\) should return TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\ParsedTemplateInterface but returns TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\UncompilableTemplateInterface\\.$#"
 			count: 1
 			path: src/Core/Compiler/TemplateCompiler.php
@@ -52,6 +47,11 @@ parameters:
 
 		-
 			message: "#^Constructor of class TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\ViewHelperNode has an unused parameter \\$state\\.$#"
+			count: 1
+			path: src/Core/Parser/SyntaxTree/ViewHelperNode.php
+
+		-
+			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
 			count: 1
 			path: src/Core/Parser/SyntaxTree/ViewHelperNode.php
 
