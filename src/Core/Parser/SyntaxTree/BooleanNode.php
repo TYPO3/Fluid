@@ -24,14 +24,9 @@ class BooleanNode extends AbstractNode
     protected $childNodes = [];
 
     /**
-     * @var NodeInterface
-     */
-    protected $node;
-
-    /**
      * @var array
      */
-    protected $stack = [];
+    protected array $stack = [];
 
     /**
      * @param mixed $input NodeInterface, array (of nodes or expression parts) or a simple type that can be evaluated to boolean
@@ -51,19 +46,12 @@ class BooleanNode extends AbstractNode
         }
     }
 
-    /**
-     * @return array
-     */
-    public function getStack()
+    public function getStack(): array
     {
         return $this->stack;
     }
 
-    /**
-     * @param RenderingContextInterface $renderingContext
-     * @return bool the boolean value
-     */
-    public function evaluate(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext): bool
     {
         return self::evaluateStack($renderingContext, $this->stack);
     }
@@ -88,7 +76,7 @@ class BooleanNode extends AbstractNode
      * @param array $expressionParts
      * @return bool the boolean value
      */
-    public static function evaluateStack(RenderingContextInterface $renderingContext, array $expressionParts)
+    public static function evaluateStack(RenderingContextInterface $renderingContext, array $expressionParts): bool
     {
         $expression = static::reconcatenateExpression($expressionParts);
         $context = static::gatherContext($renderingContext, $expressionParts);
@@ -99,11 +87,8 @@ class BooleanNode extends AbstractNode
 
     /**
      * Walk all expressionParts and concatenate an expression string
-     *
-     * @param array $expressionParts
-     * @return string
      */
-    public static function reconcatenateExpression($expressionParts)
+    public static function reconcatenateExpression(array $expressionParts): string
     {
         $merged = [];
         foreach ($expressionParts as $key => $expressionPart) {
@@ -120,12 +105,8 @@ class BooleanNode extends AbstractNode
 
     /**
      * Walk all expressionParts and gather a context array of all non textNode parts
-     *
-     * @param RenderingContextInterface $renderingContext
-     * @param array $expressionParts
-     * @return array
      */
-    public static function gatherContext($renderingContext, $expressionParts)
+    public static function gatherContext(RenderingContextInterface $renderingContext, array $expressionParts): array
     {
         $context = [];
         foreach ($expressionParts as $key => $expressionPart) {
@@ -142,12 +123,8 @@ class BooleanNode extends AbstractNode
      * Convert argument strings to their equivalents. Needed to handle strings with a boolean meaning.
      *
      * Must be public and static as it is used from inside cached templates.
-     *
-     * @param mixed $value Value to be converted to boolean
-     * @param RenderingContextInterface $renderingContext
-     * @return bool
      */
-    public static function convertToBoolean($value, $renderingContext)
+    public static function convertToBoolean(mixed $value, RenderingContextInterface $renderingContext): bool
     {
         if (is_bool($value)) {
             return $value;
