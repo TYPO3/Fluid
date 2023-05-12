@@ -46,11 +46,6 @@ parameters:
 			path: src/Core/Parser/SyntaxTree/ViewHelperNode.php
 
 		-
-			message: "#^Constructor of class TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\ViewHelperNode has an unused parameter \\$state\\.$#"
-			count: 1
-			path: src/Core/Parser/SyntaxTree/ViewHelperNode.php
-
-		-
 			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
 			count: 1
 			path: src/Core/Parser/SyntaxTree/ViewHelperNode.php
