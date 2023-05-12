@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
-use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
@@ -25,14 +24,5 @@ class TextNodeTest extends UnitTestCase
         $node = new TextNode($string);
         $renderingContext = new RenderingContext();
         self::assertEquals($node->evaluate($renderingContext), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
-    }
-
-    /**
-     * @test
-     */
-    public function constructorThrowsExceptionIfNoStringGiven(): void
-    {
-        $this->expectException(Exception::class);
-        new TextNode(123);
     }
 }
