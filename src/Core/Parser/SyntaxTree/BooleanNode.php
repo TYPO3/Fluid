@@ -7,6 +7,7 @@
 
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -168,5 +169,31 @@ class BooleanNode extends AbstractNode
             return true;
         }
         return false;
+    }
+
+    public function convert(TemplateCompiler $templateCompiler): array
+    {
+        $stack = (new ArrayNode($this->getStack()))->convert($templateCompiler);
+        $initializationPhpCode = '// Rendering Boolean node' . chr(10);
+        $initializationPhpCode .= $stack['initialization'] . chr(10);
+
+        $parser = new BooleanParser();
+        $compiledExpression = $parser->compile(BooleanNode::reconcatenateExpression($this->getStack()));
+        $functionName = $templateCompiler->variableName('expression');
+        $initializationPhpCode .= $functionName . ' = function($context) {return ' . $compiledExpression . ';};' . chr(10);
+
+        return [
+            'initialization' => $initializationPhpCode,
+            'execution' => sprintf(
+                '%s::convertToBoolean(' . chr(10) .
+                '    %s(%s::gatherContext($renderingContext, %s)),' . chr(10) .
+                '    $renderingContext' . chr(10) .
+                ')',
+                BooleanNode::class,
+                $functionName,
+                BooleanNode::class,
+                $stack['execution']
+            )
+        ];
     }
 }

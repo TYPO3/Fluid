@@ -7,6 +7,8 @@
 
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
+use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingChildrenException;
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
@@ -144,5 +146,82 @@ class ViewHelperNode extends AbstractNode
     public function evaluate(RenderingContextInterface $renderingContext)
     {
         return $renderingContext->getViewHelperInvoker()->invoke($this->uninitializedViewHelper, $this->arguments, $renderingContext);
+    }
+
+    public function convert(TemplateCompiler $templateCompiler): array
+    {
+        $initializationPhpCode = '// Rendering ViewHelper ' . $this->viewHelperClassName . chr(10);
+
+        // Build up $arguments array
+        $argumentsVariableName = $templateCompiler->variableName('arguments');
+        $renderChildrenClosureVariableName = $templateCompiler->variableName('renderChildrenClosure');
+        $viewHelperInitializationPhpCode = '';
+
+        try {
+            $convertedViewHelperExecutionCode = $this->uninitializedViewHelper->compile(
+                $argumentsVariableName,
+                $renderChildrenClosureVariableName,
+                $viewHelperInitializationPhpCode,
+                $this,
+                $templateCompiler
+            );
+
+            $accumulatedArgumentInitializationCode = '';
+            $argumentInitializationCode = sprintf('%s = [' . chr(10), $argumentsVariableName);
+
+            $arguments = $this->arguments;
+            $argumentDefinitions = $this->argumentDefinitions;
+            foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
+                if (!array_key_exists($argumentName, $arguments)) {
+                    // Argument *not* given to VH, use default value
+                    $defaultValue = $argumentDefinition->getDefaultValue();
+                    $argumentInitializationCode .= sprintf(
+                        '\'%s\' => %s,' . chr(10),
+                        $argumentName,
+                        is_array($defaultValue) && empty($defaultValue) ? '[]' : var_export($defaultValue, true)
+                    );
+                } else {
+                    // Argument *is* given to VH, resolve
+                    $argumentValue = $arguments[$argumentName];
+                    if ($argumentValue instanceof NodeInterface) {
+                        $converted = $argumentValue->convert($templateCompiler);
+                        if (!empty($converted['initialization'])) {
+                            $accumulatedArgumentInitializationCode .= $converted['initialization'];
+                        }
+                        $argumentInitializationCode .= sprintf(
+                            '\'%s\' => %s,' . chr(10),
+                            $argumentName,
+                            $converted['execution']
+                        );
+                    } else {
+                        $argumentInitializationCode .= sprintf(
+                            '\'%s\' => %s,' . chr(10),
+                            $argumentName,
+                            $argumentValue
+                        );
+                    }
+                }
+            }
+
+            $argumentInitializationCode .= '];' . chr(10);
+
+            // Build up closure which renders the child nodes
+            $initializationPhpCode .= sprintf(
+                '%s = %s;' . chr(10),
+                $renderChildrenClosureVariableName,
+                $templateCompiler->wrapChildNodesInClosure($this)
+            );
+
+            $initializationPhpCode .= $accumulatedArgumentInitializationCode . chr(10) . $argumentInitializationCode . $viewHelperInitializationPhpCode;
+        } catch (StopCompilingChildrenException $stopCompilingChildrenException) {
+            $convertedViewHelperExecutionCode = '\'' . str_replace("'", "\'", $stopCompilingChildrenException->getReplacementString()) . '\'';
+        }
+        $initializationArray = [
+            'initialization' => $initializationPhpCode,
+            // @todo: compile() *should* return strings, but it's not enforced in the interface.
+            //        The string cast is here to stay compatible in case something still returns for instance null.
+            'execution' => (string)$convertedViewHelperExecutionCode === '' ? "''" : $convertedViewHelperExecutionCode
+        ];
+        return $initializationArray;
     }
 }

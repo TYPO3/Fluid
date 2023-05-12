@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
-use TYPO3Fluid\Fluid\Core\Compiler\NodeConverter;
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
@@ -21,15 +20,6 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class TemplateCompilerTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
-    public function constructorCreatesNodeConverter(): void
-    {
-        $subject = new TemplateCompiler();
-        self::assertInstanceOf(NodeConverter::class, $subject->getNodeConverter());
-    }
-
     /**
      * @test
      */
@@ -137,23 +127,21 @@ class TemplateCompilerTest extends UnitTestCase
     /**
      * @test
      */
-    public function variableNameDelegatesToNodeConverter(): void
-    {
-        $subject = new TemplateCompiler();
-        $nodeConverterMock = $this->createMock(NodeConverter::class);
-        $nodeConverterMock->expects(self::once())->method('variableName')->with('foo')->willReturn('bar');
-        $subject->setNodeConverter($nodeConverterMock);
-        self::assertEquals('bar', $subject->variableName('foo'));
-    }
-
-    /**
-     * @test
-     */
     public function getRenderingContextGetsPreviouslySetRenderingContext(): void
     {
         $renderingContextMock = $this->createMock(RenderingContextInterface::class);
         $subject = new TemplateCompiler();
         $subject->setRenderingContext($renderingContextMock);
         self::assertSame($renderingContextMock, $subject->getRenderingContext());
+    }
+
+    /**
+     * @test
+     */
+    public function variableNameReturnsIncrementedName(): void
+    {
+        $subject = new TemplateCompiler();
+        self::assertSame('$test0', $subject->variableName('test'));
+        self::assertSame('$test1', $subject->variableName('test'));
     }
 }

@@ -7,6 +7,7 @@
 
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -92,5 +93,17 @@ abstract class AbstractNode implements NodeInterface
     public function addChildNode(NodeInterface $childNode)
     {
         $this->childNodes[] = $childNode;
+    }
+
+    /**
+     * General implementation. Nodes that actually create output
+     * in compiled templates typically override this method.
+     */
+    public function convert(TemplateCompiler $templateCompiler): array
+    {
+        return [
+            'initialization' => '// Uncompilable node type: ' . get_class($this) . chr(10),
+            'execution' => ''
+        ];
     }
 }

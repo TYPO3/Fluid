@@ -7,6 +7,7 @@
 
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -73,5 +74,23 @@ class ObjectAccessorNode extends AbstractNode
             return $variableProvider->getAll();
         }
         return $variableProvider->getByPath($this->objectPath);
+    }
+
+    public function convert(TemplateCompiler $templateCompiler): array
+    {
+        $path = $this->objectPath;
+        if ($path === '_all') {
+            return [
+                'initialization' => '',
+                'execution' => '$renderingContext->getVariableProvider()->getAll()',
+            ];
+        }
+        return [
+            'initialization' => '',
+            'execution' => sprintf(
+                '$renderingContext->getVariableProvider()->getByPath(\'%s\')',
+                $path
+            )
+        ];
     }
 }

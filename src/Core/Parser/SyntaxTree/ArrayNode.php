@@ -7,6 +7,7 @@
 
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -53,5 +54,47 @@ class ArrayNode extends AbstractNode
     public function getInternalArray()
     {
         return $this->internalArray;
+    }
+
+    public function convert(TemplateCompiler $templateCompiler): array
+    {
+        $arrayVariableName = $templateCompiler->variableName('array');
+        $accumulatedInitializationPhpCode = '';
+        $initializationPhpCode = sprintf('%s = [' . chr(10), $arrayVariableName);
+
+        foreach ($this->internalArray as $key => $value) {
+            if ($value instanceof NodeInterface) {
+                $converted = $value->convert($templateCompiler);
+                if (!empty($converted['initialization'])) {
+                    $accumulatedInitializationPhpCode .= $converted['initialization'];
+                }
+                $initializationPhpCode .= sprintf(
+                    '\'%s\' => %s,' . chr(10),
+                    $key,
+                    $converted['execution']
+                );
+            } elseif (is_numeric($value)) {
+                // handle int, float, numeric strings
+                $initializationPhpCode .= sprintf(
+                    '\'%s\' => %s,' . chr(10),
+                    $key,
+                    $value
+                );
+            } else {
+                // handle strings
+                $initializationPhpCode .= sprintf(
+                    '\'%s\' => \'%s\',' . chr(10),
+                    $key,
+                    str_replace(['\\', '\''], ['\\\\', '\\\''], $value)
+                );
+            }
+        }
+
+        $initializationPhpCode .= '];' . chr(10);
+
+        return [
+            'initialization' => $accumulatedInitializationPhpCode . chr(10) . $initializationPhpCode,
+            'execution' => $arrayVariableName
+        ];
     }
 }

@@ -7,6 +7,7 @@
 
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -43,4 +44,21 @@ interface NodeInterface
      * @return mixed Evaluated node
      */
     public function evaluate(RenderingContextInterface $renderingContext);
+
+    /**
+     * Compile the Node to a PHP representation, returning an array with
+     * exactly two keys which contain strings:
+     *
+     * - "initialization" contains PHP code which is inserted *before* the actual
+     *                    rendering call. Must be valid, i.e. end with semicolon.
+     * - "execution" contains *a single PHP instruction* which needs to return the
+     *               rendered output of the given element. Should NOT end with semicolon.
+     *
+     * @return array<string, string>
+     * @internal There is a rather "hard" list of nodes within Fluid that are
+     *           only hard to override by changing TemplateParser. As such,
+     *           it's usually not needed to add new nodes that need different
+     *           convert() processing at compile time.
+     */
+    public function convert(TemplateCompiler $templateCompiler): array;
 }
