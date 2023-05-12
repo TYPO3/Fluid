@@ -13,6 +13,9 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Text Syntax Tree Node - is a container for strings.
+ *
+ * @internal
+ * @todo Make class final.
  */
 class TextNode extends AbstractNode
 {

@@ -13,6 +13,9 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Escaping Node - wraps all content that must be escaped before output.
+ *
+ * @internal
+ * @todo Make class final.
  */
 class EscapingNode extends AbstractNode
 {

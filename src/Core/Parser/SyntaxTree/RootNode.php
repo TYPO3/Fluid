@@ -12,6 +12,9 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Root node of every syntax tree.
+ *
+ * @internal
+ * @todo Make class final.
  */
 class RootNode extends AbstractNode
 {
