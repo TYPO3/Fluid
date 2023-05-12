@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
@@ -178,7 +177,7 @@ class AbstractViewHelperTest extends UnitTestCase
     public function testCompileReturnsAndAssignsExpectedPhpCode(): void
     {
         $context = new RenderingContext();
-        $node = new ViewHelperNode($context, 'f', 'comment', [], new ParsingState());
+        $node = new ViewHelperNode($context, 'f', 'comment', []);
         $init = '';
         $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods([])->getMock();
         $result = $subject->compile('foobar', 'baz', $init, $node, new TemplateCompiler());

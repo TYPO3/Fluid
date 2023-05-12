@@ -388,8 +388,7 @@ class TemplateParser
                 $this->renderingContext,
                 $namespaceIdentifier,
                 $methodIdentifier,
-                $argumentsObjectTree,
-                $state
+                $argumentsObjectTree
             );
 
             $this->callInterceptor($currentViewHelperNode, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, $state);

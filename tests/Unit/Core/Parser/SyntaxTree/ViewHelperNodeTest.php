@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
-use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -32,7 +31,7 @@ class ViewHelperNodeTest extends UnitTestCase
         $viewHelperResolverMock->expects(self::any())->method('createViewHelperInstanceFromClassName')->with(TestViewHelper::class)->willReturn(new TestViewHelper());
         $viewHelperResolverMock->expects(self::any())->method('getArgumentDefinitionsForViewHelper')->willReturn([]);
         $arguments = [$this->createMock(NodeInterface::class)];
-        $subject = new ViewHelperNode($renderingContextMock, 'f', 'vh', $arguments, new ParsingState());
+        $subject = new ViewHelperNode($renderingContextMock, 'f', 'vh', $arguments);
         self::assertSame($arguments, $subject->getArguments());
     }
 
@@ -50,7 +49,7 @@ class ViewHelperNodeTest extends UnitTestCase
         $viewHelperInvokerMock = $this->createMock(ViewHelperInvoker::class);
         $renderingContextMock->expects(self::once())->method('getViewHelperInvoker')->willReturn($viewHelperInvokerMock);
         $viewHelperInvokerMock->expects(self::once())->method('invoke')->willReturn('test');
-        $subject = new ViewHelperNode($renderingContextMock, 'f', 'vh', [$this->createMock(NodeInterface::class)], new ParsingState());
+        $subject = new ViewHelperNode($renderingContextMock, 'f', 'vh', [$this->createMock(NodeInterface::class)]);
         $result = $subject->evaluate($renderingContextMock);
         self::assertSame('test', $result);
     }
