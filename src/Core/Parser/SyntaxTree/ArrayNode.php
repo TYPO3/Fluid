@@ -12,24 +12,18 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Array Syntax Tree Node. Handles JSON-like arrays.
+ *
+ * @internal
  */
 class ArrayNode extends AbstractNode
 {
     /**
-     * An associative array. Each key is a string. Each value is either a literal, or an AbstractNode.
-     *
-     * @var array
-     */
-    protected $internalArray = [];
-
-    /**
      * Constructor.
      *
-     * @param array $internalArray Array to store
+     * @param array $internalArray An associative array. Each key is a string. Each value is either a literal, or an AbstractNode.
      */
-    public function __construct(array $internalArray)
+    public function __construct(private readonly array $internalArray)
     {
-        $this->internalArray = $internalArray;
     }
 
     /**
@@ -47,21 +41,11 @@ class ArrayNode extends AbstractNode
         return $arrayToBuild;
     }
 
-    /**
-     * @internal DO NOT CALL DIRECTLY!
-     * @return array
-     */
-    public function getInternalArray()
-    {
-        return $this->internalArray;
-    }
-
     public function convert(TemplateCompiler $templateCompiler): array
     {
         $arrayVariableName = $templateCompiler->variableName('array');
         $accumulatedInitializationPhpCode = '';
         $initializationPhpCode = sprintf('%s = [' . chr(10), $arrayVariableName);
-
         foreach ($this->internalArray as $key => $value) {
             if ($value instanceof NodeInterface) {
                 $converted = $value->convert($templateCompiler);
@@ -89,7 +73,6 @@ class ArrayNode extends AbstractNode
                 );
             }
         }
-
         $initializationPhpCode .= '];' . chr(10);
 
         return [
