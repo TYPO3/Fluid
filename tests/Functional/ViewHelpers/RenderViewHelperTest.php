@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
-use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\RenderableFixture;
 use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 use TYPO3Fluid\Fluid\View\TemplateView;
@@ -78,11 +77,6 @@ class RenderViewHelperTest extends AbstractFunctionalTestCase
             '<f:render delegate="TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ParsedTemplateImplementationFixture"/>',
             [],
             'rendered by fixture',
-        ];
-        yield 'renderable' => [
-            '<f:render renderable="{renderable}"/>',
-            ['renderable' => new RenderableFixture()],
-            'rendered by renderable',
         ];
         yield 'section' => [
             '<f:render section="main"/><f:section name="main">rendered by section</f:section>',
