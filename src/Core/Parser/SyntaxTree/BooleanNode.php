@@ -13,6 +13,9 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * A node which is used inside boolean arguments
+ *
+ * @internal
+ * @todo Make class final.
  */
 class BooleanNode extends AbstractNode
 {

@@ -13,6 +13,9 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Numeric Syntax Tree Node - is a container for numeric values.
+ *
+ * @internal
+ * @todo Make class final.
  */
 class NumericNode extends AbstractNode
 {

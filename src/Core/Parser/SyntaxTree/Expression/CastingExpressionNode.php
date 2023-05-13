@@ -12,6 +12,9 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 /**
  * Type Casting Expression
  * Allows casting variables to specific types, for example `{myVariable as boolean}`
+ *
+ * @internal
+ * @todo Make class final.
  */
 class CastingExpressionNode extends AbstractExpressionNode
 {

@@ -11,6 +11,9 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Math Expression Syntax Node - is a container for numeric values.
+ *
+ * @internal
+ * @todo Make class final.
  */
 class MathExpressionNode extends AbstractExpressionNode
 {

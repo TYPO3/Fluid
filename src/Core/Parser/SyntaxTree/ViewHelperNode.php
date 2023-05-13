@@ -15,6 +15,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 
 /**
  * Node which will call a ViewHelper associated with this node.
+ *
+ * @internal
+ * @todo Make class final.
  */
 class ViewHelperNode extends AbstractNode
 {
