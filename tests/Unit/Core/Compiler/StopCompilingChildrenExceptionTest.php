@@ -12,6 +12,9 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingChildrenException;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
+/**
+ * @deprecated Remove together with StopCompilingChildrenException
+ */
 class StopCompilingChildrenExceptionTest extends UnitTestCase
 {
     /**

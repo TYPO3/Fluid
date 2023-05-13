@@ -7,9 +7,7 @@
 
 namespace TYPO3Fluid\Fluid\ViewHelpers\Cache;
 
-use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingChildrenException;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -88,23 +86,11 @@ class StaticViewHelper extends AbstractViewHelper
         return $this->renderChildren();
     }
 
-    /**
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     */
-    public function compile(
-        $argumentsName,
-        $closureName,
-        &$initializationPhpCode,
-        ViewHelperNode $node,
-        TemplateCompiler $compiler
-    ) {
-        $renderedString = $node->evaluateChildNodes($this->renderingContext);
-        $stopCompilingChildrenException = new StopCompilingChildrenException();
-        $stopCompilingChildrenException->setReplacementString($renderedString);
-        throw $stopCompilingChildrenException;
+    final public function convert(TemplateCompiler $templateCompiler): array
+    {
+        return [
+            'initialization' => '// Rendering ViewHelper ' . $this->viewHelperNode->getViewHelperClassName() . chr(10),
+            'execution' => '\'' . str_replace("'", "\'", $this->viewHelperNode->evaluateChildNodes($this->renderingContext)) . '\'',
+        ];
     }
 }
