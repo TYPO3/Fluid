@@ -8,7 +8,6 @@
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -19,55 +18,27 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class TextNode extends AbstractNode
 {
-    /**
-     * Contents of the text node
-     *
-     * @var string
-     */
-    protected $text;
-
-    /**
-     * Constructor.
-     *
-     * @param string $text text to store in this textNode
-     * @throws Parser\Exception
-     */
-    public function __construct($text)
+    public function __construct(protected readonly string $text)
     {
-        if (!is_string($text)) {
-            throw new Parser\Exception('Text node requires an argument of type string, "' . gettype($text) . '" given.');
-        }
-        $this->text = $text;
     }
 
     /**
      * Return the text associated to the syntax tree. Text from child nodes is
      * appended to the text in the node's own text.
-     *
-     * @param RenderingContextInterface $renderingContext
-     * @return string the text stored in this node/subtree.
      */
-    public function evaluate(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext): string
     {
         return $this->text;
     }
 
-    /**
-     * Getter for text
-     *
-     * @return string The text of this node
-     */
-    public function getText()
+    public function getText(): string
     {
         return $this->text;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->getText();
+        return $this->text;
     }
 
     public function convert(TemplateCompiler $templateCompiler): array

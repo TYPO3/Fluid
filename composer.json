@@ -38,5 +38,29 @@
     },
     "bin": [
         "bin/fluid"
-    ]
+    ],
+    "scripts": {
+        "cgl:check": "@php vendor/bin/php-cs-fixer fix --dry-run --diff -v",
+        "cgl:fix": "@php vendor/bin/php-cs-fixer fix --diff -v",
+        "ci:all": [
+            "@composer validate",
+            "@lint:php",
+            "@cgl:check",
+            "@phpstan:check",
+            "@tests:all"
+        ],
+        "lint:php": "find src/ tests/ -name '*.php' -print0 | xargs -0 -n1 -P4 ${PHP_BINARY} -dxdebug.mode=off -l >/dev/null",
+        "phpstan:check": "@php vendor/bin/phpstan analyze --no-progress",
+        "phpstan:generate-baseline": "@php vendor/bin/phpstan analyze --no-progress --generate-baseline=phpstan-baseline.neon",
+        "tests:all": "@php vendor/bin/phpunit -v"
+    },
+    "scripts-descriptions": {
+        "cgl:check": "Check coding-style in PHP files.",
+        "cgl:fix": "Check and fix coding-style in PHP files.",
+        "ci:all": "Execute all CI related scripts similar to GitHub Actions.",
+        "lint:php": "Lint PHP files for syntax errors.",
+        "phpstan:check": "Execute static code analyzer PHPStan.",
+        "phpstan:generate-baseline": "Update baseline fore for PHPStan",
+        "tests:all": "Execute tests (phpunit v10)"
+    }
 }
