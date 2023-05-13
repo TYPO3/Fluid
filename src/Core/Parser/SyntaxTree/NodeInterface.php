@@ -54,7 +54,7 @@ interface NodeInterface
      * - "execution" contains *a single PHP instruction* which needs to return the
      *               rendered output of the given element. Should NOT end with semicolon.
      *
-     * @return array<string, string>
+     * @return array{initialization: string, execution: string|number}
      * @internal There is a rather "hard" list of nodes within Fluid that are
      *           only hard to override by changing TemplateParser. As such,
      *           it's usually not needed to add new nodes that need different

@@ -41,11 +41,6 @@ parameters:
 			path: src/Core/Parser/SyntaxTree/ViewHelperNode.php
 
 		-
-			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
-			count: 1
-			path: src/Core/Parser/SyntaxTree/ViewHelperNode.php
-
-		-
 			message: "#^Binary operation \"\\+\" between non\\-empty\\-string and 0 results in an error\\.$#"
 			count: 1
 			path: src/Core/Parser/TemplateParser.php
@@ -69,6 +64,11 @@ parameters:
 			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderingContext\\:\\:\\$errorHandler \\(TYPO3Fluid\\\\Fluid\\\\Core\\\\ErrorHandler\\\\ErrorHandlerInterface\\) in isset\\(\\) is not nullable\\.$#"
 			count: 1
 			path: src/Core/Rendering/RenderingContext.php
+
+		-
+			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			count: 1
+			path: src/Core/ViewHelper/AbstractViewHelper.php
 
 		-
 			message: "#^Strict comparison using \\=\\=\\= between array\\|string and null will always evaluate to false\\.$#"
