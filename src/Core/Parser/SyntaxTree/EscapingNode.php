@@ -18,10 +18,8 @@ class EscapingNode extends AbstractNode
 {
     /**
      * Node to be escaped
-     *
-     * @var NodeInterface
      */
-    protected $node;
+    protected NodeInterface $node;
 
     /**
      * Constructor.
@@ -37,7 +35,7 @@ class EscapingNode extends AbstractNode
      * Return the value associated to the syntax tree.
      *
      * @param RenderingContextInterface $renderingContext
-     * @return number the value stored in this node/subtree.
+     * @return mixed the value stored in this node/subtree.
      */
     public function evaluate(RenderingContextInterface $renderingContext)
     {
@@ -48,10 +46,7 @@ class EscapingNode extends AbstractNode
         return $evaluated;
     }
 
-    /**
-     * @return NodeInterface
-     */
-    public function getNode()
+    public function getNode(): NodeInterface
     {
         return $this->node;
     }
