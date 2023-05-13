@@ -8,7 +8,6 @@
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderableInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
@@ -121,7 +120,6 @@ class RenderViewHelper extends AbstractViewHelper
         $this->registerArgument('section', 'string', 'Section to render - combine with partial to render section in partial');
         $this->registerArgument('partial', 'string', 'Partial to render, with or without section');
         $this->registerArgument('delegate', 'string', 'Optional PHP class name of a permanent, included-in-app ParsedTemplateInterface implementation to override partial/section');
-        $this->registerArgument('renderable', RenderableInterface::class, 'Instance of a RenderableInterface implementation to be rendered');
         $this->registerArgument('arguments', 'array', 'Array of variables to be transferred. Use {_all} for all variables', false, []);
         $this->registerArgument('optional', 'boolean', 'If TRUE, considers the *section* optional. Partial never is.', false, false);
         $this->registerArgument('default', 'mixed', 'Value (usually string) to be displayed if the section or partial does not exist');
@@ -138,8 +136,6 @@ class RenderViewHelper extends AbstractViewHelper
         $variables = (array)$arguments['arguments'];
         $optional = (bool)$arguments['optional'];
         $delegate = $arguments['delegate'];
-        /** @var RenderableInterface $renderable */
-        $renderable = $arguments['renderable'];
         $tagContent = null;
         if ($arguments['contentAs']) {
             $tagContent = $renderChildrenClosure();
@@ -157,9 +153,7 @@ class RenderViewHelper extends AbstractViewHelper
             );
         }
         $content = '';
-        if ($renderable) {
-            $content = $renderable->render($renderingContext);
-        } elseif ($delegate !== null) {
+        if ($delegate !== null) {
             if (!is_a($delegate, ParsedTemplateInterface::class, true)) {
                 throw new \InvalidArgumentException(sprintf('Cannot render %s - must implement ParsedTemplateInterface!', $delegate));
             }
@@ -171,7 +165,7 @@ class RenderViewHelper extends AbstractViewHelper
         } elseif ($section !== null) {
             $content = $view->renderSection($section, $variables, $optional);
         } elseif (!$optional) {
-            throw new \InvalidArgumentException('ViewHelper f:render called without either argument section, partial, renderable or delegate and optional flag is false');
+            throw new \InvalidArgumentException('ViewHelper f:render called without either argument section, partial or delegate and optional flag is false');
         }
         // Replace empty content with default value. If default is
         // not set, NULL is returned and cast to a new, empty string
