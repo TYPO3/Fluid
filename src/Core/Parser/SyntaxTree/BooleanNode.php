@@ -154,8 +154,7 @@ class BooleanNode extends AbstractNode
     public function convert(TemplateCompiler $templateCompiler): array
     {
         $stack = (new ArrayNode($this->getStack()))->convert($templateCompiler);
-        $initializationPhpCode = '// Rendering Boolean node' . chr(10);
-        $initializationPhpCode .= $stack['initialization'] . chr(10);
+        $initializationPhpCode = $stack['initialization'] . chr(10);
 
         $parser = new BooleanParser();
         $compiledExpression = $parser->compile(BooleanNode::reconcatenateExpression($this->getStack()));

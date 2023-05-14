@@ -8,6 +8,7 @@
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -208,19 +209,47 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
     }
 
     /**
-     * The compiled ViewHelper adds new arguments prefixed with "__" to
-     * take care of then/else/elseif cases.
-     *
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @return string
+     * Optimized version combining default convert() / compile() into one
+     * method: The condition VHs dissect children and looks for then, else
+     * and elseif nodes, separates them and puts them into special "__"
+     * prefixed arguments. The default renderChildrenClosure is not needed
+     * and skipped.
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    final public function convert(TemplateCompiler $templateCompiler): array
     {
+        $node = $this->viewHelperNode;
+
+        $argumentsVariableName = $templateCompiler->variableName('arguments');
+        $argumentInitializationCode = sprintf('%s = [' . chr(10), $argumentsVariableName);
+
+        $accumulatedArgumentInitializationCode = '';
+        $arguments = $node->getArguments();
+        $argumentDefinitions = $node->getArgumentDefinitions();
+        foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
+            if (!array_key_exists($argumentName, $arguments)) {
+                // Argument *not* given to VH, use default value
+                $defaultValue = $argumentDefinition->getDefaultValue();
+                $argumentInitializationCode .= sprintf(
+                    '\'%s\' => %s,' . chr(10),
+                    $argumentName,
+                    is_array($defaultValue) && empty($defaultValue) ? '[]' : var_export($defaultValue, true)
+                );
+            } elseif ($arguments[$argumentName] instanceof NodeInterface) {
+                // Argument *is* given to VH, resolve
+                $converted = $arguments[$argumentName]->convert($templateCompiler);
+                $accumulatedArgumentInitializationCode .= $converted['initialization'];
+                $argumentInitializationCode .= sprintf(
+                    '\'%s\' => %s,' . chr(10),
+                    $argumentName,
+                    $converted['execution']
+                );
+            }
+        }
+
         $thenChildEncountered = false;
         $elseChildEncountered = false;
         $elseIfCounter = 0;
+        $elseIfCode = '\'__elseIf\' => [' . chr(10);
         foreach ($node->getChildNodes() as $childNode) {
             if ($childNode instanceof ViewHelperNode) {
                 $viewHelperClassName = $childNode->getViewHelperClassName();
@@ -228,10 +257,9 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                     // If there are multiple f:then children, we pick the first one only.
                     // This is in line with the non-compiled behavior.
                     $thenChildEncountered = true;
-                    $initializationPhpCode .= sprintf(
-                        '%s[\'__then\'] = %s;' . chr(10),
-                        $argumentsName,
-                        $compiler->wrapChildNodesInClosure($childNode)
+                    $argumentInitializationCode .= sprintf(
+                        '\'__then\' => %s,' . chr(10),
+                        $templateCompiler->wrapChildNodesInClosure($childNode)
                     );
                     continue;
                 }
@@ -239,15 +267,14 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                     if (isset($childNode->getArguments()['if'])) {
                         // This "f:else" has the "if" argument, indicating this is a secondary (elseif) condition.
                         // Compile a closure which will evaluate the condition.
-                        $initializationPhpCode .= sprintf(
-                            '%s[\'__elseIf\'][%s] = [' . chr(10) .
-                            '    \'condition\' => %s,' . chr(10) .
-                            '    \'body\' => %s,' . chr(10) .
-                            '];' . chr(10),
-                            $argumentsName,
+                        $elseIfCode .= sprintf(
+                            '    %s => [' . chr(10) .
+                            '        \'condition\' => %s,' . chr(10) .
+                            '        \'body\' => %s' . chr(10) .
+                            '    ],' . chr(10),
                             $elseIfCounter,
-                            $compiler->wrapViewHelperNodeArgumentEvaluationInClosure($childNode, 'if'),
-                            $compiler->wrapChildNodesInClosure($childNode)
+                            $templateCompiler->wrapViewHelperNodeArgumentEvaluationInClosure($childNode, 'if'),
+                            $templateCompiler->wrapChildNodesInClosure($childNode)
                         );
                         $elseIfCounter++;
                         continue;
@@ -256,10 +283,9 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                         // If there are multiple f:else children, we pick the first one only.
                         // This is in line with the non-compiled behavior.
                         $elseChildEncountered = true;
-                        $initializationPhpCode .= sprintf(
-                            '%s[\'__else\'] = %s;' . chr(10),
-                            $argumentsName,
-                            $compiler->wrapChildNodesInClosure($childNode)
+                        $argumentInitializationCode .= sprintf(
+                            '\'__else\' => %s,' . chr(10),
+                            $templateCompiler->wrapChildNodesInClosure($childNode)
                         );
                     }
                 }
@@ -268,8 +294,27 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         if (!$thenChildEncountered && $elseIfCounter === 0 && !$elseChildEncountered && !isset($node->getArguments()['then'])) {
             // If there is no then argument, and there are neither "f:then", "f:else" nor "f:else if" children,
             // then the entire body is considered the "then" child.
-            $initializationPhpCode .= sprintf('%s[\'__then\'] = %s;', $argumentsName, $closureName) . chr(10);
+            $argumentInitializationCode .= sprintf(
+                '\'__then\' => %s,' . chr(10),
+                $templateCompiler->wrapChildNodesInClosure($node)
+            );
         }
-        return parent::compile($argumentsName, $closureName, $initializationPhpCode, $node, $compiler);
+
+        if ($elseIfCounter > 0) {
+            $elseIfCode .= '],' . chr(10);
+            $argumentInitializationCode .= $elseIfCode;
+        }
+        $argumentInitializationCode .= '];' . chr(10);
+
+        return [
+            'initialization' => '// Rendering ViewHelper ' . $node->getViewHelperClassName() . chr(10) .
+                $accumulatedArgumentInitializationCode . chr(10) .
+                $argumentInitializationCode,
+            'execution' => sprintf(
+                '%s::renderStatic(%s, static fn() => \'\', $renderingContext)' . chr(10),
+                get_class($this),
+                $argumentsVariableName,
+            )
+        ];
     }
 }

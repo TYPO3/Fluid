@@ -95,6 +95,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *     Otherwise, everything the value of the "else"-attribute is displayed.
  *
  * @api
+ * @todo: Declare final with next major
  */
 class IfViewHelper extends AbstractConditionViewHelper
 {
