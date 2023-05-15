@@ -38,11 +38,6 @@ class ViewHelperNode extends AbstractNode
     protected $argumentDefinitions = [];
 
     /**
-     * @var string
-     */
-    protected $pointerTemplateCode;
-
-    /**
      * Constructor.
      *
      * @param RenderingContextInterface $renderingContext a RenderingContext, provided by invoker
@@ -117,14 +112,6 @@ class ViewHelperNode extends AbstractNode
     {
         parent::addChildNode($childNode);
         $this->uninitializedViewHelper->setChildNodes($this->childNodes);
-    }
-
-    /**
-     * @param string $pointerTemplateCode
-     */
-    public function setPointerTemplateCode($pointerTemplateCode)
-    {
-        $this->pointerTemplateCode = $pointerTemplateCode;
     }
 
     /**
