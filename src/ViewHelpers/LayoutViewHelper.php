@@ -46,17 +46,6 @@ class LayoutViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @return string
-     */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
-    {
-        return '';
-    }
-
-    /**
      * This VH does not ever output anything as such: Layouts are
      * handled differently in the compiler / parser and the f:render
      * VH invokes section body execution.
