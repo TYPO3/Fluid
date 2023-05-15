@@ -25,7 +25,12 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 
 /**
- * Template parser building up an object syntax tree
+ * Template parser building up an object syntax tree.
+ *
+ * @internal Nobody should need to override this class. There
+ *           are various different ways to extend Fluid, the main
+ *           syntax tree should not be tampered with.
+ * @todo: Declare final with next major.
  */
 class TemplateParser
 {
