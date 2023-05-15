@@ -42,7 +42,7 @@ class LayoutViewHelper extends AbstractViewHelper
 
     public function render()
     {
-        return null;
+        return '';
     }
 
     /**
@@ -54,6 +54,20 @@ class LayoutViewHelper extends AbstractViewHelper
     public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
     {
         return '';
+    }
+
+    /**
+     * This VH does not ever output anything as such: Layouts are
+     * handled differently in the compiler / parser and the f:render
+     * VH invokes section body execution.
+     * We optimize compilation to always return an empty here.
+     */
+    final public function convert(TemplateCompiler $templateCompiler): array
+    {
+        return [
+            'initialization' => '',
+            'execution' => '\'\'',
+        ];
     }
 
     /**

@@ -98,14 +98,17 @@ class SectionViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @return string
+     * This VH does not ever output anything as such: Sections are
+     * handled differently in the compiler / parser and the f:render
+     * VH invokes section body execution.
+     * We optimize compilation to always return an empty here.
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    final public function convert(TemplateCompiler $templateCompiler): array
     {
-        return '';
+        return [
+            'initialization' => '',
+            'execution' => '\'\'',
+        ];
     }
 
     /**

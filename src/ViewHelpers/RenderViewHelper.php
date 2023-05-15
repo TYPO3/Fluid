@@ -169,7 +169,7 @@ class RenderViewHelper extends AbstractViewHelper
         }
         // Replace empty content with default value. If default is
         // not set, NULL is returned and cast to a new, empty string
-        // outside of this ViewHelper.
+        // outside this ViewHelper.
         if ($content === '') {
             $content = $arguments['default'] ?: $tagContent ?: $renderChildrenClosure();
         }
