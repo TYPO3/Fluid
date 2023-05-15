@@ -15,8 +15,9 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
- * @todo: declare final with next major. Nobody should extend / override here
- *        since compile details can be done in nodes.
+ * @internal Nobody should need to override this class.
+ * @todo: declare final with next major. Nobody should extend / override
+ *        here since compile details can be done in nodes or single VHs.
  */
 class TemplateCompiler
 {
