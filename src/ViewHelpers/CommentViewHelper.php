@@ -8,7 +8,6 @@
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -19,7 +18,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * CDATA tags to avoid this.
  *
  * Using this ViewHelper won't have a notable effect on performance,
- * especially once the template is parsed.  However it can lead to reduced
+ * especially once the template is parsed.  However, it can lead to reduced
  * readability. You can use layouts and partials to split a large template
  * into smaller parts. Using self-descriptive names for the partials can
  * make comments redundant.
@@ -73,17 +72,18 @@ class CommentViewHelper extends AbstractViewHelper
 
     public function render()
     {
-        return null;
+        return '';
     }
 
     /**
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @return string
+     * This VH does not ever output anything. We optimize compilation
+     * to always return an empty string.
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    final public function convert(TemplateCompiler $templateCompiler): array
     {
-        return '';
+        return [
+            'initialization' => '',
+            'execution' => '\'\'',
+        ];
     }
 }
