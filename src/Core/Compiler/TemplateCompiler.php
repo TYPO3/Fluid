@@ -184,8 +184,8 @@ class TemplateCompiler
 
         $this->currentlyProcessingState = $parsingState;
         $this->variableCounter = 0;
-        $generatedRenderFunctions = $this->generateSectionCodeFromParsingState($parsingState);
 
+        $generatedRenderFunctions = $this->generateSectionCodeFromParsingState($parsingState);
         $generatedRenderFunctions .= $this->generateCodeForSection(
             // @todo: This is weird. $parsingState->getRootNode() is not always a RootNode
             //        since it is type hinted to NodeInterface only?! If it would be a
@@ -195,33 +195,24 @@ class TemplateCompiler
             'Main Render function'
         );
 
-        $classDefinition = 'class ' . $identifier . ' extends \TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate';
-
-        $templateCode = <<<EOD
-<?php
-
-%s {
-
-public function getLayoutName(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
-%s;
-}
-public function hasLayout() {
-return %s;
-}
-public function addCompiledNamespaces(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
-\$renderingContext->getViewHelperResolver()->addNamespaces(%s);
-}
-
-%s
-
-}
-EOD;
         $storedLayoutName = $parsingState->getVariableContainer()->get('layoutName');
         $templateCode = sprintf(
-            $templateCode,
-            $classDefinition,
+            '<?php' . chr(10) .
+            '%s {' . chr(10) .
+            '    public function getLayoutName(\\TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface $renderingContext) {' . chr(10) .
+            '        %s;' . chr(10) .
+            '    }' . chr(10) .
+            '    public function hasLayout() {' . chr(10) .
+            '        return %s;' . chr(10) .
+            '    }' . chr(10) .
+            '    public function addCompiledNamespaces(\TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface $renderingContext) {' . chr(10) .
+            '        $renderingContext->getViewHelperResolver()->addNamespaces(%s);' . chr(10) .
+            '    }' . chr(10) .
+            '    %s' . chr(10) .
+            '}' . chr(10),
+            'class ' . $identifier . ' extends \TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate',
             $this->generateCodeForLayoutName($storedLayoutName),
-            ($parsingState->hasLayout() ? 'TRUE' : 'FALSE'),
+            ($parsingState->hasLayout() ? 'true' : 'false'),
             var_export($this->renderingContext->getViewHelperResolver()->getNamespaces(), true),
             $generatedRenderFunctions
         );
@@ -231,15 +222,16 @@ EOD;
 
     /**
      * @param RootNode|string $storedLayoutNameArgument
-     * @return string
      */
-    protected function generateCodeForLayoutName($storedLayoutNameArgument)
+    protected function generateCodeForLayoutName($storedLayoutNameArgument): string
     {
         if ($storedLayoutNameArgument instanceof RootNode) {
-            list($initialization, $execution) = array_values($storedLayoutNameArgument->convert($this));
-            return $initialization . PHP_EOL . 'return ' . $execution;
+            $convertedCode = $storedLayoutNameArgument->convert($this);
+            $initialization = $convertedCode['initialization'];
+            $execution = $convertedCode['execution'];
+            return $initialization . chr(10) . 'return ' . $execution;
         }
-        return 'return (string) \'' . $storedLayoutNameArgument . '\'';
+        return 'return (string)\'' . $storedLayoutNameArgument . '\'';
     }
 
     /**
@@ -277,25 +269,38 @@ EOD;
         return (string)preg_replace('([^a-zA-Z0-9_\x7f-\xff])', '_', $identifier);
     }
 
-    /**
-     * @param array $converted
-     * @param string $expectedFunctionName
-     * @param string $comment
-     * @return string
-     */
-    protected function generateCodeForSection(array $converted, $expectedFunctionName, $comment)
+    protected function generateCodeForSection(array $converted, string $methodName, string $comment): string
     {
-        $templateCode = <<<EOD
-/**
- * %s
- */
-public function %s(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
-%s
-return %s;
-}
-
-EOD;
-        return sprintf($templateCode, $comment, $expectedFunctionName, $converted['initialization'], $converted['execution']);
+        $initialization = $converted['initialization'];
+        $execution = $converted['execution'];
+        if ($initialization === '') {
+            // Very minor code optimization when $converted['initialization'] is empty.
+            // No real benefit, just removes a couple of empty lines.
+            return sprintf(
+                '/**' . chr(10) .
+                ' * %s' . chr(10) .
+                ' */' . chr(10) .
+                'public function %s(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {' . chr(10) .
+                '    return %s;' . chr(10) .
+                '}' . chr(10),
+                $comment,
+                $methodName,
+                $execution
+            );
+        }
+        return sprintf(
+            '/**' . chr(10) .
+            ' * %s' . chr(10) .
+            ' */' . chr(10) .
+            'public function %s(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {' . chr(10) .
+            '    %s' . chr(10) .
+            '    return %s;' . chr(10) .
+            '}' . chr(10),
+            $comment,
+            $methodName,
+            $initialization,
+            $execution
+        );
     }
 
     /**
