@@ -15,7 +15,7 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 /**
  * @deprecated Remove together with StopCompilingChildrenException
  */
-class StopCompilingChildrenExceptionTest extends UnitTestCase
+final class StopCompilingChildrenExceptionTest extends UnitTestCase
 {
     /**
      * @test

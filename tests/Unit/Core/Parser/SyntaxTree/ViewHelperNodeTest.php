@@ -17,7 +17,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class ViewHelperNodeTest extends UnitTestCase
+final class ViewHelperNodeTest extends UnitTestCase
 {
     /**
      * @test

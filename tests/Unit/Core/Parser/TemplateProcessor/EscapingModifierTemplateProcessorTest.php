@@ -15,7 +15,7 @@ use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\EscapingModifierTemplateProce
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class EscapingModifierTemplateProcessorTest extends UnitTestCase
+final class EscapingModifierTemplateProcessorTest extends UnitTestCase
 {
     public static function getEscapingTestValues(): array
     {

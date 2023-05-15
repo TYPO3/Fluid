@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class InlineViewHelperTest extends AbstractFunctionalTestCase
+final class InlineViewHelperTest extends AbstractFunctionalTestCase
 {
     /**
      * @test

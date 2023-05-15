@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class VariableConditionsTest extends AbstractFunctionalTestCase
+final class VariableConditionsTest extends AbstractFunctionalTestCase
 {
     public static function variableConditionDataProvider(): array
     {

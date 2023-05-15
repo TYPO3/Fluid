@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper;
 
-class RawViewHelperTest extends AbstractFunctionalTestCase
+final class RawViewHelperTest extends AbstractFunctionalTestCase
 {
     /**
      * @test

@@ -16,7 +16,7 @@ use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToArray;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class CastingExpressionNodeTest extends UnitTestCase
+final class CastingExpressionNodeTest extends UnitTestCase
 {
     /**
      * @test

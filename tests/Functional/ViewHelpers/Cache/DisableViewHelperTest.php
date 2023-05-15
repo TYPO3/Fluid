@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\ViewHelpers\Cache\DisableViewHelper;
 
-class DisableViewHelperTest extends AbstractFunctionalTestCase
+final class DisableViewHelperTest extends AbstractFunctionalTestCase
 {
     /**
      * @test

@@ -12,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Cases;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class CompileWithContentArgumentAndRenderStaticTest extends AbstractFunctionalTestCase
+final class CompileWithContentArgumentAndRenderStaticTest extends AbstractFunctionalTestCase
 {
     public static function compileWithContentArgumentAndRenderStaticDataProvider(): array
     {

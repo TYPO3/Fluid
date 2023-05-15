@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class BooleanParserTest extends UnitTestCase
+final class BooleanParserTest extends UnitTestCase
 {
     public static function getSomeEvaluationTestValues(): array
     {

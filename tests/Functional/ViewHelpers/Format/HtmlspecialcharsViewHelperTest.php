@@ -15,7 +15,7 @@ use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
 use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper;
 
-class HtmlspecialcharsViewHelperTest extends AbstractFunctionalTestCase
+final class HtmlspecialcharsViewHelperTest extends AbstractFunctionalTestCase
 {
     /**
      * @test

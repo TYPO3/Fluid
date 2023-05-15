@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class ParsingErrorsTest extends AbstractFunctionalTestCase
+final class ParsingErrorsTest extends AbstractFunctionalTestCase
 {
     public static function getTemplateCodeFixturesAndExpectations(): array
     {

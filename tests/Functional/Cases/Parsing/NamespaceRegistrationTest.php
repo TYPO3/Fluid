@@ -12,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Parsing;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class NamespaceRegistrationTest extends AbstractFunctionalTestCase
+final class NamespaceRegistrationTest extends AbstractFunctionalTestCase
 {
     public static function getTemplateCodeFixturesAndExpectations(): array
     {

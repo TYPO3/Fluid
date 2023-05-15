@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
+final class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
 {
     public static function preProcessSourceExtractsNamespacesDataProvider(): array
     {

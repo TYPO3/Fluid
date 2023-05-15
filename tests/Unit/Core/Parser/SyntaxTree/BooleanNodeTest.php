@@ -21,7 +21,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class BooleanNodeTest extends UnitTestCase
+final class BooleanNodeTest extends UnitTestCase
 {
     /**
      * @test

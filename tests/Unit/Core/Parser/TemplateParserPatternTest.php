@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\Parser\Patterns;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\NamespaceDetectionTemplateProcessor;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class TemplateParserPatternTest extends UnitTestCase
+final class TemplateParserPatternTest extends UnitTestCase
 {
     /**
      * @test

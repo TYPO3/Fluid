@@ -22,7 +22,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 
-class RenderingContextTest extends UnitTestCase
+final class RenderingContextTest extends UnitTestCase
 {
     public static function gettersReturnPreviouslySetValuesDataProvider(): array
     {

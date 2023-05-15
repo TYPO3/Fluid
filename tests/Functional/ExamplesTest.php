@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional;
 
-class ExamplesTest extends AbstractFunctionalTestCase
+final class ExamplesTest extends AbstractFunctionalTestCase
 {
     public static function exampleScriptValuesDataProvider(): array
     {

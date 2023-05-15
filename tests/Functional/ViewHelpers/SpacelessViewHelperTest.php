@@ -12,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class SpacelessViewHelperTest extends AbstractFunctionalTestCase
+final class SpacelessViewHelperTest extends AbstractFunctionalTestCase
 {
     public static function renderDataProvider(): \Generator
     {

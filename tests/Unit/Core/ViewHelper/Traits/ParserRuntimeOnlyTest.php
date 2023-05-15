@@ -17,7 +17,7 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 /**
  * @deprecated remove together with ParserRuntimeOnly.
  */
-class ParserRuntimeOnlyTest extends UnitTestCase
+final class ParserRuntimeOnlyTest extends UnitTestCase
 {
     /**
      * @test

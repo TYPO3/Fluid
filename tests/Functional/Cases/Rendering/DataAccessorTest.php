@@ -16,7 +16,7 @@ use TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects\WithPrope
 use TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects\WithUpperCaseGetter;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class DataAccessorTest extends AbstractFunctionalTestCase
+final class DataAccessorTest extends AbstractFunctionalTestCase
 {
     public static function renderDataProvider(): array
     {

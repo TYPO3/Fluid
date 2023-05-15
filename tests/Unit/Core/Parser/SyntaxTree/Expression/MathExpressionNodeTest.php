@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class MathExpressionNodeTest extends UnitTestCase
+final class MathExpressionNodeTest extends UnitTestCase
 {
     public static function getEvaluateExpressionTestValues(): array
     {

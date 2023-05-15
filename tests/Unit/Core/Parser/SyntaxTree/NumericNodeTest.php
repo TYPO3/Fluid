@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class NumericNodeTest extends UnitTestCase
+final class NumericNodeTest extends UnitTestCase
 {
     /**
      * @test

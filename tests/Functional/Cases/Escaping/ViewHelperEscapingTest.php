@@ -20,7 +20,7 @@ use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers\MutableTestViewHelper
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers\TagBasedTestViewHelper;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class ViewHelperEscapingTest extends BaseTestCase
+final class ViewHelperEscapingTest extends BaseTestCase
 {
     private const UNESCAPED = '<script>alert(1)</script>';
     private const ESCAPED = '&lt;script&gt;alert(1)&lt;/script&gt;';

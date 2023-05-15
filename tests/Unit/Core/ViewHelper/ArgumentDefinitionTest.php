@@ -12,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class ArgumentDefinitionTest extends UnitTestCase
+final class ArgumentDefinitionTest extends UnitTestCase
 {
     /**
      * @test

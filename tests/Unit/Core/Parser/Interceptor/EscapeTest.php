@@ -18,7 +18,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class EscapeTest extends UnitTestCase
+final class EscapeTest extends UnitTestCase
 {
     /**
      * @test

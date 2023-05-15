@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class EscapingTest extends AbstractFunctionalTestCase
+final class EscapingTest extends AbstractFunctionalTestCase
 {
     public static function getTemplateCodeFixturesAndExpectations(): array
     {
