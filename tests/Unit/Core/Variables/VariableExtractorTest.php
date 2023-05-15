@@ -15,7 +15,7 @@ use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\ClassWithMagicGetter;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class VariableExtractorTest extends UnitTestCase
+final class VariableExtractorTest extends UnitTestCase
 {
     public static function getPathTestValues(): array
     {

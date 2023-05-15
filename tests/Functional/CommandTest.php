@@ -11,7 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional;
 
 use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 
-class CommandTest extends BaseTestCase
+final class CommandTest extends BaseTestCase
 {
     public static function getCommandTestValues(): array
     {

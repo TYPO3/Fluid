@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\Variables\ChainedVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class ChainedVariableProviderTest extends UnitTestCase
+final class ChainedVariableProviderTest extends UnitTestCase
 {
     public static function getGetTestValues(): array
     {

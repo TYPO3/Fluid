@@ -12,7 +12,10 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 use TYPO3Fluid\Fluid\Core\Variables\JSONVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 
-class JSONVariableProviderTest extends AbstractFunctionalTestCase
+/**
+ * @todo Validate if extending AbstractFunctionalTestCase is needed. If so, move to `Tests/Functional/*`
+ */
+final class JSONVariableProviderTest extends AbstractFunctionalTestCase
 {
     public static function provideVariablesDataProvider(): array
     {

@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class EscapingNodeTest extends UnitTestCase
+final class EscapingNodeTest extends UnitTestCase
 {
     /**
      * @test

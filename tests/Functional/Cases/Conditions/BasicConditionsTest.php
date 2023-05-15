@@ -12,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Conditions;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class BasicConditionsTest extends AbstractFunctionalTestCase
+final class BasicConditionsTest extends AbstractFunctionalTestCase
 {
     public static function basicConditionDataProvider(): array
     {

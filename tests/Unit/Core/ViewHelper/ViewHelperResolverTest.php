@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper;
 
-class ViewHelperResolverTest extends UnitTestCase
+final class ViewHelperResolverTest extends UnitTestCase
 {
     /**
      * @test

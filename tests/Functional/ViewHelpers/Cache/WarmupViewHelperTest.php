@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\ViewHelpers\Cache\WarmupViewHelper;
 
-class WarmupViewHelperTest extends AbstractFunctionalTestCase
+final class WarmupViewHelperTest extends AbstractFunctionalTestCase
 {
     /**
      * @test

@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Variables\Fixtures\StandardVariableProviderModelFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class StandardVariableProviderTest extends UnitTestCase
+final class StandardVariableProviderTest extends UnitTestCase
 {
     /**
      * @test

@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Core\Cache\StandardCacheWarmer;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 
-class SimpleFileCacheTest extends AbstractFunctionalTestCase
+final class SimpleFileCacheTest extends AbstractFunctionalTestCase
 {
     /**
      * @test

@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class RenderViewHelperTest extends AbstractFunctionalTestCase
+final class RenderViewHelperTest extends AbstractFunctionalTestCase
 {
     /**
      * @test

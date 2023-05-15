@@ -12,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class TagBuilderTest extends UnitTestCase
+final class TagBuilderTest extends UnitTestCase
 {
     /**
      * @test

@@ -15,7 +15,7 @@ use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\ViewHelpers\GroupedForViewHelper;
 
-class GroupedForViewHelperTest extends AbstractFunctionalTestCase
+final class GroupedForViewHelperTest extends AbstractFunctionalTestCase
 {
     /**
      * @test

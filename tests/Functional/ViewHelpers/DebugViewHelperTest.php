@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithoutToString;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class DebugViewHelperTest extends AbstractFunctionalTestCase
+final class DebugViewHelperTest extends AbstractFunctionalTestCase
 {
     public static function renderDataProvider(): \Generator
     {

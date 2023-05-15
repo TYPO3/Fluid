@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class TextNodeTest extends UnitTestCase
+final class TextNodeTest extends UnitTestCase
 {
     /**
      * @test

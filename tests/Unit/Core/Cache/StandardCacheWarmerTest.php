@@ -19,7 +19,7 @@ use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 
-class StandardCacheWarmerTest extends UnitTestCase
+final class StandardCacheWarmerTest extends UnitTestCase
 {
     /**
      * @test

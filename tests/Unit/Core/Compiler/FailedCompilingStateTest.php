@@ -12,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 use TYPO3Fluid\Fluid\Core\Compiler\FailedCompilingState;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class FailedCompilingStateTest extends UnitTestCase
+final class FailedCompilingStateTest extends UnitTestCase
 {
     /**
      * @test

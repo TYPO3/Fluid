@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 
-class TemplatePathsTest extends BaseTestCase
+final class TemplatePathsTest extends BaseTestCase
 {
     public static function sanitizePathDataProvider(): array
     {

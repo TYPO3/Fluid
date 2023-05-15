@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\ViewInterface;
 
-class ViewHelperVariableContainerTest extends UnitTestCase
+final class ViewHelperVariableContainerTest extends UnitTestCase
 {
     /**
      * @test

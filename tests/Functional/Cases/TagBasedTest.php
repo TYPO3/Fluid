@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers\TagBasedTestViewHelper;
 
-class TagBasedTest extends BaseTestCase
+final class TagBasedTest extends BaseTestCase
 {
     /**
      * @test

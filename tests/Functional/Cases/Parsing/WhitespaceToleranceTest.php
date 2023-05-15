@@ -12,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Parsing;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class WhitespaceToleranceTest extends AbstractFunctionalTestCase
+final class WhitespaceToleranceTest extends AbstractFunctionalTestCase
 {
     public static function whitespaceToleranceDataProvider(): array
     {

@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\ViewHelpers\Cache\StaticViewHelper;
 
-class StaticViewHelperTest extends AbstractFunctionalTestCase
+final class StaticViewHelperTest extends AbstractFunctionalTestCase
 {
     /**
      * @test

@@ -15,7 +15,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class ParsingStateTest extends UnitTestCase
+final class ParsingStateTest extends UnitTestCase
 {
     /**
      * @test

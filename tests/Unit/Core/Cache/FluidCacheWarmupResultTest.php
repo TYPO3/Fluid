@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Core\Compiler\FailedCompilingState;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class FluidCacheWarmupResultTest extends UnitTestCase
+final class FluidCacheWarmupResultTest extends UnitTestCase
 {
     /**
      * @test

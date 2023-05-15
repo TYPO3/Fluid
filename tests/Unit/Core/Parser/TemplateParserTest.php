@@ -38,7 +38,7 @@ use TYPO3Fluid\Fluid\ViewHelpers\CommentViewHelper;
  * This is to at least half a system test, as it compares rendered results to
  * expectations, and does not strictly check the parsing...
  */
-class TemplateParserTest extends UnitTestCase
+final class TemplateParserTest extends UnitTestCase
 {
     /**
      * @test

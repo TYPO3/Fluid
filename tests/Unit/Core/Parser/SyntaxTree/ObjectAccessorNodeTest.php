@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class ObjectAccessorNodeTest extends UnitTestCase
+final class ObjectAccessorNodeTest extends UnitTestCase
 {
     public static function getEvaluateTestValues(): array
     {

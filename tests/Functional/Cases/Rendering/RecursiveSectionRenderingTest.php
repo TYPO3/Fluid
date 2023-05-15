@@ -12,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class RecursiveSectionRenderingTest extends AbstractFunctionalTestCase
+final class RecursiveSectionRenderingTest extends AbstractFunctionalTestCase
 {
     /**
      * @test

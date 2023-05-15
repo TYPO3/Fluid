@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class ConfigurationTest extends UnitTestCase
+final class ConfigurationTest extends UnitTestCase
 {
     /**
      * @test

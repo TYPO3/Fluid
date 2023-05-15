@@ -12,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Parser\SyntaxTree\Expression;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class TernaryExpressionNodeTest extends AbstractFunctionalTestCase
+final class TernaryExpressionNodeTest extends AbstractFunctionalTestCase
 {
     public static function variableConditionDataProvider(): array
     {

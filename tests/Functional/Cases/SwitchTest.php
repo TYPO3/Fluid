@@ -12,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Cases;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class SwitchTest extends AbstractFunctionalTestCase
+final class SwitchTest extends AbstractFunctionalTestCase
 {
     public static function ignoreTextAndWhitespacesDataProvider(): array
     {
