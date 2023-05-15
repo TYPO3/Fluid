@@ -161,6 +161,11 @@ class BooleanNode extends AbstractNode
         $functionName = $templateCompiler->variableName('expression');
         $initializationPhpCode .= $functionName . ' = function($context) {return ' . $compiledExpression . ';};' . chr(10);
 
+        // @todo: There are possible paths to short-circuit this code in combination
+        //        with EscapingNode, to hint EscapingNode no further sanitation
+        //        is needed. See PR #440 for options on this. The PR however introduces
+        //        multiple different values for 'execution', which needs to be decided
+        //        if we really want this.
         return [
             'initialization' => $initializationPhpCode,
             'execution' => sprintf(

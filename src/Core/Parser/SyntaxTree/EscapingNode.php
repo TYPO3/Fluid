@@ -68,12 +68,14 @@ class EscapingNode extends AbstractNode
     public function convert(TemplateCompiler $templateCompiler): array
     {
         $configuration = $this->getNode()->convert($templateCompiler);
-        $configuration['execution'] = sprintf(
-            'call_user_func_array( function ($var) { ' .
-            'return (is_string($var) || (is_object($var) && method_exists($var, \'__toString\')) ' .
-            '? htmlspecialchars((string) $var, ENT_QUOTES) : $var); }, [%s])',
-            $configuration['execution']
-        );
+        if ($configuration['execution'] !== '\'\'') {
+            $configuration['execution'] = sprintf(
+                'call_user_func_array( function ($var) { ' .
+                'return (is_string($var) || (is_object($var) && method_exists($var, \'__toString\')) ' .
+                '? htmlspecialchars((string) $var, ENT_QUOTES) : $var); }, [%s])',
+                $configuration['execution']
+            );
+        }
         return $configuration;
     }
 }
