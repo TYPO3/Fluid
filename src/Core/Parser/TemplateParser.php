@@ -355,14 +355,11 @@ class TemplateParser
             $this->parseArguments($arguments, $viewHelper)
         );
 
-        if ($viewHelperNode) {
-            $viewHelperNode->setPointerTemplateCode($templateElement);
-            if ($selfclosing === true) {
-                $state->popNodeFromStack();
-                $this->callInterceptor($viewHelperNode, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $state);
-                // This needs to be called here because closingViewHelperTagHandler() is not triggered for self-closing tags
-                $state->getNodeFromStack()->addChildNode($viewHelperNode);
-            }
+        if ($viewHelperNode && $selfclosing === true) {
+            $state->popNodeFromStack();
+            $this->callInterceptor($viewHelperNode, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $state);
+            // This needs to be called here because closingViewHelperTagHandler() is not triggered for self-closing tags
+            $state->getNodeFromStack()->addChildNode($viewHelperNode);
         }
 
         return $viewHelperNode;
