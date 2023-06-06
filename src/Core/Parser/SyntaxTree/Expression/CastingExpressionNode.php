@@ -22,7 +22,7 @@ class CastingExpressionNode extends AbstractExpressionNode
      * @var array
      */
     protected static $validTypes = [
-        'integer', 'boolean', 'string', 'float', 'array', 'DateTime'
+        'integer', 'boolean', 'string', 'float', 'array', 'DateTime', 'json'
     ];
 
     /**
@@ -88,6 +88,8 @@ class CastingExpressionNode extends AbstractExpressionNode
             $value = self::convertToDateTime($variable);
         } elseif ($type === 'array') {
             $value = (array)self::convertToArray($variable);
+        } elseif ($type === 'json') {
+            $value = (string)self::convertToJson($variable);
         }
         return $value;
     }
@@ -113,8 +115,14 @@ class CastingExpressionNode extends AbstractExpressionNode
         if (is_array($variable)) {
             return $variable;
         }
-        if (is_string($variable) && strpos($variable, ',')) {
-            return array_map('trim', explode(',', $variable));
+        if (is_string($variable)) {
+            // rough check on whether or not it's a json string
+            if (preg_match('/^[\[\{].*[\]\}]$/', trim($variable))) {
+                return json_decode($variable, true, 512, JSON_THROW_ON_ERROR);
+            }
+            if (strpos($variable, ',')) {
+                return array_map('trim', explode(',', $variable));
+            }
         }
         if ($variable instanceof \Iterator) {
             $array = [];
@@ -130,5 +138,14 @@ class CastingExpressionNode extends AbstractExpressionNode
             return [];
         }
         return [$variable];
+    }
+
+    /**
+     * @param mixed $variable
+     * @return string
+     */
+    protected static function convertToJson($variable)
+    {
+        return json_encode($variable, JSON_THROW_ON_ERROR);
     }
 }

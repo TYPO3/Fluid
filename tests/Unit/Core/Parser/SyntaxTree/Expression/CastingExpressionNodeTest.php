@@ -64,6 +64,11 @@ final class CastingExpressionNodeTest extends UnitTestCase
             ['myboolean as array', ['myboolean' => true], []],
             ['myboolean as array', ['myboolean' => false], []],
             ['myobject as array', ['myobject' => $toArrayObject], ['name' => 'foobar']],
+            ['myjsonstring as array', ['myjsonstring' => '["foo", "bar"]'], [0 => 'foo', 1 => 'bar']],
+            ['myjsonstring as array', ['myjsonstring' => '{"foo":"bar","favs":{"color":"red"}}'], ['foo' => 'bar', 'favs' => ['color' => 'red']]],
+            ['myjsonstring as array', ['myjsonstring' => ' { "json with"  :  "spaces " }' ], ['json with' => 'spaces ']],
+            ['myarray as json', ['myarray' => [0 => 'foo', 1 => 'bar']], '["foo","bar"]'],
+            ['myarray as json', ['myarray' => ['foo' => 'bar', 'favs' => ['color' => 'red']]], '{"foo":"bar","favs":{"color":"red"}}'],
         ];
     }
 
@@ -78,5 +83,17 @@ final class CastingExpressionNodeTest extends UnitTestCase
         $renderingContext->setVariableProvider(new StandardVariableProvider($variables));
         $result = CastingExpressionNode::evaluateExpression($renderingContext, $expression, []);
         self::assertEquals($expected, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function testEvaluateExpressionThrowsExceptionIfJsonSyntaxError(): void
+    {
+        $this->expectException(\JsonException::class);
+        $subject = new CastingExpressionNode('{test as array}', ['test as array']);
+        $context = new RenderingContext();
+        $context->setVariableProvider(new StandardVariableProvider(['test' => '{"invalid json"::123}']));
+        $result = $subject->evaluate($context);
     }
 }
