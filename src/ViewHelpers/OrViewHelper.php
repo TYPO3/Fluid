@@ -12,7 +12,27 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
 
 /**
- * If content is empty use alternative text
+ * Or ViewHelper
+ *
+ * If content is null use alternative text.
+ *
+ * Usage of f:or
+ * =============
+ *
+ * ::
+ *
+ *     {f:variable(name:'fallback',value:'this is not the variable you\'re looking for')}
+ *     {undefinedVariable -> f:or(alternative:fallback)}
+ *
+ * Usage of ternary operator
+ * =========================
+ *
+ * In some cases (e.g. when you want to check for empty instead of null)
+ * it might be more handy to use a ternary operator instead of f:or
+ *
+ * ::
+ *
+ *     {emptyVariable ?: 'this is an alterative text'}
  */
 class OrViewHelper extends AbstractViewHelper
 {
@@ -23,8 +43,8 @@ class OrViewHelper extends AbstractViewHelper
      */
     public function initializeArguments()
     {
-        $this->registerArgument('content', 'mixed', 'Content to check if empty');
-        $this->registerArgument('alternative', 'mixed', 'Alternative if content is empty');
+        $this->registerArgument('content', 'mixed', 'Content to check if null');
+        $this->registerArgument('alternative', 'mixed', 'Alternative if content is null');
         $this->registerArgument('arguments', 'array', 'Arguments to be replaced in the resulting string, using sprintf');
     }
 
