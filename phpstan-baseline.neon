@@ -22,7 +22,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInterface\\:\\:isChildrenEscapingEnabled\\(\\)\\.$#"
-			count: 2
+			count: 1
 			path: src/Core/Parser/Interceptor/Escape.php
 
 		-

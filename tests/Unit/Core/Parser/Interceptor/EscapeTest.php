@@ -30,10 +30,10 @@ final class EscapeTest extends UnitTestCase
         $viewHelperNodeMock = $this->createMock(ViewHelperNode::class);
         $viewHelperNodeMock->expects(self::once())->method('getUninitializedViewHelper')->willReturn($viewHelperMock);
         $subject = new Escape();
-        $property = new \ReflectionProperty($subject, 'viewHelperNodesWhichDisableTheInterceptor');
-        self::assertSame(0, $property->getValue($subject));
+        $property = new \ReflectionProperty($subject, 'childrenEscapingEnabled');
+        self::assertTrue($property->getValue($subject));
         $subject->process($viewHelperNodeMock, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, new ParsingState());
-        self::assertSame(0, $property->getValue($subject));
+        self::assertTrue($property->getValue($subject));
     }
 
     /**
@@ -46,26 +46,10 @@ final class EscapeTest extends UnitTestCase
         $viewHelperNodeMock = $this->createMock(ViewHelperNode::class);
         $viewHelperNodeMock->expects(self::once())->method('getUninitializedViewHelper')->willReturn($viewHelperMock);
         $subject = new Escape();
-        $property = new \ReflectionProperty($subject, 'viewHelperNodesWhichDisableTheInterceptor');
-        self::assertSame(0, $property->getValue($subject));
+        $property = new \ReflectionProperty($subject, 'childrenEscapingEnabled');
+        self::assertTrue($property->getValue($subject));
         $subject->process($viewHelperNodeMock, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, new ParsingState());
-        self::assertSame(1, $property->getValue($subject));
-    }
-
-    /**
-     * @test
-     */
-    public function processReenablesEscapingInterceptorOnClosingViewHelperTagIfItWasDisabledBefore(): void
-    {
-        $viewHelperMock = $this->createMock(AbstractViewHelper::class);
-        $viewHelperMock->expects(self::once())->method('isOutputEscapingEnabled')->willReturn(false);
-        $viewHelperNodeMock = $this->createMock(ViewHelperNode::class);
-        $viewHelperNodeMock->expects(self::any())->method('getUninitializedViewHelper')->willReturn($viewHelperMock);
-        $subject = new Escape();
-        $property = new \ReflectionProperty($subject, 'viewHelperNodesWhichDisableTheInterceptor');
-        $property->setValue($subject, 1);
-        $subject->process($viewHelperNodeMock, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, new ParsingState());
-        self::assertSame(0, $property->getValue($subject));
+        self::assertFalse($property->getValue($subject));
     }
 
     /**
