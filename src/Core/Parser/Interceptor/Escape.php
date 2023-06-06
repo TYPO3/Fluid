@@ -21,12 +21,19 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 class Escape implements InterceptorInterface
 {
     /**
-     * A counter of ViewHelperNodes which currently disable the interceptor.
+     * Is the interceptor enabled right now for child nodes?
+     *
+     * @var bool
+     */
+    protected $childrenEscapingEnabled = true;
+
+    /**
+     * A stack of ViewHelperNodes which currently disable the interceptor.
      * Needed to enable the interceptor again.
      *
-     * @var int
+     * @var NodeInterface[]
      */
-    protected $viewHelperNodesWhichDisableTheInterceptor = 0;
+    protected $viewHelperNodesWhichDisableTheInterceptor = [];
 
     /**
      * Adds a ViewHelper node using the Format\HtmlspecialcharsViewHelper to the given node.
@@ -42,18 +49,21 @@ class Escape implements InterceptorInterface
         if ($interceptorPosition === InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER) {
             /** @var ViewHelperNode $node */
             if (!$node->getUninitializedViewHelper()->isChildrenEscapingEnabled()) {
-                ++$this->viewHelperNodesWhichDisableTheInterceptor;
+                $this->childrenEscapingEnabled = false;
+                $this->viewHelperNodesWhichDisableTheInterceptor[] = $node;
             }
         } elseif ($interceptorPosition === InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER) {
-            /** @var ViewHelperNode $node */
-            if (!$node->getUninitializedViewHelper()->isChildrenEscapingEnabled()) {
-                --$this->viewHelperNodesWhichDisableTheInterceptor;
+            if (end($this->viewHelperNodesWhichDisableTheInterceptor) === $node) {
+                array_pop($this->viewHelperNodesWhichDisableTheInterceptor);
+                if (count($this->viewHelperNodesWhichDisableTheInterceptor) === 0) {
+                    $this->childrenEscapingEnabled = true;
+                }
             }
-
-            if ($this->viewHelperNodesWhichDisableTheInterceptor === 0 && $node->getUninitializedViewHelper()->isOutputEscapingEnabled()) {
+            /** @var ViewHelperNode $node */
+            if ($this->childrenEscapingEnabled && $node->getUninitializedViewHelper()->isOutputEscapingEnabled()) {
                 $node = new EscapingNode($node);
             }
-        } elseif ($this->viewHelperNodesWhichDisableTheInterceptor === 0 && ($node instanceof ObjectAccessorNode || $node instanceof ExpressionNodeInterface)) {
+        } elseif ($this->childrenEscapingEnabled && ($node instanceof ObjectAccessorNode || $node instanceof ExpressionNodeInterface)) {
             $node = new EscapingNode($node);
         }
         return $node;
