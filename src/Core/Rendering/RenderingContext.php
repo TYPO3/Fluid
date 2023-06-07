@@ -70,7 +70,7 @@ class RenderingContext implements RenderingContextInterface
     /**
      * @var string
      */
-    protected $controllerName;
+    protected $controllerName = '';
 
     /**
      * @var string
