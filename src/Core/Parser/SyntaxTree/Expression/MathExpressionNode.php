@@ -51,6 +51,7 @@ class MathExpressionNode extends AbstractExpressionNode
         // them in order.
         $result = array_shift($matches[0]);
         $result = static::getTemplateVariableOrValueItself($result, $renderingContext);
+        $result = ($result == (int)$result) ? (int)$result : (float)$result;
         $operator = null;
         $operators = ['*', '^', '-', '+', '/', '%'];
         foreach ($matches[0] as $part) {
@@ -58,6 +59,7 @@ class MathExpressionNode extends AbstractExpressionNode
                 $operator = $part;
             } else {
                 $part = static::getTemplateVariableOrValueItself($part, $renderingContext);
+                $part = ($part == (int)$part) ? (int)$part : (float)$part;
                 $result = self::evaluateOperation($result, $operator, $part);
             }
         }
