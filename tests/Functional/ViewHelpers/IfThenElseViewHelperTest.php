@@ -342,6 +342,37 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             '',
         ];
 
+        yield 'then variable argument, else variable argument, verdict true' => [
+            '<f:if condition="{verdict}" then="{thenVariable}" else="{elseVariable}" />',
+            ['verdict' => true, 'thenVariable' => 'thenArgument', 'elseVariable' => 'elseArgument'],
+            'thenArgument',
+        ];
+        yield 'then variable argument, else variable argument, verdict false' => [
+            '<f:if condition="{verdict}" then="{thenVariable}" else="{elseVariable}" />',
+            ['verdict' => false, 'thenVariable' => 'thenArgument', 'elseVariable' => 'elseArgument'],
+            'elseArgument',
+        ];
+        yield 'then variable argument missing, else variable argument, verdict true' => [
+            '<f:if condition="{verdict}" then="{thenVariable}" else="{elseVariable}" />',
+            ['verdict' => true, 'elseVariable' => 'elseArgument'],
+            '',
+        ];
+        yield 'then variable argument missing, else variable argument, verdict false' => [
+            '<f:if condition="{verdict}" then="{thenVariable}" else="{elseVariable}" />',
+            ['verdict' => false, 'elseVariable' => 'elseArgument'],
+            'elseArgument',
+        ];
+        yield 'then variable argument, else variable missing, verdict true' => [
+            '<f:if condition="{verdict}" then="{thenVariable}" else="{elseVariable}" />',
+            ['verdict' => true, 'thenVariable' => 'thenArgument'],
+            'thenArgument',
+        ];
+        yield 'then variable argument, else variable missing, verdict false' => [
+            '<f:if condition="{verdict}" then="{thenVariable}" else="{elseVariable}" />',
+            ['verdict' => false, 'thenVariable' => 'thenArgument'],
+            '',
+        ];
+
         /*
          * @todo: broken non-compiled, ok compiled
         yield 'else argument, else if child, if verdict false, elseif verdict true' => [
@@ -352,6 +383,111 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             'elseIfChild',
         ];
         */
+
+        yield 'inline syntax, then argument, verdict true' => [
+            '{f:if(condition:\'{verdict}\', then:\'thenArgument\')}',
+            ['verdict' => true],
+            'thenArgument',
+        ];
+        yield 'inline syntax, then argument, verdict false' => [
+            '{f:if(condition:\'{verdict}\', then:\'thenArgument\')}',
+            ['verdict' => false],
+            '',
+        ];
+
+        yield 'inline syntax, else argument, verdict true' => [
+            '{f:if(condition:\'{verdict}\', else:\'elseArgument\')}',
+            ['verdict' => true],
+            // @todo: wtf?
+            null,
+        ];
+        yield 'inline syntax, else argument, verdict false' => [
+            '{f:if(condition:\'{verdict}\', else:\'elseArgument\')}',
+            ['verdict' => false],
+            'elseArgument',
+        ];
+
+        yield 'inline syntax, then argument, else argument, verdict true' => [
+            '{f:if(condition:\'{verdict}\', then:\'thenArgument\', else:\'elseArgument\')}',
+            ['verdict' => true],
+            'thenArgument',
+        ];
+        yield 'inline syntax, then argument, else argument, verdict false' => [
+            '{f:if(condition:\'{verdict}\', then:\'thenArgument\', else:\'elseArgument\')}',
+            ['verdict' => false],
+            'elseArgument',
+        ];
+
+        yield 'inline syntax, then argument, else argument, no verdict' => [
+            '{f:if(then:\'thenArgument\', else:\'elseArgument\')}',
+            [],
+            'elseArgument',
+        ];
+
+        yield 'inline syntax, then argument, else argument, verdict true, verdict variable node' => [
+            '{f:if(condition:verdict, then:\'thenArgument\', else:\'elseArgument\')}',
+            ['verdict' => true],
+            'thenArgument',
+        ];
+        yield 'inline syntax, then argument, else argument, verdict false, verdict variable node' => [
+            '{f:if(condition:verdict, then:\'thenArgument\', else:\'elseArgument\')}',
+            ['verdict' => false],
+            'elseArgument',
+        ];
+
+        yield 'inline syntax, then argument, else argument, verdict variable missing' => [
+            '{f:if(condition:\'{verdict}\', then:\'thenArgument\', else:\'elseArgument\')}',
+            [],
+            'elseArgument',
+        ];
+        yield 'inline syntax, then argument, else argument, verdict variable missing, verdict variable node' => [
+            '{f:if(condition:verdict, then:\'thenArgument\', else:\'elseArgument\')}',
+            [],
+            'elseArgument',
+        ];
+
+        yield 'inline syntax, then argument variable, else argument variable, verdict true' => [
+            '{f:if(condition:\'{verdict}\', then:\'{thenVariable}\', else:\'{elseVariable}\')}',
+            ['verdict' => true, 'thenVariable' => 'thenArgument', 'elseVariable' => 'elseArgument'],
+            'thenArgument',
+        ];
+        yield 'inline syntax, then argument variable, else argument variable, verdict false' => [
+            '{f:if(condition:\'{verdict}\', then:\'{thenVariable}\', else:\'{elseVariable}\')}',
+            ['verdict' => false, 'thenVariable' => 'thenArgument',  'elseVariable' => 'elseArgument'],
+            'elseArgument',
+        ];
+
+        yield 'inline syntax, then argument variable, else argument variable node, verdict true' => [
+            '{f:if(condition:\'{verdict}\', then:thenVariable, else:elseVariable)}',
+            ['verdict' => true, 'thenVariable' => 'thenArgument', 'elseVariable' => 'elseArgument'],
+            'thenArgument',
+        ];
+        yield 'inline syntax, then argument variable, else argument variable node, verdict false' => [
+            '{f:if(condition:\'{verdict}\', then:thenVariable, else:elseVariable)}',
+            ['verdict' => false, 'thenVariable' => 'thenArgument',  'elseVariable' => 'elseArgument'],
+            'elseArgument',
+        ];
+
+        yield 'inline syntax, then argument string 1, else argument string 0, verdict true' => [
+            '{f:if(condition:\'{verdict}\', then:\'1\', else:\'0\')}',
+            ['verdict' => true],
+            1,
+        ];
+        yield 'inline syntax, then argument string 1, else argument string 0, verdict false' => [
+            '{f:if(condition:\'{verdict}\', then:\'1\', else:\'0\')}',
+            ['verdict' => false],
+            0,
+        ];
+        yield 'inline syntax, then argument int 1, else argument int 0, verdict true' => [
+            '{f:if(condition:\'{verdict}\', then:1, else:0)}',
+            ['verdict' => true],
+            1,
+        ];
+        yield 'inline syntax, then argument int 1, else argument int 0, verdict false' => [
+            '{f:if(condition:\'{verdict}\', then:1, else:0)}',
+            ['verdict' => false],
+            0,
+        ];
     }
 
     /**
