@@ -63,6 +63,11 @@ parameters:
 		-
 			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
 			count: 1
+			path: src/Core/ViewHelper/AbstractConditionViewHelper.php
+
+		-
+			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			count: 1
 			path: src/Core/ViewHelper/AbstractViewHelper.php
 
 		-

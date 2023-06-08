@@ -235,13 +235,21 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                     is_array($defaultValue) && empty($defaultValue) ? '[]' : var_export($defaultValue, true)
                 );
             } elseif ($arguments[$argumentName] instanceof NodeInterface) {
-                // Argument *is* given to VH, resolve
+                // Argument *is* given to VH and is a node, resolve
                 $converted = $arguments[$argumentName]->convert($templateCompiler);
                 $accumulatedArgumentInitializationCode .= $converted['initialization'];
                 $argumentInitializationCode .= sprintf(
                     '\'%s\' => %s,' . chr(10),
                     $argumentName,
                     $converted['execution']
+                );
+            } else {
+                // Argument *is* given to VH and is a simple type.
+                // @todo: Why is this not a node object as well? See f:if inline syntax tests.
+                $argumentInitializationCode .= sprintf(
+                    '\'%s\' => %s,' . chr(10),
+                    $argumentName,
+                    $arguments[$argumentName]
                 );
             }
         }
