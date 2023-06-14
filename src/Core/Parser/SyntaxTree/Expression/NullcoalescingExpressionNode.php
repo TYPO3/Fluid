@@ -13,15 +13,15 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
 
 /**
- * Ternary Condition Node - allows the shorthand version
- * of a condition to be written as `{var ? thenvar : elsevar}`
+ * Null Coalescing Condition Node - allows the shorthand of a null check
+ * for a default value as `{nullableVar ?? valueIfNull}`
  */
 class NullcoalescingExpressionNode extends AbstractExpressionNode
 {
 
     /**
-     * Pattern which detects ternary conditions written in shorthand
-     * syntax, e.g. {checkvar ? thenvar : elsevar}.
+     * Pattern which detects null coalescing conditions written in shorthand
+     * syntax, e.g. {nullableVar ?? valueIfNull}.
      */
     public static $detectionExpression = '/
 		(
