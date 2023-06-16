@@ -404,8 +404,7 @@ class TemplatePaths
     protected function sanitizePath($path)
     {
         if (is_array($path)) {
-            $paths = array_map([$this, 'sanitizePath'], $path);
-            return array_unique($paths);
+            return $this->sanitizePaths($path);
         }
         if (($wrapper = parse_url($path, PHP_URL_SCHEME)) && in_array($wrapper, stream_get_wrappers())) {
             return $path;
@@ -428,7 +427,20 @@ class TemplatePaths
      */
     protected function sanitizePaths(array $paths)
     {
-        return array_unique(array_map([$this, 'sanitizePath'], $paths));
+        return $this->uniquePaths(array_map([$this, 'sanitizePath'], $paths));
+    }
+
+    /**
+     * Creates an unique list of paths where the last duplicate item will be kept.
+     * This makes sure that the intended order of paths is kept and makes it possible
+     * to re-apply a path to the chain
+     *
+     * @param array $paths
+     * @return array
+     */
+    protected function uniquePaths(array $paths)
+    {
+        return array_reverse(array_unique(array_reverse($paths)));
     }
 
     /**
@@ -496,7 +508,7 @@ class TemplatePaths
             if (isset($paths[$pathPart]) && is_array($paths[$pathPart])) {
                 $partPaths = array_merge($partPaths, $paths[$pathPart]);
             }
-            $pathCollections[] = array_unique(array_map([$this, 'ensureSuffixedPath'], $partPaths));
+            $pathCollections[] = $this->uniquePaths(array_map([$this, 'ensureSuffixedPath'], $partPaths));
         }
         $pathCollections = array_map([$this, 'ensureAbsolutePaths'], $pathCollections);
         $pathCollections[] = $format;

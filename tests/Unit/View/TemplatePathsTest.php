@@ -49,6 +49,7 @@ final class TemplatePathsTest extends BaseTestCase
             [['/foo/bar/baz', 'C:\\foo\\bar\\baz'], ['/foo/bar/baz', 'C:/foo/bar/baz']],
             [[__FILE__, __DIR__], [strtr(__FILE__, '\\', '/'), strtr(__DIR__, '\\', '/') . '/']],
             [['', 'composer.json'], ['', strtr(getcwd(), '\\', '/') . '/composer.json']],
+            [['/foo/bar/initial', '/foo/bar/override', '/foo/bar/initial'], ['/foo/bar/override', '/foo/bar/initial']],
         ];
     }
 
