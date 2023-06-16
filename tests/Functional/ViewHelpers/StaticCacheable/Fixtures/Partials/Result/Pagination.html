@@ -1,0 +1,7 @@
+<ul class="pagination-test">
+    <li class="page-item">{s:compilable(page: previousPageNumber)}- {previousPageNumber}</li>
+<f:for each="{allPageNumbers}" as="page">
+    <li class="page-item">{s:compilable(page: '{page}')} - {page}</li>
+</f:for>
+    <li class="page-item">{s:compilable(page: '{nextPageNumber}')} - {nextPageNumber}</li>
+</ul>
