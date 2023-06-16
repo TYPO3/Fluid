@@ -122,18 +122,42 @@ class ViewHelperNode extends AbstractNode
      * If the view helper implements \TYPO3Fluid\Fluid\Core\ViewHelper\ChildNodeAccessInterface,
      * it calls setChildNodes(array childNodes) on the view helper.
      *
-     * Afterwards, checks that the view helper did not leave a variable lying around.
+     * Afterward, checks that the view helper did not leave a variable lying around.
      *
      * @param RenderingContextInterface $renderingContext
      * @return string evaluated node after the view helper has been called.
      */
     public function evaluate(RenderingContextInterface $renderingContext)
     {
+        // This is added as a safe-off, currently no evidence that we need this here like in convert().
+        // See: https://github.com/TYPO3/Fluid/issues/804
+        $this->updateViewHelperNodeInViewHelper();
         return $renderingContext->getViewHelperInvoker()->invoke($this->uninitializedViewHelper, $this->arguments, $renderingContext);
     }
 
     public function convert(TemplateCompiler $templateCompiler): array
     {
+        // We need this here to avoid https://github.com/TYPO3/Fluid/issues/804.
+        $this->updateViewHelperNodeInViewHelper();
         return $this->uninitializedViewHelper->convert($templateCompiler);
+    }
+
+    /**
+     * Ensure correct ViewHelperNode (this) reference in the uninitialized ViewHelper instance.
+     */
+    protected function updateViewHelperNodeInViewHelper(): void
+    {
+        // Custom ViewHelperResolver can and are implemented providing the ability to instantiate ViewHelpers through
+        // a DependencyInjection system like Symfony DI, for example done by TYPO3. Due to the nature, instances may be
+        // set as shared, which means that changes to property reflects the latest set state. Therefore, we need to set
+        // the current ViewHelperNode to a viewhelper instance to ensure correct context.
+        // See https://github.com/TYPO3/Fluid/issues/804
+        // @todo We should evaluate if we can get rid of this state and better pass it around.
+        // @todo The ViewHelperInterface does not contain the setViewHelperNode() method. Most likely ViewHelper are
+        //       created using the AbstractViewHelper class as base, which contains this method. However, we need
+        //       to check for method to exists before calling it.
+        if (method_exists($this->uninitializedViewHelper, 'setViewHelperNode')) {
+            $this->uninitializedViewHelper->setViewHelperNode($this);
+        }
     }
 }

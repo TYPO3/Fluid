@@ -114,3 +114,8 @@ parameters:
 			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with TYPO3Fluid\\\\Fluid\\\\Tests\\\\Functional\\\\Fixtures\\\\Various\\\\UserWithoutToString and string will always evaluate to false\\.$#"
 			count: 1
 			path: tests/Functional/ViewHelpers/Format/HtmlspecialcharsViewHelperTest.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: tests/Functional/ViewHelpers/StaticCacheable/NotSharedStaticCompilableViewHelperTest.php
