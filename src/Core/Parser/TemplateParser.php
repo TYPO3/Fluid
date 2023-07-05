@@ -761,9 +761,15 @@ class TemplateParser
         }
         $matches = [];
         $arrayToBuild = [];
+        $spreadVariableCounter = 0;
         if (preg_match_all(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS, $arrayText, $matches, PREG_SET_ORDER)) {
             foreach ($matches as $singleMatch) {
-                $arrayKey = $this->unquoteString($singleMatch['Key']);
+                if (array_key_exists('SpreadVariableIdentifier', $singleMatch)) {
+                    $arrayKey = ArrayNode::SPREAD_PREFIX . $spreadVariableCounter++;
+                    $singleMatch['VariableIdentifier'] = $singleMatch['SpreadVariableIdentifier'];
+                } else {
+                    $arrayKey = $this->unquoteString($singleMatch['Key']);
+                }
                 $assignInto = &$arrayToBuild;
                 $isBoolean = false;
                 $argumentDefinition = null;

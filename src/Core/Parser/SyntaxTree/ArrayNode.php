@@ -18,6 +18,8 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class ArrayNode extends AbstractNode
 {
+    public const SPREAD_PREFIX = '__spread';
+
     /**
      * Constructor.
      *
@@ -37,7 +39,15 @@ class ArrayNode extends AbstractNode
     {
         $arrayToBuild = [];
         foreach ($this->internalArray as $key => $value) {
-            $arrayToBuild[$key] = $value instanceof NodeInterface ? $value->evaluate($renderingContext) : $value;
+            if ($value instanceof NodeInterface) {
+                if (str_starts_with($key, self::SPREAD_PREFIX)) {
+                    $arrayToBuild = [...$arrayToBuild, ...$value->evaluate($renderingContext)];
+                } else {
+                    $arrayToBuild[$key] = $value->evaluate($renderingContext);
+                }
+            } else {
+                $arrayToBuild[$key] = $value;
+            }
         }
         return $arrayToBuild;
     }
@@ -53,11 +63,18 @@ class ArrayNode extends AbstractNode
                 if (!empty($converted['initialization'])) {
                     $accumulatedInitializationPhpCode .= $converted['initialization'];
                 }
-                $initializationPhpCode .= sprintf(
-                    '\'%s\' => %s,' . chr(10),
-                    $key,
-                    $converted['execution']
-                );
+                if (str_starts_with($key, self::SPREAD_PREFIX)) {
+                    $initializationPhpCode .= sprintf(
+                        '...%s,' . chr(10),
+                        $converted['execution']
+                    );
+                } else {
+                    $initializationPhpCode .= sprintf(
+                        '\'%s\' => %s,' . chr(10),
+                        $key,
+                        $converted['execution']
+                    );
+                }
             } elseif (is_numeric($value)) {
                 // handle int, float, numeric strings
                 $initializationPhpCode .= sprintf(
