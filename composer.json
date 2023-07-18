@@ -20,7 +20,7 @@
         "friendsofphp/php-cs-fixer": "^3.16.0",
         "phpstan/phpstan": "^1.10.14",
         "phpstan/phpstan-phpunit": "^1.3.11",
-        "phpunit/phpunit": "^10.1.2"
+        "phpunit/phpunit": "^10.2.6"
     },
     "suggest": {
         "ext-json": "PHP JSON is needed when using JSONVariableProvider: A relatively rare use case"
@@ -40,8 +40,8 @@
         "bin/fluid"
     ],
     "scripts": {
-        "cgl:check": "@php vendor/bin/php-cs-fixer fix --dry-run --diff -v",
-        "cgl:fix": "@php vendor/bin/php-cs-fixer fix --diff -v",
+        "cgl:check": "@php vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "cgl:fix": "@php vendor/bin/php-cs-fixer fix --diff",
         "ci:all": [
             "@composer validate",
             "@lint:php",
@@ -52,7 +52,7 @@
         "lint:php": "find src/ tests/ -name '*.php' -print0 | xargs -0 -n1 -P4 ${PHP_BINARY} -dxdebug.mode=off -l >/dev/null",
         "phpstan:check": "@php vendor/bin/phpstan analyze --no-progress",
         "phpstan:generate-baseline": "@php vendor/bin/phpstan analyze --no-progress --generate-baseline=phpstan-baseline.neon",
-        "tests:all": "@php vendor/bin/phpunit -v"
+        "tests:all": "@php vendor/bin/phpunit"
     },
     "scripts-descriptions": {
         "cgl:check": "Check coding-style in PHP files.",
