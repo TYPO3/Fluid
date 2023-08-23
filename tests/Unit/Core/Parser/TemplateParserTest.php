@@ -645,7 +645,7 @@ final class TemplateParserTest extends UnitTestCase
         $subject = new TemplateParser();
         $subject->setRenderingContext($context);
         $method = new \ReflectionMethod($subject, 'parseArguments');
-        $parsedArguments= $method->invoke($subject, 'var1="1" var2="0"}', $viewHelper);
+        $parsedArguments = $method->invoke($subject, 'var1="1" var2="0"}', $viewHelper);
         self::assertEquals(
             [
                 'var1' => new BooleanNode(new NumericNode(1)),
