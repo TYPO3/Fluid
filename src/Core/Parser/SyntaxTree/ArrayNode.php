@@ -23,9 +23,7 @@ class ArrayNode extends AbstractNode
      *
      * @param array $internalArray An associative array. Each key is a string. Each value is either a literal, or an AbstractNode.
      */
-    public function __construct(private readonly array $internalArray)
-    {
-    }
+    public function __construct(private readonly array $internalArray) {}
 
     /**
      * Evaluate the array and return an evaluated array

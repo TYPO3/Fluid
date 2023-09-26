@@ -14,6 +14,4 @@ use TYPO3Fluid\Fluid\View\AbstractTemplateView;
 /**
  * Fixture to test AbstractTemplateView
  */
-class AbstractTemplateViewTestFixture extends AbstractTemplateView
-{
-}
+class AbstractTemplateViewTestFixture extends AbstractTemplateView {}

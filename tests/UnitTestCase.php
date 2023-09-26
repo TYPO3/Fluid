@@ -17,6 +17,4 @@ namespace TYPO3Fluid\Fluid\Tests;
  * at some point, specific behavior needs to be implemented for unit tests, your test cases
  * will profit from it automatically.
  */
-abstract class UnitTestCase extends BaseTestCase
-{
-}
+abstract class UnitTestCase extends BaseTestCase {}

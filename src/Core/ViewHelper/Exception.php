@@ -12,6 +12,4 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  *
  * @api
  */
-class Exception extends \TYPO3Fluid\Fluid\Core\Exception
-{
-}
+class Exception extends \TYPO3Fluid\Fluid\Core\Exception {}

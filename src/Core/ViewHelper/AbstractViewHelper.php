@@ -277,9 +277,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      *
      * @api
      */
-    public function initialize()
-    {
-    }
+    public function initialize() {}
 
     /**
      * Helper method which triggers the rendering of everything between the
@@ -420,9 +418,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      *
      * @api
      */
-    public function initializeArguments()
-    {
-    }
+    public function initializeArguments() {}
 
     /**
      * Tests if the given $argumentName is set, and not NULL.
@@ -447,9 +443,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @throws Exception
      * @param array<string, mixed> $arguments
      */
-    public function handleAdditionalArguments(array $arguments)
-    {
-    }
+    public function handleAdditionalArguments(array $arguments) {}
 
     /**
      * Default implementation of validating additional, undeclared arguments.
@@ -521,18 +515,14 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param array<string, TextNode> $arguments
      * @param VariableProviderInterface $variableContainer
      */
-    public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer)
-    {
-    }
+    public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer) {}
 
     /**
      * Resets the ViewHelper state.
      *
      * Overwrite this method if you need to get a clean state of your ViewHelper.
      */
-    public function resetState()
-    {
-    }
+    public function resetState() {}
 
     /**
      * @internal See interface description.

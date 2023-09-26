@@ -196,9 +196,7 @@ class ParsingState implements ParsedTemplateInterface
     /**
      * @param RenderingContextInterface $renderingContext
      */
-    public function addCompiledNamespaces(RenderingContextInterface $renderingContext)
-    {
-    }
+    public function addCompiledNamespaces(RenderingContextInterface $renderingContext) {}
 
     /**
      * @return bool

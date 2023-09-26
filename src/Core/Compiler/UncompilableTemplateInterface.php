@@ -19,6 +19,4 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
  * The result is that the template parser will always parse the
  * original template.
  */
-interface UncompilableTemplateInterface
-{
-}
+interface UncompilableTemplateInterface {}

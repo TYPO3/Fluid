@@ -23,9 +23,7 @@ class CompileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContent
     // set to false because of json response, not test relevant
     protected $escapeChildren = false;
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function initializeArguments(): void
     {
