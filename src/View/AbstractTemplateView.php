@@ -287,12 +287,12 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
      * Renders a partial.
      *
      * @param string $partialName
-     * @param string $sectionName
+     * @param null|string $sectionName
      * @param array $variables
      * @param bool $ignoreUnknown Ignore an unknown section and just return an empty string
      * @return string
      */
-    public function renderPartial($partialName, $sectionName, array $variables, $ignoreUnknown = false)
+    public function renderPartial($partialName, $sectionName = null, array $variables = [], $ignoreUnknown = false)
     {
         $templatePaths = $this->baseRenderingContext->getTemplatePaths();
         $renderingContext = clone $this->getCurrentRenderingContext();
