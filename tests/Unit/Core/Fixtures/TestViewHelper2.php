@@ -20,7 +20,5 @@ class TestViewHelper2 extends AbstractViewHelper
         $this->registerArgument('param2', 'string', 'P3 Stuff', false, 'default');
     }
 
-    public function render(): void
-    {
-    }
+    public function render(): void {}
 }

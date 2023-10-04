@@ -18,9 +18,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class TextNode extends AbstractNode
 {
-    public function __construct(protected readonly string $text)
-    {
-    }
+    public function __construct(protected readonly string $text) {}
 
     /**
      * Return the text associated to the syntax tree. Text from child nodes is

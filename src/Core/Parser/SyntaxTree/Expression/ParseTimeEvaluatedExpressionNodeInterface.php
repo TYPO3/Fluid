@@ -22,6 +22,4 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
  *
  * @deprecated To be removed again in Fluid 3.0
  */
-interface ParseTimeEvaluatedExpressionNodeInterface extends ExpressionNodeInterface
-{
-}
+interface ParseTimeEvaluatedExpressionNodeInterface extends ExpressionNodeInterface {}

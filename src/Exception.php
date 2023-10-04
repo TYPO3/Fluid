@@ -17,6 +17,4 @@ namespace TYPO3Fluid\Fluid;
  *
  * @api
  */
-class Exception extends \RuntimeException
-{
-}
+class Exception extends \RuntimeException {}

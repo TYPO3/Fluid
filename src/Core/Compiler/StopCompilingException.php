@@ -12,6 +12,4 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
  *
  * @api
  */
-class StopCompilingException extends \TYPO3Fluid\Fluid\Core\Exception
-{
-}
+class StopCompilingException extends \TYPO3Fluid\Fluid\Core\Exception {}

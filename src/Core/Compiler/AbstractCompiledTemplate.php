@@ -92,7 +92,5 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
     /**
      * @param RenderingContextInterface $renderingContext
      */
-    public function addCompiledNamespaces(RenderingContextInterface $renderingContext)
-    {
-    }
+    public function addCompiledNamespaces(RenderingContextInterface $renderingContext) {}
 }

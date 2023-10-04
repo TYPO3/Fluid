@@ -12,6 +12,4 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  *
  * @api
  */
-class UnknownNamespaceException extends \TYPO3Fluid\Fluid\Core\Parser\Exception
-{
-}
+class UnknownNamespaceException extends \TYPO3Fluid\Fluid\Core\Parser\Exception {}

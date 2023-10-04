@@ -16,9 +16,7 @@ class StandardVariableProviderModelFixture
 {
     public string $existingPublicProperty = 'existingPublicPropertyValue';
 
-    public function __construct(private readonly string $name)
-    {
-    }
+    public function __construct(private readonly string $name) {}
 
     public function getName(): string
     {
