@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional;
 
+use TYPO3Fluid\FluidExamples\Helper\ExampleHelper;
+
 final class ExamplesTest extends AbstractFunctionalTestCase
 {
     public static function exampleScriptValuesDataProvider(): array
@@ -231,5 +233,11 @@ final class ExamplesTest extends AbstractFunctionalTestCase
         $output = ob_get_contents();
         ob_end_clean();
         call_user_func($outputCallback, $output);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        (new ExampleHelper())->cleanup();
+        parent::tearDownAfterClass();
     }
 }
