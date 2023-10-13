@@ -76,6 +76,16 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
     }
 
     /**
+     * @param string $path
+     * @return mixed
+     */
+    public function getByPath($path)
+    {
+        $this->load();
+        return parent::getByPath($path);
+    }
+
+    /**
      * @return array
      */
     public function getAllIdentifiers()
