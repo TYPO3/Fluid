@@ -102,7 +102,6 @@ class ForViewHelper extends AbstractViewHelper
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
-        $templateVariableContainer = $renderingContext->getVariableProvider();
         if (!isset($arguments['each'])) {
             return '';
         }
@@ -126,6 +125,9 @@ class ForViewHelper extends AbstractViewHelper
             ];
         }
 
+        $templateVariableContainer = $renderingContext->getVariableProvider();
+        $originalVariableContainer = clone $templateVariableContainer;
+
         $output = '';
         foreach ($arguments['each'] as $keyValue => $singleElement) {
             $templateVariableContainer->add($arguments['as'], $singleElement);
@@ -142,14 +144,16 @@ class ForViewHelper extends AbstractViewHelper
                 $iterationData['cycle']++;
             }
             $output .= $renderChildrenClosure();
-            $templateVariableContainer->remove($arguments['as']);
-            if (isset($arguments['key'])) {
-                $templateVariableContainer->remove($arguments['key']);
-            }
-            if (isset($arguments['iteration'])) {
-                $templateVariableContainer->remove($arguments['iteration']);
-            }
         }
+
+        $templateVariableContainer->add($arguments['as'], $originalVariableContainer->get($arguments['as']));
+        if (isset($arguments['key'])) {
+            $templateVariableContainer->add($arguments['key'], $originalVariableContainer->get($arguments['key']));
+        }
+        if (isset($arguments['iteration'])) {
+            $templateVariableContainer->add($arguments['iteration'], $originalVariableContainer->get($arguments['iteration']));
+        }
+
         return $output;
     }
 }
