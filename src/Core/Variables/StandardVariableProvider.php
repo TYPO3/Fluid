@@ -105,7 +105,7 @@ class StandardVariableProvider implements VariableProviderInterface
     }
 
     /**
-     * Get a variable from the context. Throws exception if variable is not found in context.
+     * Get a variable from the context.
      *
      * If "_all" is given as identifier, all variables are returned in an array,
      * if one of the other reserved variables are given, their appropriate value
@@ -166,7 +166,7 @@ class StandardVariableProvider implements VariableProviderInterface
     }
 
     /**
-     * Remove a variable from context. Throws exception if variable is not found in context.
+     * Remove a variable from context.
      *
      * @param string $identifier The identifier to remove
      * @api
@@ -222,7 +222,7 @@ class StandardVariableProvider implements VariableProviderInterface
     }
 
     /**
-     * Remove a variable from context. Throws exception if variable is not found in context.
+     * Remove a variable from context.
      *
      * @param string $identifier The identifier to remove
      */
@@ -243,7 +243,7 @@ class StandardVariableProvider implements VariableProviderInterface
     }
 
     /**
-     * Get a variable from the context. Throws exception if variable is not found in context.
+     * Get a variable from the context.
      *
      * @param string $identifier
      * @return mixed The variable identified by $identifier
