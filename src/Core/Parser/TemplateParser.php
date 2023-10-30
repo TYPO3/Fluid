@@ -524,7 +524,7 @@ class TemplateParser
      * @param int $interceptionPoint the interception point. One of the \TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants.
      * @param ParsingState $state the parsing state
      */
-    protected function callInterceptor(NodeInterface & $node, $interceptionPoint, ParsingState $state)
+    protected function callInterceptor(NodeInterface &$node, $interceptionPoint, ParsingState $state)
     {
         if ($this->configuration === null) {
             return;
