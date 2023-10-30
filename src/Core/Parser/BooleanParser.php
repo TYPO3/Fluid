@@ -288,6 +288,10 @@ class BooleanParser
             while (trim($t = $this->peek(true)) !== $stringIdentifier) {
                 $this->consume($t);
                 $string .= $t;
+
+                if ($t === '') {
+                    throw new Exception(sprintf('Closing string token expected in boolean expression "%s".', $this->expression), 1697479462);
+                }
             }
             $this->consume($stringIdentifier);
             $string .= $stringIdentifier;
