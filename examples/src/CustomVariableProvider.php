@@ -40,7 +40,7 @@ class CustomVariableProvider extends StandardVariableProvider implements Variabl
             return 'random' . sha1(rand(0, 999999999));
         }
         if ($path === 'incrementer') {
-            return ++ $this->incrementer;
+            return ++$this->incrementer;
         }
         return parent::getByPath($path);
     }
