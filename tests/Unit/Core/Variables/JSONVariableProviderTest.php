@@ -41,4 +41,44 @@ final class JSONVariableProviderTest extends AbstractFunctionalTestCase
             self::assertEquals($value, $provider->get($key));
         }
     }
+
+    /**
+     * @test
+     */
+    public function getAllLoadJsonFile(): void
+    {
+        $provider = new JSONVariableProvider();
+        $provider->setSource(__DIR__ . '/Fixtures/test.json');
+        self::assertEquals(['foo' => 'bar'], $provider->getAll());
+    }
+
+    /**
+     * @test
+     */
+    public function getAllIdentifiersLoadJsonFile(): void
+    {
+        $provider = new JSONVariableProvider();
+        $provider->setSource(__DIR__ . '/Fixtures/test.json');
+        self::assertEquals(['foo'], $provider->getAllIdentifiers());
+    }
+
+    /**
+     * @test
+     */
+    public function getLoadJsonFile(): void
+    {
+        $provider = new JSONVariableProvider();
+        $provider->setSource(__DIR__ . '/Fixtures/test.json');
+        self::assertEquals('bar', $provider->get('foo'));
+    }
+
+    /**
+     * @test
+     */
+    public function getByPathLoadJsonFile(): void
+    {
+        $provider = new JSONVariableProvider();
+        $provider->setSource(__DIR__ . '/Fixtures/test.json');
+        self::assertEquals('bar', $provider->getByPath('foo'));
+    }
 }

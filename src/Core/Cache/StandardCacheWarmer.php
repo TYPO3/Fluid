@@ -112,7 +112,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
         $paths = $renderingContext->getTemplatePaths();
         foreach ($this->formats as $format) {
             $paths->setFormat($format);
-            $formatCutoffPoint = - (strlen($format) + 1);
+            $formatCutoffPoint = -(strlen($format) + 1);
             foreach ($paths->getTemplateRootPaths() as $templateRootPath) {
                 $pathCutoffPoint = strlen($templateRootPath);
                 foreach ($this->detectControllerNamesInTemplateRootPaths([$templateRootPath]) as $controllerName) {
@@ -164,7 +164,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
         $result = new FluidCacheWarmupResult();
         $paths = $renderingContext->getTemplatePaths();
         foreach ($this->formats as $format) {
-            $formatCutoffPoint = - (strlen($format) + 1);
+            $formatCutoffPoint = -(strlen($format) + 1);
             foreach ($paths->getPartialRootPaths() as $partialRootPath) {
                 $limitedPaths = clone $paths;
                 $limitedPaths->setPartialRootPaths([$partialRootPath]);
@@ -201,7 +201,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
         $result = new FluidCacheWarmupResult();
         $paths = $renderingContext->getTemplatePaths();
         foreach ($this->formats as $format) {
-            $formatCutoffPoint = - (strlen($format) + 1);
+            $formatCutoffPoint = -(strlen($format) + 1);
             foreach ($paths->getLayoutRootPaths() as $layoutRootPath) {
                 $limitedPaths = clone $paths;
                 $limitedPaths->setLayoutRootPaths([$layoutRootPath]);

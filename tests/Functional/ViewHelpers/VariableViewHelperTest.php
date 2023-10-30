@@ -24,6 +24,10 @@ final class VariableViewHelperTest extends AbstractFunctionalTestCase
             '<f:variable name="foo">bar</f:variable>{foo}',
             'bar',
         ];
+        yield 'variable inside loop used outside' => [
+            '<f:for each="{0: \'foo\', 1: \'bar\'}" as="item"><f:variable name="lastItem" value="{item}" /></f:for>{lastItem}',
+            'bar',
+        ];
     }
 
     /**
