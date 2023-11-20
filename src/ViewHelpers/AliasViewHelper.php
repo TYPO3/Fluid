@@ -8,6 +8,8 @@
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Variables\ScopedVariableProvider;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
@@ -77,15 +79,15 @@ class AliasViewHelper extends AbstractViewHelper
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
-        $templateVariableContainer = $renderingContext->getVariableProvider();
-        $map = $arguments['map'];
-        foreach ($map as $aliasName => $value) {
-            $templateVariableContainer->add($aliasName, $value);
-        }
+        $globalVariableProvider = $renderingContext->getVariableProvider();
+        $localVariableProvider = new StandardVariableProvider($arguments['map']);
+        $scopedVariableProvider = new ScopedVariableProvider($globalVariableProvider, $localVariableProvider);
+        $renderingContext->setVariableProvider($scopedVariableProvider);
+
         $output = $renderChildrenClosure();
-        foreach ($map as $aliasName => $value) {
-            $templateVariableContainer->remove($aliasName);
-        }
+
+        $renderingContext->setVariableProvider($globalVariableProvider);
+
         return $output;
     }
 }
