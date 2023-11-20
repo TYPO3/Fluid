@@ -170,6 +170,27 @@ final class ForViewHelperTest extends AbstractFunctionalTestCase
             ['value' => $value, 'key' => '[key before]', 'item' => '[item before]'],
             '[key before] [item before] 0: bar, 1: 2,  [key before] [item before]',
         ];
+
+        $value = ['bar', 2];
+        yield 'variables are restored after loop if overwritten in loop' => [
+            '<f:for each="{value}" as="item"><f:variable name="item" value="overwritten" /></f:for>{item}',
+            ['value' => $value],
+            '',
+        ];
+
+        $value = ['bar', 2];
+        yield 'variables set inside loop can be used after loop' => [
+            '<f:for each="{value}" key="key" as="item"><f:variable name="foo" value="bar" /></f:for>{foo}',
+            ['value' => $value],
+            'bar',
+        ];
+
+        $value = ['bar', 2];
+        yield 'existing variables can be modified in loop and retain the value set in the loop' => [
+            '<f:for each="{value}" key="key" as="item"><f:variable name="foo" value="bar" /></f:for>{foo}',
+            ['value' => $value, 'foo' => 'fallback'],
+            'bar',
+        ];
     }
 
     /**
