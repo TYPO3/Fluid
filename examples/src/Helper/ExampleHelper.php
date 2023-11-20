@@ -60,4 +60,13 @@ class ExampleHelper
         echo '#' . PHP_EOL;
         echo trim($content) . PHP_EOL . PHP_EOL;
     }
+
+    public function cleanup(): void
+    {
+        $cachePath = sys_get_temp_dir() . '/' . 'fluid-examples';
+        if (!is_dir($cachePath)) {
+            return;
+        }
+        (new SimpleFileCache($cachePath))->flush();
+    }
 }

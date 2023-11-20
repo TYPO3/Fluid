@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
@@ -119,5 +120,32 @@ final class BooleanParserTest extends UnitTestCase
         $functionName = 'expression_' . md5($comparison . rand(0, 100000));
         eval('function ' . $functionName . '($context) {return ' . $compiledEvaluation . ';}');
         self::assertEquals($expected, BooleanNode::convertToBoolean($functionName($variables), $renderingContext), 'compiled Expression: ' . $compiledEvaluation);
+    }
+
+    public static function invalidEvaluationsDataProvider(): array
+    {
+        return [
+            ['{pageClass} == "myClass', ['pageClass' => 'myClass']],
+            ['{pageClass} == \'myClass', ['pageClass' => 'myClass']],
+            ['\'string1\' == \'string2', []],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider invalidEvaluationsDataProvider
+     */
+    public function invalidEvaluations(string $comparison, array $variables = []): void
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(1697479462);
+
+        $renderingContext = new RenderingContext();
+        $parser = new BooleanParser();
+        BooleanNode::convertToBoolean($parser->evaluate($comparison, $variables), $renderingContext);
+        $compiledEvaluation = $parser->compile($comparison);
+        $functionName = 'expression_' . md5($comparison . rand(0, 100000));
+        eval('function ' . $functionName . '($context) {return ' . $compiledEvaluation . ';}');
+        BooleanNode::convertToBoolean($functionName($variables), $renderingContext);
     }
 }
