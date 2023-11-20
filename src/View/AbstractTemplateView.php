@@ -287,7 +287,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
      * Renders a partial.
      *
      * @param string $partialName
-     * @param null|string $sectionName
+     * @param string|null $sectionName
      * @param array $variables
      * @param bool $ignoreUnknown Ignore an unknown section and just return an empty string
      * @return string
