@@ -21,22 +21,6 @@ namespace TYPO3Fluid\Fluid\Core\Variables;
 interface VariableProviderInterface extends \ArrayAccess
 {
     /**
-     * Variables, if any, with which to initialize this
-     * VariableProvider.
-     *
-     * @param array $variables
-     * @todo: This must be removed from the interface! At the moment,
-     *        StandardVariableProvider accepts variables as constructor
-     *        arguments, while ChainedVariableProvider expects an array
-     *        of sub providers as constructor argument.
-     *        Thus, setSource() should be the only way to set variables
-     *        and StandardVariableProvider *must not* accept current
-     *        variables as constructor argument.
-     *        Adding variables as constructor must not be relied on!
-     */
-    public function __construct(array $variables = []);
-
-    /**
      * Gets a fresh instance of this type of VariableProvider
      * and fills it with the variables passed in $variables.
      *
