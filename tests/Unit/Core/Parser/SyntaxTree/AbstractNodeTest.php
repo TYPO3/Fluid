@@ -43,18 +43,29 @@ class AbstractNodeTest extends UnitTestCase
 
     /**
      * @test
+     * @dataProvider getChildNodeThrowsExceptionFiChildNodeCannotBeCastToStringTestValues
      */
-    public function evaluateChildNodeThrowsExceptionIfChildNodeCannotBeCastToString(): void
+    public function evaluateChildNodeThrowsExceptionIfChildNodeCannotBeCastToString(mixed $value, string $exceptionClass, int $exceptionCode, string $exceptionMessage): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException($exceptionClass);
+        $this->expectExceptionCode($exceptionCode);
+        $this->expectExceptionMessage($exceptionMessage);
 
         $renderingContextMock = $this->createMock(RenderingContextInterface::class);
         $childNode = $this->createMock(NodeInterface::class);
-        $childNode->expects(self::once())->method('evaluate')->with($renderingContextMock)->willReturn(new \DateTime('now'));
+        $childNode->expects(self::once())->method('evaluate')->with($renderingContextMock)->willReturn($value);
         $subject = $this->getMockBuilder(AbstractNode::class)->onlyMethods(['evaluate'])->getMock();
         $subject->addChildNode($childNode);
         $method = new \ReflectionMethod($subject, 'evaluateChildNode');
         $method->invoke($subject, $childNode, $renderingContextMock, true);
+    }
+
+    public static function getChildNodeThrowsExceptionFiChildNodeCannotBeCastToStringTestValues(): array
+    {
+        return [
+            [new \DateTime('now'), Exception::class, 1273753083, 'Cannot cast object of type "' . \DateTime::class . '" to string.'],
+            [['some' => 'value'], Exception::class, 1698750868, 'Cannot cast an array to string.'],
+        ];
     }
 
     /**
