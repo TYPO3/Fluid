@@ -8,6 +8,8 @@
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Variables\ScopedVariableProvider;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
@@ -98,9 +100,15 @@ class CycleViewHelper extends AbstractViewHelper
 
         $currentValue = isset($values[$index]) ? $values[$index] : null;
 
-        $renderingContext->getVariableProvider()->add($as, $currentValue);
+        $scopedVariableProvider = new ScopedVariableProvider(
+            $renderingContext->getVariableProvider(),
+            new StandardVariableProvider([$as => $currentValue]),
+        );
+        $renderingContext->setVariableProvider($scopedVariableProvider);
+
         $output = $renderChildrenClosure();
-        $renderingContext->getVariableProvider()->remove($as);
+
+        $renderingContext->setVariableProvider($scopedVariableProvider->getGlobalVariableProvider());
 
         $index++;
         if (!isset($values[$index])) {
