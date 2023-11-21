@@ -175,7 +175,7 @@ final class ForViewHelperTest extends AbstractFunctionalTestCase
         yield 'variables are restored after loop if overwritten in loop' => [
             '<f:for each="{value}" as="item"><f:variable name="item" value="overwritten" /></f:for>{item}',
             ['value' => $value],
-            '',
+            'overwritten',
         ];
 
         $value = ['bar', 2];
