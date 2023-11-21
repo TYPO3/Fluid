@@ -8,6 +8,7 @@
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Variables\ScopedVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
@@ -129,14 +130,21 @@ class GroupedForViewHelper extends AbstractViewHelper
 
         $groups = static::groupElements($each, $groupBy);
 
-        $templateVariableContainer = $renderingContext->getVariableProvider();
+        $globalVariableProvider = $renderingContext->getVariableProvider();
+        $localVariableProvider = new StandardVariableProvider();
+        $renderingContext->setVariableProvider(new ScopedVariableProvider(
+            $globalVariableProvider,
+            $localVariableProvider
+        ));
+
         foreach ($groups['values'] as $currentGroupIndex => $group) {
-            $templateVariableContainer->add($groupKey, $groups['keys'][$currentGroupIndex]);
-            $templateVariableContainer->add($as, $group);
+            $localVariableProvider->add($groupKey, $groups['keys'][$currentGroupIndex]);
+            $localVariableProvider->add($as, $group);
             $output .= $renderChildrenClosure();
-            $templateVariableContainer->remove($groupKey);
-            $templateVariableContainer->remove($as);
         }
+
+        $renderingContext->setVariableProvider($globalVariableProvider);
+
         return $output;
     }
 
