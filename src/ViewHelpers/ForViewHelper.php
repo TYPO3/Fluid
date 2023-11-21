@@ -8,6 +8,8 @@
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Variables\ScopedVariableProvider;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
@@ -102,7 +104,6 @@ class ForViewHelper extends AbstractViewHelper
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
-        $templateVariableContainer = $renderingContext->getVariableProvider();
         if (!isset($arguments['each'])) {
             return '';
         }
@@ -126,30 +127,30 @@ class ForViewHelper extends AbstractViewHelper
             ];
         }
 
+        $globalVariableProvider = $renderingContext->getVariableProvider();
+        $localVariableProvider = new StandardVariableProvider();
+        $renderingContext->setVariableProvider(new ScopedVariableProvider($globalVariableProvider, $localVariableProvider));
+
         $output = '';
         foreach ($arguments['each'] as $keyValue => $singleElement) {
-            $templateVariableContainer->add($arguments['as'], $singleElement);
+            $localVariableProvider->add($arguments['as'], $singleElement);
             if (isset($arguments['key'])) {
-                $templateVariableContainer->add($arguments['key'], $keyValue);
+                $localVariableProvider->add($arguments['key'], $keyValue);
             }
             if (isset($arguments['iteration'])) {
                 $iterationData['isFirst'] = $iterationData['cycle'] === 1;
                 $iterationData['isLast'] = $iterationData['cycle'] === $iterationData['total'];
                 $iterationData['isEven'] = $iterationData['cycle'] % 2 === 0;
                 $iterationData['isOdd'] = !$iterationData['isEven'];
-                $templateVariableContainer->add($arguments['iteration'], $iterationData);
+                $localVariableProvider->add($arguments['iteration'], $iterationData);
                 $iterationData['index']++;
                 $iterationData['cycle']++;
             }
             $output .= $renderChildrenClosure();
-            $templateVariableContainer->remove($arguments['as']);
-            if (isset($arguments['key'])) {
-                $templateVariableContainer->remove($arguments['key']);
-            }
-            if (isset($arguments['iteration'])) {
-                $templateVariableContainer->remove($arguments['iteration']);
-            }
         }
+
+        $renderingContext->setVariableProvider($globalVariableProvider);
+
         return $output;
     }
 }
