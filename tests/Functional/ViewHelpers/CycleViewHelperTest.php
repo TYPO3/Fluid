@@ -50,6 +50,18 @@ final class CycleViewHelperTest extends AbstractFunctionalTestCase
             ['value' => $value],
             'child node content ',
         ];
+        $value = ['foo', 'bar', 'baz'];
+        yield 'variables are restored correctly' => [
+            '<f:cycle values="{value}" as="cycle"></f:cycle>{cycle}',
+            ['value' => $value, 'cycle' => 'initial'],
+            'initial',
+        ];
+        $value = ['foo', 'bar', 'baz'];
+        yield 'existing variables can be modified and retain the value' => [
+            '<f:cycle values="{value}" as="cycle"><f:variable name="cycle" value="overwritten" /></f:cycle>{cycle}',
+            ['value' => $value, 'cycle' => 'initial'],
+            'overwritten',
+        ];
     }
 
     /**
