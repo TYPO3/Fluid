@@ -347,6 +347,37 @@ final class GroupedForViewHelperTest extends AbstractFunctionalTestCase
             'typo3: GPL' . chr(10) .
             'office: commercial' . chr(10),
         ];
+
+        yield 'variables are restored correctly' => [
+            '<f:groupedFor each="{allProducts}" as="groupedProducts" groupBy="license" groupKey="myGroupKey"></f:groupedFor>{groupedProducts} {myGroupKey}',
+            [
+                'allProducts' => [
+                    'photoshop' => ['name' => 'Adobe Photoshop', 'license' => 'commercial'],
+                    'typo3' => ['name' => 'TYPO3', 'license' => 'GPL'],
+                    'office' => ['name' => 'Microsoft Office', 'license' => 'commercial'],
+                    'drupal' => ['name' => 'Drupal', 'license' => 'GPL'],
+                    'wordpress' => ['name' => 'Wordpress', 'license' => 'GPL'],
+                ],
+                'groupedProducts' => '[initial groupedProducts]',
+                'myGroupKey' => '[initial myGroupKey]'
+            ],
+            '[initial groupedProducts] [initial myGroupKey]',
+        ];
+
+        yield 'variables set inside can be used outside' => [
+            '<f:groupedFor each="{allProducts}" as="groupedProducts" groupBy="license"><f:variable name="groupedProducts" value="overwritten" /></f:groupedFor>{groupedProducts}',
+            [
+                'allProducts' => [
+                    'photoshop' => ['name' => 'Adobe Photoshop', 'license' => 'commercial'],
+                    'typo3' => ['name' => 'TYPO3', 'license' => 'GPL'],
+                    'office' => ['name' => 'Microsoft Office', 'license' => 'commercial'],
+                    'drupal' => ['name' => 'Drupal', 'license' => 'GPL'],
+                    'wordpress' => ['name' => 'Wordpress', 'license' => 'GPL'],
+                ],
+                'groupedProducts' => '[initial groupedProducts]',
+            ],
+            'overwritten',
+        ];
     }
 
     /**

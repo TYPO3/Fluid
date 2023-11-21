@@ -39,6 +39,30 @@ final class AliasViewHelperTest extends AbstractFunctionalTestCase
             [],
             '',
         ];
+
+        yield 'variables are restored correctly' => [
+            '<f:alias map="{x: \'foo\'}"></f:alias>{x}',
+            ['x' => 'bar'],
+            'bar',
+        ];
+
+        yield 'variables are restored correctly if overwritten in alias' => [
+            '<f:alias map="{x: \'foo\'}"><f:variable name="x" value="foo2" /></f:alias>{x}',
+            ['x' => 'bar'],
+            'foo2',
+        ];
+
+        yield 'variables set inside alias can be used afterwards' => [
+            '<f:alias map="{x: \'foo\'}"><f:variable name="foo" value="bar" /></f:alias>{foo}',
+            [],
+            'bar',
+        ];
+
+        yield 'existing variables can be modified in alias and retain the value set in the alias' => [
+            '<f:alias map="{x: \'foo\'}"><f:variable name="foo" value="bar" /></f:alias>{foo}',
+            ['foo' => 'fallback'],
+            'bar',
+        ];
     }
 
     /**

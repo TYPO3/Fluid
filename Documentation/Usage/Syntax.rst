@@ -151,3 +151,52 @@ types. To be able to cast a variable in this case, simply wrap it with quotes:
 cast the variable and finally remove the quotations and use the variable
 directly. Semantically, the quotes mean you create a new `TextNode` that
 contains a variable converted to the specified type.
+
+Variable Scopes
+===============
+
+Each Fluid template, partial and section has its own variable scope. For templates,
+these variables are set via the PHP API, for partials and sections the `<f:render>`
+ViewHelper has a `arguments` argument to provide variables.
+
+Inside templates, partials and sections there are two variable scopes: global
+variables and local variables. Local variables are created by ViewHelpers that
+provide additional variables to their child nodes. Local variables are only valid
+in their appropriate context and don't leak out to the whole template.
+
+For example, `<f:alias>` and `<f:for>` create local variables:
+
+.. code-block:: xml
+
+    <f:for each="{items}" as="item">
+        <!-- {item} is valid here -->
+    </f:for>
+    <!-- {item} is no longer valid here -->
+
+    <f:alias map="{item: myObject.sub.item}">
+        <!-- {item} is valid here -->
+    </f:for>
+    <!-- {item} is no longer valid here -->
+
+If a global variable uses the same name as a local value, the state of the global
+value will be restored when the local variable is invalidated:
+
+.. code-block:: xml
+
+    <f:variable name="item" value="global item" />
+    <!-- {item} is "global item" -->
+    <f:for each="{0: 'local item'}" as="item">
+        <!-- {item} is "local item" -->
+    </f:for>
+    <!-- {item} is "global item" -->
+
+If a variable is created in a local block, for example by using the `<f:variable>`
+ViewHelper, that variable is treated as a global variable, so it will leak out of
+the scope:
+
+.. code-block:: xml
+
+    <f:for each="{0: 'first', 1: 'second'}" as="item">
+        <f:variable name="lastItem" value="{item}" />
+    </f:for>
+    <!-- {lastItem} is "second" -->
