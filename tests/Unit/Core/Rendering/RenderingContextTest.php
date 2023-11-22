@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
 
+use stdClass;
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
@@ -102,5 +103,19 @@ final class RenderingContextTest extends UnitTestCase
         $subject = new RenderingContext();
         $subject->setCache($this->createMock(FluidCacheInterface::class));
         self::assertTrue($subject->isCacheEnabled());
+    }
+
+    /**
+     * @test
+     */
+    public function withAndGetAttribute(): void
+    {
+        $object = new stdClass();
+        $object->test = 'value';
+
+        $subject = new RenderingContext();
+        $clonedSubject = $subject->withAttribute('test', $object);
+        self::assertNull($subject->getAttribute('test'));
+        self::assertEquals($object, $clonedSubject->getAttribute('test'));
     }
 }
