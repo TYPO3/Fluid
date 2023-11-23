@@ -271,4 +271,30 @@ final class ScopedVariableProviderTest extends UnitTestCase
         self::assertNull($variableProvider->getGlobalVariableProvider()->get('globalVar'));
         self::assertNull($variableProvider->getLocalVariableProvider()->get('globalVar'));
     }
+
+    /**
+     * @test
+     */
+    public function getScopedCopy(): void
+    {
+        $variableProvider = new ScopedVariableProvider(
+            new StandardVariableProvider(['myVar' => 'global', 'globalVariable' => 'global', 'settings' => ['test' => 'global']]),
+            new StandardVariableProvider(['myVar' => 'local', 'localVariable' => 'local']),
+        );
+
+        $copy = $variableProvider->getScopeCopy(['myVar' => 'scoped']);
+        self::assertNull($copy->get('globalVariable'));
+        self::assertNull($copy->get('localVariable'));
+        self::assertEquals('scoped', $copy->get('myVar'));
+        self::assertEquals('global', $copy->get('settings.test'));
+
+        $variableProvider->getGlobalVariableProvider()->add('addedGlobalVariable', 'added');
+        $variableProvider->getLocalVariableProvider()->add('addedLocalVariable', 'added');
+        self::assertNull($copy->get('addedGlobalVariable'));
+        self::assertNull($copy->get('addedLocalVariable'));
+
+        $copy->add('addedVariable', 'added');
+        self::assertEquals('added', $copy->get('addedVariable'));
+        self::assertNull($variableProvider->get('addedVariable'));
+    }
 }
