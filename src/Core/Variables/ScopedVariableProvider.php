@@ -110,11 +110,14 @@ final class ScopedVariableProvider extends StandardVariableProvider implements V
     /**
      * @param array|\ArrayAccess $variables
      */
-    public function getScopeCopy($variables): ScopedVariableProvider
+    public function getScopeCopy($variables): VariableProviderInterface
     {
-        return new ScopedVariableProvider(
-            $this->globalVariables->getScopeCopy($variables),
-            clone $this->localVariables
-        );
+        // Instead of cloning the instance of ScopedVariableProvider,
+        // only the instance holding global variables can be used here.
+        // Local variables are irrelevant for partials and sections
+        // because all variables are provided explicity via $variables.
+        // "settings" should leak down into partials and sections, but
+        // this is already implemented in StandardVariableProvider
+        return $this->globalVariables->getScopeCopy($variables);
     }
 }
