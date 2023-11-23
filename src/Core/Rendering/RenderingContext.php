@@ -111,6 +111,12 @@ class RenderingContext implements RenderingContextInterface
     ];
 
     /**
+     * Attributes can be used to attach additional data to the
+     * rendering context to be used e. g. in ViewHelpers.
+     */
+    protected array $attributes = [];
+
+    /**
      * Constructor
      *
      * Constructing a RenderingContext should result in an object containing instances
@@ -355,6 +361,35 @@ class RenderingContext implements RenderingContextInterface
         $escapeInterceptor = new Escape();
         $parserConfiguration->addEscapingInterceptor($escapeInterceptor);
         return $parserConfiguration;
+    }
+
+    /**
+     * Retrieve a single attribute.
+     *
+     * @see withAttribute()
+     * @param string $name The attribute name.
+     * @return object|null  null if the specified attribute hasn't been set
+     */
+    public function getAttribute(string $name): ?object
+    {
+        return $this->attributes[$name] ?? null;
+    }
+
+    /**
+     * Return an instance with the specified attribute.
+     *
+     * This method allows you to attach arbitrary objects to the
+     * rendering context to be used later e. g. in ViewHelpers.
+     *
+     * @param string $name The attribute name.
+     * @param object $value The value of the attribute.
+     * @return static
+     */
+    public function withAttribute(string $name, object $value): static
+    {
+        $clonedObject = clone $this;
+        $clonedObject->attributes[$name] = $value;
+        return $clonedObject;
     }
 
     /**
