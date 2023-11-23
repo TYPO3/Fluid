@@ -175,6 +175,34 @@ final class ScopedVariableProviderTest extends UnitTestCase
             'myVar.myKey',
             'local',
         ];
+
+        yield 'variable variables using only globals' => [
+            ['myVar' => ['sub' => 'global'], 'path' => 'sub'],
+            [],
+            'myVar.{path}',
+            'global',
+        ];
+
+        yield 'variable variables using only locals' => [
+            [],
+            ['myVar' => ['sub' => 'local'], 'path' => 'sub'],
+            'myVar.{path}',
+            'local',
+        ];
+
+        yield 'variable variables using local in global' => [
+            ['myVar' => ['sub' => 'global']],
+            ['path' => 'sub'],
+            'myVar.{path}',
+            'global',
+        ];
+
+        yield 'variable variables using global in local' => [
+            ['path' => 'sub'],
+            ['myVar' => ['sub' => 'local']],
+            'myVar.{path}',
+            'local',
+        ];
     }
 
     /**
