@@ -28,6 +28,10 @@ final class VariableViewHelperTest extends AbstractFunctionalTestCase
             '<f:for each="{0: \'foo\', 1: \'bar\'}" as="item"><f:variable name="lastItem" value="{item}" /></f:for>{lastItem}',
             'bar',
         ];
+        yield 'variable assignment of zero' => [
+            '<f:variable name="zero1" value="0" />{f:variable(name: \'zero2\', value: 0)}{zero1}{zero2}',
+            '00',
+        ];
     }
 
     /**
