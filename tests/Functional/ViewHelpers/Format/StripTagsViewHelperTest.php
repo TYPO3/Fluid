@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers\Format;
 
+use stdClass;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -20,6 +21,10 @@ final class StripTagsViewHelperTest extends AbstractFunctionalTestCase
             'renderUsesValueAsSourceIfSpecified' => [
                 '<f:format.stripTags value="Some string" />',
                 'Some string',
+            ],
+            'int as input' => [
+                '<f:format.stripTags value="123" />',
+                '123',
             ],
             'renderUsesChildnodesAsSourceIfSpecified' => [
                 '<f:format.stripTags>Some string</f:format.stripTags>',
@@ -80,5 +85,35 @@ final class StripTagsViewHelperTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource('<f:format.stripTags>{value}</f:format.stripTags>');
         $view->assign('value', $toStringClass);
         self::assertEquals('alert(\'"xss"\')', $view->render());
+    }
+
+    public static function throwsExceptionForInvalidInputDataProvider(): array
+    {
+        return [
+            'array input' => [
+                [1, 2, 3],
+                1700819707,
+                'Specified array cannot be converted to string.',
+            ],
+            'object input' => [
+                new stdClass(),
+                1700819706,
+                'Specified object cannot be converted to string.',
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider throwsExceptionForInvalidInputDataProvider
+     */
+    public function throwsExceptionForInvalidInput(mixed $value, int $expectedExceptionCode, string $expectedExceptionMessage): void
+    {
+        self::expectExceptionCode($expectedExceptionCode);
+        self::expectExceptionMessage($expectedExceptionMessage);
+        $view = new TemplateView();
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource('<f:format.stripTags>{value}</f:format.stripTags>');
+        $view->assign('value', $value);
+        $view->render();
     }
 }
