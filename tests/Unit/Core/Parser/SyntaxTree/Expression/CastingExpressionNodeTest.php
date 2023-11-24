@@ -49,6 +49,10 @@ final class CastingExpressionNodeTest extends UnitTestCase
             ['123 as string', [], '123'],
             ['1 as boolean', [], true],
             ['0 as boolean', [], false],
+            ['myobject as boolean', ['myobject' => $toArrayObject], true],
+            // @todo it would be better if the result of the next two test cases would be false
+            ['myobject as boolean', ['myobject' => null], true],
+            ['myobject as boolean', [], true],
             ['0 as array', [], [0]],
             ['1 as array', [], [1]],
             ['mystring as float', ['mystring' => '1.23'], 1.23],
