@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers\Format;
 
+use stdClass;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -72,5 +73,35 @@ final class UrlencodeViewHelperTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource('<f:format.urlencode>{value}</f:format.urlencode>');
         $view->assign('value', $toStringClass);
         self::assertEquals('%3Cscript%3Ealert%28%27%22xss%22%27%29%3C%2Fscript%3E', $view->render());
+    }
+
+    public static function throwsExceptionForInvalidInputDataProvider(): array
+    {
+        return [
+            'array input' => [
+                [1, 2, 3],
+                1700821579,
+                'Specified array cannot be converted to string.',
+            ],
+            'object input' => [
+                new stdClass(),
+                1700821578,
+                'Specified object cannot be converted to string.',
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider throwsExceptionForInvalidInputDataProvider
+     */
+    public function throwsExceptionForInvalidInput(mixed $value, int $expectedExceptionCode, string $expectedExceptionMessage): void
+    {
+        self::expectExceptionCode($expectedExceptionCode);
+        self::expectExceptionMessage($expectedExceptionMessage);
+        $view = new TemplateView();
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource('<f:format.urlencode>{value}</f:format.urlencode>');
+        $view->assign('value', $value);
+        $view->render();
     }
 }

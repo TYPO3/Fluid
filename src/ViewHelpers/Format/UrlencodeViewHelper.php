@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 
+use Stringable;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
@@ -62,13 +63,16 @@ final class UrlencodeViewHelper extends AbstractViewHelper
      * Escapes special characters with their escaped counterparts as needed using PHPs rawurlencode() function.
      *
      * @see https://www.php.net/manual/function.rawurlencode.php
-     * @return mixed
+     * @return string
      */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string
     {
         $value = $renderChildrenClosure();
-        if (!is_string($value) && !(is_object($value) && method_exists($value, '__toString'))) {
-            return $value;
+        if (is_array($value)) {
+            throw new \InvalidArgumentException('Specified array cannot be converted to string.', 1700821579);
+        }
+        if (is_object($value) && !($value instanceof Stringable)) {
+            throw new \InvalidArgumentException('Specified object cannot be converted to string.', 1700821578);
         }
         return rawurlencode((string)$value);
     }
