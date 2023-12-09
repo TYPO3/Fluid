@@ -96,7 +96,10 @@ final class ScopedVariableProvider extends StandardVariableProvider implements V
     public function getByPath($path): mixed
     {
         $path = $this->resolveSubVariableReferences($path);
-        return $this->localVariables->getByPath($path) ?? $this->globalVariables->getByPath($path);
+        $identifier = explode('.', $path, 2)[0];
+        return $this->localVariables->exists($identifier)
+            ? $this->localVariables->getByPath($path)
+            : $this->globalVariables->getByPath($path);
     }
 
     public function getAllIdentifiers(): array

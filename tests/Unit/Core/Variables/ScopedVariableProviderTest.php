@@ -176,6 +176,13 @@ final class ScopedVariableProviderTest extends UnitTestCase
             'local',
         ];
 
+        yield 'local undefined subkey overrides global set subkey' => [
+            ['myVar' => ['myKey' => 'global']],
+            ['myVar' => ['myKey' => null]],
+            'myVar.myKey',
+            null,
+        ];
+
         yield 'variable variables using only globals' => [
             ['myVar' => ['sub' => 'global'], 'path' => 'sub'],
             [],
