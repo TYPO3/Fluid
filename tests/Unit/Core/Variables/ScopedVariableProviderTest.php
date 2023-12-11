@@ -290,7 +290,7 @@ final class ScopedVariableProviderTest extends UnitTestCase
         $variableProvider = new ScopedVariableProvider(new StandardVariableProvider(), new StandardVariableProvider());
         $variableProvider->add('globalVar', 'global');
         self::assertEquals('global', $variableProvider->getGlobalVariableProvider()->get('globalVar'));
-        self::assertNull($variableProvider->getLocalVariableProvider()->get('globalVar'));
+        self::assertEquals('global', $variableProvider->getLocalVariableProvider()->get('globalVar'));
     }
 
     /**

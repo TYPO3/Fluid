@@ -42,6 +42,7 @@ final class ScopedVariableProvider extends StandardVariableProvider implements V
     public function add($identifier, $value): void
     {
         $this->globalVariables->add($identifier, $value);
+        $this->localVariables->add($identifier, $value);
     }
 
     /**
