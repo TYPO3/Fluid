@@ -179,6 +179,13 @@ final class ForViewHelperTest extends AbstractFunctionalTestCase
         ];
 
         $value = ['bar', 2];
+        yield 'local variables can be converted to global variables inside loop' => [
+            '<f:for each="{value}" as="item">{item}|<f:variable name="item" value="overwritten" />{item}|</f:for>{item}',
+            ['value' => $value],
+            'bar|overwritten|2|overwritten|overwritten',
+        ];
+
+        $value = ['bar', 2];
         yield 'variables set inside loop can be used after loop' => [
             '<f:for each="{value}" key="key" as="item"><f:variable name="foo" value="bar" /></f:for>{foo}',
             ['value' => $value],

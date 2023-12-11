@@ -200,3 +200,15 @@ the scope:
         <f:variable name="lastItem" value="{item}" />
     </f:for>
     <!-- {lastItem} is "second" -->
+
+If a global variable is created inside a local scope and uses the same name as a local
+variable, it will still leak out of the scope and will also be valid inside the scope:
+
+.. code-block:: xml
+
+    <f:for each="{0: 'first', 1: 'second'}" as="item">
+        <!-- {item} is "first" or "second" -->
+        <f:variable name="item" value="overwritten" />
+        <!-- {item} is "overwritten" -->
+    </f:for>
+    <!-- {item} is "overwritten" -->
