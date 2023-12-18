@@ -169,6 +169,7 @@ final class TemplatePathsTest extends BaseTestCase
         $method = new \ReflectionMethod($subject, 'resolveFilesInFolders');
         $result = $method->invoke($subject, ['examples/Resources/Private/Layouts/', 'examples/Resources/Private/Templates/Default/'], 'html');
         $expected = [
+            'examples/Resources/Private/Layouts/ContentAs.html',
             'examples/Resources/Private/Layouts/Default.html',
             'examples/Resources/Private/Layouts/Dynamic.html',
             'examples/Resources/Private/Templates/Default/Default.html',
