@@ -17,7 +17,18 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *
  * As a condition is a boolean value, you can just use a boolean argument.
  * Alternatively, you can write a boolean expression there.
+ * The fluid expression is evaluated as PHP expression without any change.
  * Boolean expressions have the following form:
+ *
+ * !{variable}
+ *
+ * ::
+ *
+ *       <f:if condition="!{foo}">
+ *           Will be shown if foo is falsy.
+ *       </f:if>
+ *
+ * or
  *
  * XX Comparator YY
  *

@@ -35,6 +35,8 @@ final class VariableConditionsTest extends AbstractFunctionalTestCase
             ['{test}', true, ['test' => '\'  FALSE  \'']],
             ['{test}', true, ['test' => '\'  0  \'']],
             ['{test}', false, ['test' => 0]],
+            ['!{test}', true, ['test' => false]],
+            ['!{test}', false, ['test' => true]],
             ['1 == {test}', true, ['test' => 1]],
             ['1 != {test}', true, ['test' => 2]],
             ['{test1} == {test2}', true, ['test1' => 'abc', 'test2' => 'abc']],
