@@ -181,7 +181,10 @@ class TagBuilder
      * Adds an attribute to the $attributes-collection
      *
      * @param string $attributeName name of the attribute to be added to the tag
-     * @param string|\Traversable|array|null $attributeValue attribute value
+     * @param string|\Traversable|array|null $attributeValue attribute value, can only be array or traversable
+     *                                                       if the attribute name is either "data" or "area". In
+     *                                                       that special case, multiple attributes will be created
+     *                                                       with either "data-" or "area-" as prefix
      * @param bool $escapeSpecialCharacters apply htmlspecialchars to attribute value
      * @api
      */
@@ -190,9 +193,14 @@ class TagBuilder
         if ($escapeSpecialCharacters) {
             $attributeName = htmlspecialchars($attributeName);
         }
-        if (in_array($attributeName, ['data', 'aria'], true)
-            && (is_array($attributeValue) || $attributeValue instanceof \Traversable)
-        ) {
+        if (is_array($attributeValue) || $attributeValue instanceof \Traversable) {
+            if (!in_array($attributeName, ['data', 'aria'], true)) {
+                throw new \InvalidArgumentException(
+                    sprintf('Value of tag attribute "%s" cannot be of type array.', $attributeName),
+                    1709565127
+                );
+            }
+
             foreach ($attributeValue as $name => $value) {
                 $this->addAttribute($attributeName . '-' . $name, $value, $escapeSpecialCharacters);
             }
