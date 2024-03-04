@@ -9,9 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
@@ -27,16 +25,5 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $subject = $this->getMockBuilder(AbstractTagBasedViewHelper::class)->onlyMethods([])->getMock();
         $subject->setTagBuilder($tagBuilder);
         self::assertEquals('foobar', $subject->render());
-    }
-
-    /**
-     * @test
-     */
-    public function validateAdditionalArgumentsThrowsExceptionIfContainingNonDataArguments(): void
-    {
-        $this->expectException(Exception::class);
-        $subject = $this->getMockBuilder(AbstractTagBasedViewHelper::class)->onlyMethods([])->getMock();
-        $subject->setRenderingContext(new RenderingContext());
-        $subject->validateAdditionalArguments(['foo' => 'bar']);
     }
 }

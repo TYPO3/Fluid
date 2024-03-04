@@ -25,6 +25,10 @@ final class TagBasedTest extends AbstractFunctionalTestCase
                 '<test:tagBasedTest registeredTagAttribute="test" />',
                 '<div registeredTagAttribute="test" />',
             ],
+            'unregistered argument' => [
+                '<test:tagBasedTest foo="bar" />',
+                '<div foo="bar" />',
+            ],
             'data array' => [
                 '<test:tagBasedTest data="{foo: \'bar\', more: 1}" />',
                 '<div data-foo="bar" data-more="1" />',
@@ -104,10 +108,6 @@ final class TagBasedTest extends AbstractFunctionalTestCase
             'aria argument as string' => [
                 '<test:tagBasedTest aria="test" />',
                 \InvalidArgumentException::class,
-            ],
-            'undefined argument' => [
-                '<test:tagBasedTest undefinedArgument="test" />',
-                \TYPO3Fluid\Fluid\Core\ViewHelper\Exception::class,
             ],
         ];
     }
