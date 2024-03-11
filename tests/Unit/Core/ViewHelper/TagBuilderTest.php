@@ -124,6 +124,29 @@ final class TagBuilderTest extends UnitTestCase
     /**
      * @test
      */
+    public function arrayAttributesAreProperlyRendered(): void
+    {
+        $tagBuilder = new TagBuilder('tag');
+        $tagBuilder->addAttribute('data', ['attribute1' => 'data1', 'attribute2' => 'data2']);
+        $tagBuilder->addAttribute('aria', ['attribute1' => 'aria1']);
+        self::assertEquals('<tag data-attribute1="data1" data-attribute2="data2" aria-attribute1="aria1" />', $tagBuilder->render());
+    }
+
+    /**
+     * @test
+     */
+    public function customArrayAttributesThrowException(): void
+    {
+        self::expectException(\InvalidArgumentException::class);
+        self::expectExceptionCode(1709565127);
+        self::expectExceptionMessage('Value of tag attribute "custom" cannot be of type array.');
+        $tagBuilder = new TagBuilder('tag');
+        $tagBuilder->addAttribute('custom', ['attribute1' => 'data1', 'attribute2' => 'data2']);
+    }
+
+    /**
+     * @test
+     */
     public function attributeValuesAreEscapedByDefault(): void
     {
         $tagBuilder = new TagBuilder('tag');
