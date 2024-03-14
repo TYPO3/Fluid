@@ -97,4 +97,31 @@ final class TagBasedTest extends AbstractFunctionalTestCase
         $output = $view->render();
         self::assertEquals($expected, $output);
     }
+
+    public static function throwsErrorForInvalidArgumentTypesDatProvider(): array
+    {
+        return [
+            'data argument as string' => [
+                '<test:tagBasedTest data="test" />',
+            ],
+            'aria argument as string' => [
+                '<test:tagBasedTest aria="test" />',
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider throwsErrorForInvalidArgumentTypesDatProvider
+     */
+    public function throwsErrorForInvalidArgumentTypes(string $source): void
+    {
+        self::expectException(\InvalidArgumentException::class);
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $view->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
+        $view->render();
+    }
 }
