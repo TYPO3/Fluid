@@ -65,7 +65,7 @@ class OrViewHelper extends AbstractViewHelper
 
         $content = $renderChildrenClosure();
 
-        if (null === $content) {
+        if ('' === $content) {
             $content = $alternative;
         }
 
