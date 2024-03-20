@@ -76,6 +76,7 @@ final class ReplaceViewHelperTest extends AbstractFunctionalTestCase
      */
     public function throwsExceptionForInvalidArgument(string $template, array $variables, int $exceptionCode, string $exceptionMessage): void
     {
+        self::expectException(\InvalidArgumentException::class);
         self::expectExceptionCode($exceptionCode);
         self::expectExceptionMessage($exceptionMessage);
         $view = new TemplateView();
