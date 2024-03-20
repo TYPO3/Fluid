@@ -41,10 +41,10 @@ final class HtmlspecialcharsViewHelperTest extends AbstractFunctionalTestCase
     public static function renderDataProvider(): \Generator
     {
         yield 'value as argument' => [
-           '<f:format.htmlspecialchars value="Some string" keepQuotes="false" encoding="UTF-8" doubleEncode="false"/>',
+            '<f:format.htmlspecialchars value="Some string" keepQuotes="false" encoding="UTF-8" doubleEncode="false"/>',
             [],
-           'Some string',
-       ];
+            'Some string',
+        ];
         yield 'value as tag content' => [
             '<f:format.htmlspecialchars>Some string</f:format.htmlspecialchars>',
             [],
