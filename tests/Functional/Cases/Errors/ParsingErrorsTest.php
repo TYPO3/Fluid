@@ -31,9 +31,9 @@ final class ParsingErrorsTest extends AbstractFunctionalTestCase
                 '<f:section></f:section>',
                 Exception::class,
             ],
-             'Missing required argument cached' => [
+            'Missing required argument cached' => [
                 '<f:section></f:section>',
-                 Exception::class,
+                Exception::class,
             ],
             'Uses invalid namespace non-cached' => [
                 '<invalid:section></invalid:section>',
