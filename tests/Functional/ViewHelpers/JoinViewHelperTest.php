@@ -12,6 +12,8 @@ namespace TYPO3\CMS\Fluid\Tests\Functional\ViewHelpers;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ArrayAccessExample;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\IterableExample;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
 final class JoinViewHelperTest extends AbstractFunctionalTestCase
@@ -65,6 +67,13 @@ final class JoinViewHelperTest extends AbstractFunctionalTestCase
         yield 'value inline' => [
             'arguments' => [
                 'value' => [1, 2, 3],
+            ],
+            'src' => '{value -> f:join()}',
+            'expectation' => '123',
+        ];
+        yield 'value inline as iterable' => [
+            'arguments' => [
+                'value' => new IterableExample([1, 2, 3]),
             ],
             'src' => '{value -> f:join()}',
             'expectation' => '123',
@@ -140,6 +149,12 @@ final class JoinViewHelperTest extends AbstractFunctionalTestCase
             ],
             'src' => '{value -> f:join()}',
         ];
+        yield 'arrayaccess inline' => [
+            'arguments' => [
+                'value' => new ArrayAccessExample(['foo' => 'bar']),
+            ],
+            'src' => '{value -> f:join()}',
+        ];
     }
 
     #[DataProvider('renderInvalidDataProvider')]
@@ -147,6 +162,7 @@ final class JoinViewHelperTest extends AbstractFunctionalTestCase
     public function renderInvalid(array $arguments, string $src): void
     {
         $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionCode(1256475113);
 
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);

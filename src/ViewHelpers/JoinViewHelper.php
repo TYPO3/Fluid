@@ -76,24 +76,20 @@ final class JoinViewHelper extends AbstractViewHelper
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
-        $value = $arguments['value'] ?? null;
+        $value = $arguments['value'] ?? $renderChildrenClosure();
         $separator = $arguments['separator'] ?? '';
         $separatorLast = $arguments['separatorLast'] ?? null;
 
-        if ($value === null) {
-            $content = $renderChildrenClosure();
-            if (!is_array($content) && !$content instanceof \ArrayAccess && !$content instanceof \Traversable) {
-                $givenType = get_debug_type($content);
-                throw new \InvalidArgumentException(
-                    'The argument "value" was registered with type "array", but is of type "' .
-                    $givenType . '" in view helper "' . static::class . '".',
-                    1256475113
-                );
-            }
-            $value = $content;
+        if ($value === null || !is_iterable($value)) {
+            $givenType = get_debug_type($value);
+            throw new \InvalidArgumentException(
+                'The argument "value" was registered with type "array", but is of type "' .
+                $givenType . '" in view helper "' . static::class . '".',
+                1256475113
+            );
         }
 
-        $value = (array)$value;
+        $value = self::iteratorToArray($value);
 
         if (\count($value) === 0) {
             return '';
@@ -108,5 +104,13 @@ final class JoinViewHelper extends AbstractViewHelper
         }
 
         return implode($separator, \array_slice($value, 0, -1)) . $separatorLast . $value[\count($value) - 1];
+    }
+
+    /**
+     * This ensures compatibility with PHP 8.1
+     */
+    private static function iteratorToArray(\Traversable|array $iterator): array
+    {
+        return is_array($iterator) ? $iterator : iterator_to_array($iterator);
     }
 }
