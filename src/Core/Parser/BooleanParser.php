@@ -455,6 +455,12 @@ class BooleanParser
             }
             return false;
         }
+        if (trim(strtolower($x)) === 'null') {
+            if ($this->compileToCode === true) {
+                return 'NULL';
+            }
+            return null;
+        }
 
         if ($this->compileToCode === true) {
             return '"' . trim($x, '\'"') . '"';

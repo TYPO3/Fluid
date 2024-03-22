@@ -47,7 +47,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *
  *       XX Comparator YY
  *
- * Comparator is one of: :php:`==, !=, <, <=, >, >=` and :php:`%`
+ * Comparator is one of: :php:`==, ===, !=, ===, !=, !===, <, <=, >, >=` and :php:`%`
  * The :php:`%` operator (modulo) converts the result of the operation to
  * boolean.
  *

@@ -36,6 +36,11 @@ parameters:
 			path: src/Core/Parser/ParsingState.php
 
 		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\NullNode\\:\\:convert\\(\\) should return array\\{initialization\\: string, execution\\: float\\|int\\|string\\} but returns array\\{initialization\\: '', execution\\: null\\}\\.$#"
+			count: 1
+			path: src/Core/Parser/SyntaxTree/NullNode.php
+
+		-
 			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInterface\\:\\:setViewHelperNode\\(\\)\\.$#"
 			count: 1
 			path: src/Core/Parser/SyntaxTree/ViewHelperNode.php
