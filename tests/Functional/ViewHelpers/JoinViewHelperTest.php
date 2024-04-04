@@ -34,6 +34,13 @@ final class JoinViewHelperTest extends AbstractFunctionalTestCase
             'src' => '{value -> f:join()}',
             'expectation' => '',
         ];
+        yield 'single item' => [
+            'arguments' => [
+                'value' => [1],
+            ],
+            'src' => '<f:join value="{value}" />',
+            'expectation' => '1',
+        ];
         yield 'empty attribute value, with separator' => [
             'arguments' => [
                 'value' => [],
