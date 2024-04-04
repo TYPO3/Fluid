@@ -74,7 +74,7 @@ final class JoinViewHelper extends AbstractViewHelper
      *
      * @return string The concatenated string
      */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string
     {
         $value = $arguments['value'] ?? $renderChildrenClosure();
         $separator = $arguments['separator'] ?? '';
@@ -91,16 +91,12 @@ final class JoinViewHelper extends AbstractViewHelper
 
         $value = self::iteratorToArray($value);
 
-        if (\count($value) === 0) {
-            return '';
+        if (\count($value) < 2) {
+            return (string)array_pop($value);
         }
 
         if ($separatorLast === null || $separatorLast === $separator) {
             return implode($separator, $value);
-        }
-
-        if (\count($value) === 1) {
-            return (string)$value[0];
         }
 
         return implode($separator, \array_slice($value, 0, -1)) . $separatorLast . $value[\count($value) - 1];
