@@ -553,6 +553,37 @@ final class TemplateParserTest extends UnitTestCase
             ]
         ];
 
+        yield 'Single array spread' => [
+            'string' => '...some.identifier',
+            'expected' => [
+                '__spread0' => new ObjectAccessorNode('some.identifier')
+            ]
+        ];
+
+        yield 'Multiple arrays spread' => [
+            'string' => '...some.identifier, ...other.identifier',
+            'expected' => [
+                '__spread0' => new ObjectAccessorNode('some.identifier'),
+                '__spread1' => new ObjectAccessorNode('other.identifier')
+            ]
+        ];
+
+        yield 'Mixed types and arrays spread' => [
+            'string' => 'number: 123, string: \'some.string\', identifier: some.identifier, ...some.identifier, array: {number: 123, string: \'some.string\', identifier: some.identifier}, ...other.identifier',
+            'expected' => [
+                'number' => 123,
+                'string' => new TextNode('some.string'),
+                'identifier' => new ObjectAccessorNode('some.identifier'),
+                '__spread0' => new ObjectAccessorNode('some.identifier'),
+                'array' => new ArrayNode([
+                    'number' => 123,
+                    'string' => new TextNode('some.string'),
+                    'identifier' => new ObjectAccessorNode('some.identifier')
+                ]),
+                '__spread1' => new ObjectAccessorNode('other.identifier')
+            ]
+        ];
+
         $rootNode = new RootNode();
         $rootNode->addChildNode(new ObjectAccessorNode('some.{index}'));
         yield 'variable identifier' => [
