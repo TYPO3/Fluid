@@ -44,7 +44,7 @@ class CompileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContent
                 'arguments[secondOptionalArgument]' => $arguments['secondOptionalArgument'],
                 'renderChildrenClosure' => $renderChildrenClosure(),
             ],
-            JSON_PRETTY_PRINT
+            JSON_PRETTY_PRINT,
         );
     }
 }

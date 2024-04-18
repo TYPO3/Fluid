@@ -85,8 +85,8 @@ final class FluidCacheWarmupResultTest extends UnitTestCase
                 FluidCacheWarmupResult::RESULT_COMPILABLE => true,
                 FluidCacheWarmupResult::RESULT_COMPILED => false,
                 FluidCacheWarmupResult::RESULT_HASLAYOUT => false,
-                FluidCacheWarmupResult::RESULT_COMPILEDCLASS => 'subject1-identifier'
-            ]
+                FluidCacheWarmupResult::RESULT_COMPILEDCLASS => 'subject1-identifier',
+            ],
         ];
         self::assertSame($expected, $subject->getResults());
     }
@@ -110,8 +110,8 @@ final class FluidCacheWarmupResultTest extends UnitTestCase
                 FluidCacheWarmupResult::RESULT_HASLAYOUT => true,
                 FluidCacheWarmupResult::RESULT_COMPILEDCLASS => 'subject2-identifier',
                 FluidCacheWarmupResult::RESULT_FAILURE => 'failure-reason',
-                FluidCacheWarmupResult::RESULT_MITIGATIONS => ['m1', 'm2']
-            ]
+                FluidCacheWarmupResult::RESULT_MITIGATIONS => ['m1', 'm2'],
+            ],
         ];
         $subject = new FluidCacheWarmupResult();
         $subject->add($failedCompilingStateMock, 'foobar');

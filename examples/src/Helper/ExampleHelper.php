@@ -31,13 +31,13 @@ class ExampleHelper
         // rendering the file located in `TemplatesB` because this folder was last
         // and is checked first (think of these paths as prioritised fallbacks).
         $paths->setTemplateRootPaths([
-            __DIR__ . '/../../Resources/Private/Templates/'
+            __DIR__ . '/../../Resources/Private/Templates/',
         ]);
         $paths->setLayoutRootPaths([
-            __DIR__ . '/../../Resources/Private/Layouts/'
+            __DIR__ . '/../../Resources/Private/Layouts/',
         ]);
         $paths->setPartialRootPaths([
-            __DIR__ . '/../../Resources/Private/Partials/'
+            __DIR__ . '/../../Resources/Private/Partials/',
         ]);
 
         // Configure View's caching to use system temp dir (typically /tmp und unix) as caching directory.

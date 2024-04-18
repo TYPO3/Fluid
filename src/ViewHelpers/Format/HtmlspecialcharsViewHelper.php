@@ -110,7 +110,7 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper
         return sprintf(
             '!is_string(%1$s) && !(is_object(%1$s) && method_exists(%1$s, \'__toString\')) ? %1$s : htmlspecialchars(%1$s, (%2$s[\'keepQuotes\'] ? ENT_NOQUOTES : ENT_QUOTES), %2$s[\'encoding\'], %2$s[\'doubleEncode\'])',
             $valueVariableName,
-            $argumentsName
+            $argumentsName,
         );
     }
 }

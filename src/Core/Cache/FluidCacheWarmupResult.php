@@ -60,7 +60,7 @@ class FluidCacheWarmupResult
             static::RESULT_COMPILABLE => $currentlyCompiled || $state->isCompilable(),
             static::RESULT_COMPILED => $currentlyCompiled,
             static::RESULT_HASLAYOUT => $state->hasLayout(),
-            static::RESULT_COMPILEDCLASS => $state->getIdentifier()
+            static::RESULT_COMPILEDCLASS => $state->getIdentifier(),
         ];
         if ($state instanceof FailedCompilingState) {
             $this->results[$templatePathAndFilename][static::RESULT_FAILURE] = $state->getFailureReason();

@@ -34,7 +34,7 @@ final class InlineViewHelperTest extends AbstractFunctionalTestCase
         yield 'empty string' => [
             '<f:inline code="{code}" />',
             [
-                'code' => ''
+                'code' => '',
             ],
             null,
         ];
@@ -58,7 +58,7 @@ final class InlineViewHelperTest extends AbstractFunctionalTestCase
         yield 'valid code with undefined variable' => [
             '<f:inline code="{code}" />',
             [
-                'code' => '{f:if(condition: undefinedVariable, then: \'foo\', else: \'bar\')}'
+                'code' => '{f:if(condition: undefinedVariable, then: \'foo\', else: \'bar\')}',
             ],
             'bar',
         ];
@@ -66,7 +66,7 @@ final class InlineViewHelperTest extends AbstractFunctionalTestCase
             '<f:inline code="{code}" />',
             [
                 'code' => '{f:if(condition: definedVariable, then: \'foo\', else: \'bar\')}',
-                'definedVariable' => true
+                'definedVariable' => true,
             ],
             'foo',
         ];
@@ -74,7 +74,7 @@ final class InlineViewHelperTest extends AbstractFunctionalTestCase
             '<f:inline>{code}</f:inline>',
             [
                 'code' => '{f:if(condition: definedVariable, then: \'foo\', else: \'bar\')}',
-                'definedVariable' => true
+                'definedVariable' => true,
             ],
             'foo',
         ];

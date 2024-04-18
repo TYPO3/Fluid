@@ -232,7 +232,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                 $argumentInitializationCode .= sprintf(
                     '\'%s\' => %s,' . chr(10),
                     $argumentName,
-                    is_array($defaultValue) && empty($defaultValue) ? '[]' : var_export($defaultValue, true)
+                    is_array($defaultValue) && empty($defaultValue) ? '[]' : var_export($defaultValue, true),
                 );
             } elseif ($arguments[$argumentName] instanceof NodeInterface) {
                 // Argument *is* given to VH and is a node, resolve
@@ -241,7 +241,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                 $argumentInitializationCode .= sprintf(
                     '\'%s\' => %s,' . chr(10),
                     $argumentName,
-                    $converted['execution']
+                    $converted['execution'],
                 );
             } else {
                 // Argument *is* given to VH and is a simple type.
@@ -249,7 +249,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                 $argumentInitializationCode .= sprintf(
                     '\'%s\' => %s,' . chr(10),
                     $argumentName,
-                    $arguments[$argumentName]
+                    $arguments[$argumentName],
                 );
             }
         }
@@ -267,7 +267,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                     $thenChildEncountered = true;
                     $argumentInitializationCode .= sprintf(
                         '\'__then\' => %s,' . chr(10),
-                        $templateCompiler->wrapChildNodesInClosure($childNode)
+                        $templateCompiler->wrapChildNodesInClosure($childNode),
                     );
                     continue;
                 }
@@ -282,7 +282,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                             '    ],' . chr(10),
                             $elseIfCounter,
                             $templateCompiler->wrapViewHelperNodeArgumentEvaluationInClosure($childNode, 'if'),
-                            $templateCompiler->wrapChildNodesInClosure($childNode)
+                            $templateCompiler->wrapChildNodesInClosure($childNode),
                         );
                         $elseIfCounter++;
                         continue;
@@ -293,7 +293,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                         $elseChildEncountered = true;
                         $argumentInitializationCode .= sprintf(
                             '\'__else\' => %s,' . chr(10),
-                            $templateCompiler->wrapChildNodesInClosure($childNode)
+                            $templateCompiler->wrapChildNodesInClosure($childNode),
                         );
                     }
                 }
@@ -304,7 +304,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
             // then the entire body is considered the "then" child.
             $argumentInitializationCode .= sprintf(
                 '\'__then\' => %s,' . chr(10),
-                $templateCompiler->wrapChildNodesInClosure($node)
+                $templateCompiler->wrapChildNodesInClosure($node),
             );
         }
 
@@ -322,7 +322,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                 '%s::renderStatic(%s, static fn() => \'\', $renderingContext)' . chr(10),
                 get_class($this),
                 $argumentsVariableName,
-            )
+            ),
         ];
     }
 }

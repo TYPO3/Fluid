@@ -169,10 +169,10 @@ class TemplateParser
                 $character,
                 $error->getMessage(),
                 $error->getCode(),
-                $templateCode
+                $templateCode,
             ),
             $error->getCode(),
-            $error
+            $error,
         );
     }
 
@@ -213,7 +213,7 @@ class TemplateParser
     {
         $parsedTemplate = $this->parse(
             $templateSourceClosure($this, $this->renderingContext->getTemplatePaths()),
-            $templateIdentifier
+            $templateIdentifier,
         );
         $parsedTemplate->setIdentifier($templateIdentifier);
         $this->parsedTemplates[$templateIdentifier] = $parsedTemplate;
@@ -289,26 +289,26 @@ class TemplateParser
                         $matchedVariables['MethodIdentifier'],
                         $matchedVariables['Attributes'],
                         ($matchedVariables['Selfclosing'] === '' ? false : true),
-                        $templateElement
+                        $templateElement,
                     )) {
                         continue;
                     }
                 } catch (\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error) {
                     $this->textHandler(
                         $state,
-                        $this->renderingContext->getErrorHandler()->handleViewHelperError($error)
+                        $this->renderingContext->getErrorHandler()->handleViewHelperError($error),
                     );
                 } catch (Exception $error) {
                     $this->textHandler(
                         $state,
-                        $this->renderingContext->getErrorHandler()->handleParserError($error)
+                        $this->renderingContext->getErrorHandler()->handleParserError($error),
                     );
                 }
             } elseif (preg_match(Patterns::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG, $templateElement, $matchedVariables) > 0) {
                 if ($this->closingViewHelperTagHandler(
                     $state,
                     $matchedVariables['NamespaceIdentifier'],
-                    $matchedVariables['MethodIdentifier']
+                    $matchedVariables['MethodIdentifier'],
                 )) {
                     continue;
                 }
@@ -319,7 +319,7 @@ class TemplateParser
         if ($state->countNodeStack() !== 1) {
             throw new Exception(
                 'Not all tags were closed!',
-                1238169398
+                1238169398,
             );
         }
         return $state;
@@ -352,7 +352,7 @@ class TemplateParser
             $state,
             $namespaceIdentifier,
             $methodIdentifier,
-            $this->parseArguments($arguments, $viewHelper)
+            $this->parseArguments($arguments, $viewHelper),
         );
 
         if ($viewHelperNode && $selfclosing === true) {
@@ -390,7 +390,7 @@ class TemplateParser
                 $this->renderingContext,
                 $namespaceIdentifier,
                 $methodIdentifier,
-                $argumentsObjectTree
+                $argumentsObjectTree,
             );
 
             $this->callInterceptor($currentViewHelperNode, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, $state);
@@ -401,12 +401,12 @@ class TemplateParser
         } catch (\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error) {
             $this->textHandler(
                 $state,
-                $this->renderingContext->getErrorHandler()->handleViewHelperError($error)
+                $this->renderingContext->getErrorHandler()->handleViewHelperError($error),
             );
         } catch (Exception $error) {
             $this->textHandler(
                 $state,
-                $this->renderingContext->getErrorHandler()->handleParserError($error)
+                $this->renderingContext->getErrorHandler()->handleParserError($error),
             );
         }
         return null;
@@ -440,7 +440,7 @@ class TemplateParser
             throw new Exception(
                 'Templating tags not properly nested. Expected: ' . $expectedViewHelperClassName . '; Actual: ' .
                 $actualViewHelperClassName,
-                1224485398
+                1224485398,
             );
         }
         $this->callInterceptor($lastStackElement, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $state);
@@ -494,7 +494,7 @@ class TemplateParser
                     $state,
                     $singleMatch['NamespaceIdentifier'],
                     $singleMatch['MethodIdentifier'],
-                    $arguments
+                    $arguments,
                 );
                 if ($viewHelperNode) {
                     $numberOfViewHelpers++;
@@ -668,7 +668,7 @@ class TemplateParser
                     $matchedVariables['Object'],
                     $matchedVariables['Delimiter'],
                     (isset($matchedVariables['ViewHelper']) ? $matchedVariables['ViewHelper'] : ''),
-                    (isset($matchedVariables['AdditionalViewHelpers']) ? $matchedVariables['AdditionalViewHelpers'] : '')
+                    (isset($matchedVariables['AdditionalViewHelpers']) ? $matchedVariables['AdditionalViewHelpers'] : ''),
                 );
             } elseif ($context === self::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS
                 && preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $section, $matchedVariables) > 0
@@ -708,7 +708,7 @@ class TemplateParser
                             } catch (ExpressionException $error) {
                                 $this->textHandler(
                                     $state,
-                                    $this->renderingContext->getErrorHandler()->handleExpressionError($error)
+                                    $this->renderingContext->getErrorHandler()->handleExpressionError($error),
                                 );
                             }
                         }

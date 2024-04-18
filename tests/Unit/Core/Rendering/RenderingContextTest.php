@@ -57,7 +57,7 @@ final class RenderingContextTest extends UnitTestCase
             ['cache', SimpleFileCache::class],
             ['templateParser', TemplateParser::class],
             ['templateCompiler', TemplateCompiler::class],
-            ['viewHelperVariableContainer', ViewHelperVariableContainer::class]
+            ['viewHelperVariableContainer', ViewHelperVariableContainer::class],
         ];
     }
 

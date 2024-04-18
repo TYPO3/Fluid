@@ -197,7 +197,7 @@ class TagBuilder
             if (!in_array($attributeName, ['data', 'aria'], true)) {
                 throw new \InvalidArgumentException(
                     sprintf('Value of tag attribute "%s" cannot be of type array.', $attributeName),
-                    1709565127
+                    1709565127,
                 );
             }
 

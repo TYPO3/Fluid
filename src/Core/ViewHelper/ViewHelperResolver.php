@@ -35,7 +35,7 @@ class ViewHelperResolver
      * @var array
      */
     protected $namespaces = [
-        'f' => ['TYPO3Fluid\\Fluid\\ViewHelpers']
+        'f' => ['TYPO3Fluid\\Fluid\\ViewHelpers'],
     ];
 
     /**
@@ -250,7 +250,7 @@ class ViewHelperResolver
                     'Based on your spelling, the system would load the class "%s", however this class does not exist.',
                     $namespaceIdentifier,
                     $methodIdentifier,
-                    $resolvedViewHelperClassName
+                    $resolvedViewHelperClassName,
                 ), 1407060572);
             }
             $this->resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier] = $actualViewHelperClassName;

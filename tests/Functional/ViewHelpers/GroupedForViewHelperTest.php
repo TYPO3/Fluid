@@ -359,7 +359,7 @@ final class GroupedForViewHelperTest extends AbstractFunctionalTestCase
                     'wordpress' => ['name' => 'Wordpress', 'license' => 'GPL'],
                 ],
                 'groupedProducts' => '[initial groupedProducts]',
-                'myGroupKey' => '[initial myGroupKey]'
+                'myGroupKey' => '[initial myGroupKey]',
             ],
             '[initial groupedProducts] [initial myGroupKey]',
         ];

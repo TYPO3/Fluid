@@ -133,7 +133,7 @@ class AbstractTemplateViewTest extends UnitTestCase
         $series = [
             ['foo', 'FooValue'],
             ['foo', 'FooValueOverridden'],
-            ['bar', 'BarValue']
+            ['bar', 'BarValue'],
         ];
         $variableProvider->expects(self::exactly(3))->method('add')->willReturnCallback(function (...$args) use (&$series): void {
             [$expectedArgOne, $expectedArgTwo] = array_shift($series);

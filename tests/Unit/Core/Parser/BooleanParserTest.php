@@ -103,7 +103,7 @@ final class BooleanParserTest extends UnitTestCase
 
             ['{foo}', true, ['foo' => true]],
             ['{foo} == FALSE', true, ['foo' => false]],
-            ['!{foo}', true, ['foo' => false]]
+            ['!{foo}', true, ['foo' => false]],
         ];
     }
 

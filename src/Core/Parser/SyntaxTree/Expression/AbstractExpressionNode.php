@@ -86,8 +86,8 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
                 '\%s::evaluateExpression($renderingContext, %s, %s)',
                 $handlerClass,
                 $expressionVariable,
-                $matchesVariable
-            )
+                $matchesVariable,
+            ),
         ];
     }
 

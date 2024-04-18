@@ -36,7 +36,7 @@ abstract class BaseTestCase extends TestCase
         string $mockClassName = '',
         bool $callOriginalConstructor = true,
         bool $callOriginalClone = true,
-        bool $callAutoload = true
+        bool $callAutoload = true,
     ) {
         $builder = $this->getMockBuilder($this->buildAccessibleProxy($originalClassName))
             ->setConstructorArgs($arguments)
@@ -120,7 +120,7 @@ abstract class BaseTestCase extends TestCase
         array $arguments = [],
         bool $callOriginalConstructor = true,
         bool $callOriginalClone = true,
-        bool $callAutoload = true
+        bool $callAutoload = true,
     ) {
         $builder = $this->getMockBuilder($originalClassName);
         if ($methods !== null) {
@@ -148,7 +148,7 @@ abstract class BaseTestCase extends TestCase
         string $mockClassName = '',
         bool $callOriginalConstructor = true,
         bool $callOriginalClone = true,
-        bool $callAutoload = true
+        bool $callAutoload = true,
     ): object {
         return $this->getMockForAbstractClass($this->buildAccessibleProxy($originalClassName), $arguments, $mockClassName, $callOriginalConstructor, $callOriginalClone, $callAutoload);
     }

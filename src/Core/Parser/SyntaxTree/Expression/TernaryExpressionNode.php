@@ -148,7 +148,7 @@ class TernaryExpressionNode extends AbstractExpressionNode
             static::class,
             var_export($then, true),
             static::class,
-            var_export($else, true)
+            var_export($else, true),
         );
 
         return [
@@ -157,8 +157,8 @@ class TernaryExpressionNode extends AbstractExpressionNode
                 '%s(%s::gatherContext($renderingContext, %s[1]), $renderingContext)',
                 $functionName,
                 static::class,
-                $matchesVariable
-            )
+                $matchesVariable,
+            ),
         ];
     }
 }

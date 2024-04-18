@@ -25,7 +25,7 @@ final class VariableConditionsTest extends AbstractFunctionalTestCase
         $someObject->someFloat = 13.37;
         $someObject->someBoolean = true;
         $someArray = [
-            'foo' => 'bar'
+            'foo' => 'bar',
         ];
         $emptyCountable = new \SplObjectStorage();
 
@@ -85,7 +85,7 @@ final class VariableConditionsTest extends AbstractFunctionalTestCase
             ['{emptyCountable} || FALSE', false, ['emptyCountable' => $emptyCountable]],
             ['FALSE || {emptyCountable}', false, ['emptyCountable' => $emptyCountable]],
             // inline if-viewhelper condition with countable objects
-            ['{f:if(condition: \'{emptyCountable} || FALSE\', else: \'1\')} == 1)', true, ['emptyCountable' => $emptyCountable]]
+            ['{f:if(condition: \'{emptyCountable} || FALSE\', else: \'1\')} == 1)', true, ['emptyCountable' => $emptyCountable]],
         ];
     }
 

@@ -18,11 +18,11 @@ final class CdataViewHelperTest extends AbstractFunctionalTestCase
     {
         yield 'empty argument and not empty tag content' => [
             '<f:format.cdata>test1</f:format.cdata>',
-            '<![CDATA[test1]]>'
+            '<![CDATA[test1]]>',
         ];
         yield 'non empty argument and empty tag content' => [
             '<f:format.cdata value="test2" />',
-            '<![CDATA[test2]]>'
+            '<![CDATA[test2]]>',
         ];
     }
 

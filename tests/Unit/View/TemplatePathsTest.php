@@ -27,7 +27,7 @@ final class TemplatePathsTest extends BaseTestCase
             ['composer.json', strtr(getcwd(), '\\', '/') . '/composer.json'],
             ['php://stdin', 'php://stdin'],
             ['foo://bar/baz', ''],
-            ['file://foo/bar/baz', 'file://foo/bar/baz']
+            ['file://foo/bar/baz', 'file://foo/bar/baz'],
         ];
     }
 
@@ -79,7 +79,7 @@ final class TemplatePathsTest extends BaseTestCase
         return [
             ['layoutRootPaths', ['foo' => 'bar']],
             ['templateRootPaths', ['foo' => 'bar']],
-            ['partialRootPaths', ['foo' => 'bar']]
+            ['partialRootPaths', ['foo' => 'bar']],
         ];
     }
 
@@ -115,7 +115,7 @@ final class TemplatePathsTest extends BaseTestCase
             TemplatePaths::CONFIG_TEMPLATEROOTPATHS => ['Resources/Private/Templates/'],
             TemplatePaths::CONFIG_LAYOUTROOTPATHS => ['Resources/Private/Layouts/'],
             TemplatePaths::CONFIG_PARTIALROOTPATHS => ['Resources/Private/Partials/'],
-            TemplatePaths::CONFIG_FORMAT => 'xml'
+            TemplatePaths::CONFIG_FORMAT => 'xml',
         ]);
         self::assertNotEmpty($instance->getTemplateRootPaths());
     }
@@ -125,7 +125,7 @@ final class TemplatePathsTest extends BaseTestCase
         return [
             ['resolveAvailableTemplateFiles', 'setTemplateRootPaths'],
             ['resolveAvailablePartialFiles', 'setPartialRootPaths'],
-            ['resolveAvailableLayoutFiles', 'setLayoutRootPaths']
+            ['resolveAvailableLayoutFiles', 'setLayoutRootPaths'],
         ];
     }
 
@@ -155,7 +155,7 @@ final class TemplatePathsTest extends BaseTestCase
         $expected = [
             TemplatePaths::CONFIG_TEMPLATEROOTPATHS => [1],
             TemplatePaths::CONFIG_LAYOUTROOTPATHS => [2],
-            TemplatePaths::CONFIG_PARTIALROOTPATHS => [3]
+            TemplatePaths::CONFIG_PARTIALROOTPATHS => [3],
         ];
         self::assertEquals($expected, $result);
     }
@@ -178,7 +178,7 @@ final class TemplatePathsTest extends BaseTestCase
         sort($expected);
         self::assertSame(
             $expected,
-            $result
+            $result,
         );
     }
 

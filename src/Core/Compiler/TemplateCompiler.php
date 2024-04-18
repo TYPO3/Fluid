@@ -192,7 +192,7 @@ class TemplateCompiler
             //        RootNode, we could just call $parsingState->getRootNode()->compile().
             $this->convertSubNodes($parsingState->getRootNode()->getChildNodes()),
             'render',
-            'Main Render function'
+            'Main Render function',
         );
 
         $storedLayoutName = $parsingState->getVariableContainer()->get('layoutName');
@@ -214,7 +214,7 @@ class TemplateCompiler
             $this->generateCodeForLayoutName($storedLayoutName),
             ($parsingState->hasLayout() ? 'true' : 'false'),
             var_export($this->renderingContext->getViewHelperResolver()->getNamespaces(), true),
-            $generatedRenderFunctions
+            $generatedRenderFunctions,
         );
         $this->renderingContext->getCache()->set($identifier, $templateCode);
         return $templateCode;
@@ -250,7 +250,7 @@ class TemplateCompiler
                     //        and call $node->convert($this) directly.
                     $this->convertSubNodes($sectionRootNode->getChildNodes()),
                     'section_' . sha1($sectionName),
-                    'section ' . $sectionName
+                    'section ' . $sectionName,
                 );
             }
         }
@@ -285,7 +285,7 @@ class TemplateCompiler
                 '}' . chr(10),
                 $comment,
                 $methodName,
-                $execution
+                $execution,
             );
         }
         return sprintf(
@@ -299,7 +299,7 @@ class TemplateCompiler
             $comment,
             $methodName,
             $initialization,
-            $execution
+            $execution,
         );
     }
 
@@ -354,7 +354,7 @@ class TemplateCompiler
             case 0:
                 return [
                     'initialization' => '',
-                    'execution' => 'NULL'
+                    'execution' => 'NULL',
                 ];
             case 1:
                 $childNode = current($nodes);
@@ -376,7 +376,7 @@ class TemplateCompiler
                 }
                 return [
                     'initialization' => $initializationPhpCode,
-                    'execution' => $outputVariableName
+                    'execution' => $outputVariableName,
                 ];
         }
     }

@@ -25,7 +25,7 @@ final class DataAccessorTest extends AbstractFunctionalTestCase
                 '["{data.value}"]',
                 [
                     'data' => [
-                        'value' => 'value'
+                        'value' => 'value',
                     ],
                 ],
                 [
@@ -69,7 +69,7 @@ final class DataAccessorTest extends AbstractFunctionalTestCase
                 [
                     'privateValue@GETPRIVATEVALUE()',
                     'protectedValue@GETPROTECTEDVALUE()',
-                    'publicValue@GETPUBLICVALUE()'
+                    'publicValue@GETPUBLICVALUE()',
                 ],
             ],
             'multiple accessor types' => [
@@ -80,7 +80,7 @@ final class DataAccessorTest extends AbstractFunctionalTestCase
                 [
                     'privateValue@getPrivateValue()',
                     'protectedValue@getProtectedValue()',
-                    'publicValue@getPublicValue()'
+                    'publicValue@getPublicValue()',
                 ],
             ],
         ];

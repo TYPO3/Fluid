@@ -168,7 +168,7 @@ final class TemplateParserTest extends UnitTestCase
         $compiler->expects(self::atLeastOnce())->method('has')->willReturn(false);
         $compiler->expects(self::atLeastOnce())->method('store')->willReturnOnConsecutiveCalls(
             self::throwException(new StopCompilingException()),
-            true
+            true,
         );
         $context->setTemplateCompiler($compiler);
         $context->setVariableProvider(new StandardVariableProvider());
@@ -197,7 +197,7 @@ final class TemplateParserTest extends UnitTestCase
             ["'this \"string\" had \\'quotes\\' in it'", 'this "string" had \'quotes\' in it'],
             ['"this \\"string\\" had \'quotes\' in it"', 'this "string" had \'quotes\' in it'],
             ['"a weird \"string\" \'with\' *freaky* \\\\stuff', 'a weird "string" \'with\' *freaky* \\stuff'],
-            ['\'\\\'escaped quoted string in string\\\'\'', '\'escaped quoted string in string\'']
+            ['\'\\\'escaped quoted string in string\\\'\'', '\'escaped quoted string in string\''],
         ];
     }
 
@@ -216,7 +216,7 @@ final class TemplateParserTest extends UnitTestCase
         return [
             ['TemplateParserTestFixture01-shorthand'],
             ['TemplateParserTestFixture06'],
-            ['TemplateParserTestFixture14']
+            ['TemplateParserTestFixture14'],
         ];
     }
 
@@ -357,7 +357,7 @@ final class TemplateParserTest extends UnitTestCase
         return [
             ['a="2"', ['a' => '2']],
             ['a="2" b="foobar \' with \\" quotes"', ['a' => '2', 'b' => 'foobar \' with " quotes']],
-            [' arguments="{number : 362525200}"', ['arguments' => '{number : 362525200}']]
+            [' arguments="{number : 362525200}"', ['arguments' => '{number : 362525200}']],
         ];
     }
 
@@ -465,21 +465,21 @@ final class TemplateParserTest extends UnitTestCase
             'string' => 'number: 123',
             'expected' => [
                 'number' => 123,
-            ]
+            ],
         ];
 
         yield 'Single quoted string' => [
             'string' => 'string: \'some.string\'',
             'expected' => [
                 'string' => new TextNode('some.string'),
-            ]
+            ],
         ];
 
         yield 'Single identifier' => [
             'string' => 'identifier: some.identifier',
             'expected' => [
-                'identifier' => new ObjectAccessorNode('some.identifier')
-            ]
+                'identifier' => new ObjectAccessorNode('some.identifier'),
+            ],
         ];
 
         yield 'Single subarray' => [
@@ -488,9 +488,9 @@ final class TemplateParserTest extends UnitTestCase
                 'array' => new ArrayNode([
                     'number' => 123,
                     'string' => new TextNode('some.string'),
-                    'identifier' => new ObjectAccessorNode('some.identifier')
-                ])
-            ]
+                    'identifier' => new ObjectAccessorNode('some.identifier'),
+                ]),
+            ],
         ];
 
         yield 'Single subarray with numerical ids' => [
@@ -499,9 +499,9 @@ final class TemplateParserTest extends UnitTestCase
                 'array' => new ArrayNode([
                     123,
                     new TextNode('some.string'),
-                    new ObjectAccessorNode('some.identifier')
-                ])
-            ]
+                    new ObjectAccessorNode('some.identifier'),
+                ]),
+            ],
         ];
 
         yield 'Single quoted subarray' => [
@@ -509,8 +509,8 @@ final class TemplateParserTest extends UnitTestCase
             'expected' => [
                 'number' => 234,
                 'string' => new TextNode('some.string'),
-                'identifier' => new ObjectAccessorNode('some.identifier')
-            ]
+                'identifier' => new ObjectAccessorNode('some.identifier'),
+            ],
         ];
 
         yield 'Single quoted subarray with numerical keys' => [
@@ -519,8 +519,8 @@ final class TemplateParserTest extends UnitTestCase
                 'number' => 123,
                 234,
                 new TextNode('some.string'),
-                new ObjectAccessorNode('some.identifier')
-            ]
+                new ObjectAccessorNode('some.identifier'),
+            ],
         ];
 
         yield 'Nested subarray' => [
@@ -533,10 +533,10 @@ final class TemplateParserTest extends UnitTestCase
                     'array' => new ArrayNode([
                         'number' => 123,
                         'string' => new TextNode('some.string'),
-                        'identifier' => new ObjectAccessorNode('some.identifier')
-                    ])
-                ])
-            ]
+                        'identifier' => new ObjectAccessorNode('some.identifier'),
+                    ]),
+                ]),
+            ],
         ];
 
         yield 'Mixed types' => [
@@ -548,9 +548,9 @@ final class TemplateParserTest extends UnitTestCase
                 'array' => new ArrayNode([
                     'number' => 123,
                     'string' => new TextNode('some.string'),
-                    'identifier' => new ObjectAccessorNode('some.identifier')
-                ])
-            ]
+                    'identifier' => new ObjectAccessorNode('some.identifier'),
+                ]),
+            ],
         ];
 
         $rootNode = new RootNode();
@@ -558,8 +558,8 @@ final class TemplateParserTest extends UnitTestCase
         yield 'variable identifier' => [
             'string' => 'variableIdentifier: \'{some.{index}}\'',
             'expected' => [
-                'variableIdentifier' => $rootNode
-            ]
+                'variableIdentifier' => $rootNode,
+            ],
         ];
 
         $rootNode = new RootNode();
@@ -568,9 +568,9 @@ final class TemplateParserTest extends UnitTestCase
             'string' => 'array: {variableIdentifier: \'{some.{index}}\'}',
             'expected' => [
                 'array' => new ArrayNode([
-                    'variableIdentifier' => $rootNode
-                ])
-            ]
+                    'variableIdentifier' => $rootNode,
+                ]),
+            ],
         ];
     }
 
@@ -602,7 +602,7 @@ final class TemplateParserTest extends UnitTestCase
         $this->expectException(Exception::class);
         $expected = [
             'firstArgument' => new ArgumentDefinition('firstArgument', 'string', '', false),
-            'secondArgument' => new ArgumentDefinition('secondArgument', 'string', '', true)
+            'secondArgument' => new ArgumentDefinition('secondArgument', 'string', '', true),
         ];
         $subject = new TemplateParser();
         $method = new \ReflectionMethod($subject, 'abortIfRequiredArgumentsAreMissing');
@@ -616,10 +616,10 @@ final class TemplateParserTest extends UnitTestCase
     {
         $expectedArguments = [
             'name1' => new ArgumentDefinition('name1', 'string', 'desc', false),
-            'name2' => new ArgumentDefinition('name2', 'string', 'desc', true)
+            'name2' => new ArgumentDefinition('name2', 'string', 'desc', true),
         ];
         $actualArguments = [
-            'name2' => 'bla'
+            'name2' => 'bla',
         ];
         $subject = new TemplateParser();
         $method = new \ReflectionMethod($subject, 'abortIfRequiredArgumentsAreMissing');
@@ -635,7 +635,7 @@ final class TemplateParserTest extends UnitTestCase
     {
         $argumentDefinitions = [
             'var1' => new ArgumentDefinition('var1', 'bool', 'desc', false),
-            'var2' => new ArgumentDefinition('var2', 'boolean', 'desc', false)
+            'var2' => new ArgumentDefinition('var2', 'boolean', 'desc', false),
         ];
         $viewHelper = $this->createMock(CommentViewHelper::class);
         $resolver = $this->createMock(ViewHelperResolver::class);
@@ -649,9 +649,9 @@ final class TemplateParserTest extends UnitTestCase
         self::assertEquals(
             [
                 'var1' => new BooleanNode(new NumericNode(1)),
-                'var2' => new BooleanNode(new NumericNode(0))
+                'var2' => new BooleanNode(new NumericNode(0)),
             ],
-            $parsedArguments
+            $parsedArguments,
         );
     }
 }

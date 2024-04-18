@@ -105,7 +105,7 @@ class RawViewHelper extends AbstractViewHelper
             $contentArgumentName,
             $argumentsName,
             $contentArgumentName,
-            $closureName
+            $closureName,
         );
     }
 }

@@ -110,7 +110,7 @@ class DebugViewHelper extends AbstractViewHelper
                             '%s"%s": %s',
                             str_repeat('  ', $level),
                             $property,
-                            static::dumpVariable($value, $html, $level + 1, $levels)
+                            static::dumpVariable($value, $html, $level + 1, $levels),
                         );
                     }
                 }
@@ -120,7 +120,7 @@ class DebugViewHelper extends AbstractViewHelper
                 $string = sprintf(
                     '<code>%s = %s</code>',
                     $typeLabel,
-                    htmlspecialchars(var_export($variable, true), ENT_COMPAT, 'UTF-8', false)
+                    htmlspecialchars(var_export($variable, true), ENT_COMPAT, 'UTF-8', false),
                 );
             } else {
                 $string = sprintf('<code>%s</code>', $typeLabel);
@@ -132,7 +132,7 @@ class DebugViewHelper extends AbstractViewHelper
                         $string .= sprintf(
                             '<li>%s: %s</li>',
                             $property,
-                            static::dumpVariable($value, $html, $level + 1, $levels)
+                            static::dumpVariable($value, $html, $level + 1, $levels),
                         );
                     }
                     $string .= '</ul>';
@@ -162,7 +162,7 @@ class DebugViewHelper extends AbstractViewHelper
             return [
                 'class' => get_class($variable),
                 'ISO8601' => $variable->format(\DateTime::ATOM),
-                'UNIXTIME' => (int)$variable->format('U')
+                'UNIXTIME' => (int)$variable->format('U'),
             ];
         }
         $reflection = new \ReflectionObject($variable);

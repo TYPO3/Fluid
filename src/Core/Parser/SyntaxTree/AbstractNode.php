@@ -106,7 +106,7 @@ abstract class AbstractNode implements NodeInterface
     {
         return [
             'initialization' => '// Uncompilable node type: ' . get_class($this) . chr(10),
-            'execution' => ''
+            'execution' => '',
         ];
     }
 }

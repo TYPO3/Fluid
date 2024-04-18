@@ -22,7 +22,7 @@ final class RecursiveRenderingTest extends AbstractFunctionalTestCase
         $source = file_get_contents(__DIR__ . '/../../Fixtures/Templates/RecursiveSectionRendering.html');
         $variables = [
             'settings' => [
-                'test' => '<strong>Bla</strong>'
+                'test' => '<strong>Bla</strong>',
             ],
             'items' => [
                 [
@@ -33,22 +33,22 @@ final class RecursiveRenderingTest extends AbstractFunctionalTestCase
                             'items' => [
                                 [
                                     'id' => 3,
-                                    'items' => []
-                                ]
-                            ]
-                        ]
-                    ]
+                                    'items' => [],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
                 [
-                    'id' => 4
-                ]
-            ]
+                    'id' => 4,
+                ],
+            ],
         ];
         $expectations = [
             'Item: 1.',
             'Item: 2.',
             'Item: 3.',
-            'Item: 4.'
+            'Item: 4.',
         ];
 
         $view = new TemplateView();
@@ -80,7 +80,7 @@ final class RecursiveRenderingTest extends AbstractFunctionalTestCase
         $source = file_get_contents(__DIR__ . '/../../Fixtures/Templates/RecursivePartialRendering.html');
         $variables = [
             'settings' => [
-                'test' => '<strong>Bla</strong>'
+                'test' => '<strong>Bla</strong>',
             ],
             'items' => [
                 [
@@ -91,22 +91,22 @@ final class RecursiveRenderingTest extends AbstractFunctionalTestCase
                             'items' => [
                                 [
                                     'id' => 3,
-                                    'items' => []
-                                ]
-                            ]
-                        ]
-                    ]
+                                    'items' => [],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
                 [
-                    'id' => 4
-                ]
-            ]
+                    'id' => 4,
+                ],
+            ],
         ];
         $expectations = [
             'Item: 1.',
             'Item: 2.',
             'Item: 3.',
-            'Item: 4.'
+            'Item: 4.',
         ];
 
         $view = new TemplateView();

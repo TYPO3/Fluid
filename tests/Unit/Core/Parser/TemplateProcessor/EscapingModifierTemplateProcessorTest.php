@@ -32,7 +32,7 @@ final class EscapingModifierTemplateProcessorTest extends UnitTestCase
             ['{escapingEnabled=on}', true],
             ['{escapingEnabled off}', false],
             ['{escapingEnabled = off}', false],
-            ['{escapingEnabled=off}', false]
+            ['{escapingEnabled=off}', false],
         ];
     }
 
@@ -66,7 +66,7 @@ final class EscapingModifierTemplateProcessorTest extends UnitTestCase
                 '{escaping off}' . PHP_EOL . '{escaping off}',
                 '{escaping off}' . PHP_EOL . '{escaping true}',
                 '{escaping off}' . PHP_EOL . '{escaping false}',
-            ]
+            ],
         ];
     }
 

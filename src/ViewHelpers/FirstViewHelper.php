@@ -45,7 +45,7 @@ final class FirstViewHelper extends AbstractViewHelper
             throw new \InvalidArgumentException(
                 'The argument "value" was registered with type "array", but is of type "' .
                 $givenType . '" in view helper "' . static::class . '".',
-                1712220569
+                1712220569,
             );
         }
 

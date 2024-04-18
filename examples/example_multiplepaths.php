@@ -49,7 +49,7 @@ $view->getTemplatePaths()->fillFromConfigurationArray([
     TemplatePaths::CONFIG_PARTIALROOTPATHS => [
         __DIR__ . '/Resources/Private/Partials/',
         __DIR__ . '/ResourceOverrides/Private/Partials/',
-    ]
+    ],
 ]);
 
 $view->assign('foobar', 'This is foobar');

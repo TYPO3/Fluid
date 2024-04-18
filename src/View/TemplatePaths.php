@@ -59,7 +59,7 @@ class TemplatePaths
     protected $resolvedIdentifiers = [
         self::NAME_TEMPLATES => [],
         self::NAME_LAYOUTS => [],
-        self::NAME_PARTIALS => []
+        self::NAME_PARTIALS => [],
     ];
 
     /**
@@ -70,7 +70,7 @@ class TemplatePaths
     protected $resolvedFiles = [
         self::NAME_TEMPLATES => [],
         self::NAME_LAYOUTS => [],
-        self::NAME_PARTIALS => []
+        self::NAME_PARTIALS => [],
     ];
 
     /**
@@ -128,7 +128,7 @@ class TemplatePaths
         return [
             self::CONFIG_TEMPLATEROOTPATHS => $this->sanitizePaths($this->getTemplateRootPaths()),
             self::CONFIG_LAYOUTROOTPATHS => $this->sanitizePaths($this->getLayoutRootPaths()),
-            self::CONFIG_PARTIALROOTPATHS => $this->sanitizePaths($this->getPartialRootPaths())
+            self::CONFIG_PARTIALROOTPATHS => $this->sanitizePaths($this->getPartialRootPaths()),
         ];
     }
 
@@ -488,7 +488,7 @@ class TemplatePaths
         $pathParts = [
             self::CONFIG_TEMPLATEROOTPATHS,
             self::CONFIG_LAYOUTROOTPATHS,
-            self::CONFIG_PARTIALROOTPATHS
+            self::CONFIG_PARTIALROOTPATHS,
         ];
         $pathCollections = [];
         foreach ($pathParts as $pathPart) {
@@ -600,9 +600,9 @@ class TemplatePaths
                     $action,
                     $format,
                     $templateReference === null ? $controller . '/' . ucfirst($action) . '.' . $format : $templateReference,
-                    count($this->getTemplateRootPaths()) ? 'The following paths were checked: ' . implode(', ', $this->getTemplateRootPaths()) : 'No paths configured.'
+                    count($this->getTemplateRootPaths()) ? 'The following paths were checked: ' . implode(', ', $this->getTemplateRootPaths()) : 'No paths configured.',
                 ),
-                1257246929
+                1257246929,
             );
         }
         return file_get_contents($templateReference);
@@ -727,7 +727,7 @@ class TemplatePaths
         }
         throw new InvalidTemplateResourceException(
             'The Fluid template files "' . implode('", "', $tried) . '" could not be loaded.',
-            1225709595
+            1225709595,
         );
     }
 
@@ -742,7 +742,7 @@ class TemplatePaths
             $this->resolvedIdentifiers = $this->resolvedFiles = [
                 self::NAME_TEMPLATES => [],
                 self::NAME_LAYOUTS => [],
-                self::NAME_PARTIALS => []
+                self::NAME_PARTIALS => [],
             ];
         }
     }

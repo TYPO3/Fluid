@@ -190,7 +190,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
                     $templatePaths->getLayoutIdentifier($layoutName),
                     function ($parent, TemplatePaths $paths) use ($layoutName) {
                         return $paths->getLayoutSource($layoutName);
-                    }
+                    },
                 );
             } catch (PassthroughSourceException $error) {
                 return $error->getSource();
@@ -250,7 +250,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
                     return '';
                 }
                 return $renderingContext->getErrorHandler()->handleViewError(
-                    new InvalidSectionException('Section "' . $sectionName . '" does not exist.')
+                    new InvalidSectionException('Section "' . $sectionName . '" does not exist.'),
                 );
             }
             $this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
@@ -263,7 +263,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
                     return '';
                 }
                 return $renderingContext->getErrorHandler()->handleViewError(
-                    new InvalidSectionException('Section "' . $sectionName . '" does not exist.')
+                    new InvalidSectionException('Section "' . $sectionName . '" does not exist.'),
                 );
             }
             /** @var ViewHelperNode $section */
@@ -272,7 +272,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
             $renderingContext->getViewHelperVariableContainer()->add(
                 SectionViewHelper::class,
                 'isCurrentlyRenderingSection',
-                true
+                true,
             );
 
             $this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
@@ -301,7 +301,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
                 $templatePaths->getPartialIdentifier($partialName),
                 function ($parent, TemplatePaths $paths) use ($partialName) {
                     return $paths->getPartialSource($partialName);
-                }
+                },
             );
         } catch (PassthroughSourceException $error) {
             return $error->getSource();
@@ -383,7 +383,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
             $templatePaths->getTemplateIdentifier($controllerName, $actionName),
             function ($parent, TemplatePaths $paths) use ($controllerName, $actionName) {
                 return $paths->getTemplateSource($controllerName, $actionName);
-            }
+            },
         );
         if ($parsedTemplate->isCompiled()) {
             $parsedTemplate->addCompiledNamespaces($this->baseRenderingContext);
