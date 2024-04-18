@@ -80,7 +80,7 @@ class WarmupViewHelper extends AbstractViewHelper
             'array',
             'Array of variables to assign ONLY when compiling. See main class documentation.',
             false,
-            []
+            [],
         );
     }
 
@@ -103,7 +103,7 @@ class WarmupViewHelper extends AbstractViewHelper
         }
         $originalVariableProvider = static::overlayVariablesIfNotSet(
             $this->renderingContext,
-            $this->arguments['variables']
+            $this->arguments['variables'],
         );
         $content = $this->renderChildren();
         $this->renderingContext->setVariableProvider($originalVariableProvider);
@@ -143,7 +143,7 @@ class WarmupViewHelper extends AbstractViewHelper
         $currentProvider = $renderingContext->getVariableProvider();
         $chainedVariableProvider = new ChainedVariableProvider([
             $currentProvider,
-            new StandardVariableProvider($variables)
+            new StandardVariableProvider($variables),
         ]);
         $renderingContext->setVariableProvider($chainedVariableProvider);
         return $currentProvider;

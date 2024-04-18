@@ -69,7 +69,7 @@ class LayoutViewHelper extends AbstractViewHelper
     public static function postParseEvent(
         ViewHelperNode $node,
         array $arguments,
-        VariableProviderInterface $variableContainer
+        VariableProviderInterface $variableContainer,
     ) {
         if (isset($arguments['name'])) {
             $layoutNameNode = $arguments['name'];

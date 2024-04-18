@@ -37,7 +37,7 @@ class CompileWithContentArgumentAndRenderStaticFirstRegisteredOptionalArgumentAf
                 'arguments[firstOptionalArgument]' => $arguments['firstOptionalArgument'],
                 'renderChildrenClosure' => $renderChildrenClosure(),
             ],
-            JSON_PRETTY_PRINT
+            JSON_PRETTY_PRINT,
         );
     }
 }

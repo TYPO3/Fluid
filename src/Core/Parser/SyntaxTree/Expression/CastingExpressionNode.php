@@ -22,7 +22,7 @@ class CastingExpressionNode extends AbstractExpressionNode
      * @var array
      */
     protected static $validTypes = [
-        'integer', 'boolean', 'string', 'float', 'array', 'DateTime'
+        'integer', 'boolean', 'string', 'float', 'array', 'DateTime',
     ];
 
     /**
@@ -61,8 +61,8 @@ class CastingExpressionNode extends AbstractExpressionNode
                 sprintf(
                     'Invalid target conversion type "%s" specified in casting expression "{%s}".',
                     $type,
-                    $expression
-                )
+                    $expression,
+                ),
             );
         }
         return self::convertStatic($variable, $type);

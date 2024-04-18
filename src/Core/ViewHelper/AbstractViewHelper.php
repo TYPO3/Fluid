@@ -165,7 +165,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
         if (array_key_exists($name, $this->argumentDefinitions)) {
             throw new Exception(
                 'Argument "' . $name . '" has already been defined, thus it should not be defined again.',
-                1253036401
+                1253036401,
             );
         }
         $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue, $escape);
@@ -192,7 +192,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
         if (!array_key_exists($name, $this->argumentDefinitions)) {
             throw new Exception(
                 'Argument "' . $name . '" has not been defined, thus it can\'t be overridden.',
-                1279212461
+                1279212461,
             );
         }
         $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue, $escape);
@@ -265,8 +265,8 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                 'ViewHelper class "%s" does not declare a "render()" method and inherits the default "renderStatic". ' .
                 'Executing this ViewHelper would cause infinite recursion - please either implement "render()" or ' .
                 '"renderStatic()" on your ViewHelper class',
-                get_class($this)
-            )
+                get_class($this),
+            ),
         );
     }
 
@@ -346,7 +346,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                         throw new \InvalidArgumentException(
                             'The argument "' . $argumentName . '" was registered with type "' . $type . '", but is of type "' .
                             $givenType . '" in view helper "' . get_class($this) . '".',
-                            1256475113
+                            1256475113,
                         );
                     }
                 }
@@ -463,8 +463,8 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                     'Undeclared arguments passed to ViewHelper %s: %s. Valid arguments are: %s',
                     get_class($this),
                     implode(', ', array_keys($arguments)),
-                    implode(', ', array_keys($this->argumentDefinitions))
-                )
+                    implode(', ', array_keys($this->argumentDefinitions)),
+                ),
             );
         }
     }
@@ -487,7 +487,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
             '%s::renderStatic(%s, %s, $renderingContext)',
             get_class($this),
             $argumentsName,
-            $closureName
+            $closureName,
         );
     }
 
@@ -541,7 +541,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                 $renderChildrenClosureVariableName,
                 $viewHelperInitializationPhpCode,
                 $this->viewHelperNode,
-                $templateCompiler
+                $templateCompiler,
             );
 
             $accumulatedArgumentInitializationCode = '';
@@ -556,7 +556,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                     $argumentInitializationCode .= sprintf(
                         '\'%s\' => %s,' . chr(10),
                         $argumentName,
-                        is_array($defaultValue) && empty($defaultValue) ? '[]' : var_export($defaultValue, true)
+                        is_array($defaultValue) && empty($defaultValue) ? '[]' : var_export($defaultValue, true),
                     );
                 } else {
                     // Argument *is* given to VH, resolve
@@ -569,13 +569,13 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                         $argumentInitializationCode .= sprintf(
                             '\'%s\' => %s,' . chr(10),
                             $argumentName,
-                            $converted['execution']
+                            $converted['execution'],
                         );
                     } else {
                         $argumentInitializationCode .= sprintf(
                             '\'%s\' => %s,' . chr(10),
                             $argumentName,
-                            $argumentValue
+                            $argumentValue,
                         );
                     }
                 }
@@ -587,7 +587,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
             $initializationPhpCode .= sprintf(
                 '%s = %s;' . chr(10),
                 $renderChildrenClosureVariableName,
-                $templateCompiler->wrapChildNodesInClosure($this->viewHelperNode)
+                $templateCompiler->wrapChildNodesInClosure($this->viewHelperNode),
             );
 
             $initializationPhpCode .= $accumulatedArgumentInitializationCode . chr(10) . $argumentInitializationCode . $viewHelperInitializationPhpCode;
@@ -599,7 +599,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
             'initialization' => $initializationPhpCode,
             // @todo: compile() *should* return strings, but it's not enforced in the interface.
             //        The string cast is here to stay compatible in case something still returns for instance null.
-            'execution' => (string)$convertedViewHelperExecutionCode === '' ? "''" : $convertedViewHelperExecutionCode
+            'execution' => (string)$convertedViewHelperExecutionCode === '' ? "''" : $convertedViewHelperExecutionCode,
         ];
     }
 }

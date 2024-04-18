@@ -52,7 +52,7 @@ class VariableViewHelper extends AbstractViewHelper
     public static function renderStatic(
         array $arguments,
         \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
+        RenderingContextInterface $renderingContext,
     ) {
         $value = $renderChildrenClosure();
         $renderingContext->getVariableProvider()->add($arguments['name'], $value);

@@ -63,7 +63,7 @@ final class HtmlspecialcharsViewHelperTest extends AbstractFunctionalTestCase
         yield '[argument] render respects "keepQuotes" argument' => [
             '<f:format.htmlspecialchars keepQuotes="true" value="Some special characters: &©\"" />',
             [],
-            'Some special characters: &amp;©"'
+            'Some special characters: &amp;©"',
         ];
 
         yield '[argument] render respects "encoding" argument' => [
@@ -110,7 +110,7 @@ final class HtmlspecialcharsViewHelperTest extends AbstractFunctionalTestCase
         yield '[tag content] render respects "keepQuotes" argument' => [
             '<f:format.htmlspecialchars keepQuotes="true">Some special characters: &©"</f:format.htmlspecialchars>',
             [],
-            'Some special characters: &amp;©"'
+            'Some special characters: &amp;©"',
         ];
 
         yield '[tag content] render respects "encoding" argument' => [

@@ -33,7 +33,7 @@ $view->assignMultiple([
         'csv' => 'one,two',
         'aStringWithNumbers' => '132 a string',
         'anArray' => ['one', 'two'],
-        'typeNameInteger' => 'integer'
+        'typeNameInteger' => 'integer',
     ],
     'foobar' => 'string foo',
     // The variables we will use as dynamic part names:
@@ -48,14 +48,14 @@ $view->assignMultiple([
         // A numerically indexed array which we will access directly.
         'numeric' => [
             'foo',
-            'bar'
+            'bar',
         ],
         $dynamic1 => 'Dynamic key in $array[$dynamic1]',
         $dynamic2 => 'Dynamic key in $array[$dynamic2]',
     ],
     '123numericprefix' => 'Numeric prefixed variable',
     // A variable whose value refers to another variable name
-    'dynamicVariableName' => 'foobar'
+    'dynamicVariableName' => 'foobar',
 ]);
 
 // Assigning the template path and filename to be rendered. Doing this overrides

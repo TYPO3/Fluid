@@ -136,8 +136,8 @@ class RenderingContext implements RenderingContextInterface
             [
                 new EscapingModifierTemplateProcessor(),
                 new PassthroughSourceModifierTemplateProcessor(),
-                new NamespaceDetectionTemplateProcessor()
-            ]
+                new NamespaceDetectionTemplateProcessor(),
+            ],
         );
         $this->setViewHelperResolver(new ViewHelperResolver());
         $this->setViewHelperInvoker(new ViewHelperInvoker());

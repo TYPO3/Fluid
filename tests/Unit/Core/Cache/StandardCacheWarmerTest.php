@@ -44,7 +44,7 @@ final class StandardCacheWarmerTest extends UnitTestCase
             [new \TYPO3Fluid\Fluid\Core\ViewHelper\Exception('ViewHelper exception')],
             [new \TYPO3Fluid\Fluid\Core\Exception('Fluid core exception')],
             [new \TYPO3Fluid\Fluid\View\Exception('Fluid view exception')],
-            [new \RuntimeException('General runtime exception')]
+            [new \RuntimeException('General runtime exception')],
         ];
     }
 

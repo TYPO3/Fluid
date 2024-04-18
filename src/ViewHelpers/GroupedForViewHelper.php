@@ -134,7 +134,7 @@ class GroupedForViewHelper extends AbstractViewHelper
         $localVariableProvider = new StandardVariableProvider();
         $renderingContext->setVariableProvider(new ScopedVariableProvider(
             $globalVariableProvider,
-            $localVariableProvider
+            $localVariableProvider,
         ));
 
         foreach ($groups['values'] as $currentGroupIndex => $group) {

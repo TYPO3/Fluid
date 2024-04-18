@@ -92,8 +92,8 @@ class ObjectAccessorNode extends AbstractNode
             'initialization' => '',
             'execution' => sprintf(
                 '$renderingContext->getVariableProvider()->getByPath(\'%s\')',
-                $path
-            )
+                $path,
+            ),
         ];
     }
 }

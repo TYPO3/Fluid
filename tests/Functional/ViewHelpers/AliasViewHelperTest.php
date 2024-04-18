@@ -25,13 +25,13 @@ final class AliasViewHelperTest extends AbstractFunctionalTestCase
         yield 'multiple aliases are defined' => [
             '<f:alias map="{x: \'foo\', y: \'bar\'}">{y} {x}</f:alias>',
             [],
-            'bar foo'
+            'bar foo',
         ];
 
         yield 'wrapped content is output even if map is empty' => [
             '<f:alias map="{emptyMap}">wrapped content</f:alias>',
             ['emptyMap' => []],
-            'wrapped content'
+            'wrapped content',
         ];
 
         yield 'defined alias does not exist anymore outside tag' => [

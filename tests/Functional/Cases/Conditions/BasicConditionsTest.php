@@ -43,7 +43,7 @@ final class BasicConditionsTest extends AbstractFunctionalTestCase
 
             // groups
             ['(1 && (\'foo\' == \'foo\') && (TRUE || 1)) && 0 != 1', true],
-            ['(1 && (\'foo\' == \'foo\') && (TRUE || 1)) && 0 != 1 && FALSE', false]
+            ['(1 && (\'foo\' == \'foo\') && (TRUE || 1)) && 0 != 1 && FALSE', false],
         ];
     }
 

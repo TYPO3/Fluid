@@ -107,7 +107,7 @@ final class ViewHelperResolverTest extends UnitTestCase
             [['foo' => ['test']], 'foo', true],
             [['foo' => ['test']], 'foobar', false],
             [['foo*' => null], 'foo', false],
-            [[], 'invalid', false]
+            [[], 'invalid', false],
         ];
     }
 

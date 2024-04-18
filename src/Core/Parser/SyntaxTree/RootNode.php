@@ -38,7 +38,7 @@ class RootNode extends AbstractNode
             case 0:
                 return [
                     'initialization' => '',
-                    'execution' => 'NULL'
+                    'execution' => 'NULL',
                 ];
             case 1:
                 $childNode = current($this->getChildNodes());
@@ -59,7 +59,7 @@ class RootNode extends AbstractNode
 
                 return [
                     'initialization' => $initializationPhpCode,
-                    'execution' => $outputVariableName
+                    'execution' => $outputVariableName,
                 ];
         }
     }

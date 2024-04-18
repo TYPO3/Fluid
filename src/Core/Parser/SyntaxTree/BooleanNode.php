@@ -176,8 +176,8 @@ class BooleanNode extends AbstractNode
                 BooleanNode::class,
                 $functionName,
                 BooleanNode::class,
-                $stack['execution']
-            )
+                $stack['execution'],
+            ),
         ];
     }
 }

@@ -78,8 +78,8 @@ class CountViewHelper extends AbstractViewHelper
             throw new ViewHelper\Exception(
                 sprintf(
                     'Subject given to f:count() is not countable (type: %s)',
-                    is_object($countable) ? get_class($countable) : gettype($countable)
-                )
+                    is_object($countable) ? get_class($countable) : gettype($countable),
+                ),
             );
         }
         return count($countable);

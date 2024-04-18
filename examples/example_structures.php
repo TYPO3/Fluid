@@ -35,7 +35,7 @@ $view->assign('array', ['one', 'two', 'three']);
 $view->assign('group', [
     ['property' => 'one'],
     ['property' => 'one'],
-    ['property' => 'two']
+    ['property' => 'two'],
 ]);
 
 // Rendering the View: plain old rendering of single file, no bells and whistles.
