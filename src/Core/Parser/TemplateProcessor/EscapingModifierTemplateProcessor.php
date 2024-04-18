@@ -50,7 +50,7 @@ class EscapingModifierTemplateProcessor implements TemplateProcessorInterface
         if (count($matches) > 1) {
             throw new Exception(
                 'There is more than one escaping modifier defined. There can only be one {escapingEnabled=...} per template.',
-                1407331080
+                1407331080,
             );
         }
         if ($matches === []) {

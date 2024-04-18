@@ -41,7 +41,7 @@ final class ParsingErrorsTest extends AbstractFunctionalTestCase
             ],
             'Uses invalid namespace cached' => [
                 '<invalid:section></invalid:section>',
-                UnknownNamespaceException::class
+                UnknownNamespaceException::class,
             ],
         ];
     }

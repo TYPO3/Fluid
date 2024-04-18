@@ -88,7 +88,7 @@ final class JoinViewHelperTest extends AbstractFunctionalTestCase
         yield 'value inline and argument' => [
             'arguments' => [
                 'valueInline' => [1, 2, 3],
-                'valueArgument' => [3, 2, 1]
+                'valueArgument' => [3, 2, 1],
             ],
             'src' => '{valueInline -> f:join(value: valueArgument)}',
             'expectation' => '321',

@@ -72,7 +72,7 @@ trait CompileWithContentArgumentAndRenderStatic
         return static::renderStatic(
             $this->arguments,
             $this->buildRenderChildrenClosure(),
-            $this->renderingContext
+            $this->renderingContext,
         );
     }
 
@@ -89,13 +89,13 @@ trait CompileWithContentArgumentAndRenderStatic
         $closureName,
         &$initializationPhpCode,
         ViewHelperNode $node,
-        TemplateCompiler $compiler
+        TemplateCompiler $compiler,
     ) {
         $execution = sprintf(
             '%s::renderStatic(%s, %s, $renderingContext)',
             static::class,
             $argumentsName,
-            $closureName
+            $closureName,
         );
 
         $contentArgumentName = $this->resolveContentArgumentName();
@@ -107,7 +107,7 @@ trait CompileWithContentArgumentAndRenderStatic
             $argumentsName,
             $argumentsName,
             $contentArgumentName,
-            $closureName
+            $closureName,
         );
         return $execution;
     }
@@ -152,7 +152,7 @@ trait CompileWithContentArgumentAndRenderStatic
             }
             throw new Exception(
                 sprintf('Attempting to compile %s failed. Chosen compile method requires that ViewHelper has ' .
-                    'at least one registered and optional argument', __CLASS__)
+                    'at least one registered and optional argument', __CLASS__),
             );
         }
         return $this->contentArgumentName;

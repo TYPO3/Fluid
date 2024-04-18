@@ -20,45 +20,45 @@ final class DebugViewHelperTest extends AbstractFunctionalTestCase
         yield 'not existing variable' => [
             '<f:debug>{value}</f:debug>',
             [],
-            'null' . PHP_EOL
+            'null' . PHP_EOL,
         ];
         yield 'not existing variable html' => [
             '<f:debug html="1">{value}</f:debug>',
             [],
-            '<code>NULL = NULL</code>'
+            '<code>NULL = NULL</code>',
         ];
 
         yield 'null' => [
             '<f:debug>{value}</f:debug>',
             ['value' => null],
-            'null' . PHP_EOL
+            'null' . PHP_EOL,
         ];
         yield 'null html' => [
             '<f:debug html="1">{value}</f:debug>',
             ['value' => null],
-            '<code>NULL = NULL</code>'
+            '<code>NULL = NULL</code>',
         ];
 
         yield 'string' => [
             '<f:debug>{value}</f:debug>',
             ['value' => 'test'],
-            "string 'test'" . PHP_EOL
+            "string 'test'" . PHP_EOL,
         ];
         yield 'string html' => [
             '<f:debug html="1">{value}</f:debug>',
             ['value' => 'test'],
-            "<code>string = 'test'</code>"
+            "<code>string = 'test'</code>",
         ];
 
         yield 'html string' => [
             '<f:debug>{value}</f:debug>',
             ['value' => 'test<strong>bold</strong>'],
-            "string 'test<strong>bold</strong>'" . PHP_EOL
+            "string 'test<strong>bold</strong>'" . PHP_EOL,
         ];
         yield 'html string html' => [
             '<f:debug html="1">{value}</f:debug>',
             ['value' => 'test<strong>bold</strong>'],
-            "<code>string = 'test&lt;strong&gt;bold&lt;/strong&gt;'</code>"
+            "<code>string = 'test&lt;strong&gt;bold&lt;/strong&gt;'</code>",
         ];
 
         yield 'array nested html string' => [
@@ -69,7 +69,7 @@ final class DebugViewHelperTest extends AbstractFunctionalTestCase
                 ],
             ],
             'array: ' . PHP_EOL .
-            '  "nested": string \'test<strong>bold</strong>\'' . PHP_EOL
+            '  "nested": string \'test<strong>bold</strong>\'' . PHP_EOL,
         ];
         yield 'array nested html string html' => [
             '<f:debug html="1">{value}</f:debug>',
@@ -78,74 +78,74 @@ final class DebugViewHelperTest extends AbstractFunctionalTestCase
                     'nested' => 'test<strong>bold</strong>',
                 ],
             ],
-            "<code>array</code><ul><li>nested: <code>string = 'test&lt;strong&gt;bold&lt;/strong&gt;'</code></li></ul>"
+            "<code>array</code><ul><li>nested: <code>string = 'test&lt;strong&gt;bold&lt;/strong&gt;'</code></li></ul>",
         ];
 
         yield 'type only' => [
             '<f:debug typeOnly="1">{value}</f:debug>',
             ['value' => 'test'],
-            'string'
+            'string',
         ];
         yield 'type only html' => [
             '<f:debug typeOnly="1" html="1">{value}</f:debug>',
             ['value' => 'test'],
-            'string'
+            'string',
         ];
 
         yield 'nested array' => [
             '<f:debug>{value}</f:debug>',
             [
                 'value' => [
-                    'nested' => 'test'
-                ]
+                    'nested' => 'test',
+                ],
             ],
             'array: ' . PHP_EOL .
-            '  "nested": string \'test\'' . PHP_EOL
+            '  "nested": string \'test\'' . PHP_EOL,
         ];
         yield 'nested array html' => [
             '<f:debug html="1">{value}</f:debug>',
             [
                 'value' => [
-                    'nested' => 'test'
-                ]
+                    'nested' => 'test',
+                ],
             ],
-            '<code>array</code><ul><li>nested: <code>string = \'test\'</code></li></ul>'
+            '<code>array</code><ul><li>nested: <code>string = \'test\'</code></li></ul>',
         ];
 
         yield 'array iterator object' => [
             '<f:debug>{value}</f:debug>',
             ['value' => new \ArrayIterator(['foo' => 'bar'])],
             'ArrayIterator: ' . PHP_EOL .
-            '  "foo": string \'bar\'' . PHP_EOL
+            '  "foo": string \'bar\'' . PHP_EOL,
         ];
         yield 'array iterator object html' => [
             '<f:debug html="1">{value}</f:debug>',
             ['value' => new \ArrayIterator(['foo' => 'bar'])],
-            '<code>ArrayIterator</code><ul><li>foo: <code>string = \'bar\'</code></li></ul>'
+            '<code>ArrayIterator</code><ul><li>foo: <code>string = \'bar\'</code></li></ul>',
         ];
 
         yield 'array object' => [
             '<f:debug>{value}</f:debug>',
             ['value' => new \ArrayObject(['foo' => 'bar'])],
             'ArrayObject: ' . PHP_EOL .
-            '  "foo": string \'bar\'' . PHP_EOL
+            '  "foo": string \'bar\'' . PHP_EOL,
         ];
         yield 'array object html' => [
             '<f:debug html="1">{value}</f:debug>',
             ['value' => new \ArrayObject(['foo' => 'bar'])],
-            '<code>ArrayObject</code><ul><li>foo: <code>string = \'bar\'</code></li></ul>'
+            '<code>ArrayObject</code><ul><li>foo: <code>string = \'bar\'</code></li></ul>',
         ];
 
         yield 'casual object' => [
             '<f:debug>{value}</f:debug>',
             ['value' => new UserWithoutToString('username')],
             'TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithoutToString: ' . PHP_EOL .
-            '  "name": string \'username\'' . PHP_EOL
+            '  "name": string \'username\'' . PHP_EOL,
         ];
         yield 'casual object html' => [
             '<f:debug html="1">{value}</f:debug>',
             ['value' => new UserWithoutToString('username')],
-            '<code>TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithoutToString</code><ul><li>name: <code>string = \'username\'</code></li></ul>'
+            '<code>TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithoutToString</code><ul><li>name: <code>string = \'username\'</code></li></ul>',
         ];
 
         yield 'datetime object' => [
@@ -164,7 +164,7 @@ final class DebugViewHelperTest extends AbstractFunctionalTestCase
                 '<li>class: <code>string = \'DateTime\'</code></li>' .
                 '<li>ISO8601: <code>string = \'2016-07-12T13:08:35+00:00\'</code></li>' .
                 '<li>UNIXTIME: <code>integer = 1468328915</code></li>' .
-            '</ul>'
+            '</ul>',
         ];
 
         $value = fopen('php://memory', 'r+');
@@ -197,7 +197,7 @@ final class DebugViewHelperTest extends AbstractFunctionalTestCase
                 '<li>unread_bytes: <code>integer = 0</code></li>' .
                 '<li>seekable: <code>boolean = true</code></li>' .
                 '<li>uri: <code>string = \'php://memory\'</code></li>' .
-            '</ul>'
+            '</ul>',
         ];
 
         $arrayObject = new \ArrayObject(['foo' => 'bar']);
@@ -245,7 +245,7 @@ final class DebugViewHelperTest extends AbstractFunctionalTestCase
                         '</li>' .
                     '</ul>' .
                 '</li>' .
-            '</ul>'
+            '</ul>',
         ];
     }
 

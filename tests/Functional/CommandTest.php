@@ -19,17 +19,17 @@ final class CommandTest extends BaseTestCase
             [
                 '%s --help',
                 'Use the CLI utility in the following modes',
-                'Exception'
+                'Exception',
             ],
             [
                 'echo "Hello world!" | %s',
                 'Hello world!',
-                'Exeption'
+                'Exeption',
             ],
             [
                 'echo "{foo}" | %s --variables "{\\"foo\\": \\"bar\\"}"',
                 'bar',
-                'Exception', 'foo'
+                'Exception', 'foo',
             ],
         ];
     }

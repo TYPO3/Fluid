@@ -119,7 +119,7 @@ final class TrimViewHelper extends AbstractViewHelper
             self::SIDE_RIGHT, self::SIDE_END => rtrim($value, $characters),
             default => throw new Exception(
                 'The side "' . $side . '" supplied to Fluid\'s format.trim ViewHelper is not supported.',
-                1669191560
+                1669191560,
             ),
         };
     }

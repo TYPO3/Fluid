@@ -196,7 +196,7 @@ class SwitchViewHelper extends AbstractViewHelper
                 $phpCode .= sprintf(
                     'case call_user_func(%s): return call_user_func(%s);',
                     $valueClosure,
-                    $childrenClosure
+                    $childrenClosure,
                 ) . PHP_EOL;
             }
         }

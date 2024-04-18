@@ -123,7 +123,7 @@ class ForViewHelper extends AbstractViewHelper
             $iterationData = [
                 'index' => 0,
                 'cycle' => 1,
-                'total' => count($arguments['each'])
+                'total' => count($arguments['each']),
             ];
         }
 

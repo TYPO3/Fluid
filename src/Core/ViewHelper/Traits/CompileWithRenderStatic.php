@@ -31,7 +31,7 @@ trait CompileWithRenderStatic
         return static::renderStatic(
             $this->arguments,
             $this->buildRenderChildrenClosure(),
-            $this->renderingContext
+            $this->renderingContext,
         );
     }
 
@@ -53,13 +53,13 @@ trait CompileWithRenderStatic
         $closureName,
         &$initializationPhpCode,
         ViewHelperNode $node,
-        TemplateCompiler $compiler
+        TemplateCompiler $compiler,
     ) {
         return sprintf(
             '%s::renderStatic(%s, %s, $renderingContext)',
             static::class,
             $argumentsName,
-            $closureName
+            $closureName,
         );
     }
 }

@@ -54,7 +54,7 @@ class ConsoleRunner
         self::ARGUMENT_TEMPLATEROOTPATHS => 'Template root paths, multiple paths can be passed separated by spaces',
         self::ARGUMENT_PARTIALROOTPATHS => 'Partial root paths, multiple paths can be passed separated by spaces',
         self::ARGUMENT_LAYOUTROOTPATHS => 'Layout root paths, multiple paths can be passed separated by spaces',
-        self::ARGUMENT_RENDERINGCONTEXT => 'Class name of custom RenderingContext implementation to use when rendering'
+        self::ARGUMENT_RENDERINGCONTEXT => 'Class name of custom RenderingContext implementation to use when rendering',
     ];
 
     /**
@@ -79,7 +79,7 @@ class ConsoleRunner
                 call_user_func(explode('::', $arguments[self::ARGUMENT_BOOTSTRAP]));
             } else {
                 throw new \InvalidArgumentException(
-                    'Provided bootstrap argument is neither a file nor an executable, public, static function!'
+                    'Provided bootstrap argument is neither a file nor an executable, public, static function!',
                 );
             }
         }
@@ -150,18 +150,18 @@ class ConsoleRunner
                 "%s\n    Compiled? %s\n    Has Layout? %s\n",
                 $templatePathAndFilename,
                 $aspects[FluidCacheWarmupResult::RESULT_COMPILABLE] ? 'YES' : 'NO',
-                $aspects[FluidCacheWarmupResult::RESULT_HASLAYOUT] ? 'YES' : 'NO'
+                $aspects[FluidCacheWarmupResult::RESULT_HASLAYOUT] ? 'YES' : 'NO',
             );
             if (isset($aspects[FluidCacheWarmupResult::RESULT_COMPILABLE])) {
                 $string .= sprintf(
                     "    Compiled as: %s\n",
-                    $aspects[FluidCacheWarmupResult::RESULT_COMPILEDCLASS]
+                    $aspects[FluidCacheWarmupResult::RESULT_COMPILEDCLASS],
                 );
             }
             if (isset($aspects[FluidCacheWarmupResult::RESULT_FAILURE])) {
                 $string .= sprintf(
                     "    Compilation failure reason: %s\n",
-                    $aspects[FluidCacheWarmupResult::RESULT_FAILURE]
+                    $aspects[FluidCacheWarmupResult::RESULT_FAILURE],
                 );
             }
             if (isset($aspects[FluidCacheWarmupResult::RESULT_MITIGATIONS])) {
@@ -261,7 +261,7 @@ class ConsoleRunner
     protected function createErrorResponse($response, $code)
     {
         $headers = [
-            'HTTP/1.1 ' . $code . ' ' . $response
+            'HTTP/1.1 ' . $code . ' ' . $response,
         ];
         return implode("\n", $headers) . "\n\n" . $response;
     }
@@ -278,7 +278,7 @@ class ConsoleRunner
             'Connection:keep-alive',
             'Content-Type:text/html;charset=utf-8',
             'Content-Length:' . strlen($response),
-            'Pragma:no-cache'
+            'Pragma:no-cache',
         ];
         return implode("\n", $headers) . "\n\n" . $response;
     }

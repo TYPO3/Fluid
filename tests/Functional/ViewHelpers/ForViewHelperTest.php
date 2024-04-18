@@ -161,7 +161,7 @@ final class ForViewHelperTest extends AbstractFunctionalTestCase
             ['value' => $value],
             'key: foo, item: fooValue, index: 0, cycle: 1, total: 3, isFirst: 1, isLast: , isEven: , isOdd: 1' . chr(10) .
             'key: Fluid, item: FluidStandalone, index: 1, cycle: 2, total: 3, isFirst: , isLast: , isEven: 1, isOdd: ' . chr(10) .
-            'key: TYPO3, item: rocks, index: 2, cycle: 3, total: 3, isFirst: , isLast: 1, isEven: , isOdd: 1' . chr(10)
+            'key: TYPO3, item: rocks, index: 2, cycle: 3, total: 3, isFirst: , isLast: 1, isEven: , isOdd: 1' . chr(10),
         ];
 
         $value = ['bar', 2];

@@ -93,7 +93,7 @@ final class TemplateParserPatternTest extends UnitTestCase
             'Attributes' => ' attribute="Hallo"',
             3 => ' attribute="Hallo"',
             'Selfclosing' => '',
-            4 => ''
+            4 => '',
         ];
         preg_match($pattern, $source, $matches);
         self::assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly.');
@@ -109,7 +109,7 @@ final class TemplateParserPatternTest extends UnitTestCase
             'Attributes' => ' data-attribute="Hallo"',
             3 => ' data-attribute="Hallo"',
             'Selfclosing' => '',
-            4 => ''
+            4 => '',
         ];
         preg_match($pattern, $source, $matches);
         self::assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly with data- attributes.');
@@ -124,7 +124,7 @@ final class TemplateParserPatternTest extends UnitTestCase
             'Attributes' => '',
             3 => '',
             'Selfclosing' => '/',
-            4 => '/'
+            4 => '/',
         ];
         preg_match($pattern, $source, $matches);
         self::assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly when there is a space before the self-closing tag.');
@@ -139,7 +139,7 @@ final class TemplateParserPatternTest extends UnitTestCase
             'Attributes' => ' attribute="Ha\"llo"',
             3 => ' attribute="Ha\"llo"',
             'Selfclosing' => '/',
-            4 => '/'
+            4 => '/',
         ];
         preg_match($pattern, $source, $matches);
         self::assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly with self-closing tags.');
@@ -154,7 +154,7 @@ final class TemplateParserPatternTest extends UnitTestCase
             'Attributes' => ' complex:attribute="Ha>llo" a="b" c=\'d\'',
             3 => ' complex:attribute="Ha>llo" a="b" c=\'d\'',
             'Selfclosing' => '/',
-            4 => '/'
+            4 => '/',
         ];
         preg_match($pattern, $source, $matches);
         self::assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly with complex attributes and > inside the attributes.');
@@ -250,8 +250,8 @@ final class TemplateParserPatternTest extends UnitTestCase
                 2 => 'for',
                 'MethodIdentifier' => 'for',
                 3 => 'each: bla',
-                'ViewHelperArguments' => 'each: bla'
-            ]
+                'ViewHelperArguments' => 'each: bla',
+            ],
         ];
         preg_match_all($pattern, $source, $matches, PREG_SET_ORDER);
         self::assertEquals($matches, $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER');
@@ -266,8 +266,8 @@ final class TemplateParserPatternTest extends UnitTestCase
                 2 => 'for',
                 'MethodIdentifier' => 'for',
                 3 => 'each: bla,',
-                'ViewHelperArguments' => 'each: bla,'
-            ]
+                'ViewHelperArguments' => 'each: bla,',
+            ],
         ];
         preg_match_all($pattern, $source, $matches, PREG_SET_ORDER);
         self::assertEquals($matches, $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER');
@@ -282,8 +282,8 @@ final class TemplateParserPatternTest extends UnitTestCase
                 2 => 'for',
                 'MethodIdentifier' => 'for',
                 3 => 'each: bla, ',
-                'ViewHelperArguments' => 'each: bla, '
-            ]
+                'ViewHelperArguments' => 'each: bla, ',
+            ],
         ];
         preg_match_all($pattern, $source, $matches, PREG_SET_ORDER);
         self::assertEquals($matches, $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER');
@@ -297,7 +297,7 @@ final class TemplateParserPatternTest extends UnitTestCase
                 2 => 'for',
                 'MethodIdentifier' => 'for',
                 3 => 'each: bla',
-                'ViewHelperArguments' => 'each: bla'
+                'ViewHelperArguments' => 'each: bla',
             ],
             1 => [
                 0 => 'foo.bar:bla(a:"b\"->(f:a()", cd: {a:b})',
@@ -306,8 +306,8 @@ final class TemplateParserPatternTest extends UnitTestCase
                 2 => 'bla',
                 'MethodIdentifier' => 'bla',
                 3 => 'a:"b\"->(f:a()", cd: {a:b}',
-                'ViewHelperArguments' => 'a:"b\"->(f:a()", cd: {a:b}'
-            ]
+                'ViewHelperArguments' => 'a:"b\"->(f:a()", cd: {a:b}',
+            ],
         ];
         preg_match_all($pattern, $source, $matches, PREG_SET_ORDER);
         self::assertEquals($matches, $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER');
@@ -368,7 +368,7 @@ final class TemplateParserPatternTest extends UnitTestCase
             ['string' => '{"a":{bla:{x:z}, b: a}}'],
             ['string' => '{a:{bla:{"x":z}, b: a}}'],
             ['string' => '{"@a": "bar"}'],
-            ['string' => '{\'_b\': "bar"}']
+            ['string' => '{\'_b\': "bar"}'],
         ];
     }
 
@@ -422,7 +422,7 @@ final class TemplateParserPatternTest extends UnitTestCase
                 'QuotedString' => '',
                 3 => '',
                 'VariableIdentifier' => 'b',
-                4 => 'b'
+                4 => 'b',
             ],
             1 => [
                 0 => 'e: {c:d, "e#":f, \'g\': "h"}',
@@ -437,8 +437,8 @@ final class TemplateParserPatternTest extends UnitTestCase
                 'Number' => '',
                 5 => '',
                 'Subarray' => 'c:d, "e#":f, \'g\': "h"',
-                6 => 'c:d, "e#":f, \'g\': "h"'
-            ]
+                6 => 'c:d, "e#":f, \'g\': "h"',
+            ],
         ];
         self::assertTrue($success);
         self::assertEquals($expected, $matches, 'The regular expression splitting the array apart does not work!');
@@ -464,7 +464,7 @@ final class TemplateParserPatternTest extends UnitTestCase
                 'QuotedString' => '',
                 3 => '',
                 'VariableIdentifier' => 'b',
-                4 => 'b'
+                4 => 'b',
             ],
             1 => [
                 0 => '\'c\': d',
@@ -475,8 +475,8 @@ final class TemplateParserPatternTest extends UnitTestCase
                 'QuotedString' => '',
                 3 => '',
                 'VariableIdentifier' => 'd',
-                4 => 'd'
-            ]
+                4 => 'd',
+            ],
         ];
         self::assertTrue($success);
         self::assertEquals($expected, $matches, 'The regular expression splitting the array apart does not work!');
@@ -497,9 +497,9 @@ final class TemplateParserPatternTest extends UnitTestCase
                         'QuotedString' => '',
                         3 => '',
                         'VariableIdentifier' => 'foo.bar1',
-                        4 => 'foo.bar1'
-                    ]
-                ]
+                        4 => 'foo.bar1',
+                    ],
+                ],
             ],
             [
                 'expression' => '{"foo2": "bar2"}',
@@ -511,9 +511,9 @@ final class TemplateParserPatternTest extends UnitTestCase
                         'Key' => '"foo2"',
                         2 => '"foo2"',
                         'QuotedString' => '"bar2"',
-                        3 => '"bar2"'
-                    ]
-                ]
+                        3 => '"bar2"',
+                    ],
+                ],
             ],
             [
                 'expression' => '{foo3: bar.baz3}',
@@ -527,9 +527,9 @@ final class TemplateParserPatternTest extends UnitTestCase
                         'QuotedString' => '',
                         3 => '',
                         'VariableIdentifier' => 'bar.baz3',
-                        4 => 'bar.baz3'
-                    ]
-                ]
+                        4 => 'bar.baz3',
+                    ],
+                ],
             ],
             [
                 'expression' => '{foo4: _4bar.-baz4}',
@@ -543,9 +543,9 @@ final class TemplateParserPatternTest extends UnitTestCase
                         'QuotedString' => '',
                         3 => '',
                         'VariableIdentifier' => '_4bar.-baz4',
-                        4 => '_4bar.-baz4'
-                    ]
-                ]
+                        4 => '_4bar.-baz4',
+                    ],
+                ],
             ],
             [
                 'expression' => '{5foo5: -5bar}',
@@ -559,9 +559,9 @@ final class TemplateParserPatternTest extends UnitTestCase
                         'QuotedString' => '',
                         3 => '',
                         'VariableIdentifier' => '-5bar',
-                        4 => '-5bar'
-                    ]
-                ]
+                        4 => '-5bar',
+                    ],
+                ],
             ],
             [
                 'expression' => '{foo6: 66}',
@@ -577,10 +577,10 @@ final class TemplateParserPatternTest extends UnitTestCase
                         'VariableIdentifier' => '',
                         4 => '',
                         'Number' => '66',
-                        5 => '66'
-                    ]
-                ]
-            ]
+                        5 => '66',
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -596,7 +596,7 @@ final class TemplateParserPatternTest extends UnitTestCase
         self::assertEquals(
             $expected,
             $matches,
-            'The regular expression splitting the array apart does not work!'
+            'The regular expression splitting the array apart does not work!',
         );
     }
 

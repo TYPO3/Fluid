@@ -93,8 +93,8 @@ class ViewHelperCompiler
                 $onClass,
                 $method,
                 $argumentsName,
-                $renderChildrenClosureName
-            )
+                $renderChildrenClosureName,
+            ),
         ];
     }
 }

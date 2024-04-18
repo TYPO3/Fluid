@@ -28,16 +28,16 @@ class AbstractViewHelperTest extends UnitTestCase
         return [
             'plain array' => [
                 ['foo', 'bar'],
-                'foo'
+                'foo',
             ],
             'iterator w/o arrayaccess' => [
                 new \IteratorIterator(new \ArrayIterator(['foo', 'bar'])),
-                'foo'
+                'foo',
             ],
             'unsupported value' => [
                 'unsupported value',
-                null
-            ]
+                null,
+            ],
         ];
     }
 
@@ -63,7 +63,7 @@ class AbstractViewHelperTest extends UnitTestCase
         $method2 = new \ReflectionMethod($subject, 'overrideArgument');
         $method2->invoke($subject, 'someName', 'integer', 'changed desc', true);
         $expected = [
-            'someName' => new ArgumentDefinition('someName', 'integer', 'changed desc', true)
+            'someName' => new ArgumentDefinition('someName', 'integer', 'changed desc', true),
         ];
         self::assertEquals($expected, $subject->prepareArguments());
     }
@@ -142,7 +142,7 @@ class AbstractViewHelperTest extends UnitTestCase
             [new ArgumentDefinition('test', 'DateTime', '', true), 'test'],
             [new ArgumentDefinition('test', 'integer', '', true), new \ArrayIterator(['bar'])],
             [new ArgumentDefinition('test', 'object', '', true), 'test'],
-            [new ArgumentDefinition('test', 'string[]', '', true), [new \DateTime('now'), 'test']]
+            [new ArgumentDefinition('test', 'string[]', '', true), [new \DateTime('now'), 'test']],
         ];
     }
 

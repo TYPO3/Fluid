@@ -14,5 +14,5 @@ return [
     '{number}',
     '</foo:format.number>',
     '</foo:format.nl2br>',
-    "\n"
+    "\n",
 ];

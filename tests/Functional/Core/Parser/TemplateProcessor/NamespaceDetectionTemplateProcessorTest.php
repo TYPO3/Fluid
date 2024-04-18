@@ -24,7 +24,7 @@ final class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
                 [
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
                 ],
-                ''
+                '',
             ],
             'supports expression node style namespaces' => [
                 '{namespace x=X\\Y\\ViewHelpers}',
@@ -32,7 +32,7 @@ final class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
                     'x' => ['X\\Y\\ViewHelpers'],
                 ],
-                ''
+                '',
             ],
             'ignores blank expression node style namespaces' => [
                 '{namespace z}',
@@ -40,7 +40,7 @@ final class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
                     'z' => null,
                 ],
-                ''
+                '',
             ],
             'ignores unknown namespaces' => [
                 '<html xmlns:unknown="http://not.from.here/ns/something" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
@@ -48,7 +48,7 @@ final class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
                     'unknown' => null,
                 ],
-                PHP_EOL
+                PHP_EOL,
             ],
             'supports xmlns detection, single' => [
                 '<html xmlns:x="http://typo3.org/ns/X/Y/ViewHelpers" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
@@ -56,7 +56,7 @@ final class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
                     'x' => ['X\\Y\\ViewHelpers'],
                 ],
-                PHP_EOL
+                PHP_EOL,
             ],
             'supports xmlns detection, leave tag in place' => [
                 '<html xmlns:x="http://typo3.org/ns/X/Y/ViewHelpers">' . PHP_EOL . '</html>',
@@ -64,7 +64,7 @@ final class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
                     'x' => ['X\\Y\\ViewHelpers'],
                 ],
-                '<html xmlns:x="http://typo3.org/ns/X/Y/ViewHelpers">' . PHP_EOL . '</html>'
+                '<html xmlns:x="http://typo3.org/ns/X/Y/ViewHelpers">' . PHP_EOL . '</html>',
             ],
             'supports xmlns detection, multiple' => [
                 '<html xmlns:x="http://typo3.org/ns/X/Y/ViewHelpers" xmlns:z="http://typo3.org/ns/X/Z/ViewHelpers" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
@@ -73,7 +73,7 @@ final class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
                     'x' => ['X\\Y\\ViewHelpers'],
                     'z' => ['X\\Z\\ViewHelpers'],
                 ],
-                PHP_EOL
+                PHP_EOL,
             ],
             'supports expression style namespace detection, camelCase' => [
                 '{namespace camelCase=X\\Y\\ViewHelpers}',
@@ -81,7 +81,7 @@ final class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
                     'camelCase' => ['X\\Y\\ViewHelpers'],
                 ],
-                ''
+                '',
             ],
             'supports xmlns detection, camelCase' => [
                 '<html xmlns:camelCase="http://typo3.org/ns/X/Y/ViewHelpers" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
@@ -89,7 +89,7 @@ final class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
                     'camelCase' => ['X\\Y\\ViewHelpers'],
                 ],
-                PHP_EOL
+                PHP_EOL,
             ],
         ];
     }

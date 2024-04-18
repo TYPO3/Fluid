@@ -54,21 +54,21 @@ class ArrayNode extends AbstractNode
                 $initializationPhpCode .= sprintf(
                     '\'%s\' => %s,' . chr(10),
                     $key,
-                    $converted['execution']
+                    $converted['execution'],
                 );
             } elseif (is_numeric($value)) {
                 // handle int, float, numeric strings
                 $initializationPhpCode .= sprintf(
                     '\'%s\' => %s,' . chr(10),
                     $key,
-                    $value
+                    $value,
                 );
             } else {
                 // handle strings
                 $initializationPhpCode .= sprintf(
                     '\'%s\' => \'%s\',' . chr(10),
                     $key,
-                    str_replace(['\\', '\''], ['\\\\', '\\\''], $value)
+                    str_replace(['\\', '\''], ['\\\\', '\\\''], $value),
                 );
             }
         }
@@ -76,7 +76,7 @@ class ArrayNode extends AbstractNode
 
         return [
             'initialization' => $accumulatedInitializationPhpCode . chr(10) . $initializationPhpCode,
-            'execution' => $arrayVariableName
+            'execution' => $arrayVariableName,
         ];
     }
 }

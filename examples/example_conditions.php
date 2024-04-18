@@ -34,8 +34,8 @@ $view->assign('asArray', [
     'nested' => [
         'then' => 'Dotted variable TRUE',
         'else' => 'Dotted variable FALSE',
-        'check' => true
-    ]
+        'check' => true,
+    ],
 ]);
 
 // Assigning the template path and filename to be rendered. Doing this overrides

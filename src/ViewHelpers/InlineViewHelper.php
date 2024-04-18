@@ -45,7 +45,7 @@ class InlineViewHelper extends AbstractViewHelper
         $this->registerArgument(
             'code',
             'string',
-            'Fluid code to be rendered as if it were part of the template rendering it. Can be passed as inline argument or tag content'
+            'Fluid code to be rendered as if it were part of the template rendering it. Can be passed as inline argument or tag content',
         );
     }
 
@@ -58,7 +58,7 @@ class InlineViewHelper extends AbstractViewHelper
     public static function renderStatic(
         array $arguments,
         \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
+        RenderingContextInterface $renderingContext,
     ) {
         return $renderingContext->getTemplateParser()->parse((string)$renderChildrenClosure())->render($renderingContext);
     }

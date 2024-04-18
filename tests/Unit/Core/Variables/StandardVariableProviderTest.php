@@ -212,169 +212,169 @@ final class StandardVariableProviderTest extends UnitTestCase
         return [
             'access string variable' => [
                 [
-                    'foo' => 'bar'
+                    'foo' => 'bar',
                 ],
                 'foo',
-                'bar'
+                'bar',
             ],
             'access not existing sub array on string value returns null' => [
                 [
-                    'foo' => 'bar'
+                    'foo' => 'bar',
                 ],
                 'foo.invalid',
-                null
+                null,
             ],
             'access object getter' => [
                 [
-                    'user' => new StandardVariableProviderModelFixture('Foobar Name')
+                    'user' => new StandardVariableProviderModelFixture('Foobar Name'),
                 ],
                 'user.name',
-                'Foobar Name'
+                'Foobar Name',
             ],
             'access object getter that returns empty string' => [
                 [
-                    'user' => new StandardVariableProviderModelFixture('')
+                    'user' => new StandardVariableProviderModelFixture(''),
                 ],
                 'user.name',
-                ''
+                '',
             ],
             'access object isser' => [
                 [
-                    'user' => new StandardVariableProviderModelFixture('Foobar Name')
+                    'user' => new StandardVariableProviderModelFixture('Foobar Name'),
                 ],
                 'user.named',
-                true
+                true,
             ],
             'access object isser that returns false' => [
                 [
-                    'user' => new StandardVariableProviderModelFixture('')
+                    'user' => new StandardVariableProviderModelFixture(''),
                 ],
                 'user.named',
-                false
+                false,
             ],
             'access object hasser' => [
                 [
-                    'user' => new StandardVariableProviderModelFixture('Foobar Name')
+                    'user' => new StandardVariableProviderModelFixture('Foobar Name'),
                 ],
                 'user.someName',
-                true
+                true,
             ],
             'access object hasser that returns false' => [
                 [
-                    'user' => new StandardVariableProviderModelFixture('')
+                    'user' => new StandardVariableProviderModelFixture(''),
                 ],
                 'user.someName',
-                false
+                false,
             ],
             'access public object property' => [
                 [
-                    'user' => new StandardVariableProviderModelFixture('')
+                    'user' => new StandardVariableProviderModelFixture(''),
                 ],
                 'user.existingPublicProperty',
-                'existingPublicPropertyValue'
+                'existingPublicPropertyValue',
             ],
             'access not existing object detail returns null' => [
                 [
-                    'user' => new StandardVariableProviderModelFixture('')
+                    'user' => new StandardVariableProviderModelFixture(''),
                 ],
                 'user.invalid',
-                null
+                null,
             ],
             'access dynamic variable using invalid variable reference' => [
                 [],
                 '{invalid}',
-                null
+                null,
             ],
             'access dynamic variable using invalid sub variable reference' => [
                 [],
                 '{{invalid}}',
-                null
+                null,
             ],
             'access dynamic variable using invalid variable reference in string' => [
                 [],
                 'foo{invalid}bar',
-                null
+                null,
             ],
             'access dynamic variable using invalid sub variable reference in string' => [
                 [],
                 'foo{{invalid}}bar',
-                null
+                null,
             ],
             'access dynamic variable using invalid variable reference in dotted string' => [
                 [],
                 'foo.{invalid}.bar',
-                null
+                null,
             ],
             'access dynamic variable using invalid sub variable reference in dotted string' => [
                 [],
                 'foo.{{invalid}}.bar',
-                null
+                null,
             ],
             'access dynamic variable using variable reference' => [
                 [
                     'foodynamicbar' => 'test',
-                    'dyn' => 'dynamic'
+                    'dyn' => 'dynamic',
                 ],
                 'foo{dyn}bar',
-                'test'
+                'test',
             ],
             'access dynamic variable using variable reference that resolves to zero' => [
                 [
                     'foo' => [
-                        0 => 'bar'
+                        0 => 'bar',
                     ],
-                    'dynamic' => 0
+                    'dynamic' => 0,
                 ],
                 'foo.{dynamic}',
-                'bar'
+                'bar',
             ],
             'access dynamic variable with dotted path using variable reference' => [
                 [
                     'foo' => [
                         'dynamic' => [
-                            'bar' => 'test'
-                        ]
+                            'bar' => 'test',
+                        ],
                     ],
-                    'dyn' => 'dynamic'
+                    'dyn' => 'dynamic',
                 ],
                 'foo.{dyn}.bar',
-                'test'
+                'test',
             ],
             'access nested dynamic variable with dotted path using double sub variable reference' => [
                 [
                     'foo' => [
-                        'sub2' => 'test'
+                        'sub2' => 'test',
                     ],
                     'baz' => 'sub1',
-                    'sub1' => 'sub2'
+                    'sub1' => 'sub2',
                 ],
                 'foo.{{baz}}',
-                'test'
+                'test',
             ],
             'access nested dynamic variable with dotted path using triple sub variable reference' => [
                 [
                     'foo' => [
-                        'sub3' => 'test'
+                        'sub3' => 'test',
                     ],
                     'baz' => 'sub1',
                     'sub1' => 'sub2',
-                    'sub2' => 'sub3'
+                    'sub2' => 'sub3',
                 ],
                 'foo.{{{baz}}}',
-                'test'
+                'test',
             ],
             'access nested dynamic variable with dotted path using sub variable reference' => [
                 [
                     'foo' => [
-                        'bar' => 'test'
+                        'bar' => 'test',
                     ],
                     'dynamic' => [
-                        'sub' => 'bar'
+                        'sub' => 'bar',
                     ],
-                    'baz' => 'sub'
+                    'baz' => 'sub',
                 ],
                 'foo.{dynamic.{baz}}',
-                'test'
+                'test',
             ],
             'access nested dynamic variable with dotted path using sub variable reference and suffix' => [
                 [
@@ -384,12 +384,12 @@ final class StandardVariableProviderTest extends UnitTestCase
                         ],
                     ],
                     'dynamic' => [
-                        'dyn1' => 'bar'
+                        'dyn1' => 'bar',
                     ],
-                    'baz' => 'dyn1'
+                    'baz' => 'dyn1',
                 ],
                 'foo.{dynamic.{baz}}.baz',
-                'test'
+                'test',
             ],
             'access nested dynamic variable with dotted path using sub variable reference and double suffix' => [
                 [
@@ -399,36 +399,36 @@ final class StandardVariableProviderTest extends UnitTestCase
                         ],
                     ],
                     'dynamic' => [
-                        'dyn1foo' => 'bar'
+                        'dyn1foo' => 'bar',
                     ],
-                    'baz' => 'dyn1'
+                    'baz' => 'dyn1',
                 ],
                 'foo.{dynamic.{baz}foo}.baz',
-                'test'
+                'test',
             ],
             'access with multiple dynamic variables' => [
                 [
                     'foodynamic1dynamic2' => 'test',
                     'dyn1' => 'dynamic1',
-                    'dyn2' => 'dynamic2'
+                    'dyn2' => 'dynamic2',
                 ],
                 'foo{dyn1}{dyn2}',
-                'test'
+                'test',
             ],
             'access with multiple dynamic variables and dotted path' => [
                 [
                     'foo' => [
                         'dynamic1' => [
                             'dynamic2' => [
-                                'bar' => 'test'
-                            ]
-                        ]
+                                'bar' => 'test',
+                            ],
+                        ],
                     ],
                     'dyn1' => 'dynamic1',
-                    'dyn2' => 'dynamic2'
+                    'dyn2' => 'dynamic2',
                 ],
                 'foo.{dyn1}.{dyn2}.bar',
-                'test'
+                'test',
             ],
             'access with multiple nested dynamic variables and dotted path' => [
                 [
@@ -436,10 +436,10 @@ final class StandardVariableProviderTest extends UnitTestCase
                         'dynamic1-1' => [
                             'dynamic3-1dynamic4-1' => [
                                 'dynamic5-1' => [
-                                    'bar' => 'test'
-                                ]
-                            ]
-                        ]
+                                    'bar' => 'test',
+                                ],
+                            ],
+                        ],
                     ],
                     'dyn1' => [
                         'dyn1-1' => 'dynamic1-1',
@@ -450,10 +450,10 @@ final class StandardVariableProviderTest extends UnitTestCase
                     'dyn5' => [
                         'dyn5-1' => 'dynamic5-1',
                     ],
-                    'dyn6' => 'dyn5-1'
+                    'dyn6' => 'dyn5-1',
                 ],
                 'foo.{dyn1.{dyn2}}.{dyn3}{dyn4}.{dyn5.{dyn6}}.bar',
-                'test'
+                'test',
             ],
         ];
     }

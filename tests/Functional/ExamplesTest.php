@@ -42,29 +42,29 @@ final class ExamplesTest extends AbstractFunctionalTestCase
                     '$varfalse == $varfalse === TRUE',
                     '$varfalse != $varfalse === FALSE',
                     '$vararray1 == $vararray1 === TRUE',
-                    '\'thisstring\' != \'thatstring\' === TRUE'
-                ]
+                    '\'thisstring\' != \'thatstring\' === TRUE',
+                ],
             ],
             'example_customresolving.php' => [
                 'example_customresolving.php',
                 [
                     var_export(['foo' => 'bar'], true),
                     var_export(['bar' => 'foo'], true),
-                ]
+                ],
             ],
             'example_format.php' => [
                 'example_format.php',
                 [
                     '"layout": "Default.json",',
-                    '"foobar": "Variable foobar"'
-                ]
+                    '"foobar": "Variable foobar"',
+                ],
             ],
             'example_layoutless.php' => [
                 'example_layoutless.php',
                 [
                     'This section is rendered below',
-                    'This text is rendered because it is outside the section'
-                ]
+                    'This text is rendered because it is outside the section',
+                ],
             ],
             'example_math.php' => [
                 'example_math.php',
@@ -73,8 +73,8 @@ final class ExamplesTest extends AbstractFunctionalTestCase
                     'Expression: 4 * $numberten = 40',
                     'Expression: 4 / $numberten = ' . (0.4), // NOTE: concat'ing a float + string LC-casts the float to localized comma/t-sep. Hence, let PHP also cast the expected value.
                     'Expression: $numberone / $numberten = ' . (0.1), // NOTE: concat'ing a float + string LC-casts the float to localized comma/t-sep. Hence, let PHP also cast the expected value.
-                    'Expression: 10 ^ $numberten = 10000000000'
-                ]
+                    'Expression: 10 ^ $numberten = 10000000000',
+                ],
             ],
             'example_multiplepaths.php' => [
                 'example_multiplepaths.php',
@@ -84,7 +84,7 @@ final class ExamplesTest extends AbstractFunctionalTestCase
                     'Value of "foobar": This is foobar.',
                     'Contents of FirstPartial.html',
                     'Overridden contents of SecondPartial.html',
-                ]
+                ],
             ],
             'example_mvc.php' => [
                 'example_mvc.php',
@@ -92,36 +92,36 @@ final class ExamplesTest extends AbstractFunctionalTestCase
                     'I am the template belonging to the "Default" controller, action "Default".',
                     'I am the template belonging to the "Other" controller, action "Default".',
                     'I am the template belonging to the "Other" controller, action "List".',
-                    'Value of "foobar": MVC template.'
-                ]
+                    'Value of "foobar": MVC template.',
+                ],
             ],
             'example_namespaces.php' => [
                 'example_namespaces.php',
                 [
                     'Namespaces template',
-                    '<invalid:vh>This tag will be shown</invalid:vh>'
-                ]
+                    '<invalid:vh>This tag will be shown</invalid:vh>',
+                ],
             ],
             'example_namespaceresolving.php' => [
                 'example_namespaceresolving.php',
                 [
                     'NamespaceResolving template from Singles.',
                     'Argument passed to CustomViewHelper:',
-                    '123'
-                ]
+                    '123',
+                ],
             ],
             'example_single.php' => [
                 'example_single.php',
                 [
-                    'Value of "foobar": Single template'
-                ]
+                    'Value of "foobar": Single template',
+                ],
             ],
             'example_escapingmodifier.php' => [
                 'example_escapingmodifier.php',
                 [
                     'Value of "html": <strong>This is not escaped</strong>',
                     'From partial: <strong>This is not escaped</strong>',
-                ]
+                ],
             ],
             'example_structures.php' => [
                 'example_structures.php',
@@ -140,8 +140,8 @@ final class ExamplesTest extends AbstractFunctionalTestCase
                     'This `f:else` was rendered',
                     'The value was "3"',
                     'The unmatched value case triggered',
-                    'The "b" nested switch case was triggered'
-                ]
+                    'The "b" nested switch case was triggered',
+                ],
             ],
             'example_variables.php' => [
                 'example_variables.php',
@@ -163,21 +163,21 @@ final class ExamplesTest extends AbstractFunctionalTestCase
                     'Received $array.printf with formatted string Formatted string, value: formatted',
                     'Received $array.baz with value 42',
                     'Received $array.xyz.foobar with value Escaped sub-string',
-                    'Received $myVariable with value Nice string'
-                ]
+                    'Received $myVariable with value Nice string',
+                ],
             ],
             'example_variableprovider.php' => [
                 'example_variableprovider.php',
                 [
                     'VariableProvider template from Singles.',
                     'Random: random',
-                ]
+                ],
             ],
             'example_dynamiclayout.php' => [
                 'example_dynamiclayout.php',
                 [
                     'Rendered via DynamicLayout, section "Main":',
-                ]
+                ],
             ],
             'example_cachestatic.php' => [
                 'example_cachestatic.php',
@@ -185,13 +185,13 @@ final class ExamplesTest extends AbstractFunctionalTestCase
                     'Cached as static text 1',
                     'Cached as static text 2',
                     'Cached as static text 3',
-                ]
+                ],
             ],
             'example_passthrough.php' => [
                 'example_passthrough.php',
                 [
-                    '<f:format.raw>This does not get parsed; the source is passed through with Fluid markup</f:format.raw>'
-                ]
+                    '<f:format.raw>This does not get parsed; the source is passed through with Fluid markup</f:format.raw>',
+                ],
             ],
             'example_errorhandling.php' => [
                 'example_errorhandling.php',
@@ -202,8 +202,8 @@ final class ExamplesTest extends AbstractFunctionalTestCase
                     'Parser error: The ViewHelper "<f:invalid>" could not be resolved.',
                     'Based on your spelling, the system would load the class "TYPO3Fluid\Fluid\ViewHelpers\InvalidViewHelper", however this class does not exist. Offending code: <f:invalid />',
                     'Invalid expression: Invalid target conversion type &quot;invalidtype&quot; specified in casting expression &quot;{foobar as invalidtype}&quot;.',
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
