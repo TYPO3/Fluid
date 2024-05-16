@@ -9,4 +9,3 @@
 /phpunit.xml.dist export-ignore
 /tests/Functional/ export-ignore
 /tests/Unit/ export-ignore
-/Makefile export-ignore
