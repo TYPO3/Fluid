@@ -223,7 +223,7 @@ final class TemplatePathsTest extends BaseTestCase
     {
         $instance = new TemplatePaths();
         $instance->setTemplateSource('foobar');
-        self::assertSame('source_8843d7f92416211de9ebb963ff4ce28125932878_DummyController_dummyAction_html', $instance->getTemplateIdentifier('DummyController', 'dummyAction'));
+        self::assertSame('source_d78fda63144c5c84_DummyController_dummyAction_html', $instance->getTemplateIdentifier('DummyController', 'dummyAction'));
     }
 
     /**

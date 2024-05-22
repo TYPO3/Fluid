@@ -556,7 +556,7 @@ class TemplatePaths
     public function getTemplateIdentifier($controller = 'Default', $action = 'Default')
     {
         if ($this->templateSource !== null) {
-            return 'source_' . sha1($this->templateSource) . '_' . $controller . '_' . $action . '_' . $this->getFormat();
+            return 'source_' . hash('xxh3', (string)$this->templateSource) . '_' . $controller . '_' . $action . '_' . $this->getFormat();
         }
         $templatePathAndFilename = $this->resolveTemplateFileForControllerAndActionAndFormat($controller, $action);
         $prefix = ltrim($controller . '_action_' . $action, '_');
@@ -610,7 +610,7 @@ class TemplatePaths
 
     /**
      * Returns a unique identifier for the given file in the format
-     * <PackageKey>_<SubPackageKey>_<ControllerName>_<prefix>_<SHA1>
+     * <PackageKey>_<SubPackageKey>_<ControllerName>_<prefix>_<hash>
      * The SH1 hash is a checksum that is based on the file path and last modification date
      *
      * @param string|null $pathAndFilename
@@ -621,7 +621,7 @@ class TemplatePaths
     {
         $pathAndFilename = (string)$pathAndFilename;
         $templateModifiedTimestamp = $pathAndFilename !== 'php://stdin' && file_exists($pathAndFilename) ? filemtime($pathAndFilename) : 0;
-        return sprintf('%s_%s', $prefix, sha1($pathAndFilename . '|' . $templateModifiedTimestamp));
+        return sprintf('%s_%s', $prefix, hash('xxh3', $pathAndFilename . '|' . $templateModifiedTimestamp));
     }
 
     /**
