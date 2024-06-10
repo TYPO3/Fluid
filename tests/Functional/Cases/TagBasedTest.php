@@ -25,6 +25,10 @@ final class TagBasedTest extends AbstractFunctionalTestCase
                 '<test:tagBasedTest registeredTagAttribute="test" />',
                 '<div registeredTagAttribute="test" />',
             ],
+            'unregistered argument' => [
+                '<test:tagBasedTest foo="bar" />',
+                '<div foo="bar" />',
+            ],
             'data array' => [
                 '<test:tagBasedTest data="{foo: \'bar\', more: 1}" />',
                 '<div data-foo="bar" data-more="1" />',
@@ -99,15 +103,9 @@ final class TagBasedTest extends AbstractFunctionalTestCase
         return [
             'data argument as string' => [
                 '<test:tagBasedTest data="test" />',
-                \InvalidArgumentException::class,
             ],
             'aria argument as string' => [
                 '<test:tagBasedTest aria="test" />',
-                \InvalidArgumentException::class,
-            ],
-            'undefined argument' => [
-                '<test:tagBasedTest undefinedArgument="test" />',
-                \TYPO3Fluid\Fluid\Core\ViewHelper\Exception::class,
             ],
         ];
     }
@@ -116,9 +114,9 @@ final class TagBasedTest extends AbstractFunctionalTestCase
      * @test
      * @dataProvider throwsErrorForInvalidArgumentTypesDatProvider
      */
-    public function throwsErrorForInvalidArgumentTypes(string $source, string $exceptionClass): void
+    public function throwsErrorForInvalidArgumentTypes(string $source): void
     {
-        self::expectException($exceptionClass);
+        self::expectException(\InvalidArgumentException::class);
 
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);

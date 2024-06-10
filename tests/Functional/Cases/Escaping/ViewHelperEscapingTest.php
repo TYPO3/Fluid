@@ -322,10 +322,6 @@ final class ViewHelperEscapingTest extends BaseTestCase
         self::assertSame('<div foo="' . self::ESCAPED . '" />', $this->renderCode($viewHelper, '<test:test additionalAttributes="{foo: value}" />'), 'Tag additional attributes values are escaped');
         self::assertSame('<div data-&gt;' . self::ESCAPED . '&lt;="1" />', $this->renderCode($viewHelper, '<test:test data=\'{"><script>alert(1)</script><": 1}\' />'), 'Tag data attribute keys are escaped');
         self::assertSame('<div &gt;' . self::ESCAPED . '&lt;="1" />', $this->renderCode($viewHelper, '<test:test additionalAttributes=\'{"><script>alert(1)</script><": 1}\' />'), 'Tag additional attributes keys are escaped');
-
-        // Disabled: bug detected, handleAdditionalArguments on AbstractTagBasedViewHelper does assign the tag attribute, but following this call,
-        // the initialize() method is called which resets the TagBuilder and in turn removes the data- prefixed attributes which are then not re-assigned.
-        // Regression caused by https://github.com/TYPO3/Fluid/pull/419.
-        //$this->assertSame('<div data-foo="' . self::ESCAPED . '" />', $this->renderCode($viewHelper, '<test:test data-foo="{value}" />'), 'Tag unregistered data attribute is escaped');
+        self::assertSame('<div data-foo="' . self::ESCAPED . '" />', $this->renderCode($viewHelper, '<test:test data-foo="{value}" />'), 'Tag unregistered data attribute is escaped');
     }
 }
