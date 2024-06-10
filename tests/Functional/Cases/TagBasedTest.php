@@ -103,11 +103,9 @@ final class TagBasedTest extends AbstractFunctionalTestCase
         return [
             'data argument as string' => [
                 '<test:tagBasedTest data="test" />',
-                \InvalidArgumentException::class,
             ],
             'aria argument as string' => [
                 '<test:tagBasedTest aria="test" />',
-                \InvalidArgumentException::class,
             ],
         ];
     }
@@ -116,9 +114,9 @@ final class TagBasedTest extends AbstractFunctionalTestCase
      * @test
      * @dataProvider throwsErrorForInvalidArgumentTypesDatProvider
      */
-    public function throwsErrorForInvalidArgumentTypes(string $source, string $exceptionClass): void
+    public function throwsErrorForInvalidArgumentTypes(string $source): void
     {
-        self::expectException($exceptionClass);
+        self::expectException(\InvalidArgumentException::class);
 
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);
