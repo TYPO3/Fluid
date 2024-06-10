@@ -159,7 +159,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         parent::handleAdditionalArguments($arguments);
     }
 
-    public function validateAdditionalArguments(array $arguments)
+    public function validateAdditionalArguments(array $arguments): void
     {
         // Skip validation of additional arguments since we want to pass all arguments to the tag
     }
