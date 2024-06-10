@@ -22,12 +22,27 @@ final class CommandTest extends BaseTestCase
                 'Exception',
             ],
             [
+                '%s help',
+                'Supported commands:',
+                'Exception',
+            ],
+            [
                 'echo "Hello world!" | %s',
                 'Hello world!',
                 'Exeption',
             ],
             [
+                'echo "Hello world!" | %s run',
+                'Hello world!',
+                'Exeption',
+            ],
+            [
                 'echo "{foo}" | %s --variables "{\\"foo\\": \\"bar\\"}"',
+                'bar',
+                'Exception', 'foo',
+            ],
+            [
+                'echo "{foo}" | %s run --variables "{\\"foo\\": \\"bar\\"}"',
                 'bar',
                 'Exception', 'foo',
             ],

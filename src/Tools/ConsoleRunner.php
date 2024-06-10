@@ -9,12 +9,15 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tools;
 
+use Composer\Autoload\ClassLoader;
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult;
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Core\Variables\JSONVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Exception;
+use TYPO3Fluid\Fluid\Schema\SchemaGenerator;
+use TYPO3Fluid\Fluid\Schema\ViewHelperFinder;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\View\ViewInterface;
@@ -26,6 +29,7 @@ final class ConsoleRunner
 {
     private const COMMAND_HELP = 'help';
     private const COMMAND_RUN = 'run';
+    private const COMMAND_SCHEMA = 'schema';
 
     private const ARGUMENT_HELP = 'help';
     private const ARGUMENT_SOCKET = 'socket';
@@ -40,10 +44,12 @@ final class ConsoleRunner
     private const ARGUMENT_LAYOUTROOTPATHS = 'layoutRootPaths';
     private const ARGUMENT_PARTIALROOTPATHS = 'partialRootPaths';
     private const ARGUMENT_RENDERINGCONTEXT = 'renderingContext';
+    private const ARGUMENT_DESTINATION = 'destination';
 
     private array $commandDesccriptions = [
         self::COMMAND_HELP => 'Show this help screen',
         self::COMMAND_RUN => 'Run fluid code, either interactively or file-based',
+        self::COMMAND_SCHEMA => 'Generate xsd schema files based on all available ViewHelper classes',
     ];
 
     private array $argumentDescriptions = [
@@ -64,12 +70,16 @@ final class ConsoleRunner
         ],
         self::COMMAND_HELP => [
         ],
+        self::COMMAND_SCHEMA => [
+            self::ARGUMENT_HELP => 'Shows usage examples',
+            self::ARGUMENT_DESTINATION => 'Destination folder where the schema files should be written to',
+        ],
     ];
 
     /**
      * @param string[] $arguments
      */
-    public function handleCommand(array $arguments): string
+    public function handleCommand(array $arguments, ClassLoader $autoloader): string
     {
         array_shift($arguments);
 
@@ -91,6 +101,9 @@ final class ConsoleRunner
             case self::COMMAND_HELP:
                 return $this->handleHelpCommand();
 
+            case self::COMMAND_SCHEMA:
+                return $this->handleSchemaCommand($arguments, $autoloader);
+
             case self::COMMAND_RUN:
             default:
                 return $this->handleRunCommand($arguments);
@@ -101,6 +114,43 @@ final class ConsoleRunner
     {
         return $this->dumpHelpHeader() .
             $this->dumpSupportedCommands($this->commandDesccriptions);
+    }
+
+    /**
+     * @param array<string, string> $arguments
+     */
+    private function handleSchemaCommand(array $arguments, ClassLoader $autoloader): string
+    {
+        if (isset($arguments[self::ARGUMENT_HELP])) {
+            return $this->dumpHelpHeader() .
+                $this->dumpSupportedParameters($this->argumentDescriptions[self::COMMAND_SCHEMA]);
+        }
+
+        $allViewHelpers = (new ViewHelperFinder())->findViewHelpersInComposerProject($autoloader);
+
+        $groupedByNamespace = [];
+        foreach ($allViewHelpers as $viewHelper) {
+            $groupedByNamespace[$viewHelper->xmlNamespace] ??= [];
+            $groupedByNamespace[$viewHelper->xmlNamespace][] = $viewHelper;
+        }
+
+        $destination = (isset($arguments[self::ARGUMENT_DESTINATION])) ? rtrim($arguments[self::ARGUMENT_DESTINATION], '/') . '/' : './';
+        if (!file_exists($destination)) {
+            mkdir($destination, recursive: true);
+        } elseif (!is_dir($destination)) {
+            throw new \InvalidArgumentException(
+                'Invalid destination folder: ' . $destination,
+            );
+        }
+
+        foreach ($groupedByNamespace as $xmlNamespace => $viewHelpers) {
+            $schema = (new SchemaGenerator())->generate($xmlNamespace, $viewHelpers);
+            $fileName = str_replace('http://typo3.org/ns/', '', $xmlNamespace);
+            $fileName = str_replace('/', '_', $fileName);
+            $fileName = preg_replace('#[^0-9a-zA-Z_]#', '', $fileName);
+            file_put_contents($destination . 'schema_' . $fileName . '.xsd', $schema->asXml());
+        }
+        return '';
     }
 
     /**
@@ -392,18 +442,6 @@ final class ConsoleRunner
     }
 
     /**
-     * @param array<string, string> $commands
-     */
-    private function dumpSupportedCommands(array $commands): string
-    {
-        $commandString = 'Supported commands:' . PHP_EOL . PHP_EOL;
-        foreach ($commands as $name => $description) {
-            $commandString .= "\t" . 'bin/fluid ' . str_pad($name, 20, ' ') . ' # ' . $description . PHP_EOL;
-        }
-        return $commandString . PHP_EOL;
-    }
-
-    /**
      * @param array<string, string> $parameters
      */
     private function dumpSupportedParameters(array $parameters): string
@@ -413,6 +451,18 @@ final class ConsoleRunner
             $parameterString .= "\t" . '--' . str_pad($name, 20, ' ') . ' # ' . $description . PHP_EOL;
         }
         return $parameterString . PHP_EOL;
+    }
+
+    /**
+     * @param array<string, string> $commands
+     */
+    private function dumpSupportedCommands(array $commands): string
+    {
+        $commandString = 'Supported commands:' . PHP_EOL . PHP_EOL;
+        foreach ($commands as $name => $description) {
+            $commandString .= "\t" . 'bin/fluid ' . str_pad($name, 20, ' ') . ' # ' . $description . PHP_EOL;
+        }
+        return $commandString . PHP_EOL;
     }
 
     /**
