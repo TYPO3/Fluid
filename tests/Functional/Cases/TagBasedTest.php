@@ -9,154 +9,121 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
-use TYPO3Fluid\Fluid\Tests\BaseTestCase;
-use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers\TagBasedTestViewHelper;
+use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
-final class TagBasedTest extends BaseTestCase
+final class TagBasedTest extends AbstractFunctionalTestCase
 {
-    /**
-     * @test
-     */
-    public function tagBasedViewHelperWithAdditionalAttributesArray(): void
-    {
-        $invoker = new ViewHelperInvoker();
-        $viewHelper = new TagBasedTestViewHelper();
-        $arguments = [
-            'additionalAttributes' => [
-                'foo' => 'bar',
-            ],
-        ];
-        $result = $invoker->invoke($viewHelper, $arguments, new RenderingContext());
-        self::assertSame('<div foo="bar" />', $result);
-    }
-
-    /**
-     * @test
-     */
-    public function tagBasedViewHelperWithDataArray(): void
-    {
-        $invoker = new ViewHelperInvoker();
-        $viewHelper = new TagBasedTestViewHelper();
-        $arguments = [
-            'data' => [
-                'foo' => 'bar',
-            ],
-        ];
-        $result = $invoker->invoke($viewHelper, $arguments, new RenderingContext());
-        self::assertSame('<div data-foo="bar" />', $result);
-    }
-
-    /**
-     * @test
-     */
-    public function tagBasedViewHelperWithAriaArray(): void
-    {
-        $invoker = new ViewHelperInvoker();
-        $viewHelper = new TagBasedTestViewHelper();
-        $arguments = [
-            'aria' => [
-                'controls' => 'foo',
-            ],
-        ];
-        $result = $invoker->invoke($viewHelper, $arguments, new RenderingContext());
-        self::assertSame('<div aria-controls="foo" />', $result);
-    }
-
-    /**
-     * @test
-     */
-    public function tagBasedViewHelperWithDataPrefixedArgument(): void
-    {
-        $invoker = new ViewHelperInvoker();
-        $viewHelper = new TagBasedTestViewHelper();
-        $arguments = [
-            'data-foo' => 'bar',
-        ];
-        $result = $invoker->invoke($viewHelper, $arguments, new RenderingContext());
-        self::assertSame('<div data-foo="bar" />', $result);
-    }
-
-    /**
-     * @test
-     */
-    public function tagBasedViewHelperWithAriaPrefixedArgument(): void
-    {
-        $invoker = new ViewHelperInvoker();
-        $viewHelper = new TagBasedTestViewHelper();
-        $arguments = [
-            'aria-controls' => 'foo',
-        ];
-        $result = $invoker->invoke($viewHelper, $arguments, new RenderingContext());
-        self::assertSame('<div aria-controls="foo" />', $result);
-    }
-
-    public static function tagBasedViewHelperWithDataArrayAndPrefixedArgumentProvider(): array
+    public static function renderTagBasedViewHelperDataProvider(): array
     {
         return [
-            'data before attribute' => [
-                [
-                    'data' => [
-                        'foo' => 'data',
-                    ],
-                    'data-foo' => 'attribute',
-                ],
+            'registered argument' => [
+                '<test:tagBasedTest registeredArgument="test" />',
+                '<div />',
             ],
-            'attribute before data' => [
-                [
-                    'data-foo' => 'attribute',
-                    'data' => [
-                        'foo' => 'data',
-                    ],
-                ],
+            'registered tag attribute' => [
+                '<test:tagBasedTest registeredTagAttribute="test" />',
+                '<div registeredTagAttribute="test" />',
+            ],
+            'data array' => [
+                '<test:tagBasedTest data="{foo: \'bar\', more: 1}" />',
+                '<div data-foo="bar" data-more="1" />',
+            ],
+            'aria array' => [
+                '<test:tagBasedTest aria="{foo: \'bar\', more: 1}" />',
+                '<div aria-foo="bar" aria-more="1" />',
+            ],
+            'data attribute' => [
+                '<test:tagBasedTest data-foo="bar" />',
+                '<div data-foo="bar" />',
+            ],
+            'aria attribute' => [
+                '<test:tagBasedTest aria-foo="bar" />',
+                '<div aria-foo="bar" />',
+            ],
+            'data array before data attribute' => [
+                '<test:tagBasedTest data="{foo: \'data\'}" data-foo="attribute" />',
+                '<div data-foo="attribute" />',
+            ],
+            'data array after data attribute' => [
+                '<test:tagBasedTest data-foo="attribute" data="{foo: \'data\'}" />',
+                '<div data-foo="attribute" />',
+            ],
+            'aria array before aria attribute' => [
+                '<test:tagBasedTest aria="{foo: \'aria\'}" aria-foo="attribute" />',
+                '<div aria-foo="attribute" />',
+            ],
+            'aria array after aria attribute' => [
+                '<test:tagBasedTest aria-foo="attribute" aria="{foo: \'aria\'}" />',
+                '<div aria-foo="attribute" />',
+            ],
+            'additional attributes' => [
+                '<test:tagBasedTest additionalAttributes="{data-foo: \'bar\'}" />',
+                '<div data-foo="bar" />',
+            ],
+            'additional attributes and data array' => [
+                '<test:tagBasedTest additionalAttributes="{data-foo: \'additional\'}" data="{foo: \'data\'}" />',
+                '<div data-foo="data" />',
+            ],
+            'additional attributes and data attribute' => [
+                '<test:tagBasedTest additionalAttributes="{data-foo: \'additional\'}" data-foo="attribute" />',
+                '<div data-foo="attribute" />',
             ],
         ];
     }
 
     /**
-     * @dataProvider tagBasedViewHelperWithDataArrayAndPrefixedArgumentProvider
      * @test
+     * @dataProvider renderTagBasedViewHelperDataProvider
      */
-    public function tagBasedViewHelperWithDataArrayAndPrefixedArgument(array $arguments): void
+    public function renderTagBasedViewHelper(string $source, string $expected): void
     {
-        $invoker = new ViewHelperInvoker();
-        $viewHelper = new TagBasedTestViewHelper();
-        $result = $invoker->invoke($viewHelper, $arguments, new RenderingContext());
-        self::assertSame('<div data-foo="attribute" />', $result);
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $view->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
+        $output = $view->render();
+        self::assertEquals($expected, $output);
+
+        // Second run to test cached template parsing
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $view->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
+        $output = $view->render();
+        self::assertEquals($expected, $output);
     }
 
-    public static function tagBasedViewHelperWithAriaArrayAndPrefixedArgumentProvider(): array
+    public static function throwsErrorForInvalidArgumentTypesDatProvider(): array
     {
         return [
-            'aria before attribute' => [
-                [
-                    'aria' => [
-                        'controls' => 'aria',
-                    ],
-                    'aria-controls' => 'attribute',
-                ],
+            'data argument as string' => [
+                '<test:tagBasedTest data="test" />',
+                \InvalidArgumentException::class,
             ],
-            'attribute before aria' => [
-                [
-                    'aria-controls' => 'attribute',
-                    'aria' => [
-                        'controls' => 'aria',
-                    ],
-                ],
+            'aria argument as string' => [
+                '<test:tagBasedTest aria="test" />',
+                \InvalidArgumentException::class,
+            ],
+            'undefined argument' => [
+                '<test:tagBasedTest undefinedArgument="test" />',
+                \TYPO3Fluid\Fluid\Core\ViewHelper\Exception::class,
             ],
         ];
     }
 
     /**
-     * @dataProvider tagBasedViewHelperWithAriaArrayAndPrefixedArgumentProvider
      * @test
+     * @dataProvider throwsErrorForInvalidArgumentTypesDatProvider
      */
-    public function tagBasedViewHelperWithAriaArrayAndPrefixedArgument(array $arguments): void
+    public function throwsErrorForInvalidArgumentTypes(string $source, string $exceptionClass): void
     {
-        $invoker = new ViewHelperInvoker();
-        $viewHelper = new TagBasedTestViewHelper();
-        $result = $invoker->invoke($viewHelper, $arguments, new RenderingContext());
-        self::assertSame('<div aria-controls="attribute" />', $result);
+        self::expectException($exceptionClass);
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $view->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
+        $view->render();
     }
 }

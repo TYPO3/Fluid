@@ -170,6 +170,16 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         parent::handleAdditionalArguments($arguments);
     }
 
+    public function validateAdditionalArguments(array $arguments)
+    {
+        foreach (array_keys($arguments) as $name) {
+            if (str_starts_with($name, 'data-') || str_starts_with($name, 'aria-')) {
+                unset($arguments[$name]);
+            }
+        }
+        parent::validateAdditionalArguments($arguments);
+    }
+
     /**
      * @return string
      */

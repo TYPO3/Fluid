@@ -558,26 +558,26 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                         $argumentName,
                         is_array($defaultValue) && empty($defaultValue) ? '[]' : var_export($defaultValue, true),
                     );
-                } else {
-                    // Argument *is* given to VH, resolve
-                    $argumentValue = $arguments[$argumentName];
-                    if ($argumentValue instanceof NodeInterface) {
-                        $converted = $argumentValue->convert($templateCompiler);
-                        if (!empty($converted['initialization'])) {
-                            $accumulatedArgumentInitializationCode .= $converted['initialization'];
-                        }
-                        $argumentInitializationCode .= sprintf(
-                            '\'%s\' => %s,' . chr(10),
-                            $argumentName,
-                            $converted['execution'],
-                        );
-                    } else {
-                        $argumentInitializationCode .= sprintf(
-                            '\'%s\' => %s,' . chr(10),
-                            $argumentName,
-                            $argumentValue,
-                        );
+                }
+            }
+
+            foreach ($arguments as $argumentName => $argumentValue) {
+                if ($argumentValue instanceof NodeInterface) {
+                    $converted = $argumentValue->convert($templateCompiler);
+                    if (!empty($converted['initialization'])) {
+                        $accumulatedArgumentInitializationCode .= $converted['initialization'];
                     }
+                    $argumentInitializationCode .= sprintf(
+                        '\'%s\' => %s,' . chr(10),
+                        $argumentName,
+                        $converted['execution'],
+                    );
+                } else {
+                    $argumentInitializationCode .= sprintf(
+                        '\'%s\' => %s,' . chr(10),
+                        $argumentName,
+                        $argumentValue,
+                    );
                 }
             }
 
