@@ -41,7 +41,7 @@ abstract class AbstractFunctionalTestCase extends BaseTestCase
 
     public static function setUpBeforeClass(): void
     {
-        self::$cachePath = sys_get_temp_dir() . '/' . 'fluid-functional-tests-' . sha1(__CLASS__);
+        self::$cachePath = sys_get_temp_dir() . '/' . 'fluid-functional-tests-' . hash('xxh3', __CLASS__);
         mkdir(self::$cachePath);
         self::$cache = (new SimpleFileCache(self::$cachePath));
     }

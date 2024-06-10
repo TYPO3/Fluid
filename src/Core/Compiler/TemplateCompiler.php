@@ -234,11 +234,7 @@ class TemplateCompiler
         return 'return (string)\'' . $storedLayoutNameArgument . '\'';
     }
 
-    /**
-     * @param ParsingState $parsingState
-     * @return string
-     */
-    protected function generateSectionCodeFromParsingState(ParsingState $parsingState)
+    protected function generateSectionCodeFromParsingState(ParsingState $parsingState): string
     {
         $generatedRenderFunctions = '';
         if ($parsingState->getVariableContainer()->exists('1457379500_sections')) {
@@ -249,7 +245,7 @@ class TemplateCompiler
                     // @todo: Verify this is *always* an instance of RootNode
                     //        and call $node->convert($this) directly.
                     $this->convertSubNodes($sectionRootNode->getChildNodes()),
-                    'section_' . sha1($sectionName),
+                    'section_' . hash('xxh3', $sectionName),
                     'section ' . $sectionName,
                 );
             }

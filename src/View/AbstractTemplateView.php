@@ -244,7 +244,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
         }
 
         if ($parsedTemplate->isCompiled()) {
-            $methodNameOfSection = 'section_' . sha1($sectionName);
+            $methodNameOfSection = 'section_' . hash('xxh3', (string)$sectionName);
             if (!method_exists($parsedTemplate, $methodNameOfSection)) {
                 if ($ignoreUnknown) {
                     return '';
