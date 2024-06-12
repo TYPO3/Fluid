@@ -22,52 +22,96 @@ use TYPO3Fluid\Fluid\View\ViewInterface;
 /**
  * @internal
  */
-class ConsoleRunner
+final class ConsoleRunner
 {
-    public const ARGUMENT_HELP = 'help';
-    public const ARGUMENT_SOCKET = 'socket';
-    public const ARGUMENT_WARMUP = 'warmup';
-    public const ARGUMENT_TEMPLATEFILE = 'template';
-    public const ARGUMENT_CACHEDIRECTORY = 'cacheDirectory';
-    public const ARGUMENT_VARIABLES = 'variables';
-    public const ARGUMENT_CONTROLLERNAME = 'controller';
-    public const ARGUMENT_CONTROLLERACTION = 'action';
-    public const ARGUMENT_BOOTSTRAP = 'bootstrap';
-    public const ARGUMENT_TEMPLATEROOTPATHS = 'templateRootPaths';
-    public const ARGUMENT_LAYOUTROOTPATHS = 'layoutRootPaths';
-    public const ARGUMENT_PARTIALROOTPATHS = 'partialRootPaths';
-    public const ARGUMENT_RENDERINGCONTEXT = 'renderingContext';
+    private const COMMAND_HELP = 'help';
+    private const COMMAND_RUN = 'run';
 
-    /**
-     * @var array
-     */
-    protected $argumentDescriptions = [
-        self::ARGUMENT_HELP => 'Shows usage examples',
-        self::ARGUMENT_SOCKET => 'Path to socket (ignored unless running as socket server)',
-        self::ARGUMENT_WARMUP => 'Run in Warmup Mode (requires templateRootPaths and others, see help text)',
-        self::ARGUMENT_TEMPLATEFILE => 'A single template file to render',
-        self::ARGUMENT_CACHEDIRECTORY => 'Path to a directory used as cache for compiled Fluid templates',
-        self::ARGUMENT_VARIABLES => 'Variables (JSON string or JSON file) to use when rendering',
-        self::ARGUMENT_CONTROLLERNAME => 'Controller name to use when rendering in MVC mode',
-        self::ARGUMENT_CONTROLLERACTION => 'Controller action when rendering in MVC mode',
-        self::ARGUMENT_BOOTSTRAP => 'A PHP file path or name of a PHP class (ClassName::functionToCall) which will bootstrap environment before rendering',
-        self::ARGUMENT_TEMPLATEROOTPATHS => 'Template root paths, multiple paths can be passed separated by spaces',
-        self::ARGUMENT_PARTIALROOTPATHS => 'Partial root paths, multiple paths can be passed separated by spaces',
-        self::ARGUMENT_LAYOUTROOTPATHS => 'Layout root paths, multiple paths can be passed separated by spaces',
-        self::ARGUMENT_RENDERINGCONTEXT => 'Class name of custom RenderingContext implementation to use when rendering',
+    private const ARGUMENT_HELP = 'help';
+    private const ARGUMENT_SOCKET = 'socket';
+    private const ARGUMENT_WARMUP = 'warmup';
+    private const ARGUMENT_TEMPLATEFILE = 'template';
+    private const ARGUMENT_CACHEDIRECTORY = 'cacheDirectory';
+    private const ARGUMENT_VARIABLES = 'variables';
+    private const ARGUMENT_CONTROLLERNAME = 'controller';
+    private const ARGUMENT_CONTROLLERACTION = 'action';
+    private const ARGUMENT_BOOTSTRAP = 'bootstrap';
+    private const ARGUMENT_TEMPLATEROOTPATHS = 'templateRootPaths';
+    private const ARGUMENT_LAYOUTROOTPATHS = 'layoutRootPaths';
+    private const ARGUMENT_PARTIALROOTPATHS = 'partialRootPaths';
+    private const ARGUMENT_RENDERINGCONTEXT = 'renderingContext';
+
+    private array $commandDesccriptions = [
+        self::COMMAND_HELP => 'Show this help screen',
+        self::COMMAND_RUN => 'Run fluid code, either interactively or file-based',
+    ];
+
+    private array $argumentDescriptions = [
+        self::COMMAND_RUN => [
+            self::ARGUMENT_HELP => 'Shows usage examples',
+            self::ARGUMENT_SOCKET => 'Path to socket (ignored unless running as socket server)',
+            self::ARGUMENT_WARMUP => 'Run in Warmup Mode (requires templateRootPaths and others, see help text)',
+            self::ARGUMENT_TEMPLATEFILE => 'A single template file to render',
+            self::ARGUMENT_CACHEDIRECTORY => 'Path to a directory used as cache for compiled Fluid templates',
+            self::ARGUMENT_VARIABLES => 'Variables (JSON string or JSON file) to use when rendering',
+            self::ARGUMENT_CONTROLLERNAME => 'Controller name to use when rendering in MVC mode',
+            self::ARGUMENT_CONTROLLERACTION => 'Controller action when rendering in MVC mode',
+            self::ARGUMENT_BOOTSTRAP => 'A PHP file path or name of a PHP class (ClassName::functionToCall) which will bootstrap environment before rendering',
+            self::ARGUMENT_TEMPLATEROOTPATHS => 'Template root paths, multiple paths can be passed separated by spaces',
+            self::ARGUMENT_PARTIALROOTPATHS => 'Partial root paths, multiple paths can be passed separated by spaces',
+            self::ARGUMENT_LAYOUTROOTPATHS => 'Layout root paths, multiple paths can be passed separated by spaces',
+            self::ARGUMENT_RENDERINGCONTEXT => 'Class name of custom RenderingContext implementation to use when rendering',
+        ],
+        self::COMMAND_HELP => [
+        ],
     ];
 
     /**
-     * @param array $arguments
-     * @return string|void
+     * @param string[] $arguments
      */
-    public function handleCommand(array $arguments)
+    public function handleCommand(array $arguments): string
     {
-        $arguments = $this->parseAndValidateInputArguments($arguments);
+        array_shift($arguments);
+
+        if (!isset($arguments[0]) || str_starts_with($arguments[0], '--')) {
+            // Support old command syntax where run was the default/only command
+            $command = self::COMMAND_RUN;
+        } elseif (isset($this->commandDesccriptions[$arguments[0]])) {
+            $command = array_shift($arguments);
+        } else {
+            throw new \InvalidArgumentException('Unsupported command: ' . $arguments[0]);
+        }
+
+        $arguments = $this->parseAndValidateInputArguments(
+            $arguments,
+            array_keys($this->argumentDescriptions[$command]),
+        );
+
+        switch ($command) {
+            case self::COMMAND_HELP:
+                return $this->handleHelpCommand();
+
+            case self::COMMAND_RUN:
+            default:
+                return $this->handleRunCommand($arguments);
+        }
+    }
+
+    private function handleHelpCommand(): string
+    {
+        return $this->dumpHelpHeader() .
+            $this->dumpSupportedCommands($this->commandDesccriptions);
+    }
+
+    /**
+     * @param array<string, string> $arguments
+     */
+    private function handleRunCommand(array $arguments): string
+    {
         if (isset($arguments[self::ARGUMENT_HELP])) {
             return $this->dumpHelpHeader() .
-                $this->dumpSupportedParameters() .
-                $this->dumpusageExample();
+                $this->dumpSupportedParameters($this->argumentDescriptions[self::COMMAND_RUN]) .
+                $this->dumpRunExamples();
         }
         if (isset($arguments[self::ARGUMENT_BOOTSTRAP])) {
             if (is_file($arguments[self::ARGUMENT_BOOTSTRAP])) {
@@ -132,17 +176,17 @@ class ConsoleRunner
         }
         if (isset($arguments[self::ARGUMENT_SOCKET])) {
             $this->listenIndefinitelyOnSocket($arguments[self::ARGUMENT_SOCKET], $view);
-        } else {
-            $action = $arguments[self::ARGUMENT_CONTROLLERACTION] ?? null;
-            return $view->render($action);
+            return '';
         }
+        $action = $arguments[self::ARGUMENT_CONTROLLERACTION] ?? null;
+        return $view->render($action);
     }
 
     /**
      * @param FluidCacheWarmupResult $result
      * @return string
      */
-    protected function renderWarmupResult(FluidCacheWarmupResult $result)
+    private function renderWarmupResult(FluidCacheWarmupResult $result)
     {
         $string = PHP_EOL . 'Template cache warmup results' . PHP_EOL . PHP_EOL;
         foreach ($result->getResults() as $templatePathAndFilename => $aspects) {
@@ -179,7 +223,7 @@ class ConsoleRunner
      * @param string $socketIdentifier
      * @param ViewInterface $view
      */
-    protected function listenIndefinitelyOnSocket($socketIdentifier, ViewInterface $view)
+    private function listenIndefinitelyOnSocket($socketIdentifier, ViewInterface $view)
     {
         if (file_exists($socketIdentifier)) {
             unlink($socketIdentifier);
@@ -214,7 +258,7 @@ class ConsoleRunner
      * @param TemplatePaths $paths
      * @return string
      */
-    protected function parseTemplatePathAndFilenameFromHeaders($input, TemplatePaths $paths)
+    private function parseTemplatePathAndFilenameFromHeaders($input, TemplatePaths $paths)
     {
         if (strpos($input, "\000") !== false) {
             return $this->parseTemplatePathAndFilenameFromScgiHeaders($input);
@@ -227,7 +271,7 @@ class ConsoleRunner
      * @param TemplatePaths $paths
      * @return string
      */
-    protected function parseTemplatePathAndFilenameFromProcessedHeaders($input, TemplatePaths $paths)
+    private function parseTemplatePathAndFilenameFromProcessedHeaders($input, TemplatePaths $paths)
     {
         $matches = [];
         preg_match('/^GET ([^\s]+)/', $input, $matches);
@@ -235,7 +279,8 @@ class ConsoleRunner
         if (substr($uri, -1) === '/') {
             $uri .= 'index.html';
         }
-        $templateRootPath = reset($paths->getTemplateRootPaths());
+        $templateRootPaths = $paths->getTemplateRootPaths();
+        $templateRootPath = reset($templateRootPaths);
         $templateRootPath = rtrim($templateRootPath, '/');
         return $templateRootPath . $uri;
     }
@@ -244,7 +289,7 @@ class ConsoleRunner
      * @param string $input
      * @return string
      */
-    protected function parseTemplatePathAndFilenameFromScgiHeaders($input)
+    private function parseTemplatePathAndFilenameFromScgiHeaders($input)
     {
         $lines = explode("\000", $input);
         $parameters = [];
@@ -258,7 +303,7 @@ class ConsoleRunner
      * @param string $response
      * @param int $code
      */
-    protected function createErrorResponse($response, $code)
+    private function createErrorResponse($response, $code)
     {
         $headers = [
             'HTTP/1.1 ' . $code . ' ' . $response,
@@ -270,7 +315,7 @@ class ConsoleRunner
      * @param string $response
      * @return string
      */
-    protected function createResponse($response)
+    private function createResponse($response)
     {
         $headers = [
             'HTTP/1.1 200 OK',
@@ -288,19 +333,19 @@ class ConsoleRunner
      * @param ViewInterface $view
      * @return string
      */
-    protected function renderSocketRequest($templatePathAndFilename, ViewInterface $view)
+    private function renderSocketRequest($templatePathAndFilename, ViewInterface $view)
     {
         $view->getTemplatePaths()->setTemplatePathAndFilename($templatePathAndFilename);
         return $view->render();
     }
 
     /**
-     * @param array $arguments
-     * @return array
+     * @param string[] $arguments
+     * @param string[] $allowed
+     * @return array<string, mixed>
      */
-    protected function parseAndValidateInputArguments(array $arguments)
+    private function parseAndValidateInputArguments(array $arguments, array $allowed)
     {
-        $allowed = $this->getAllowedParameterNames();
         $argumentPointer = false;
         $parsed = [];
         foreach ($arguments as $argument) {
@@ -335,18 +380,9 @@ class ConsoleRunner
     }
 
     /**
-     * @return array
-     */
-    protected function getAllowedParameterNames()
-    {
-        $reflection = new \ReflectionClass($this);
-        return array_values($reflection->getConstants());
-    }
-
-    /**
      * @return string
      */
-    public function dumpHelpHeader()
+    private function dumpHelpHeader()
     {
         return PHP_EOL .
             '----------------------------------------------------------------------------------------------' . PHP_EOL .
@@ -356,14 +392,25 @@ class ConsoleRunner
     }
 
     /**
-     * @return string
+     * @param array<string, string> $commands
      */
-    public function dumpSupportedParameters()
+    private function dumpSupportedCommands(array $commands): string
     {
-        $parameters = $this->getAllowedParameterNames();
+        $commandString = 'Supported commands:' . PHP_EOL . PHP_EOL;
+        foreach ($commands as $name => $description) {
+            $commandString .= "\t" . 'bin/fluid ' . str_pad($name, 20, ' ') . ' # ' . $description . PHP_EOL;
+        }
+        return $commandString . PHP_EOL;
+    }
+
+    /**
+     * @param array<string, string> $parameters
+     */
+    private function dumpSupportedParameters(array $parameters): string
+    {
         $parameterString = 'Supported parameters:' . PHP_EOL . PHP_EOL;
-        foreach ($parameters as $parameter) {
-            $parameterString .= "\t" . '--' . str_pad($parameter, 20, ' ') . ' # ' . $this->argumentDescriptions[$parameter] . PHP_EOL;
+        foreach ($parameters as $name => $description) {
+            $parameterString .= "\t" . '--' . str_pad($name, 20, ' ') . ' # ' . $description . PHP_EOL;
         }
         return $parameterString . PHP_EOL;
     }
@@ -371,42 +418,42 @@ class ConsoleRunner
     /**
      * @return string
      */
-    public function dumpusageExample()
+    private function dumpRunExamples()
     {
         return <<< HELP
 Use the CLI utility in the following modes:
 
 Interactive mode:
 
-    ./bin/fluid
+    ./bin/fluid run
     (enter fluid template code, then enter key, then ctrl+d to send the input)
 
 Or using STDIN:
 
-    cat mytemplatefile.html | ./bin/fluid
+    cat mytemplatefile.html | ./bin/fluid run
 
 Or using parameters:
 
-    ./bin/fluid --template mytemplatefile.html
+    ./bin/fluid run --template mytemplatefile.html
 
 To specify multiple values, for example for the templateRootPaths argument:
 
-    ./bin/fluid --templateRootPaths /path/to/first/ /path/to/second/ "/path/with spaces/"
+    ./bin/fluid run --templateRootPaths /path/to/first/ /path/to/second/ "/path/with spaces/"
 
 To specify variables, use any JSON source - string of JSON, local file or URI, or class
 name of a PHP class implementing DataProviderInterface:
 
-    ./bin/fluid --variables /path/to/fluidvariables.json
+    ./bin/fluid run --variables /path/to/fluidvariables.json
 
-    ./bin/fluid --variables unix:/path/to/unixpipe
+    ./bin/fluid run --variables unix:/path/to/unixpipe
 
-    ./bin/fluid --variables http://offsite.com/variables.json
+    ./bin/fluid run --variables http://offsite.com/variables.json
 
-    ./bin/fluid --variables `cat /path/to/fluidvariables.json`
+    ./bin/fluid run --variables `cat /path/to/fluidvariables.json`
 
-    ./bin/fluid --variables "TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider"
+    ./bin/fluid run --variables "TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider"
 
-    ./bin/fluid --variables "TYPO3Fluid\Fluid\Core\Variables\JSONVariableProvider:/path/to/file.json"
+    ./bin/fluid run --variables "TYPO3Fluid\Fluid\Core\Variables\JSONVariableProvider:/path/to/file.json"
 
 When specifying a VariableProvider class name it is possible to additionally add a
 simple string value which gets passed to the VariableProvider through ->setSource()
@@ -415,22 +462,22 @@ for each VariableProvider to know which source types are supported.
 
 Cache warmup can be triggered by calling:
 
-    ./bin/fluid --warmup --cacheDirectory "/path/to/cache"
+    ./bin/fluid run --warmup --cacheDirectory "/path/to/cache"
 
 And should you require it you can pass the class name of a custom RenderingContext (which can return a
 custom FluidCacheWarmer instance!):
 
-    ./bin/fluid --warmup --renderingContext "My\\Custom\\RenderingContext"
+    ./bin/fluid run --warmup --renderingContext "My\\Custom\\RenderingContext"
 
 Furthermore, should you require special bootstrapping of a framework, you can specify
 an entry point containing a bootstrap (with or without output, does not matter) which
 will be required/included as part of the initialisation.
 
-    ./bin/fluid --warmup --renderingContext "My\\Custom\\RenderingContext" --bootstrap /path/to/bootstrap.php
+    ./bin/fluid run --warmup --renderingContext "My\\Custom\\RenderingContext" --bootstrap /path/to/bootstrap.php
 
 Or using a public, static function on a class which bootstraps:
 
-    ./bin/fluid --warmup --renderingContext "My\\Custom\\RenderingContext" --bootstrap MyBootstrapClass::bootstrapMethod
+    ./bin/fluid run --warmup --renderingContext "My\\Custom\\RenderingContext" --bootstrap MyBootstrapClass::bootstrapMethod
 
 When passing a class-and-method bootstrap it is important that the method has no
 required arguments and is possible to call as static method.
@@ -441,7 +488,7 @@ a bootstrapper which does not cause output if you intend to render templates.
 A WebSocket mode is available. When starting the CLI utility in WebSocket mode,
 very basic HTTP requests are rendered directly by listening on an IP:PORT combination:
 
-    sudo ./bin/fluid --socket 0.0.0.0:8080 --templateRootPaths /path/to/files/
+    sudo ./bin/fluid run --socket 0.0.0.0:8080 --templateRootPaths /path/to/files/
 
 Pointing your browser to http://localhost:8080 should then render the requested
 file from the given path, defaulting to `index.html` when URI ends in `/`.
@@ -456,7 +503,7 @@ as would be done through for example Apache or Nginx.
 An additional SocketServer mode is available. When started in SocketServer mode,
 the CLI utility can be used as upstream (SCGI currently) in Nginx:
 
-    sudo ./bin/fluid --socket /var/run/fluid.sock
+    sudo ./bin/fluid run --socket /var/run/fluid.sock
 
 Example SCGI config for Nginx:
 

@@ -23,5 +23,4 @@ try {
     echo $runner->handleCommand($argv);
 } catch (InvalidArgumentException $error) {
     echo PHP_EOL . 'ERROR! ' . $error->getMessage() . PHP_EOL . PHP_EOL;
-    echo $runner->dumpSupportedParameters();
 }
