@@ -60,7 +60,7 @@ final class SchemaGenerator
                 if ($argumentDefinition->isRequired()) {
                     $xsdAttribute->addAttribute('use', 'required');
                 } else {
-                    $xsdAttribute->addAttribute('default', $this->encodeFluidVariable($default));
+                    $xsdAttribute->addAttribute('default', $this->createFluidRepresentation($default));
                 }
 
                 // Add PHP type to documentation text
@@ -118,12 +118,12 @@ final class SchemaGenerator
         }
     }
 
-    private function encodeFluidVariable(mixed $input, bool $isRoot = true): string
+    private function createFluidRepresentation(mixed $input, bool $isRoot = true): string
     {
         if (is_array($input)) {
             $fluidArray = [];
             foreach ($input as $key => $value) {
-                $fluidArray[] = $this->encodeFluidVariable($key, false) . ': ' . $this->encodeFluidVariable($value, false);
+                $fluidArray[] = $this->createFluidRepresentation($key, false) . ': ' . $this->createFluidRepresentation($value, false);
             }
             return '{' . implode(', ', $fluidArray) . '}';
         }
