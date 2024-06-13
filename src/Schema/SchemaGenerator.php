@@ -25,10 +25,10 @@ final class SchemaGenerator
 
             $xsdElement->addAttribute('name', $metadata->tagName);
 
-            // Add deprecation information to ViewHelper documentation
             $documentation = $metadata->documentation;
+            // Add deprecation information to ViewHelper documentation
             if (isset($metadata->docTags['@deprecated'])) {
-                $documentation .= "\n..  attention::\n**Deprecated** " . $metadata->docTags['@deprecated'];
+                $documentation .= "\n@deprecated " . $metadata->docTags['@deprecated'];
             }
             $documentation = trim($documentation);
 

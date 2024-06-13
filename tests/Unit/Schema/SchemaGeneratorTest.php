@@ -94,7 +94,7 @@ class SchemaGeneratorTest extends UnitTestCase
                 '<?xml version="1.0" encoding="UTF-8"?>' . "\n" .
                 '<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://typo3.org/ns/Vendor/Package/ViewHelpers">' .
                 '<xsd:element name="myViewHelper">' .
-                '<xsd:annotation><xsd:documentation><![CDATA[..  attention::' . "\n" . '**Deprecated** since 1.2.3, will be removed in 2.0.0]]></xsd:documentation></xsd:annotation>' .
+                '<xsd:annotation><xsd:documentation><![CDATA[@deprecated since 1.2.3, will be removed in 2.0.0]]></xsd:documentation></xsd:annotation>' .
                 '<xsd:complexType mixed="true">' .
                 '<xsd:sequence><xsd:any minOccurs="0"/></xsd:sequence>' .
                 '</xsd:complexType>' .
