@@ -17,13 +17,15 @@
     },
     "require-dev": {
         "ext-json": "*",
+        "ext-simplexml": "*",
         "friendsofphp/php-cs-fixer": "^3.54.0",
         "phpstan/phpstan": "^1.10.14",
         "phpstan/phpstan-phpunit": "^1.3.11",
         "phpunit/phpunit": "^10.2.6"
     },
     "suggest": {
-        "ext-json": "PHP JSON is needed when using JSONVariableProvider: A relatively rare use case"
+        "ext-json": "PHP JSON is needed when using JSONVariableProvider: A relatively rare use case",
+        "ext-simplexml": "SimpleXML is required for the XSD schema generator"
     },
     "autoload": {
         "psr-4": {
