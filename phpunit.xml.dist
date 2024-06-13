@@ -17,9 +17,11 @@
     <testsuites>
         <testsuite name="Unit">
             <directory>tests/Unit</directory>
+            <directory suffix=".phpt">tests/Unit</directory>
         </testsuite>
         <testsuite name="Functional">
             <directory>tests/Functional</directory>
+            <directory suffix=".phpt">tests/Functional</directory>
         </testsuite>
     </testsuites>
     <php>
