@@ -140,6 +140,12 @@ final class SchemaGenerator
             return 'NULL';
         }
 
+        // Generally, this wouldn't be correct, since it's not the correct representation,
+        // but in the context of XSD files we merely need to provide *any* string representation
+        if (is_object($input)) {
+            return '';
+        }
+
         return (string)$input;
     }
 }
