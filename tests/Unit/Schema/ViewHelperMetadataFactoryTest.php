@@ -13,6 +13,14 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Schema\ViewHelperMetadataFactory;
+use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\Sub\ArbitraryArgumentsViewHelper;
+use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\Sub\DeprecatedViewHelper;
+use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\WithDocumentationViewHelper;
+use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\WithoutClassSuffix;
+use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\WithoutDocumentationViewHelper;
+use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\WithoutInterfaceViewHelper;
+use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\WrongDirectoryViewHelper;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class ViewHelperMetadataFactoryTest extends UnitTestCase
@@ -21,7 +29,7 @@ class ViewHelperMetadataFactoryTest extends UnitTestCase
     {
         return [
             'WithoutDocumentationViewHelper' => [
-                'TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers\\WithoutDocumentationViewHelper',
+                WithoutDocumentationViewHelper::class,
                 'TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers',
                 'WithoutDocumentationViewHelper',
                 'withoutDocumentation',
@@ -31,7 +39,7 @@ class ViewHelperMetadataFactoryTest extends UnitTestCase
                 false,
             ],
             'WithDocumentationViewHelper' => [
-                'TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers\\WithDocumentationViewHelper',
+                WithDocumentationViewHelper::class,
                 'TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers',
                 'WithDocumentationViewHelper',
                 'withDocumentation',
@@ -41,7 +49,7 @@ class ViewHelperMetadataFactoryTest extends UnitTestCase
                 false,
             ],
             'DeprecatedViewHelper' => [
-                'TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers\\Sub\\DeprecatedViewHelper',
+                DeprecatedViewHelper::class,
                 'TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers',
                 'Sub\\DeprecatedViewHelper',
                 'sub.deprecated',
@@ -51,7 +59,7 @@ class ViewHelperMetadataFactoryTest extends UnitTestCase
                 false,
             ],
             'ArbitraryArgumentsViewHelper' => [
-                'TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers\\Sub\\ArbitraryArgumentsViewHelper',
+                ArbitraryArgumentsViewHelper::class,
                 'TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers',
                 'Sub\\ArbitraryArgumentsViewHelper',
                 'sub.arbitraryArguments',
@@ -94,10 +102,10 @@ class ViewHelperMetadataFactoryTest extends UnitTestCase
     {
         return [
             'NonexistentViewHelper' => ['TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers\\NonexistentViewHelper'],
-            'WithoutInterfaceViewHelper' => ['TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers\\WithoutInterfaceViewHelper'],
-            'WithoutClassSuffix' => ['TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers\\WithoutClassSuffix'],
-            'AbstractViewHelper' => ['TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers\\AbstractViewHelper'],
-            'WrongDirectoryViewHelper' => ['TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\WrongDirectoryViewHelper'],
+            'WithoutInterfaceViewHelper' => [WithoutInterfaceViewHelper::class],
+            'WithoutClassSuffix' => [WithoutClassSuffix::class],
+            'AbstractViewHelper' => [AbstractViewHelper::class],
+            'WrongDirectoryViewHelper' => [WrongDirectoryViewHelper::class],
         ];
     }
 
