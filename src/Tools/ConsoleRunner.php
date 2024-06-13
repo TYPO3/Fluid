@@ -134,7 +134,7 @@ final class ConsoleRunner
             $groupedByNamespace[$viewHelper->xmlNamespace][] = $viewHelper;
         }
 
-        $destination = (isset($arguments[self::ARGUMENT_DESTINATION])) ? rtrim($arguments[self::ARGUMENT_DESTINATION], '/') . '/' : './';
+        $destination = rtrim($arguments[self::ARGUMENT_DESTINATION] ?? '.', '/') . '/';
         if (!file_exists($destination)) {
             mkdir($destination, recursive: true);
         } elseif (!is_dir($destination)) {
