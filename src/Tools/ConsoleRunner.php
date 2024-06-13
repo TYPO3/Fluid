@@ -442,18 +442,6 @@ final class ConsoleRunner
     }
 
     /**
-     * @param array<string, string> $parameters
-     */
-    private function dumpSupportedParameters(array $parameters): string
-    {
-        $parameterString = 'Supported parameters:' . PHP_EOL . PHP_EOL;
-        foreach ($parameters as $name => $description) {
-            $parameterString .= "\t" . '--' . str_pad($name, 20, ' ') . ' # ' . $description . PHP_EOL;
-        }
-        return $parameterString . PHP_EOL;
-    }
-
-    /**
      * @param array<string, string> $commands
      */
     private function dumpSupportedCommands(array $commands): string
@@ -463,6 +451,18 @@ final class ConsoleRunner
             $commandString .= "\t" . 'bin/fluid ' . str_pad($name, 20, ' ') . ' # ' . $description . PHP_EOL;
         }
         return $commandString . PHP_EOL;
+    }
+
+    /**
+     * @param array<string, string> $parameters
+     */
+    private function dumpSupportedParameters(array $parameters): string
+    {
+        $parameterString = 'Supported parameters:' . PHP_EOL . PHP_EOL;
+        foreach ($parameters as $name => $description) {
+            $parameterString .= "\t" . '--' . str_pad($name, 20, ' ') . ' # ' . $description . PHP_EOL;
+        }
+        return $parameterString . PHP_EOL;
     }
 
     /**
