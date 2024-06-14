@@ -151,7 +151,18 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * @api
      * @deprecated No longer necessary since arbitrary arguments are possible; will be removed with next major version
      */
-    protected function registerUniversalTagAttributes() {}
+    protected function registerUniversalTagAttributes()
+    {
+        $this->registerTagAttribute('class', 'string', 'CSS class(es) for this element');
+        $this->registerTagAttribute('dir', 'string', 'Text direction for this HTML element. Allowed strings: "ltr" (left to right), "rtl" (right to left)');
+        $this->registerTagAttribute('id', 'string', 'Unique (in this file) identifier for this HTML element.');
+        $this->registerTagAttribute('lang', 'string', 'Language for this element. Use short names specified in RFC 1766');
+        $this->registerTagAttribute('style', 'string', 'Individual CSS styles for this element');
+        $this->registerTagAttribute('title', 'string', 'Tooltip text of element');
+        $this->registerTagAttribute('accesskey', 'string', 'Keyboard shortcut to access this element');
+        $this->registerTagAttribute('tabindex', 'integer', 'Specifies the tab order of this element');
+        $this->registerTagAttribute('onclick', 'string', 'JavaScript evaluated for the onclick event');
+    }
 
     public function handleAdditionalArguments(array $arguments)
     {
