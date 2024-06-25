@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -80,10 +82,8 @@ final class TagBasedTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider renderTagBasedViewHelperDataProvider
-     */
+    #[DataProvider('renderTagBasedViewHelperDataProvider')]
+    #[Test]
     public function renderTagBasedViewHelper(string $source, string $expected): void
     {
         $view = new TemplateView();
@@ -114,10 +114,8 @@ final class TagBasedTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider throwsErrorForInvalidArgumentTypesDatProvider
-     */
+    #[DataProvider('throwsErrorForInvalidArgumentTypesDatProvider')]
+    #[Test]
     public function throwsErrorForInvalidArgumentTypes(string $source): void
     {
         self::expectException(\InvalidArgumentException::class);

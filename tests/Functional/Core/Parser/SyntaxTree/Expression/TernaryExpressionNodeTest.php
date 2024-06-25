@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Parser\SyntaxTree\Expression;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -245,10 +247,8 @@ final class TernaryExpressionNodeTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider variableConditionDataProvider
-     */
+    #[DataProvider('variableConditionDataProvider')]
+    #[Test]
     public function variableCondition(string $source, array $variables, $expected): void
     {
         $view = new TemplateView();

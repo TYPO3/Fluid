@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Parsing;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -32,10 +34,8 @@ final class CommaToleranceTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider commaToleranceDataProvider
-     */
+    #[DataProvider('commaToleranceDataProvider')]
+    #[Test]
     public function commaTolerance(string $source, $expected): void
     {
         $view = new TemplateView();

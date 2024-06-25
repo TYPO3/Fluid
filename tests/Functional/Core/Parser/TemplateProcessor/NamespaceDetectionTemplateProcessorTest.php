@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Parser\TemplateProcessor;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\NamespaceDetectionTemplateProcessor;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
@@ -94,10 +96,8 @@ final class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider preProcessSourceExtractsNamespacesDataProvider
-     * @test
-     */
+    #[DataProvider('preProcessSourceExtractsNamespacesDataProvider')]
+    #[Test]
     public function preProcessSourceExtractsNamespaces(string $templateSource, array $expectedNamespaces, string $expectedSource): void
     {
         $viewHelperResolver = new ViewHelperResolver();

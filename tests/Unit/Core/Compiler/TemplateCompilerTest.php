@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
@@ -20,9 +21,7 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 final class TemplateCompilerTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function isWarmupModeReturnsTrueAfterEnterWarmupModeHasBeenCalled(): void
     {
         $subject = new TemplateCompiler();
@@ -31,9 +30,7 @@ final class TemplateCompilerTest extends UnitTestCase
         self::assertTrue($subject->isWarmupMode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getRenderingContextReturnsPreviouslySetRenderingContext(): void
     {
         $subject = new TemplateCompiler();
@@ -42,9 +39,7 @@ final class TemplateCompilerTest extends UnitTestCase
         self::assertSame($renderingContextMock, $subject->getRenderingContext());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function hasReturnsFalseWithoutCache(): void
     {
         $renderingContextMock = $this->createMock(RenderingContextInterface::class);
@@ -55,9 +50,7 @@ final class TemplateCompilerTest extends UnitTestCase
         self::assertFalse($subject->has('test'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function hasReturnsTrueWithCache(): void
     {
         $cacheMock = $this->createMock(SimpleFileCache::class);
@@ -70,9 +63,7 @@ final class TemplateCompilerTest extends UnitTestCase
         self::assertTrue($subject->has('test'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function wrapViewHelperNodeArgumentEvaluationInClosureCreatesExpectedString(): void
     {
         $arguments = ['value' => new TextNode('sometext')];
@@ -86,9 +77,7 @@ final class TemplateCompilerTest extends UnitTestCase
         self::assertEquals($expected, $subject->wrapViewHelperNodeArgumentEvaluationInClosure($viewHelperNodeMock, 'value'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function storeReturnsNullIfDisabled(): void
     {
         $renderingContextMock = $this->createMock(RenderingContextInterface::class);
@@ -98,9 +87,7 @@ final class TemplateCompilerTest extends UnitTestCase
         self::assertNull($subject->store('foobar', new ParsingState()));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testStoreSavesUncompilableState(): void
     {
         $cacheMock = $this->createMock(SimpleFileCache::class);
@@ -115,18 +102,14 @@ final class TemplateCompilerTest extends UnitTestCase
         $subject->store('fakeidentifier', $parsingStateMock);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function disableThrowsException(): void
     {
         $this->expectException(StopCompilingException::class);
         (new TemplateCompiler())->disable();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getRenderingContextGetsPreviouslySetRenderingContext(): void
     {
         $renderingContextMock = $this->createMock(RenderingContextInterface::class);
@@ -135,9 +118,7 @@ final class TemplateCompilerTest extends UnitTestCase
         self::assertSame($renderingContextMock, $subject->getRenderingContext());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function variableNameReturnsIncrementedName(): void
     {
         $subject = new TemplateCompiler();

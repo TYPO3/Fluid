@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\View;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -23,9 +24,7 @@ use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
 
 class AbstractTemplateViewTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function getRenderingContextReturnsPreviouslySetRenderingContext(): void
     {
         $renderingContext = $this->createMock(RenderingContextInterface::class);
@@ -35,9 +34,7 @@ class AbstractTemplateViewTest extends UnitTestCase
         self::assertSame($renderingContext, $subject->getRenderingContext());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getViewHelperResolverReturnsViewHelperResolverFromRenderingContext(): void
     {
         $renderingContext = $this->createMock(RenderingContextInterface::class);
@@ -49,9 +46,7 @@ class AbstractTemplateViewTest extends UnitTestCase
         self::assertSame($viewHelperResolver, $subject->getViewHelperResolver());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function assignAddsValueToTemplateVariableContainer(): void
     {
         $renderingContext = $this->createMock(RenderingContextInterface::class);
@@ -72,9 +67,7 @@ class AbstractTemplateViewTest extends UnitTestCase
         $subject->assign('foo', 'FooValue')->assign('bar', 'BarValue');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function assignCanOverridePreviouslyAssignedValues(): void
     {
         $renderingContext = $this->createMock(RenderingContextInterface::class);
@@ -95,9 +88,7 @@ class AbstractTemplateViewTest extends UnitTestCase
         $subject->assign('foo', 'FooValue')->assign('foo', 'FooValueOverridden');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function assignMultipleAddsValuesToTemplateVariableContainer(): void
     {
         $renderingContext = $this->createMock(RenderingContextInterface::class);
@@ -119,9 +110,7 @@ class AbstractTemplateViewTest extends UnitTestCase
         $subject->assignMultiple(['foo' => 'FooValue', 'bar' => 'BarValue'])->assignMultiple(['baz' => 'BazValue']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function assignMultipleCanOverridePreviouslyAssignedValues(): void
     {
         $renderingContext = $this->createMock(RenderingContextInterface::class);
@@ -143,9 +132,7 @@ class AbstractTemplateViewTest extends UnitTestCase
         $subject->assign('foo', 'FooValue')->assignMultiple(['foo' => 'FooValueOverridden', 'bar' => 'BarValue']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function renderSectionThrowsExceptionIfSectionMissingAndNotIgnoringUnknownWithNotCompiledTemplate(): void
     {
         $this->expectException(InvalidSectionException::class);
@@ -163,9 +150,7 @@ class AbstractTemplateViewTest extends UnitTestCase
         $subject->renderSection('Missing');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function renderSectionThrowsExceptionIfSectionMissingAndNotIgnoringUnknownWithCompiledTemplate(): void
     {
         $this->expectException(InvalidSectionException::class);
@@ -183,9 +168,7 @@ class AbstractTemplateViewTest extends UnitTestCase
         $subject->renderSection('Missing');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function renderSectionOnCompiledTemplateDoesNotThrowExceptionWhenIgnoreUnknownIsTrue(): void
     {
         $renderingContext = $this->createMock(RenderingContextInterface::class);

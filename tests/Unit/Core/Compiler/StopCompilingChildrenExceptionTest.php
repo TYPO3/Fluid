@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingChildrenException;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
@@ -17,9 +18,7 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
  */
 final class StopCompilingChildrenExceptionTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function setAndGetReplacementString(): void
     {
         $subject = new StopCompilingChildrenException();

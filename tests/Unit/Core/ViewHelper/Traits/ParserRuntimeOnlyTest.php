@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Traits;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Traits\Fixtures\ParserRuntimeOnlyFixture;
@@ -19,17 +20,13 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
  */
 final class ParserRuntimeOnlyTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function renderReturnsNull(): void
     {
         self::assertNull((new ParserRuntimeOnlyFixture())->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function compileReturnsEmptyString(): void
     {
         $initializationPhpCode = '';

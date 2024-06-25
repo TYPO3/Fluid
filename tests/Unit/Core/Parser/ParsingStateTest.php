@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
@@ -17,9 +18,7 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 final class ParsingStateTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function getIdentifierReturnsPreviouslySetIdentifier(): void
     {
         $subject = new ParsingState();
@@ -27,9 +26,7 @@ final class ParsingStateTest extends UnitTestCase
         self::assertSame('foo', $subject->getIdentifier());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setRootNodeCanBeReadOutAgain(): void
     {
         $subject = new ParsingState();
@@ -38,9 +35,7 @@ final class ParsingStateTest extends UnitTestCase
         self::assertSame($rootNode, $subject->getRootNode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function pushAndGetFromStackWorks(): void
     {
         $subject = new ParsingState();
@@ -50,9 +45,7 @@ final class ParsingStateTest extends UnitTestCase
         self::assertSame($rootNode, $subject->popNodeFromStack());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function renderCallsTheRightMethodsOnTheRootNode(): void
     {
         $subject = new ParsingState();
@@ -64,9 +57,7 @@ final class ParsingStateTest extends UnitTestCase
         self::assertSame('T3DD09 Rock!', $renderedValue);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getLayoutNameReturnsLayoutNameFromVariableProvider(): void
     {
         $subject = new ParsingState();
@@ -74,9 +65,7 @@ final class ParsingStateTest extends UnitTestCase
         self::assertEquals('test', $subject->getLayoutName(new RenderingContext()));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function isCompilableReturnsPreviouslySetCompilableState(): void
     {
         $subject = new ParsingState();

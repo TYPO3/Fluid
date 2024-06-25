@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper;
@@ -24,10 +26,8 @@ final class ViewHelperInvokerTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider getInvocationTestValues
-     */
+    #[DataProvider('getInvocationTestValues')]
+    #[Test]
     public function testInvokeViewHelper(string $viewHelperClassName, array $arguments, string $expectedOutput): void
     {
         $invoker = new ViewHelperInvoker();

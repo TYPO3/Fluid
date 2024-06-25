@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
@@ -16,9 +18,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 final class RenderViewHelperTest extends AbstractFunctionalTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function exceptionForOptionalSetToFalseAndNoTargetGiven(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -29,9 +29,7 @@ final class RenderViewHelperTest extends AbstractFunctionalTestCase
         $view->render();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function exceptionForInvalidDelegate(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -42,9 +40,7 @@ final class RenderViewHelperTest extends AbstractFunctionalTestCase
         $view->render();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function exceptionForMissingPartial(): void
     {
         $this->expectException(InvalidTemplateResourceException::class);
@@ -57,9 +53,7 @@ final class RenderViewHelperTest extends AbstractFunctionalTestCase
         $view->render();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function exceptionForMissingSection(): void
     {
         $this->expectException(InvalidSectionException::class);
@@ -125,10 +119,8 @@ final class RenderViewHelperTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider renderDataProvider
-     */
+    #[DataProvider('renderDataProvider')]
+    #[Test]
     public function render(string $template, array $arguments, string $expected): void
     {
         $view = new TemplateView();

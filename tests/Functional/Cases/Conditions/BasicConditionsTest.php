@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Conditions;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -47,10 +49,8 @@ final class BasicConditionsTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider basicConditionDataProvider
-     */
+    #[DataProvider('basicConditionDataProvider')]
+    #[Test]
     public function basicCondition(string $source, bool $expected): void
     {
         $source = '<f:if condition="' . $source . '" then="yes" else="no" />';

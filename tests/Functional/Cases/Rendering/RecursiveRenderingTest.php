@@ -9,14 +9,13 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
 final class RecursiveRenderingTest extends AbstractFunctionalTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function recursiveSectionRenderingClonesVariableStorageAndRestoresAfterLoop(): void
     {
         $source = file_get_contents(__DIR__ . '/../../Fixtures/Templates/RecursiveSectionRendering.html');
@@ -71,9 +70,7 @@ final class RecursiveRenderingTest extends AbstractFunctionalTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function recursivePartialRenderingClonesVariableStorageAndRestoresAfterLoop(): void
     {
         $partialPath = __DIR__ . '/../../Fixtures/Partials/';

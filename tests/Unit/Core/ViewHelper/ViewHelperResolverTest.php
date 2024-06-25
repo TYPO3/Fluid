@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
@@ -16,9 +18,7 @@ use TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper;
 
 final class ViewHelperResolverTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function addNamespaceWithStringRecordsNamespace(): void
     {
         $subject = new ViewHelperResolver();
@@ -26,9 +26,7 @@ final class ViewHelperResolverTest extends UnitTestCase
         self::assertSame(['test'], $subject->getNamespaces()['t']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addNamespaceWithArrayRecordsNamespace(): void
     {
         $subject = new ViewHelperResolver();
@@ -36,9 +34,7 @@ final class ViewHelperResolverTest extends UnitTestCase
         self::assertSame(['test'], $subject->getNamespaces()['t']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addNamespaceWithNullDoesNotChoke(): void
     {
         $subject = new ViewHelperResolver();
@@ -46,9 +42,7 @@ final class ViewHelperResolverTest extends UnitTestCase
         self::assertSame(['f' => ['TYPO3Fluid\Fluid\ViewHelpers'], 'ignored' => null], $subject->getNamespaces());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addNamespaceWithNullTwiceDoesNotChoke(): void
     {
         $subject = new ViewHelperResolver();
@@ -57,9 +51,7 @@ final class ViewHelperResolverTest extends UnitTestCase
         self::assertSame(['f' => ['TYPO3Fluid\\Fluid\\ViewHelpers'], 'ignored' => null], $subject->getNamespaces());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addNamespaceWithNullAndThenValidValueConvertsToNotIgnoredNamespace(): void
     {
         $subject = new ViewHelperResolver();
@@ -68,9 +60,7 @@ final class ViewHelperResolverTest extends UnitTestCase
         self::assertSame(['f' => ['TYPO3Fluid\\Fluid\\ViewHelpers'], 'ignored' => ['Foo\\Bar']], $subject->getNamespaces());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addNamespaceDoesNotThrowAnExceptionIfTheAliasExistAlreadyAndPointsToTheSamePhpNamespace(): void
     {
         $subject = new ViewHelperResolver();
@@ -80,9 +70,7 @@ final class ViewHelperResolverTest extends UnitTestCase
         self::assertSame(['f' => ['TYPO3Fluid\Fluid\ViewHelpers'], 'foo' => ['Some\Namespace']], $subject->getNamespaces());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setNamespacesSetsNamespaces(): void
     {
         $subject = new ViewHelperResolver();
@@ -90,9 +78,7 @@ final class ViewHelperResolverTest extends UnitTestCase
         self::assertSame(['t' => ['test']], $subject->getNamespaces());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setNamespacesConvertsStringNamespaceToArray(): void
     {
         $subject = new ViewHelperResolver();
@@ -111,10 +97,8 @@ final class ViewHelperResolverTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider isNamespaceValidReturnsExpectedValueDataProvider
-     */
+    #[DataProvider('isNamespaceValidReturnsExpectedValueDataProvider')]
+    #[Test]
     public function isNamespaceValidReturnsExpectedValue(array $namespaces, string $namespace, bool $expected): void
     {
         $subject = new ViewHelperResolver();
@@ -132,10 +116,8 @@ final class ViewHelperResolverTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider isNamespaceIgnoredReturnsExpectedValueDataProvider
-     */
+    #[DataProvider('isNamespaceIgnoredReturnsExpectedValueDataProvider')]
+    #[Test]
     public function isNamespaceIgnoredReturnsExpectedValue(array $namespaces, string $namespace, bool $expected): void
     {
         $subject = new ViewHelperResolver();
@@ -153,10 +135,8 @@ final class ViewHelperResolverTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider isNamespaceValidOrIgnoredReturnsExpectedValueDataProvider
-     */
+    #[DataProvider('isNamespaceValidOrIgnoredReturnsExpectedValueDataProvider')]
+    #[Test]
     public function isNamespaceValidOrIgnoredReturnsExpectedValue(array $namespaces, string $namespace, bool $expected): void
     {
         $subject = new ViewHelperResolver();
@@ -164,9 +144,7 @@ final class ViewHelperResolverTest extends UnitTestCase
         self::assertSame($expected, $subject->isNamespaceValidOrIgnored($namespace));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function resolveViewHelperClassNameThrowsExceptionIfClassNotResolved(): void
     {
         $this->expectException(Exception::class);
@@ -174,9 +152,7 @@ final class ViewHelperResolverTest extends UnitTestCase
         $subject->resolveViewHelperClassName('f', 'invalid');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function resolveViewHelperClassNameSupportsMultipleNamespaces(): void
     {
         $subject = new ViewHelperResolver();
@@ -186,9 +162,7 @@ final class ViewHelperResolverTest extends UnitTestCase
         self::assertSame('TYPO3Fluid\\Fluid\\ViewHelpers\\RenderViewHelper', $subject->resolveViewHelperClassName('f', 'render'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function resolveViewHelperClassNameDoesNotChokeOnNullInMultipleNamespaces(): void
     {
         $subject = new ViewHelperResolver();
@@ -198,9 +172,7 @@ final class ViewHelperResolverTest extends UnitTestCase
         self::assertSame('TYPO3Fluid\\Fluid\\ViewHelpers\\RenderViewHelper', $subject->resolveViewHelperClassName('f', 'render'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function resolveViewHelperClassNameTrimsBackslashSuffixFromNamespace(): void
     {
         $subject = new ViewHelperResolver();
@@ -217,19 +189,15 @@ final class ViewHelperResolverTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider resolvePhpNamespaceFromFluidNamespaceDataProvider
-     */
+    #[DataProvider('resolvePhpNamespaceFromFluidNamespaceDataProvider')]
+    #[Test]
     public function resolvePhpNamespaceFromFluidNamespace(string $input, string $expected): void
     {
         $subject = new ViewHelperResolver();
         self::assertSame($expected, $subject->resolvePhpNamespaceFromFluidNamespace($input));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function createViewHelperInstanceCreatesInstance(): void
     {
         $subject = new ViewHelperResolver();

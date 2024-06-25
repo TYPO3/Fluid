@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers\Format;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use stdClass;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
@@ -49,10 +51,8 @@ final class StripTagsViewHelperTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider renderDataProvider
-     */
+    #[DataProvider('renderDataProvider')]
+    #[Test]
     public function render(string $template, string $expected): void
     {
         $view = new TemplateView();
@@ -69,9 +69,8 @@ final class StripTagsViewHelperTest extends AbstractFunctionalTestCase
     /**
      * Ensures that objects are handled properly:
      * + class having __toString() method gets tags stripped off
-     *
-     * @test
      */
+    #[Test]
     public function renderEscapesObjectIfPossible(): void
     {
         $toStringClass = new class () {
@@ -103,10 +102,8 @@ final class StripTagsViewHelperTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider throwsExceptionForInvalidInputDataProvider
-     */
+    #[DataProvider('throwsExceptionForInvalidInputDataProvider')]
+    #[Test]
     public function throwsExceptionForInvalidInput(mixed $value, int $expectedExceptionCode, string $expectedExceptionMessage): void
     {
         self::expectExceptionCode($expectedExceptionCode);

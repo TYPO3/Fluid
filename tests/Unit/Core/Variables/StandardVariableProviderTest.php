@@ -9,24 +9,22 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Variables\Fixtures\StandardVariableProviderModelFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 final class StandardVariableProviderTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function getSourceReturnsEmptyArray(): void
     {
         $subject = new StandardVariableProvider();
         self::assertSame([], $subject->getSource());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getSourceReturnsPreviouslySetSource(): void
     {
         $subject = new StandardVariableProvider();
@@ -34,9 +32,7 @@ final class StandardVariableProviderTest extends UnitTestCase
         self::assertSame(['foo' => 'bar'], $subject->getSource());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getSourceReturnsPreviouslyAddedVariables(): void
     {
         $subject = new StandardVariableProvider();
@@ -45,18 +41,14 @@ final class StandardVariableProviderTest extends UnitTestCase
         self::assertSame(['name' => 'Simon', 'org' => 'TYPO3'], $subject->getSource());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getAllReturnsEmptyArray(): void
     {
         $subject = new StandardVariableProvider();
         self::assertSame([], $subject->getAll());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getAllReturnsPreviouslySetSource(): void
     {
         $subject = new StandardVariableProvider();
@@ -64,9 +56,7 @@ final class StandardVariableProviderTest extends UnitTestCase
         self::assertSame(['foo' => 'bar'], $subject->getAll());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getAllReturnsPreviouslyAddedVariables(): void
     {
         $subject = new StandardVariableProvider();
@@ -75,18 +65,14 @@ final class StandardVariableProviderTest extends UnitTestCase
         self::assertSame(['name' => 'Simon', 'org' => 'TYPO3'], $subject->getAll());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getAllIdentifiersReturnsEmptyArray(): void
     {
         $subject = new StandardVariableProvider();
         self::assertSame([], $subject->getAllIdentifiers());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getAllIdentifiersReturnsKeysOfPreviouslySetSource(): void
     {
         $subject = new StandardVariableProvider();
@@ -94,9 +80,7 @@ final class StandardVariableProviderTest extends UnitTestCase
         self::assertSame(['foo'], $subject->getAllIdentifiers());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getAllIdentifiersReturnsKeysOfPreviouslyAddedVariables(): void
     {
         $subject = new StandardVariableProvider();
@@ -105,18 +89,14 @@ final class StandardVariableProviderTest extends UnitTestCase
         self::assertSame(['name', 'org'], $subject->getAllIdentifiers());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getReturnsNullWithNotExistingVariable(): void
     {
         $variableProvider = new StandardVariableProvider();
         self::assertNull($variableProvider->get('nonexistent'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getReturnsPreviouslyAddedVariable(): void
     {
         $subject = new StandardVariableProvider();
@@ -124,9 +104,7 @@ final class StandardVariableProviderTest extends UnitTestCase
         self::assertSame($subject->get('variable'), 'someString');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getAsArrayAccessReturnsPreviouslySetVariable(): void
     {
         $subject = new StandardVariableProvider();
@@ -134,9 +112,7 @@ final class StandardVariableProviderTest extends UnitTestCase
         self::assertSame($subject['variable'], 'someString');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function existsReturnsTrueWithPreviouslyAddedVariable(): void
     {
         $subject = new StandardVariableProvider();
@@ -144,9 +120,7 @@ final class StandardVariableProviderTest extends UnitTestCase
         self::assertTrue($subject->exists('variable'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function existsAsArrayAccessReturnsTrueWithPreviouslyAddedVariable(): void
     {
         $subject = new StandardVariableProvider();
@@ -154,9 +128,7 @@ final class StandardVariableProviderTest extends UnitTestCase
         self::assertTrue(isset($subject['variable']));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function unsetAsArrayAccessRemovesVariable(): void
     {
         $subject = new StandardVariableProvider();
@@ -165,9 +137,7 @@ final class StandardVariableProviderTest extends UnitTestCase
         self::assertFalse($subject->exists('variable'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function removeReallyRemovesVariables(): void
     {
         $subject = new StandardVariableProvider();
@@ -176,9 +146,7 @@ final class StandardVariableProviderTest extends UnitTestCase
         self::assertNull($subject->get('variable'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function sleepReturnsArrayWithVariableKey(): void
     {
         $subject = new StandardVariableProvider();
@@ -186,9 +154,7 @@ final class StandardVariableProviderTest extends UnitTestCase
         self::assertContains('variables', $properties);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getScopeCopyReturnsCopyWithSettings(): void
     {
         $subject = new StandardVariableProvider(['foo' => 'bar', 'settings' => ['baz' => 'bam']]);
@@ -196,9 +162,7 @@ final class StandardVariableProviderTest extends UnitTestCase
         self::assertSame(['bar' => 'foo', 'settings' => ['baz' => 'bam']], $copy->getAll());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testSupportsDottedPath(): void
     {
         $provider = new StandardVariableProvider();
@@ -460,9 +424,9 @@ final class StandardVariableProviderTest extends UnitTestCase
 
     /**
      * @param mixed $expected
-     * @test
-     * @dataProvider getPathTestValues
      */
+    #[DataProvider('getPathTestValues')]
+    #[Test]
     public function getByPathReturnsExpectedValues(array $variables, string $path, $expected): void
     {
         $subject = new StandardVariableProvider();

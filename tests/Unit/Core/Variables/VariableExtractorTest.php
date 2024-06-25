@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithoutToString;
@@ -43,9 +45,9 @@ final class VariableExtractorTest extends UnitTestCase
     /**
      * @param mixed $subject
      * @param mixed $expected
-     * @test
-     * @dataProvider getPathTestValues
      */
+    #[DataProvider('getPathTestValues')]
+    #[Test]
     public function testGetByPath($subject, string $path, $expected): void
     {
         $result = VariableExtractor::extract($subject, $path);
@@ -73,9 +75,9 @@ final class VariableExtractorTest extends UnitTestCase
 
     /**
      * @param mixed $subject
-     * @test
-     * @dataProvider getAccessorsForPathTestValues
      */
+    #[DataProvider('getAccessorsForPathTestValues')]
+    #[Test]
     public function testGetAccessorsForPath($subject, string $path, array $expected): void
     {
         $result = VariableExtractor::extractAccessors($subject, $path);
@@ -99,18 +101,16 @@ final class VariableExtractorTest extends UnitTestCase
     /**
      * @param mixed $subject
      * @param mixed $accessor
-     * @test
-     * @dataProvider getExtractRedectAccessorTestValues
      */
+    #[DataProvider('getExtractRedectAccessorTestValues')]
+    #[Test]
     public function testExtractRedetectsAccessorIfUnusableAccessorPassed($subject, string $path, $accessor, string $expected): void
     {
         $result = VariableExtractor::extract($subject, $path, [$accessor]);
         self::assertEquals($expected, $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testExtractCallsMagicMethodGetters(): void
     {
         $subject = new ClassWithMagicGetter();

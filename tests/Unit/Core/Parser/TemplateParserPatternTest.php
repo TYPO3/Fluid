@@ -9,15 +9,15 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\Patterns;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\NamespaceDetectionTemplateProcessor;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 final class TemplateParserPatternTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function testSCAN_PATTERN_NAMESPACEDECLARATION(): void
     {
         self::assertEquals(preg_match(NamespaceDetectionTemplateProcessor::NAMESPACE_DECLARATION, '{namespace acme=Acme.MyPackage\Bla\blubb}'), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (1).');
@@ -28,9 +28,7 @@ final class TemplateParserPatternTest extends UnitTestCase
         self::assertEquals(preg_match(NamespaceDetectionTemplateProcessor::NAMESPACE_DECLARATION, '\{namespace typo3 = TYPO3.TYPO3\Bla3\Blubb }'), 0, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did match a namespace declaration even if it was escaped. (2)');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testSPLIT_PATTERN_DYNAMICTAGS(): void
     {
         $pattern = Patterns::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS;
@@ -77,9 +75,7 @@ final class TemplateParserPatternTest extends UnitTestCase
         self::assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_DYNAMICTAGS pattern did not split the input string correctly with custom multi-part namespace identifier.');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testSCAN_PATTERN_DYNAMICTAG(): void
     {
         $pattern = Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG;
@@ -160,9 +156,7 @@ final class TemplateParserPatternTest extends UnitTestCase
         self::assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly with complex attributes and > inside the attributes.');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testSCAN_PATTERN_CLOSINGDYNAMICTAG(): void
     {
         $pattern = Patterns::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG;
@@ -171,9 +165,7 @@ final class TemplateParserPatternTest extends UnitTestCase
         self::assertEquals(preg_match($pattern, '</t:bla>'), 1, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does not match a unknown namespace tag it should match.');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testSPLIT_PATTERN_TAGARGUMENTS(): void
     {
         $pattern = Patterns::$SPLIT_PATTERN_TAGARGUMENTS;
@@ -182,9 +174,7 @@ final class TemplateParserPatternTest extends UnitTestCase
         self::assertEquals('data-foo', $matches[3]['Argument']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testSPLIT_PATTERN_SHORTHANDSYNTAX(): void
     {
         $pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX;
@@ -234,9 +224,7 @@ final class TemplateParserPatternTest extends UnitTestCase
         self::assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with a custom multi-part namespace identifier.(10)');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testSPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER(): void
     {
         $pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER;
@@ -313,9 +301,7 @@ final class TemplateParserPatternTest extends UnitTestCase
         self::assertEquals($matches, $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testSCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS(): void
     {
         $pattern = Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS;
@@ -372,10 +358,8 @@ final class TemplateParserPatternTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS
-     * @test
-     */
+    #[DataProvider('dataProviderSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS')]
+    #[Test]
     public function testSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS(string $string): void
     {
         $success = preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $string, $matches) === 1;
@@ -392,19 +376,15 @@ final class TemplateParserPatternTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderInvalidSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS
-     * @test
-     */
+    #[DataProvider('dataProviderInvalidSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS')]
+    #[Test]
     public function SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS_doesNotMatchInvalidSyntax(string $string): void
     {
         $success = preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $string, $matches) === 1;
         self::assertFalse($success);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS(): void
     {
         $pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
@@ -444,9 +424,7 @@ final class TemplateParserPatternTest extends UnitTestCase
         self::assertEquals($expected, $matches, 'The regular expression splitting the array apart does not work!');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS_matchesQuotedKeys(): void
     {
         $pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
@@ -584,10 +562,8 @@ final class TemplateParserPatternTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderValidArrayExpressionsBeginningAndEndingOnDigits
-     * @test
-     */
+    #[DataProvider('dataProviderValidArrayExpressionsBeginningAndEndingOnDigits')]
+    #[Test]
     public function SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS_matchesKeysEndingInDigits(string $expression, array $expected): void
     {
         $pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
@@ -609,10 +585,8 @@ final class TemplateParserPatternTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderInvalidSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS
-     * @test
-     */
+    #[DataProvider('dataProviderInvalidSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS')]
+    #[Test]
     public function SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS_doesNotMatchInvalidSyntax(string $string): void
     {
         $pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
@@ -622,9 +596,8 @@ final class TemplateParserPatternTest extends UnitTestCase
 
     /**
      * Test the SCAN_PATTERN_CDATA which should detect <![CDATA[...]]> (with no leading or trailing spaces!)
-     *
-     * @test
      */
+    #[Test]
     public function testSCAN_PATTERN_CDATA(): void
     {
         $pattern = Patterns::$SCAN_PATTERN_CDATA;

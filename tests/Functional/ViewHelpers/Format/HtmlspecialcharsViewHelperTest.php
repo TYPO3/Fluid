@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers\Format;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
@@ -17,9 +19,7 @@ use TYPO3Fluid\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper;
 
 final class HtmlspecialcharsViewHelperTest extends AbstractFunctionalTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function renderDoesNotModifySourceIfItIsAnObjectThatCantBeConvertedToAString(): void
     {
         $user = new UserWithoutToString('Xaver <b>Cross-Site</b>');
@@ -30,9 +30,7 @@ final class HtmlspecialcharsViewHelperTest extends AbstractFunctionalTestCase
         self::assertSame($user, $view->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function viewHelperDeactivatesEscapingInterceptor(): void
     {
         self::assertFalse((new HtmlspecialcharsViewHelper())->isOutputEscapingEnabled());
@@ -152,10 +150,8 @@ final class HtmlspecialcharsViewHelperTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider renderDataProvider
-     */
+    #[DataProvider('renderDataProvider')]
+    #[Test]
     public function render(string $template, array $variables, $expected): void
     {
         $view = new TemplateView();

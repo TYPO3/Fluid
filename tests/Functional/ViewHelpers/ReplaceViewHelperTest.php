@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ArrayAccessExample;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\IterableExample;
@@ -70,10 +72,8 @@ final class ReplaceViewHelperTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider throwsExceptionForInvalidArgumentDataProvider
-     */
+    #[DataProvider('throwsExceptionForInvalidArgumentDataProvider')]
+    #[Test]
     public function throwsExceptionForInvalidArgument(string $template, array $variables, int $exceptionCode, string $exceptionMessage): void
     {
         self::expectException(\InvalidArgumentException::class);
@@ -134,10 +134,8 @@ final class ReplaceViewHelperTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider renderDataProvider
-     */
+    #[DataProvider('renderDataProvider')]
+    #[Test]
     public function render(string $template, array $variables, string $expected): void
     {
         $view = new TemplateView();

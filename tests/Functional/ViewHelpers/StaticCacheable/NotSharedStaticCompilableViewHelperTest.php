@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers\StaticCacheable;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
@@ -18,9 +19,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
  */
 final class NotSharedStaticCompilableViewHelperTest extends AbstractFunctionalTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function renderWithNotSharedCompilableViewHelper(): void
     {
         // @todo If the test with the mocked ViewHelperResolver is executed standalone, it fails and shows the broken

@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
@@ -41,10 +43,8 @@ class AbstractViewHelperTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider getFirstElementOfNonEmptyTestValues
-     * @test
-     */
+    #[DataProvider('getFirstElementOfNonEmptyTestValues')]
+    #[Test]
     public function getFirstElementOfNonEmptyReturnsExpectedValue(mixed $input, string|null $expected): void
     {
         $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods([])->getMock();
@@ -52,9 +52,7 @@ class AbstractViewHelperTest extends UnitTestCase
         self::assertEquals($expected, $method->invoke($subject, $input));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function overrideArgumentOverwritesExistingArgumentDefinition(): void
     {
         $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods([])->getMock();
@@ -68,9 +66,7 @@ class AbstractViewHelperTest extends UnitTestCase
         self::assertEquals($expected, $subject->prepareArguments());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function registeringTheSameArgumentNameAgainThrowsException(): void
     {
         $this->expectException(\Exception::class);
@@ -80,9 +76,7 @@ class AbstractViewHelperTest extends UnitTestCase
         $method->invoke($subject, 'someName', 'integer', 'desc', true);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function overrideArgumentThrowsExceptionWhenTryingToOverwriteAnNonexistingArgument(): void
     {
         $this->expectException(\Exception::class);
@@ -91,9 +85,7 @@ class AbstractViewHelperTest extends UnitTestCase
         $method->invoke($subject, 'argumentName', 'string', 'description', true);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function validateArgumentsAcceptsAllObjectsImplementingArrayAccessAsAnArray(): void
     {
         $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods(['prepareArguments'])->getMock();
@@ -102,9 +94,7 @@ class AbstractViewHelperTest extends UnitTestCase
         $subject->validateArguments();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setRenderingContextShouldSetInnerVariables(): void
     {
         $templateVariableContainer = $this->createMock(VariableProviderInterface::class);
@@ -120,9 +110,7 @@ class AbstractViewHelperTest extends UnitTestCase
         self::assertSame($viewHelperVariableContainer, $property->getValue($subject));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function renderChildrenCallsRenderChildrenClosureIfSet(): void
     {
         $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods([])->getMock();
@@ -146,10 +134,8 @@ class AbstractViewHelperTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider validateArgumentsErrorsDataProvider
-     */
+    #[DataProvider('validateArgumentsErrorsDataProvider')]
+    #[Test]
     public function validateArgumentsErrors(ArgumentDefinition $argument, array|string|object $value): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -160,9 +146,7 @@ class AbstractViewHelperTest extends UnitTestCase
         $subject->validateArguments();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function validateAdditionalArgumentsThrowsExceptionIfNotEmpty(): void
     {
         $this->expectException(Exception::class);
@@ -171,9 +155,7 @@ class AbstractViewHelperTest extends UnitTestCase
         $subject->validateAdditionalArguments(['foo' => 'bar']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testCompileReturnsAndAssignsExpectedPhpCode(): void
     {
         $context = new RenderingContext();
@@ -185,9 +167,7 @@ class AbstractViewHelperTest extends UnitTestCase
         self::assertEquals(get_class($subject) . '::renderStatic(foobar, baz, $renderingContext)', $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testCallRenderMethodCanRenderViewHelperWithoutRenderMethodAndCallsRenderStatic(): void
     {
         $subject = new RenderMethodFreeViewHelper();
@@ -197,9 +177,7 @@ class AbstractViewHelperTest extends UnitTestCase
         self::assertSame('I was rendered', $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testCallRenderMethodOnViewHelperWithoutRenderMethodWithDefaultRenderStaticMethodThrowsException(): void
     {
         $this->expectException(Exception::class);

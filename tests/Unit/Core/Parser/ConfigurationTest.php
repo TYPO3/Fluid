@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
@@ -16,9 +17,7 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 final class ConfigurationTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function testAddInterceptor(): void
     {
         $interceptor = new Escape();
@@ -28,9 +27,7 @@ final class ConfigurationTest extends UnitTestCase
         self::assertContains($interceptor, $interceptors);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testAddEscapingInterceptor(): void
     {
         $interceptor = new Escape();

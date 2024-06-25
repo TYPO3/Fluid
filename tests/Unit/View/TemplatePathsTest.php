@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\View;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
@@ -31,10 +33,8 @@ final class TemplatePathsTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider sanitizePathDataProvider
-     */
+    #[DataProvider('sanitizePathDataProvider')]
+    #[Test]
     public function sanitizePath(string|array $input, string|array $expected): void
     {
         $subject = new TemplatePaths();
@@ -52,10 +52,8 @@ final class TemplatePathsTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider sanitizePathsDataProvider
-     */
+    #[DataProvider('sanitizePathsDataProvider')]
+    #[Test]
     public function sanitizePaths(array $input, array $expected): void
     {
         $subject = new TemplatePaths();
@@ -64,9 +62,7 @@ final class TemplatePathsTest extends BaseTestCase
         self::assertSame($expected, $output);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getLayoutPathAndFilenameReturnsPreviouslySetLayoutPathAndFilename(): void
     {
         $subject = new TemplatePaths();
@@ -83,10 +79,8 @@ final class TemplatePathsTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider getGetterAndSetterTestValues
-     * @test
-     */
+    #[DataProvider('getGetterAndSetterTestValues')]
+    #[Test]
     public function testGetterAndSetter(string $property, array $value): void
     {
         $getter = 'get' . ucfirst($property);
@@ -97,18 +91,14 @@ final class TemplatePathsTest extends BaseTestCase
         self::assertSame($value, $subject->$getter());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testFillByPackageName(): void
     {
         $instance = new TemplatePaths('TYPO3Fluid.Fluid');
         self::assertNotEmpty($instance->getTemplateRootPaths());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testFillByConfigurationArray(): void
     {
         $instance = new TemplatePaths([
@@ -129,10 +119,8 @@ final class TemplatePathsTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider getResolveFilesMethodTestValues
-     * @test
-     */
+    #[DataProvider('getResolveFilesMethodTestValues')]
+    #[Test]
     public function testResolveFilesMethodCallsResolveFilesInFolders(string $method, string $pathsMethod): void
     {
         $subject = $this->getMockBuilder(TemplatePaths::class)->onlyMethods(['resolveFilesInFolders'])->getMock();
@@ -141,9 +129,7 @@ final class TemplatePathsTest extends BaseTestCase
         $subject->$method('format', 'format');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testToArray(): void
     {
         $subject = $this->getMockBuilder(TemplatePaths::class)->onlyMethods(['sanitizePath'])->getMock();
@@ -160,9 +146,7 @@ final class TemplatePathsTest extends BaseTestCase
         self::assertEquals($expected, $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testResolveFilesInFolders(): void
     {
         $subject = new TemplatePaths();
@@ -182,9 +166,7 @@ final class TemplatePathsTest extends BaseTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testGetTemplateSourceThrowsExceptionIfFileNotFound(): void
     {
         $this->expectException(InvalidTemplateResourceException::class);
@@ -192,9 +174,7 @@ final class TemplatePathsTest extends BaseTestCase
         $instance->getTemplateSource();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testGetTemplateSourceReadsStreamWrappers(): void
     {
         $fixture = __DIR__ . '/Fixtures/LayoutFixture.html';
@@ -205,9 +185,7 @@ final class TemplatePathsTest extends BaseTestCase
         fclose($stream);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testResolveFileInPathsThrowsExceptionIfFileNotFound(): void
     {
         $this->expectException(InvalidTemplateResourceException::class);
@@ -216,9 +194,7 @@ final class TemplatePathsTest extends BaseTestCase
         $method->invoke($instance, ['/not/', '/found/'], 'notfound.html');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testGetTemplateIdentifierReturnsSourceChecksumWithControllerAndActionAndFormat(): void
     {
         $instance = new TemplatePaths();
@@ -226,9 +202,7 @@ final class TemplatePathsTest extends BaseTestCase
         self::assertSame('source_d78fda63144c5c84_DummyController_dummyAction_html', $instance->getTemplateIdentifier('DummyController', 'dummyAction'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testActionTemplateWithControllerAndAction(): void
     {
         $subject = new TemplatePaths();
@@ -240,9 +214,7 @@ final class TemplatePathsTest extends BaseTestCase
         self::assertStringStartsWith('ARandomController_action_TestTemplate_', $identifier);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testActionTemplateWithEmptyController(): void
     {
         $subject = new TemplatePaths();

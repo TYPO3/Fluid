@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Interceptor;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
@@ -20,9 +21,7 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 final class EscapeTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function processDoesNotDisableEscapingInterceptorByDefault(): void
     {
         $viewHelperMock = $this->createMock(AbstractViewHelper::class);
@@ -36,9 +35,7 @@ final class EscapeTest extends UnitTestCase
         self::assertTrue($property->getValue($subject));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function processDisablesEscapingInterceptorIfViewHelperDisablesIt(): void
     {
         $viewHelperMock = $this->createMock(AbstractViewHelper::class);
@@ -52,9 +49,7 @@ final class EscapeTest extends UnitTestCase
         self::assertFalse($property->getValue($subject));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function processWrapsCurrentViewHelperInEscapeNode(): void
     {
         $mockNode = $this->createMock(ObjectAccessorNode::class);

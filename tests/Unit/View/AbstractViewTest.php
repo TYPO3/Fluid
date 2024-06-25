@@ -9,23 +9,20 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\View;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Unit\View\Fixtures\AbstractViewTestFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class AbstractViewTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function renderReturnsEmptyString(): void
     {
         $subject = new AbstractViewTestFixture();
         self::assertSame('', $subject->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testAssignsVariableAndReturnsSelf(): void
     {
         $subject = new AbstractViewTestFixture();
@@ -33,9 +30,7 @@ class AbstractViewTest extends UnitTestCase
         self::assertSame(['test' => 'foobar'], $subject->variables);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testAssignsMultipleVariablesAndReturnsSelf(): void
     {
         $subject = new AbstractViewTestFixture();

@@ -9,14 +9,13 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
 final class NestedFluidTemplatesWithLayoutTest extends AbstractFunctionalTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function nestedTemplateRenderingWithDifferentLayoutPaths(): void
     {
         $source = '<f:layout name="Layout"/><f:section name="main"><f:format.raw>{anotherFluidTemplateContent}</f:format.raw></f:section>';

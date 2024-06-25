@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Variables\ChainedVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
@@ -29,10 +31,8 @@ final class ChainedVariableProviderTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider getGetTestValues
-     * @test
-     */
+    #[DataProvider('getGetTestValues')]
+    #[Test]
     public function getReturnsPreviouslySetSourceVariables(array $local, array $chain, string $path, string|null $expected): void
     {
         $subject = new ChainedVariableProvider($chain);
@@ -40,10 +40,8 @@ final class ChainedVariableProviderTest extends UnitTestCase
         self::assertEquals($expected, $subject->get($path));
     }
 
-    /**
-     * @dataProvider getGetTestValues
-     * @test
-     */
+    #[DataProvider('getGetTestValues')]
+    #[Test]
     public function getByPathReturnsPreviouslySetSourceVariables(array $local, array $chain, string $path, string|null $expected): void
     {
         $subject = new ChainedVariableProvider($chain);
@@ -63,10 +61,8 @@ final class ChainedVariableProviderTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider getAllReturnsPreviouslySetSourceVariablesDataProvider
-     * @test
-     */
+    #[DataProvider('getAllReturnsPreviouslySetSourceVariablesDataProvider')]
+    #[Test]
     public function getAllReturnsPreviouslySetSourceVariables(array $local, array $chain, array $expected): void
     {
         $subject = new ChainedVariableProvider($chain);
@@ -86,10 +82,8 @@ final class ChainedVariableProviderTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider getAllIdentifiersReturnsPreviouslySetSourceIdentifiersDataProvider
-     * @test
-     */
+    #[DataProvider('getAllIdentifiersReturnsPreviouslySetSourceIdentifiersDataProvider')]
+    #[Test]
     public function getAllIdentifiersReturnsPreviouslySetSourceIdentifiers(array $local, array $chain, array $expected): void
     {
         $subject = new ChainedVariableProvider($chain);
@@ -97,9 +91,7 @@ final class ChainedVariableProviderTest extends UnitTestCase
         self::assertEquals($expected, $subject->getAllIdentifiers());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getScopeCopyKeepsExistingVariableProviders(): void
     {
         $chain = [new StandardVariableProvider(['a' => 'a']), new StandardVariableProvider()];

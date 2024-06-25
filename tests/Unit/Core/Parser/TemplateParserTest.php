@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
@@ -40,9 +42,7 @@ use TYPO3Fluid\Fluid\ViewHelpers\CommentViewHelper;
  */
 final class TemplateParserTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function testInitializeViewHelperAndAddItToStackReturnsFalseIfNamespaceIgnored(): void
     {
         $resolver = $this->createMock(ViewHelperResolver::class);
@@ -56,9 +56,7 @@ final class TemplateParserTest extends UnitTestCase
         self::assertNull($result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testInitializeViewHelperAndAddItToStackThrowsExceptionIfNamespaceInvalid(): void
     {
         $this->expectException(UnknownNamespaceException::class);
@@ -74,9 +72,7 @@ final class TemplateParserTest extends UnitTestCase
         self::assertNull($result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testClosingViewHelperTagHandlerReturnsFalseIfNamespaceIgnored(): void
     {
         $resolver = $this->createMock(ViewHelperResolver::class);
@@ -90,9 +86,7 @@ final class TemplateParserTest extends UnitTestCase
         self::assertFalse($result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testClosingViewHelperTagHandlerThrowsExceptionIfNamespaceInvalid(): void
     {
         $this->expectException(UnknownNamespaceException::class);
@@ -108,9 +102,7 @@ final class TemplateParserTest extends UnitTestCase
         self::assertFalse($result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function isEscapingEnabledReturnsPreviouslySetEscapingEnabled(): void
     {
         $subject = new TemplateParser();
@@ -121,9 +113,7 @@ final class TemplateParserTest extends UnitTestCase
         self::assertTrue($subject->isEscapingEnabled());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testBuildObjectTreeThrowsExceptionOnUnclosedViewHelperTag(): void
     {
         $this->expectException(Exception::class);
@@ -135,9 +125,7 @@ final class TemplateParserTest extends UnitTestCase
         $method->invoke($subject, ['<f:render>'], TemplateParser::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testParseCallsPreProcessOnTemplateProcessors(): void
     {
         $subject = new TemplateParser();
@@ -153,9 +141,7 @@ final class TemplateParserTest extends UnitTestCase
         self::assertEquals('final', $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getOrParseAndStoreTemplateSetsAndStoresUncompilableStateInCache(): void
     {
         $parsedTemplate = new ParsingState();
@@ -180,9 +166,7 @@ final class TemplateParserTest extends UnitTestCase
         self::assertFalse($parsedTemplate->isCompilable());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function parseThrowsExceptionWhenStringArgumentMissing(): void
     {
         $this->expectException(\Exception::class);
@@ -201,10 +185,8 @@ final class TemplateParserTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider quotedStrings
-     * @test
-     */
+    #[DataProvider('quotedStrings')]
+    #[Test]
     public function unquoteStringReturnsUnquotedStrings(string $quoted, string $unquoted): void
     {
         $subject = new TemplateParser();
@@ -220,10 +202,8 @@ final class TemplateParserTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider templatesToSplit
-     * @test
-     */
+    #[DataProvider('templatesToSplit')]
+    #[Test]
     public function splitTemplateAtDynamicTagsReturnsCorrectlySplitTemplate(string $templateName): void
     {
         $template = file_get_contents(__DIR__ . '/Fixtures/' . $templateName . '.html');
@@ -233,9 +213,7 @@ final class TemplateParserTest extends UnitTestCase
         self::assertSame($expectedResult, $method->invoke($subject, $template));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function buildObjectTreeCreatesRootNodeAndSetsUpParsingState(): void
     {
         $context = new RenderingContext();
@@ -246,9 +224,7 @@ final class TemplateParserTest extends UnitTestCase
         self::assertInstanceOf(ParsingState::class, $method->invoke($subject, [], TemplateParser::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function closingViewHelperTagHandlerThrowsExceptionBecauseOfClosingTagWhichWasNeverOpened(): void
     {
         $this->expectException(\Exception::class);
@@ -261,9 +237,7 @@ final class TemplateParserTest extends UnitTestCase
         $method->invoke($subject, $mockState, 'f', 'render');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function closingViewHelperTagHandlerThrowsExceptionBecauseOfWrongTagNesting(): void
     {
         $this->expectException(\Exception::class);
@@ -274,9 +248,7 @@ final class TemplateParserTest extends UnitTestCase
         $method->invoke($subject, $mockState, 'f', 'render');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function objectAccessorHandlerCreatesObjectAccessorNodeWithExpectedValueAndAddsItToStack(): void
     {
         $mockNodeOnStack = $this->createMock(NodeInterface::class);
@@ -288,9 +260,7 @@ final class TemplateParserTest extends UnitTestCase
         $method->invoke($subject, $mockState, 'objectAccessorString', '', '', '');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function valuesFromObjectAccessorsAreRunThroughEscapingInterceptorsByDefault(): void
     {
         $objectAccessorNodeInterceptor = $this->createMock(InterceptorInterface::class);
@@ -310,9 +280,7 @@ final class TemplateParserTest extends UnitTestCase
         $method->invoke($subject, $mockState, 'objectAccessorString', '', '', '');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function valuesFromObjectAccessorsAreNotRunThroughEscapingInterceptorsIfEscapingIsDisabled(): void
     {
         $parserConfiguration = $this->createMock(Configuration::class);
@@ -329,9 +297,7 @@ final class TemplateParserTest extends UnitTestCase
         $method->invoke($subject, $mockState, 'objectAccessorString', '', '', '');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function valuesFromObjectAccessorsAreRunThroughInterceptors(): void
     {
         $objectAccessorNodeInterceptor = $this->createMock(InterceptorInterface::class);
@@ -361,10 +327,8 @@ final class TemplateParserTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider parseArgumentsWorksAsExpectedDataProvider
-     */
+    #[DataProvider('parseArgumentsWorksAsExpectedDataProvider')]
+    #[Test]
     public function parseArgumentsWorksAsExpected(string $argumentsString, array $expected): void
     {
         $context = new RenderingContext();
@@ -377,9 +341,7 @@ final class TemplateParserTest extends UnitTestCase
         self::assertSame($expected, $method->invoke($subject, $argumentsString, $viewHelper));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function buildArgumentObjectTreeReturnsTextNodeForSimplyString(): void
     {
         $subject = new TemplateParser();
@@ -387,9 +349,7 @@ final class TemplateParserTest extends UnitTestCase
         $this->assertInstanceof(TextNode::class, $method->invoke($subject, 'a very plain string'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function buildArgumentObjectTreeBuildsObjectTreeForComplexString(): void
     {
         $objectTree = $this->createMock(ParsingState::class);
@@ -403,9 +363,7 @@ final class TemplateParserTest extends UnitTestCase
         self::assertEquals('theRootNode', $method->invoke($subject, 'a <very> {complex} string'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function arrayHandlerAddsArrayNodeWithProperContentToStack(): void
     {
         $nodeMock = $this->createMock(NodeInterface::class);
@@ -418,9 +376,7 @@ final class TemplateParserTest extends UnitTestCase
         $method->invoke($subject, $parsingStateMock, ['arrayText']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function textNodesAreRunThroughEscapingInterceptorsByDefault(): void
     {
         $textInterceptor = $this->createMock(InterceptorInterface::class);
@@ -439,9 +395,7 @@ final class TemplateParserTest extends UnitTestCase
         $method->invoke($subject, $parsingStateMock, 'string');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function textNodesAreNotRunThroughEscapingInterceptorsIfEscapingIsDisabled(): void
     {
         $parserConfiguration = $this->createMock(Configuration::class);
@@ -574,10 +528,8 @@ final class TemplateParserTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProviderRecursiveArrayHandler
-     * @test
-     */
+    #[DataProvider('dataProviderRecursiveArrayHandler')]
+    #[Test]
     public function testRecursiveArrayHandler(string $string, array $expected): void
     {
         $state = new ParsingState();
@@ -594,9 +546,7 @@ final class TemplateParserTest extends UnitTestCase
         self::assertEquals($expected, $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function abortIfRequiredArgumentsAreMissingThrowsException(): void
     {
         $this->expectException(Exception::class);
@@ -609,9 +559,7 @@ final class TemplateParserTest extends UnitTestCase
         $method->invoke($subject, $expected, []);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function abortIfRequiredArgumentsAreMissingDoesNotThrowExceptionIfRequiredArgumentExists(): void
     {
         $expectedArguments = [
@@ -628,9 +576,7 @@ final class TemplateParserTest extends UnitTestCase
         self::assertTrue(true);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function booleanArgumentsMustBeConvertedIntoBooleanNodes(): void
     {
         $argumentDefinitions = [
