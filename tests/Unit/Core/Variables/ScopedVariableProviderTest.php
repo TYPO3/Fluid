@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Variables\ScopedVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
@@ -42,10 +44,8 @@ final class ScopedVariableProviderTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider getAllDataProvider
-     */
+    #[DataProvider('getAllDataProvider')]
+    #[Test]
     public function getAllVariables(array $globalVariables, array $localVariables, array $result): void
     {
         $variableProvider = new ScopedVariableProvider(
@@ -82,10 +82,8 @@ final class ScopedVariableProviderTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider getAllIdentifiersDataProvider
-     */
+    #[DataProvider('getAllIdentifiersDataProvider')]
+    #[Test]
     public function getAllIdentifiers(array $globalVariables, array $localVariables, array $result): void
     {
         $variableProvider = new ScopedVariableProvider(
@@ -126,10 +124,8 @@ final class ScopedVariableProviderTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider getVariableDataProvider
-     */
+    #[DataProvider('getVariableDataProvider')]
+    #[Test]
     public function getVariable(array $globalVariables, array $localVariables, string $identifier, $result): void
     {
         $variableProvider = new ScopedVariableProvider(
@@ -212,10 +208,8 @@ final class ScopedVariableProviderTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider getVariableByPathDataProvider
-     */
+    #[DataProvider('getVariableByPathDataProvider')]
+    #[Test]
     public function getVariableByPath(array $globalVariables, array $localVariables, string $path, $result): void
     {
         $variableProvider = new ScopedVariableProvider(
@@ -256,10 +250,8 @@ final class ScopedVariableProviderTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider variableExistsDataProvider
-     */
+    #[DataProvider('variableExistsDataProvider')]
+    #[Test]
     public function variableExists(array $globalVariables, array $localVariables, string $identifier, bool $exists): void
     {
         $variableProvider = new ScopedVariableProvider(
@@ -269,9 +261,7 @@ final class ScopedVariableProviderTest extends UnitTestCase
         self::assertEquals($exists, $variableProvider->exists($identifier));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setVariableInConstructor()
     {
         $variableProvider = new ScopedVariableProvider(
@@ -282,9 +272,7 @@ final class ScopedVariableProviderTest extends UnitTestCase
         self::assertNull($variableProvider->getLocalVariableProvider()->get('globalVar'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addVariable()
     {
         $variableProvider = new ScopedVariableProvider(new StandardVariableProvider(), new StandardVariableProvider());
@@ -293,9 +281,7 @@ final class ScopedVariableProviderTest extends UnitTestCase
         self::assertEquals('global', $variableProvider->getLocalVariableProvider()->get('globalVar'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function removeVariable(): void
     {
         $variableProvider = new ScopedVariableProvider(
@@ -307,9 +293,7 @@ final class ScopedVariableProviderTest extends UnitTestCase
         self::assertNull($variableProvider->getLocalVariableProvider()->get('globalVar'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getScopedCopy(): void
     {
         $variableProvider = new ScopedVariableProvider(

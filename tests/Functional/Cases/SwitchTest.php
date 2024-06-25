@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -36,10 +38,8 @@ final class SwitchTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider ignoreTextAndWhitespacesDataProvider
-     */
+    #[DataProvider('ignoreTextAndWhitespacesDataProvider')]
+    #[Test]
     public function ignoreTextAndWhitespaces(string $source, string $notExpected): void
     {
         $view = new TemplateView();

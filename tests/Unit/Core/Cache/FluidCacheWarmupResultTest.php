@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Cache;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult;
 use TYPO3Fluid\Fluid\Core\Compiler\FailedCompilingState;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
@@ -16,9 +17,7 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 final class FluidCacheWarmupResultTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function mergeCombinesTwoResults(): void
     {
         $result1 = new FluidCacheWarmupResult();
@@ -45,9 +44,7 @@ final class FluidCacheWarmupResultTest extends UnitTestCase
         self::assertSame($expected, $subject->getResults());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function mergeOverridesExistingResult(): void
     {
         $result1 = new FluidCacheWarmupResult();
@@ -68,9 +65,7 @@ final class FluidCacheWarmupResultTest extends UnitTestCase
         self::assertSame($expected, $subject->getResults());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addWorksWithParsedTemplate(): void
     {
         $parsedTemplateMock = $this->createMock(ParsedTemplateInterface::class);
@@ -91,9 +86,7 @@ final class FluidCacheWarmupResultTest extends UnitTestCase
         self::assertSame($expected, $subject->getResults());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addWorksWithFailedCompilingState(): void
     {
         $failedCompilingStateMock = $this->createMock(FailedCompilingState::class);

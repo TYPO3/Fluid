@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects\WithCamelCaseGetter;
 use TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects\WithEverything;
@@ -86,10 +88,8 @@ final class DataAccessorTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider renderDataProvider
-     */
+    #[DataProvider('renderDataProvider')]
+    #[Test]
     public function render(string $template, array $variables, array $expected): void
     {
         $view = new TemplateView();
@@ -105,9 +105,7 @@ final class DataAccessorTest extends AbstractFunctionalTestCase
         self::assertSame($expected, json_decode($view->render(), true));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function renderThrowsExceptionAccessingPrivateProperty(): void
     {
         $this->expectException(\Throwable::class);

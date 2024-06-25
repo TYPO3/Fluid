@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree\Expression;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
@@ -18,9 +20,7 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 final class CastingExpressionNodeTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function testEvaluateDelegatesToEvaluteExpression(): void
     {
         $subject = new CastingExpressionNode('{test as string}', ['test as string']);
@@ -30,9 +30,7 @@ final class CastingExpressionNodeTest extends UnitTestCase
         self::assertSame('10', $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testEvaluateInvalidExpressionThrowsException(): void
     {
         $this->expectException(ExpressionException::class);
@@ -72,10 +70,10 @@ final class CastingExpressionNodeTest extends UnitTestCase
     }
 
     /**
-     * @dataProvider getEvaluateExpressionTestValues
      * @param mixed $expected
-     * @test
      */
+    #[DataProvider('getEvaluateExpressionTestValues')]
+    #[Test]
     public function testEvaluateExpression(string $expression, array $variables, $expected): void
     {
         $renderingContext = new RenderingContext();

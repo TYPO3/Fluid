@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
@@ -18,9 +20,7 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class AbstractNodeTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function evaluateChildNodesPassesRenderingContextToChildNodes(): void
     {
         $renderingContextMock = $this->createMock(RenderingContextInterface::class);
@@ -31,9 +31,7 @@ class AbstractNodeTest extends UnitTestCase
         $subject->evaluateChildNodes($renderingContextMock);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function evaluateChildNodesReturnsNullIfNoChildNodesExist(): void
     {
         $renderingContextMock = $this->createMock(RenderingContextInterface::class);
@@ -41,10 +39,8 @@ class AbstractNodeTest extends UnitTestCase
         self::assertNull($subject->evaluateChildNodes($renderingContextMock));
     }
 
-    /**
-     * @test
-     * @dataProvider getChildNodeThrowsExceptionFiChildNodeCannotBeCastToStringTestValues
-     */
+    #[DataProvider('getChildNodeThrowsExceptionFiChildNodeCannotBeCastToStringTestValues')]
+    #[Test]
     public function evaluateChildNodeThrowsExceptionIfChildNodeCannotBeCastToString(mixed $value, string $exceptionClass, int $exceptionCode, string $exceptionMessage): void
     {
         $this->expectException($exceptionClass);
@@ -68,9 +64,7 @@ class AbstractNodeTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function evaluateChildNodeCanCastToString(): void
     {
         $renderingContextMock = $this->createMock(RenderingContextInterface::class);
@@ -84,9 +78,7 @@ class AbstractNodeTest extends UnitTestCase
         self::assertEquals('foobar', $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function evaluateChildNodesConcatenatesOutputs(): void
     {
         $renderingContextMock = $this->createMock(RenderingContextInterface::class);
@@ -102,9 +94,7 @@ class AbstractNodeTest extends UnitTestCase
         self::assertEquals('foobar', $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function childNodeCanBeReadOutAgain(): void
     {
         $childNode = $this->createMock(NodeInterface::class);

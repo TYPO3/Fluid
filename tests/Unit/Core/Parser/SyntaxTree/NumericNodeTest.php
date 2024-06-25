@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
@@ -16,9 +17,7 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 final class NumericNodeTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function renderReturnsProperIntegerGivenInConstructor(): void
     {
         $renderingContext = new RenderingContext();
@@ -27,9 +26,7 @@ final class NumericNodeTest extends UnitTestCase
         self::assertEquals($node->evaluate($renderingContext), 1, 'The rendered value of a numeric node does not match the string given in the constructor.');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function renderReturnsProperFloatGivenInConstructor(): void
     {
         $renderingContext = new RenderingContext();
@@ -38,18 +35,14 @@ final class NumericNodeTest extends UnitTestCase
         self::assertEquals($node->evaluate($renderingContext), 1.1, 'The rendered value of a numeric node does not match the string given in the constructor.');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function constructorThrowsExceptionIfNoNumericGiven(): void
     {
         $this->expectException(Exception::class);
         new NumericNode('foo');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addChildNodeThrowsException(): void
     {
         $this->expectException(Exception::class);

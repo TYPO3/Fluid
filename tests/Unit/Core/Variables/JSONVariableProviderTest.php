@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Variables\JSONVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 
@@ -26,10 +28,8 @@ final class JSONVariableProviderTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider provideVariablesDataProvider
-     */
+    #[DataProvider('provideVariablesDataProvider')]
+    #[Test]
     public function provideVariables(string $input, array $expected): void
     {
         $provider = new JSONVariableProvider();
@@ -42,9 +42,7 @@ final class JSONVariableProviderTest extends AbstractFunctionalTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getAllLoadJsonFile(): void
     {
         $provider = new JSONVariableProvider();
@@ -52,9 +50,7 @@ final class JSONVariableProviderTest extends AbstractFunctionalTestCase
         self::assertEquals(['foo' => 'bar'], $provider->getAll());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getAllIdentifiersLoadJsonFile(): void
     {
         $provider = new JSONVariableProvider();
@@ -62,9 +58,7 @@ final class JSONVariableProviderTest extends AbstractFunctionalTestCase
         self::assertEquals(['foo'], $provider->getAllIdentifiers());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getLoadJsonFile(): void
     {
         $provider = new JSONVariableProvider();
@@ -72,9 +66,7 @@ final class JSONVariableProviderTest extends AbstractFunctionalTestCase
         self::assertEquals('bar', $provider->get('foo'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getByPathLoadJsonFile(): void
     {
         $provider = new JSONVariableProvider();

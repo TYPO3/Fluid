@@ -9,14 +9,13 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Compiler\FailedCompilingState;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 final class FailedCompilingStateTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function getFailureReasonReturnsPreviouslySetFailureReason(): void
     {
         $subject = new FailedCompilingState();
@@ -24,9 +23,7 @@ final class FailedCompilingStateTest extends UnitTestCase
         self::assertSame('failed', $subject->getFailureReason());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getMitigationsReturnsPreviouslySetMitigation(): void
     {
         $subject = new FailedCompilingState();
@@ -34,9 +31,7 @@ final class FailedCompilingStateTest extends UnitTestCase
         self::assertSame(['m1', 'm2'], $subject->getMitigations());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addMitigationAddsAnotherMitigation(): void
     {
         $subject = new FailedCompilingState();

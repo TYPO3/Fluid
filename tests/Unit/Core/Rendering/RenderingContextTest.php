@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use stdClass;
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
@@ -34,10 +36,8 @@ final class RenderingContextTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider gettersReturnPreviouslySetValuesDataProvider
-     */
+    #[DataProvider('gettersReturnPreviouslySetValuesDataProvider')]
+    #[Test]
     public function gettersReturnPreviouslySetValues(string $property, string|array $expected): void
     {
         $subject = new RenderingContext();
@@ -61,10 +61,8 @@ final class RenderingContextTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider gettersReturnPreviouslySetObjectsDataProvider
-     */
+    #[DataProvider('gettersReturnPreviouslySetObjectsDataProvider')]
+    #[Test]
     public function gettersReturnPreviouslySetObjects(string $property, string $expected): void
     {
         $expected = $this->createMock($expected);
@@ -75,9 +73,7 @@ final class RenderingContextTest extends UnitTestCase
         self::assertSame($expected, $subject->$getter());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getTemplateProcessorsReturnsPreviouslySetTemplateProcessor(): void
     {
         $processors = [$this->createMock(TemplateProcessorInterface::class), $this->createMock(TemplateProcessorInterface::class)];
@@ -86,18 +82,14 @@ final class RenderingContextTest extends UnitTestCase
         self::assertSame($processors, $subject->getTemplateProcessors());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function isCacheEnabledReturnsFalse(): void
     {
         $subject = new RenderingContext();
         self::assertFalse($subject->isCacheEnabled());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function isCacheEnabledReturnsTrueIfCacheIsEnabled(): void
     {
         $subject = new RenderingContext();
@@ -105,9 +97,7 @@ final class RenderingContextTest extends UnitTestCase
         self::assertTrue($subject->isCacheEnabled());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function withAndGetAttribute(): void
     {
         $object = new stdClass();

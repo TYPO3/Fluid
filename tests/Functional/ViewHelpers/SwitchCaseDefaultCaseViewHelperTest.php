@@ -9,15 +9,15 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
 final class SwitchCaseDefaultCaseViewHelperTest extends AbstractFunctionalTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function renderThrowsExceptionIfCaseIsOutsideOfSwitch(): void
     {
         $this->expectException(Exception::class);
@@ -28,9 +28,7 @@ final class SwitchCaseDefaultCaseViewHelperTest extends AbstractFunctionalTestCa
         $view->render();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function renderThrowsExceptionIfDefaultCaseIsOutsideOfSwitch(): void
     {
         $this->expectException(Exception::class);
@@ -82,10 +80,8 @@ final class SwitchCaseDefaultCaseViewHelperTest extends AbstractFunctionalTestCa
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider renderDataProvider
-     */
+    #[DataProvider('renderDataProvider')]
+    #[Test]
     public function render(string $template, array $variables, $expected): void
     {
         $view = new TemplateView();

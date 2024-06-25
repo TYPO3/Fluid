@@ -9,24 +9,21 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Cache;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Core\Cache\StandardCacheWarmer;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 
 final class SimpleFileCacheTest extends AbstractFunctionalTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function getCacheWarmerReturnsStandardCacheWarmer(): void
     {
         $cache = new SimpleFileCache(self::$cachePath);
         self::assertInstanceOf(StandardCacheWarmer::class, $cache->getCacheWarmer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getReturnsFalseWhenNotFound(): void
     {
         $cache = new SimpleFileCache(self::$cachePath);
@@ -34,9 +31,7 @@ final class SimpleFileCacheTest extends AbstractFunctionalTestCase
         self::assertFalse($result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getReturnsTrueWhenFound(): void
     {
         $cache = new SimpleFileCache(self::$cachePath);
@@ -44,9 +39,7 @@ final class SimpleFileCacheTest extends AbstractFunctionalTestCase
         self::assertTrue($result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addToCacheCreatesFile(): void
     {
         $cache = new SimpleFileCache(self::$cachePath);
@@ -54,9 +47,7 @@ final class SimpleFileCacheTest extends AbstractFunctionalTestCase
         self::assertFileExists(self::$cachePath . '/' . 'test.php');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getLoadsFile(): void
     {
         $cache = new SimpleFileCache(self::$cachePath);
@@ -65,9 +56,7 @@ final class SimpleFileCacheTest extends AbstractFunctionalTestCase
         self::assertTrue(class_exists('MyCachedClass', false));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function flushWithoutNameCallsGetCachedFilenamesAndFlushByFilename(): void
     {
         $cache = $this->getMockBuilder(SimpleFileCache::class)
@@ -79,9 +68,7 @@ final class SimpleFileCacheTest extends AbstractFunctionalTestCase
         $cache->flush();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function flushWithNameCallsFlushByName(): void
     {
         $cache = $this->getMockBuilder(SimpleFileCache::class)
@@ -93,9 +80,7 @@ final class SimpleFileCacheTest extends AbstractFunctionalTestCase
         $cache->flush('foo');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function flushByNameDeletesSingleFile(): void
     {
         $cache = new SimpleFileCache(self::$cachePath);
@@ -106,9 +91,7 @@ final class SimpleFileCacheTest extends AbstractFunctionalTestCase
         self::assertFileDoesNotExist(self::$cachePath . '/' . 'test.php');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setThrowsRuntimeExceptionOnInvalidDirectory(): void
     {
         $this->expectException(\RuntimeException::class);

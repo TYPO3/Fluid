@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
@@ -30,10 +32,10 @@ final class ObjectAccessorNodeTest extends UnitTestCase
     }
 
     /**
-     * @test
-     * @dataProvider getEvaluateTestValues
      * @param mixed $expected
      */
+    #[DataProvider('getEvaluateTestValues')]
+    #[Test]
     public function testEvaluateGetsExpectedValue(array $variables, string $path, $expected): void
     {
         $node = new ObjectAccessorNode($path);
@@ -44,9 +46,7 @@ final class ObjectAccessorNodeTest extends UnitTestCase
         self::assertEquals($expected, $value);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testEvaluatedUsesVariableProviderGetByPath(): void
     {
         $node = new ObjectAccessorNode('foo.bar');

@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Parsing;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -47,10 +49,8 @@ final class WhitespaceToleranceTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider whitespaceToleranceDataProvider
-     */
+    #[DataProvider('whitespaceToleranceDataProvider')]
+    #[Test]
     public function whitespaceTolerance(string $source): void
     {
         $view = new TemplateView();

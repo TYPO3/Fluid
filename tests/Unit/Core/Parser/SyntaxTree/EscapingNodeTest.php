@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
@@ -16,9 +17,7 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 final class EscapingNodeTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function testEscapesNodeInConstructor(): void
     {
         $string = '<strong>escape me</strong>';
@@ -28,9 +27,7 @@ final class EscapingNodeTest extends UnitTestCase
         self::assertEquals($node->evaluate($renderingContext), htmlspecialchars($string, ENT_QUOTES));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testEscapesNodeOverriddenWithAddChildNode(): void
     {
         $string1 = '<strong>escape me</strong>';

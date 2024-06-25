@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
@@ -107,10 +109,8 @@ final class BooleanParserTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider getSomeEvaluationTestValues
-     */
+    #[DataProvider('getSomeEvaluationTestValues')]
+    #[Test]
     public function testSomeEvaluations(string $comparison, bool $expected, array $variables = []): void
     {
         $renderingContext = new RenderingContext();
@@ -131,10 +131,8 @@ final class BooleanParserTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider invalidEvaluationsDataProvider
-     */
+    #[DataProvider('invalidEvaluationsDataProvider')]
+    #[Test]
     public function invalidEvaluations(string $comparison, array $variables = []): void
     {
         $this->expectException(Exception::class);

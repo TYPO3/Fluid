@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers\Cache;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
@@ -16,18 +17,14 @@ use TYPO3Fluid\Fluid\ViewHelpers\Cache\WarmupViewHelper;
 
 final class WarmupViewHelperTest extends AbstractFunctionalTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function viewHelperCanBeInstantiated(): void
     {
         $subject = new WarmupViewHelper();
         self::assertInstanceOf(AbstractViewHelper::class, $subject);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function templateUsingViewHelperCanBeRendered(): void
     {
         $template = '<f:cache.warmup variables="{name: \'bar\'}">' .

@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree\Expression;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\MathExpressionNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
@@ -44,10 +46,10 @@ final class MathExpressionNodeTest extends UnitTestCase
     }
 
     /**
-     * @dataProvider getEvaluateExpressionTestValues
      * @param mixed $expected
-     * @test
      */
+    #[DataProvider('getEvaluateExpressionTestValues')]
+    #[Test]
     public function testEvaluateExpression(string $expression, array $variables, $expected): void
     {
         $renderingContext = new RenderingContext();

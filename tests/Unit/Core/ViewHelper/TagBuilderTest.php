@@ -9,32 +9,27 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 final class TagBuilderTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function constructorSetsTagName(): void
     {
         $tagBuilder = new TagBuilder('someTagName');
         self::assertEquals('someTagName', $tagBuilder->getTagName());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function constructorSetsTagContent(): void
     {
         $tagBuilder = new TagBuilder('', '<some text>');
         self::assertEquals('<some text>', $tagBuilder->getContent());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setContentDoesNotEscapeValue(): void
     {
         $tagBuilder = new TagBuilder();
@@ -42,18 +37,14 @@ final class TagBuilderTest extends UnitTestCase
         self::assertEquals('<to be escaped>', $tagBuilder->getContent());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function hasContentReturnsTrueIfTagContainsText(): void
     {
         $tagBuilder = new TagBuilder('', 'foo');
         self::assertTrue($tagBuilder->hasContent());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function hasContentReturnsFalseIfContentIsNull(): void
     {
         $tagBuilder = new TagBuilder();
@@ -61,9 +52,7 @@ final class TagBuilderTest extends UnitTestCase
         self::assertFalse($tagBuilder->hasContent());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function hasContentReturnsFalseIfContentIsAnEmptyString(): void
     {
         $tagBuilder = new TagBuilder();
@@ -71,27 +60,21 @@ final class TagBuilderTest extends UnitTestCase
         self::assertFalse($tagBuilder->hasContent());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function renderReturnsEmptyStringByDefault(): void
     {
         $tagBuilder = new TagBuilder();
         self::assertEquals('', $tagBuilder->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function renderReturnsSelfClosingTagIfNoContentIsSpecified(): void
     {
         $tagBuilder = new TagBuilder('tag');
         self::assertEquals('<tag />', $tagBuilder->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function contentCanBeRemoved(): void
     {
         $tagBuilder = new TagBuilder('tag', 'some content');
@@ -99,9 +82,7 @@ final class TagBuilderTest extends UnitTestCase
         self::assertEquals('<tag />', $tagBuilder->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function renderReturnsOpeningAndClosingTagIfNoContentIsSpecifiedButForceClosingTagIsTrue(): void
     {
         $tagBuilder = new TagBuilder('tag');
@@ -109,9 +90,7 @@ final class TagBuilderTest extends UnitTestCase
         self::assertEquals('<tag></tag>', $tagBuilder->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function attributesAreProperlyRendered(): void
     {
         $tagBuilder = new TagBuilder('tag');
@@ -121,9 +100,7 @@ final class TagBuilderTest extends UnitTestCase
         self::assertEquals('<tag attribute1="attribute1value" attribute2="attribute2value" attribute3="attribute3value" />', $tagBuilder->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function arrayAttributesAreProperlyRendered(): void
     {
         $tagBuilder = new TagBuilder('tag');
@@ -132,9 +109,7 @@ final class TagBuilderTest extends UnitTestCase
         self::assertEquals('<tag data-attribute1="data1" data-attribute2="data2" aria-attribute1="aria1" />', $tagBuilder->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function customArrayAttributesThrowException(): void
     {
         self::expectException(\InvalidArgumentException::class);
@@ -144,9 +119,7 @@ final class TagBuilderTest extends UnitTestCase
         $tagBuilder->addAttribute('custom', ['attribute1' => 'data1', 'attribute2' => 'data2']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function attributeValuesAreEscapedByDefault(): void
     {
         $tagBuilder = new TagBuilder('tag');
@@ -154,9 +127,7 @@ final class TagBuilderTest extends UnitTestCase
         self::assertEquals('<tag foo="&lt;to be escaped&gt;" />', $tagBuilder->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function attributeValuesAreNotEscapedIfDisabled(): void
     {
         $tagBuilder = new TagBuilder('tag');
@@ -164,9 +135,7 @@ final class TagBuilderTest extends UnitTestCase
         self::assertEquals('<tag foo="<not to be escaped>" />', $tagBuilder->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function attributesCanBeRemoved(): void
     {
         $tagBuilder = new TagBuilder('tag');
@@ -177,9 +146,7 @@ final class TagBuilderTest extends UnitTestCase
         self::assertEquals('<tag attribute1="attribute1value" attribute3="attribute3value" />', $tagBuilder->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function emptyAttributesGetRemovedWhenCallingIgnoreEmptyAttributesWithTrue(): void
     {
         $tagBuilder = new TagBuilder('tag');
@@ -190,9 +157,7 @@ final class TagBuilderTest extends UnitTestCase
         self::assertEquals('<tag attribute3="attribute3value" />', $tagBuilder->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function emptyAttributesGetPreservedWhenCallingIgnoreEmptyAttributesWithFalse(): void
     {
         $tagBuilder = new TagBuilder('tag');
@@ -203,9 +168,7 @@ final class TagBuilderTest extends UnitTestCase
         self::assertEquals('<tag attribute1="" attribute2="" attribute3="attribute3value" />', $tagBuilder->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function ignoresNewEmptyAttributesIfEmptyAttributesIgnored(): void
     {
         $tagBuilder = new TagBuilder('tag');
@@ -216,9 +179,7 @@ final class TagBuilderTest extends UnitTestCase
         self::assertEquals('<tag attribute3="attribute3value" />', $tagBuilder->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function attributesCanBeAccessed(): void
     {
         $tagBuilder = new TagBuilder('tag');
@@ -227,9 +188,7 @@ final class TagBuilderTest extends UnitTestCase
         self::assertSame('attribute1value', $attributeValue);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function attributesCanBeAccessedBulk(): void
     {
         $tagBuilder = new TagBuilder('tag');
@@ -238,9 +197,7 @@ final class TagBuilderTest extends UnitTestCase
         self::assertEquals(['attribute1' => 'attribute1value'], $attributeValues);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getAttributeWithMissingAttributeReturnsNull(): void
     {
         $tagBuilder = new TagBuilder('tag');
@@ -248,9 +205,7 @@ final class TagBuilderTest extends UnitTestCase
         self::assertNull($attributeValue);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function resetResetsTagBuilder(): void
     {
         $tagBuilder = new TagBuilder();
@@ -264,9 +219,7 @@ final class TagBuilderTest extends UnitTestCase
         self::assertSame([], $tagBuilder->getAttributes());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function tagNameCanBeOverridden(): void
     {
         $tagBuilder = new TagBuilder('foo');
@@ -274,9 +227,7 @@ final class TagBuilderTest extends UnitTestCase
         self::assertEquals('<bar />', $tagBuilder->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function tagContentCanBeOverridden(): void
     {
         $tagBuilder = new TagBuilder('foo', 'some content');
@@ -284,9 +235,7 @@ final class TagBuilderTest extends UnitTestCase
         self::assertEquals('<foo />', $tagBuilder->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function tagIsNotRenderedIfTagNameIsEmpty(): void
     {
         $tagBuilder = new TagBuilder('foo');

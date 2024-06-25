@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\FluidExamples\Helper\ExampleHelper;
 
 final class ExamplesTest extends AbstractFunctionalTestCase
@@ -207,10 +209,8 @@ final class ExamplesTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider exampleScriptValuesDataProvider
-     */
+    #[DataProvider('exampleScriptValuesDataProvider')]
+    #[Test]
     public function exampleScriptValues(string $script, array $expectedOutputs): void
     {
         $scriptFile = __DIR__ . '/../../examples/' . $script;

@@ -9,15 +9,14 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 final class TextNodeTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function renderReturnsSameStringAsGivenInConstructor(): void
     {
         $string = 'I can work quite effectively in a train!';

@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Escaping;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
@@ -111,10 +113,8 @@ final class EscapingTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider getTemplateCodeFixturesAndExpectations
-     */
+    #[DataProvider('getTemplateCodeFixturesAndExpectations')]
+    #[Test]
     public function testTemplateCodeFixture(string $source, string $expected, string $notExpected): void
     {
         $variables = ['settings' => ['test' => '<strong>Bla</strong>']];
@@ -138,9 +138,7 @@ final class EscapingTest extends AbstractFunctionalTestCase
         self::assertNotEquals($notExpected, $output);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function disablingEscapingTwiceInTemplateThrowsParsingException(): void
     {
         $this->expectException(Exception::class);

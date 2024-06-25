@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\BackedEnumExample;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ClassConstantsExample;
@@ -17,9 +19,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 final class ConstantViewHelperTest extends AbstractFunctionalTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function renderThrowsExceptionOnNonStringValue(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -31,9 +31,7 @@ final class ConstantViewHelperTest extends AbstractFunctionalTestCase
         $view->render();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function renderThrowsErrorOnUndefinedConstant(): void
     {
         $this->expectException(\Error::class);
@@ -83,10 +81,8 @@ final class ConstantViewHelperTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider renderDataProvider
-     */
+    #[DataProvider('renderDataProvider')]
+    #[Test]
     public function render(mixed $name, mixed $expected): void
     {
         $templateSources = [

@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\TemplateProcessor;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\EscapingModifierTemplateProcessor;
@@ -36,10 +38,8 @@ final class EscapingModifierTemplateProcessorTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider getEscapingTestValues
-     * @test
-     */
+    #[DataProvider('getEscapingTestValues')]
+    #[Test]
     public function testSetsEscapingToExpectedValueAndStripsModifier(string $templateSource, bool $expected): void
     {
         $subject = new EscapingModifierTemplateProcessor();
@@ -70,10 +70,8 @@ final class EscapingModifierTemplateProcessorTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider getErrorTestValues
-     * @test
-     */
+    #[DataProvider('getErrorTestValues')]
+    #[Test]
     public function testThrowsExceptionOnMultipleDefinitions(string $templateSource): void
     {
         $this->expectException(Exception::class);

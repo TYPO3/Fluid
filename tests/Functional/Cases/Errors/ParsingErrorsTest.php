@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Errors;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
@@ -46,10 +48,8 @@ final class ParsingErrorsTest extends AbstractFunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider getTemplateCodeFixturesAndExpectations
-     */
+    #[DataProvider('getTemplateCodeFixturesAndExpectations')]
+    #[Test]
     public function testTemplateCodeFixture(string $source, string $expectedException): void
     {
         $this->expectException($expectedException);

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -19,9 +20,7 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 final class ViewHelperNodeTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function getArgumentsReturnsArgumentsSetByConstructor(): void
     {
         $renderingContextMock = $this->createMock(RenderingContextInterface::class);
@@ -35,9 +34,7 @@ final class ViewHelperNodeTest extends UnitTestCase
         self::assertSame($arguments, $subject->getArguments());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function evaluateCallsViewHelperInvoker(): void
     {
         $renderingContextMock = $this->createMock(RenderingContextInterface::class);
