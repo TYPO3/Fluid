@@ -10,12 +10,12 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\ViewInterface;
 
-final class ViewHelperVariableContainerTest extends UnitTestCase
+final class ViewHelperVariableContainerTest extends TestCase
 {
     #[Test]
     public function storedDataCanBeReadOutAgain(): void

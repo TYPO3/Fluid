@@ -10,15 +10,15 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Traits;
 
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Traits\Fixtures\ParserRuntimeOnlyFixture;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
  * @deprecated remove together with ParserRuntimeOnly.
  */
-final class ParserRuntimeOnlyTest extends UnitTestCase
+final class ParserRuntimeOnlyTest extends TestCase
 {
     #[Test]
     public function renderReturnsNull(): void

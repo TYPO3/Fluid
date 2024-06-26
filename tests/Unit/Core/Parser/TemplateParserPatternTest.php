@@ -11,11 +11,11 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Parser\Patterns;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\NamespaceDetectionTemplateProcessor;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-final class TemplateParserPatternTest extends UnitTestCase
+final class TemplateParserPatternTest extends TestCase
 {
     #[Test]
     public function testSCAN_PATTERN_NAMESPACEDECLARATION(): void

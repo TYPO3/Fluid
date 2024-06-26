@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
@@ -31,7 +32,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\ViewHelpers\CommentViewHelper;
 
 /**
@@ -40,7 +40,7 @@ use TYPO3Fluid\Fluid\ViewHelpers\CommentViewHelper;
  * This is to at least half a system test, as it compares rendered results to
  * expectations, and does not strictly check the parsing...
  */
-final class TemplateParserTest extends UnitTestCase
+final class TemplateParserTest extends TestCase
 {
     #[Test]
     public function testInitializeViewHelperAndAddItToStackReturnsFalseIfNamespaceIgnored(): void

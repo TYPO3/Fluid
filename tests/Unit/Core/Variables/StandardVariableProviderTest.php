@@ -11,11 +11,11 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Variables\Fixtures\StandardVariableProviderModelFixture;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-final class StandardVariableProviderTest extends UnitTestCase
+final class StandardVariableProviderTest extends TestCase
 {
     #[Test]
     public function getSourceReturnsEmptyArray(): void

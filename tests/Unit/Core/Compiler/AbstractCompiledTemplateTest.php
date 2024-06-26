@@ -10,12 +10,12 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler\Fixtures\AbstractCompiledTemplateTestFixture;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class AbstractCompiledTemplateTest extends UnitTestCase
+class AbstractCompiledTemplateTest extends TestCase
 {
     #[Test]
     public function setIdentifierDoesNotChangeObject(): void

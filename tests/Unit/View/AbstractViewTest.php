@@ -10,10 +10,10 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\View;
 
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Tests\Unit\View\Fixtures\AbstractViewTestFixture;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class AbstractViewTest extends UnitTestCase
+class AbstractViewTest extends TestCase
 {
     #[Test]
     public function renderReturnsEmptyString(): void

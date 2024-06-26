@@ -11,14 +11,14 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree\Expression;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToArray;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-final class CastingExpressionNodeTest extends UnitTestCase
+final class CastingExpressionNodeTest extends TestCase
 {
     #[Test]
     public function testEvaluateDelegatesToEvaluteExpression(): void

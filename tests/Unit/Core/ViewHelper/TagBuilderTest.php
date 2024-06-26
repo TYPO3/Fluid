@@ -10,10 +10,10 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-final class TagBuilderTest extends UnitTestCase
+final class TagBuilderTest extends TestCase
 {
     #[Test]
     public function constructorSetsTagName(): void

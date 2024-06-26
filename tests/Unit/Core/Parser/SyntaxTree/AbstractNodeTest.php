@@ -11,14 +11,14 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class AbstractNodeTest extends UnitTestCase
+class AbstractNodeTest extends TestCase
 {
     #[Test]
     public function evaluateChildNodesPassesRenderingContextToChildNodes(): void

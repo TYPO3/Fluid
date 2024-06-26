@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Schema;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Schema\ViewHelperMetadataFactory;
 use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\AbstractViewHelper;
@@ -21,9 +22,8 @@ use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\WithoutClassSuffix;
 use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\WithoutDocumentationViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\WithoutInterfaceViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\WrongDirectoryViewHelper;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class ViewHelperMetadataFactoryTest extends UnitTestCase
+class ViewHelperMetadataFactoryTest extends TestCase
 {
     public static function createObjectDataProvider(): iterable
     {
