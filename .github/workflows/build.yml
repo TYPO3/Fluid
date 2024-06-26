@@ -41,5 +41,5 @@ jobs:
       - name: Phpstan
         run: vendor/bin/phpstan analyze --no-progress
 
-      - name: Phpunit v10
+      - name: Phpunit
         run: vendor/bin/phpunit
