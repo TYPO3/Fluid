@@ -363,32 +363,21 @@ class RenderingContext implements RenderingContextInterface
         return $parserConfiguration;
     }
 
-    /**
-     * Retrieve a single attribute.
-     *
-     * @see withAttribute()
-     * @param string $name The attribute name.
-     * @return object|null  null if the specified attribute hasn't been set
-     */
-    public function getAttribute(string $name): ?object
+    public function getAttribute(string $className): object
     {
-        return $this->attributes[$name] ?? null;
+        if (!isset($this->attributes[$className])) {
+            throw new AttributeNotSetException('An attribute of type ' . $className . ' has not been set', 1719394231);
+        }
+        return $this->attributes[$className];
     }
 
     /**
-     * Return an instance with the specified attribute.
-     *
-     * This method allows you to attach arbitrary objects to the
-     * rendering context to be used later e. g. in ViewHelpers.
-     *
-     * @param string $name The attribute name.
-     * @param object $value The value of the attribute.
-     * @return static
+     * @todo: Check $value instanceof $className in v4
      */
-    public function withAttribute(string $name, object $value): static
+    public function withAttribute(string $className, object $value): static
     {
         $clonedObject = clone $this;
-        $clonedObject->attributes[$name] = $value;
+        $clonedObject->attributes[$className] = $value;
         return $clonedObject;
     }
 

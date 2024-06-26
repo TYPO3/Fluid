@@ -17,6 +17,7 @@ use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\AttributeNotSetException;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
@@ -102,10 +103,16 @@ final class RenderingContextTest extends UnitTestCase
     {
         $object = new stdClass();
         $object->test = 'value';
-
         $subject = new RenderingContext();
-        $clonedSubject = $subject->withAttribute('test', $object);
-        self::assertNull($subject->getAttribute('test'));
-        self::assertEquals($object, $clonedSubject->getAttribute('test'));
+        $clonedSubject = $subject->withAttribute(stdClass::class, $object);
+        self::assertEquals($object, $clonedSubject->getAttribute(stdClass::class));
+    }
+
+    #[Test]
+    public function getAttributeThrowsWithNoSuchAttribute(): void
+    {
+        $this->expectException(AttributeNotSetException::class);
+        $this->expectExceptionCode(1719394231);
+        (new RenderingContext())->getAttribute(stdClass::class);
     }
 }
