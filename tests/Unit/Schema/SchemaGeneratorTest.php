@@ -11,12 +11,12 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Schema;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Schema\SchemaGenerator;
 use TYPO3Fluid\Fluid\Schema\ViewHelperMetadata;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class SchemaGeneratorTest extends UnitTestCase
+class SchemaGeneratorTest extends TestCase
 {
     public static function generateSchemaDataProvider(): iterable
     {

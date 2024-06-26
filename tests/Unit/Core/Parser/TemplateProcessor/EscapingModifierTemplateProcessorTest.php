@@ -11,13 +11,13 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\TemplateProcessor;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\EscapingModifierTemplateProcessor;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-final class EscapingModifierTemplateProcessorTest extends UnitTestCase
+final class EscapingModifierTemplateProcessorTest extends TestCase
 {
     public static function getEscapingTestValues(): array
     {

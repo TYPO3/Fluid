@@ -11,12 +11,12 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-final class ViewHelperInvokerTest extends UnitTestCase
+final class ViewHelperInvokerTest extends TestCase
 {
     public static function getInvocationTestValues(): array
     {

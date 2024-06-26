@@ -10,11 +10,11 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-final class RootNodeTest extends UnitTestCase
+final class RootNodeTest extends TestCase
 {
     #[Test]
     public function testEvaluateCallsEvaluateChildNodes(): void

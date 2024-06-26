@@ -11,13 +11,13 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\ClassWithMagicGetter;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-final class VariableExtractorTest extends UnitTestCase
+final class VariableExtractorTest extends TestCase
 {
     public static function getPathTestValues(): array
     {

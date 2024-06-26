@@ -11,13 +11,13 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-final class BooleanParserTest extends UnitTestCase
+final class BooleanParserTest extends TestCase
 {
     public static function getSomeEvaluationTestValues(): array
     {

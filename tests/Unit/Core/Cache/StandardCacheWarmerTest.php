@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Cache;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Cache\StandardCacheWarmer;
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
@@ -18,10 +19,9 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 
-final class StandardCacheWarmerTest extends UnitTestCase
+final class StandardCacheWarmerTest extends TestCase
 {
     #[Test]
     public function testDetectControllerNamesInTemplateRootPaths(): void

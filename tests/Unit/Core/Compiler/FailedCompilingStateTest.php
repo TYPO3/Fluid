@@ -10,10 +10,10 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Compiler\FailedCompilingState;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-final class FailedCompilingStateTest extends UnitTestCase
+final class FailedCompilingStateTest extends TestCase
 {
     #[Test]
     public function getFailureReasonReturnsPreviouslySetFailureReason(): void

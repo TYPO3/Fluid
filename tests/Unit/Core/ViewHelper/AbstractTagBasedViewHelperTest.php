@@ -10,11 +10,11 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-class AbstractTagBasedViewHelperTest extends UnitTestCase
+class AbstractTagBasedViewHelperTest extends TestCase
 {
     #[Test]
     public function renderCallsRenderOnTagBuilder(): void

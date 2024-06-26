@@ -17,6 +17,8 @@ use PHPUnit\Framework\TestCase;
  *
  * Don't subclass this test case but rather choose a more specialized base test case,
  * such as UnitTestCase or FunctionalTestCase
+ *
+ * @deprecated Will be removed in v4. Update .gitattributes to fully exclude tests/
  */
 abstract class BaseTestCase extends TestCase
 {
