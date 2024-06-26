@@ -112,9 +112,11 @@ class RenderingContext implements RenderingContextInterface
 
     /**
      * Attributes can be used to attach additional data to the
-     * rendering context to be used e. g. in ViewHelpers.
+     * rendering context to be used e.g. in ViewHelpers.
+     *
+     * @var object[]
      */
-    protected array $attributes = [];
+    private array $attributes = [];
 
     /**
      * Constructor
@@ -363,22 +365,27 @@ class RenderingContext implements RenderingContextInterface
         return $parserConfiguration;
     }
 
-    public function getAttribute(string $className): object
-    {
-        if (!isset($this->attributes[$className])) {
-            throw new AttributeNotSetException('An attribute of type ' . $className . ' has not been set', 1719394231);
-        }
-        return $this->attributes[$className];
-    }
-
-    /**
-     * @todo: Check $value instanceof $className in v4
-     */
     public function withAttribute(string $className, object $value): static
     {
+        if (!$value instanceof $className) {
+            throw new \RuntimeException('$value is not an instance of ' . $className, 1719410580);
+        }
         $clonedObject = clone $this;
         $clonedObject->attributes[$className] = $value;
         return $clonedObject;
+    }
+
+    public function hasAttribute(string $className): bool
+    {
+        return isset($this->attributes[$className]);
+    }
+
+    public function getAttribute(string $className): object
+    {
+        if (!isset($this->attributes[$className])) {
+            throw new \RuntimeException('An attribute of type ' . $className . ' has not been set', 1719394231);
+        }
+        return $this->attributes[$className];
     }
 
     /**

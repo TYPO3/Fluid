@@ -181,15 +181,6 @@ interface RenderingContextInterface
     public function setControllerAction($action);
 
     /**
-     * Retrieve a single attribute instance.
-     *
-     * @template T of object
-     * @param class-string<T> $className
-     * @return T
-     */
-    public function getAttribute(string $className): object;
-
-    /**
      * Return an instance with the specified attribute being attached.
      *
      * This method allows you to attach arbitrary objects to the
@@ -200,4 +191,21 @@ interface RenderingContextInterface
      * @param T $value
      */
     public function withAttribute(string $className, object $value): RenderingContextInterface;
+
+    /**
+     * Return true if an attribute object of that type exists.
+     *
+     * @template T of object
+     * @param class-string<T> $className
+     */
+    public function hasAttribute(string $className): bool;
+
+    /**
+     * Retrieve a single attribute instance.
+     *
+     * @template T of object
+     * @param class-string<T> $className
+     * @return T
+     */
+    public function getAttribute(string $className): object;
 }

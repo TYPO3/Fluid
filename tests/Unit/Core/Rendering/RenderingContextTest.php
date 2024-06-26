@@ -18,7 +18,6 @@ use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
-use TYPO3Fluid\Fluid\Core\Rendering\AttributeNotSetException;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
@@ -99,20 +98,40 @@ final class RenderingContextTest extends TestCase
     }
 
     #[Test]
-    public function withAndGetAttribute(): void
+    public function withAttributeThrowsIfValueIsNotInstanceofClassName(): void
     {
-        $object = new stdClass();
-        $object->test = 'value';
-        $subject = new RenderingContext();
-        $clonedSubject = $subject->withAttribute(stdClass::class, $object);
-        self::assertEquals($object, $clonedSubject->getAttribute(stdClass::class));
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionCode(1719410580);
+        (new RenderingContext())->withAttribute(RenderingContext::class, new stdClass());
+    }
+
+    #[Test]
+    public function hasAttributeReturnsFalseIfNotSet(): void
+    {
+        self::assertFalse((new RenderingContext())->hasAttribute(stdClass::class));
+    }
+
+    #[Test]
+    public function hasAttributeReturnsTrueIfSet(): void
+    {
+        $subject = (new RenderingContext())->withAttribute(stdClass::class, new stdClass());
+        self::assertTrue($subject->hasAttribute(stdClass::class));
     }
 
     #[Test]
     public function getAttributeThrowsWithNoSuchAttribute(): void
     {
-        $this->expectException(AttributeNotSetException::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionCode(1719394231);
         (new RenderingContext())->getAttribute(stdClass::class);
+    }
+
+    #[Test]
+    public function getAttributeReturnsInstanceSetUsingWithAttribute(): void
+    {
+        $object = new stdClass();
+        $subject = new RenderingContext();
+        $clonedSubject = $subject->withAttribute(stdClass::class, $object);
+        self::assertEquals($object, $clonedSubject->getAttribute(stdClass::class));
     }
 }
