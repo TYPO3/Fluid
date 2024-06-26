@@ -23,14 +23,11 @@ final class BasicConditionsTest extends AbstractFunctionalTestCase
             ['1 != 2', true],
             ['1 == 2', false],
             ['1 === 1', true],
-            // expected value based on php versions behaviour
-            ['\'foo\' == 0', PHP_VERSION_ID < 80000],
-            // expected value based on php versions behaviour
-            ['1.1 >= \'foo\'', PHP_VERSION_ID < 80000],
+            ['\'foo\' == 0', false],
+            ['1.1 >= \'foo\'', false],
             ['\'String containing word \"false\" in text\'', true],
             ['\'  FALSE  \'', true],
-            // expected value based on php versions behaviour
-            ['\'foo\' > 0', !(PHP_VERSION_ID < 80000)],
+            ['\'foo\' > 0', true],
             ['FALSE', false],
             ['(FALSE || (FALSE || 1)', true],
             ['(FALSE or (FALSE or 1)', true],
