@@ -112,9 +112,11 @@ class RenderingContext implements RenderingContextInterface
 
     /**
      * Attributes can be used to attach additional data to the
-     * rendering context to be used e. g. in ViewHelpers.
+     * rendering context to be used e.g. in ViewHelpers.
+     *
+     * @var object[]
      */
-    protected array $attributes = [];
+    private array $attributes = [];
 
     /**
      * Constructor
@@ -363,33 +365,27 @@ class RenderingContext implements RenderingContextInterface
         return $parserConfiguration;
     }
 
-    /**
-     * Retrieve a single attribute.
-     *
-     * @see withAttribute()
-     * @param string $name The attribute name.
-     * @return object|null  null if the specified attribute hasn't been set
-     */
-    public function getAttribute(string $name): ?object
+    public function withAttribute(string $className, object $value): static
     {
-        return $this->attributes[$name] ?? null;
+        if (!$value instanceof $className) {
+            throw new \RuntimeException('$value is not an instance of ' . $className, 1719410580);
+        }
+        $clonedObject = clone $this;
+        $clonedObject->attributes[$className] = $value;
+        return $clonedObject;
     }
 
-    /**
-     * Return an instance with the specified attribute.
-     *
-     * This method allows you to attach arbitrary objects to the
-     * rendering context to be used later e. g. in ViewHelpers.
-     *
-     * @param string $name The attribute name.
-     * @param object $value The value of the attribute.
-     * @return static
-     */
-    public function withAttribute(string $name, object $value): static
+    public function hasAttribute(string $className): bool
     {
-        $clonedObject = clone $this;
-        $clonedObject->attributes[$name] = $value;
-        return $clonedObject;
+        return isset($this->attributes[$className]);
+    }
+
+    public function getAttribute(string $className): object
+    {
+        if (!isset($this->attributes[$className])) {
+            throw new \RuntimeException('An attribute of type ' . $className . ' has not been set', 1719394231);
+        }
+        return $this->attributes[$className];
     }
 
     /**
