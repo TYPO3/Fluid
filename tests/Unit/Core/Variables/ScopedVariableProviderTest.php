@@ -11,11 +11,11 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Variables\ScopedVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-final class ScopedVariableProviderTest extends UnitTestCase
+final class ScopedVariableProviderTest extends TestCase
 {
     public static function getAllDataProvider(): \Generator
     {

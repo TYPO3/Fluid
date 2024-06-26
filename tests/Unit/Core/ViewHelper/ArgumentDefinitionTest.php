@@ -10,10 +10,10 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-final class ArgumentDefinitionTest extends UnitTestCase
+final class ArgumentDefinitionTest extends TestCase
 {
     #[Test]
     public function objectStoresDataCorrectly(): void

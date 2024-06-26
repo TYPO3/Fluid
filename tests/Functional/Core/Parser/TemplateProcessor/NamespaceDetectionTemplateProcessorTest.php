@@ -14,9 +14,9 @@ use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\NamespaceDetectionTemplateProcessor;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 
-final class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
+final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTestCase
 {
     public static function preProcessSourceExtractsNamespacesDataProvider(): array
     {

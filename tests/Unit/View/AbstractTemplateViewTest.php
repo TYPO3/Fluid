@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\View;
 
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -18,11 +19,10 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\Unit\View\Fixtures\AbstractTemplateViewTestFixture;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\AbstractTemplateView;
 use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
 
-class AbstractTemplateViewTest extends UnitTestCase
+class AbstractTemplateViewTest extends TestCase
 {
     #[Test]
     public function getRenderingContextReturnsPreviouslySetRenderingContext(): void

@@ -11,11 +11,11 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\View;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3Fluid\Fluid\Tests\BaseTestCase;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 
-final class TemplatePathsTest extends BaseTestCase
+final class TemplatePathsTest extends TestCase
 {
     public static function sanitizePathDataProvider(): array
     {

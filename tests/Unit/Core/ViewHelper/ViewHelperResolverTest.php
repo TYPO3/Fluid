@@ -11,12 +11,12 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper;
 
-final class ViewHelperResolverTest extends UnitTestCase
+final class ViewHelperResolverTest extends TestCase
 {
     #[Test]
     public function addNamespaceWithStringRecordsNamespace(): void

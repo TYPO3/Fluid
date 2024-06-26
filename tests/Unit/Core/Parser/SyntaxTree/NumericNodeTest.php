@@ -10,12 +10,12 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-final class NumericNodeTest extends UnitTestCase
+final class NumericNodeTest extends TestCase
 {
     #[Test]
     public function renderReturnsProperIntegerGivenInConstructor(): void

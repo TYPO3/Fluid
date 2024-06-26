@@ -9,9 +9,9 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional;
 
+use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
-use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 
 /**
  * Base test case for functional tests.
@@ -27,17 +27,14 @@ use TYPO3Fluid\Fluid\Tests\BaseTestCase;
  *           exported as package file. Extensions with own view helpers can not rely on it as test base.
  *           This may change in case this abstract stabilizes, later.
  */
-abstract class AbstractFunctionalTestCase extends BaseTestCase
+abstract class AbstractFunctionalTestCase extends TestCase
 {
-    /**
-     * @var FluidCacheInterface
-     */
-    protected static $cache;
+    protected static FluidCacheInterface $cache;
 
     /**
      * @var string Absolute path to cache directory
      */
-    protected static $cachePath;
+    protected static string $cachePath;
 
     public static function setUpBeforeClass(): void
     {

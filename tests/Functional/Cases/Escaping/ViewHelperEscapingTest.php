@@ -14,13 +14,13 @@ use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
-use TYPO3Fluid\Fluid\Tests\BaseTestCase;
+use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\TestViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers\MutableTestViewHelper;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers\TagBasedTestViewHelper;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-final class ViewHelperEscapingTest extends BaseTestCase
+final class ViewHelperEscapingTest extends AbstractFunctionalTestCase
 {
     private const UNESCAPED = '<script>alert(1)</script>';
     private const ESCAPED = '&lt;script&gt;alert(1)&lt;/script&gt;';
