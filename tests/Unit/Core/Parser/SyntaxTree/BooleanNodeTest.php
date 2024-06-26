@@ -466,11 +466,9 @@ final class BooleanNodeTest extends TestCase
     public function equalsReturnsTrueIfComparingStringWithZero(): void
     {
         $renderingContext = new RenderingContext();
-        // expected value based on php versions behaviour
-        $expected = (PHP_VERSION_ID < 80000 ? true : false);
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('\'stringA\' == 0'));
-        self::assertSame($expected, BooleanNode::createFromNodeAndEvaluate($rootNode, $renderingContext));
+        self::assertFalse(BooleanNode::createFromNodeAndEvaluate($rootNode, $renderingContext));
     }
 
     #[Test]
