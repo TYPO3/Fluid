@@ -181,7 +181,7 @@ class TagBuilder
      * Adds an attribute to the $attributes-collection
      *
      * @param string $attributeName name of the attribute to be added to the tag
-     * @param string|\Traversable|array|null $attributeValue attribute value, can only be array or traversable
+     * @param string|bool|\Traversable|array|null $attributeValue attribute value, can only be array or traversable
      *                                                       if the attribute name is either "data" or "area". In
      *                                                       that special case, multiple attributes will be created
      *                                                       with either "data-" or "area-" as prefix
@@ -205,6 +205,15 @@ class TagBuilder
                 $this->addAttribute($attributeName . '-' . $name, $value, $escapeSpecialCharacters);
             }
         } else {
+            if ($attributeValue === false) {
+                $this->removeAttribute($attributeName);
+                return;
+            }
+
+            if ($attributeValue === true) {
+                $attributeValue = $attributeName;
+            }
+
             if (trim((string)$attributeValue) === '' && $this->ignoreEmptyAttributes) {
                 return;
             }

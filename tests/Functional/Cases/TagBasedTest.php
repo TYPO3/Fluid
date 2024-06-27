@@ -47,6 +47,22 @@ final class TagBasedTest extends AbstractFunctionalTestCase
                 '<test:tagBasedTest aria-foo="bar" />',
                 '<div aria-foo="bar" />',
             ],
+            'unregistered boolean argument false' => [
+                '<test:tagBasedTest async="false" />',
+                '<div />',
+            ],
+            'unregistered boolean argument true' => [
+                '<test:tagBasedTest async="true" />',
+                '<div async="async" />',
+            ],
+            'boolean argument false' => [
+                '<test:tagBasedTest booleanArgument="false" />',
+                '<div />',
+            ],
+            'boolean argument true' => [
+                '<test:tagBasedTest booleanArgument="true" />',
+                '<div booleanArgument="booleanArgument" />',
+            ],
             'data array before data attribute' => [
                 '<test:tagBasedTest data="{foo: \'data\'}" data-foo="attribute" />',
                 '<div data-foo="attribute" />',
