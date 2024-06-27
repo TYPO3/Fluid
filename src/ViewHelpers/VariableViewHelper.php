@@ -30,6 +30,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  *     <f:variable name="myvariable">some value</f:variable>
  *     {oldvariable -> f:format.htmlspecialchars() -> f:variable(name: 'newvariable')}
  *     <f:variable name="myvariable"><f:format.htmlspecialchars>{oldvariable}</f:format.htmlspecialchars></f:variable>
+ *     {f:variable(name: 'myarray.mykey.mydeeperkey', value: 'some value')}
+ *     <f:variable name="myarray.mykey.mydeeperkey">some value</f:variable>
  *
  * @see \TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper
  * @api
@@ -55,6 +57,29 @@ class VariableViewHelper extends AbstractViewHelper
         RenderingContextInterface $renderingContext,
     ) {
         $value = $renderChildrenClosure();
-        $renderingContext->getVariableProvider()->add($arguments['name'], $value);
+
+        if (!str_contains($arguments['name'], '.')) {
+            $renderingContext->getVariableProvider()->add($arguments['name'], $value);
+            return;
+        }
+
+        $seperated = explode('.', $arguments['name']);
+
+        $name = $seperated[0];
+        $keys = array_slice($seperated,1);
+
+        $object = $renderingContext->getVariableProvider()->get($name) ?: [];
+
+        $current = &$object;
+        foreach ($keys as $keySegment) {
+            if (!isset($current[$keySegment]) || !is_array($current[$keySegment])) {
+                $current[$keySegment] = [];
+            }
+            $current = &$current[$keySegment];
+        }
+        $current = $value;
+        unset($current);
+
+        $renderingContext->getVariableProvider()->add($name, $object);
     }
 }
