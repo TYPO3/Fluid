@@ -22,4 +22,5 @@
     <inventory id="ext_fsc"
                url="https://docs.typo3.org/c/typo3/cms-fluid-styled-content/main/en-us/"
     />
+    <inventory id="t3viewhelper" url="https://docs.typo3.org/other/typo3/view-helper-reference/main/en-us/"/>
 </guides>
