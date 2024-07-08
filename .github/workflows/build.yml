@@ -33,7 +33,7 @@ jobs:
           find src/ tests/ -name '*.php' -print0 | xargs -0 -n1 -P4 php -dxdebug.mode=off -l >/dev/null
 
       - name: Install dependencies
-        run: composer update
+        run: COMPOSER_ROOT_VERSION=dev-main composer update
 
       - name: CGL check
         run: vendor/bin/php-cs-fixer fix --dry-run --diff -v
@@ -43,3 +43,8 @@ jobs:
 
       - name: Phpunit
         run: vendor/bin/phpunit
+
+      - name: Documentation integrity
+        run: |
+          FLUID_DOCUMENTATION_OUTPUT_DIR=Documentation/ViewHelpers vendor/bin/fluidDocumentation generate vendor/t3docs/fluid-documentation-generator/config/fluidStandalone/*
+          git add Documentation/*; git status; git status | grep -q "nothing to commit, working tree clean"
