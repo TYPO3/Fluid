@@ -45,7 +45,7 @@ class AbstractViewHelperTest extends TestCase
 
     #[DataProvider('getFirstElementOfNonEmptyTestValues')]
     #[Test]
-    public function getFirstElementOfNonEmptyReturnsExpectedValue(mixed $input, string|null $expected): void
+    public function getFirstElementOfNonEmptyReturnsExpectedValue(mixed $input, ?string $expected): void
     {
         $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods([])->getMock();
         $method = new \ReflectionMethod($subject, 'getFirstElementOfNonEmpty');
