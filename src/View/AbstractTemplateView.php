@@ -54,7 +54,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
      *
      * @param RenderingContextInterface|null $context
      */
-    public function __construct(RenderingContextInterface $context = null)
+    public function __construct(?RenderingContextInterface $context = null)
     {
         if (!$context) {
             $context = new RenderingContext();
