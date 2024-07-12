@@ -1,4 +1,7 @@
 <?php
+
+use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
+
 if (PHP_SAPI !== 'cli') {
     die('CLI only.');
 }
@@ -10,24 +13,24 @@ $finder = (new PhpCsFixer\Finder())
 return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setUsingCache(false)
+    ->setParallelConfig(ParallelConfigFactory::detect())
     ->setFinder($finder)
     ->setRules([
         '@DoctrineAnnotation' => true,
-        '@PER' => true,
+        '@PER-CS' => true,
         'array_syntax' => ['syntax' => 'short'],
         'blank_line_after_opening_tag' => true,
         'cast_spaces' => ['space' => 'none'],
-        'compact_nullable_typehint' => true,
+        'compact_nullable_type_declaration' => true,
         'concat_space' => ['spacing' => 'one'],
         'declare_parentheses' => true,
         'declare_equal_normalize' => ['space' => 'none'],
         'dir_constant' => true,
-        'function_typehint_space' => true,
         'lowercase_cast' => true,
         'method_argument_space' => ['on_multiline' => 'ensure_fully_multiline'],
         'modernize_types_casting' => true,
         'native_function_casing' => true,
-        'new_with_braces' => true,
+        'new_with_parentheses' => true,
         'no_alias_functions' => true,
         'no_blank_lines_after_phpdoc' => true,
         'no_empty_phpdoc' => true,
@@ -64,6 +67,7 @@ return (new PhpCsFixer\Config())
         'single_space_around_construct' => true,
         'single_line_comment_style' => ['comment_types' => ['hash']],
         'single_trait_insert_per_statement' => true,
+        'type_declaration_spaces' => true,
         'whitespace_after_comma_in_array' => true,
         'header_comment' => [
             'header' => 'This file belongs to the package "TYPO3 Fluid".' . chr(10) .

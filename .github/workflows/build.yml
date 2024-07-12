@@ -36,7 +36,7 @@ jobs:
         run: COMPOSER_ROOT_VERSION=dev-main composer update
 
       - name: CGL check
-        run: vendor/bin/php-cs-fixer fix --dry-run --diff -v
+        run: vendor/bin/php-cs-fixer fix -v --diff --dry-run --show-progress none
 
       - name: Phpstan
         run: vendor/bin/phpstan analyze --no-progress
