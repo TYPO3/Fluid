@@ -583,7 +583,7 @@ class TemplateParser
         return $argumentsObjectTree + $undeclaredArguments;
     }
 
-    protected function isArgumentEscaped(ViewHelperInterface $viewHelper, ArgumentDefinition $argumentDefinition = null)
+    protected function isArgumentEscaped(ViewHelperInterface $viewHelper, ?ArgumentDefinition $argumentDefinition = null)
     {
         $hasDefinition = $argumentDefinition instanceof ArgumentDefinition;
         $isBoolean = $hasDefinition && ($argumentDefinition->getType() === 'boolean' || $argumentDefinition->getType() === 'bool');
@@ -752,7 +752,7 @@ class TemplateParser
      * @return NodeInterface[] the array node built up
      * @throws Exception
      */
-    protected function recursiveArrayHandler(ParsingState $state, $arrayText, ViewHelperInterface $viewHelper = null)
+    protected function recursiveArrayHandler(ParsingState $state, $arrayText, ?ViewHelperInterface $viewHelper = null)
     {
         $undeclaredArguments = [];
         $argumentDefinitions = [];

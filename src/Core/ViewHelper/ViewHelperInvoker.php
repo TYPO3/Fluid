@@ -40,7 +40,7 @@ class ViewHelperInvoker
      * @param \Closure|null $renderChildrenClosure
      * @return string
      */
-    public function invoke($viewHelperClassNameOrInstance, array $arguments, RenderingContextInterface $renderingContext, \Closure $renderChildrenClosure = null)
+    public function invoke($viewHelperClassNameOrInstance, array $arguments, RenderingContextInterface $renderingContext, ?\Closure $renderChildrenClosure = null)
     {
         $viewHelperResolver = $renderingContext->getViewHelperResolver();
         if ($viewHelperClassNameOrInstance instanceof ViewHelperInterface) {
