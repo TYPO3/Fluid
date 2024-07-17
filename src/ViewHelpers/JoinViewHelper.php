@@ -62,9 +62,9 @@ final class JoinViewHelper extends AbstractViewHelper
 
     public function initializeArguments(): void
     {
-        $this->registerArgument('value', 'array', 'An array', false);
+        $this->registerArgument('value', 'array', 'An array');
         $this->registerArgument('separator', 'string', 'The separator', false, '');
-        $this->registerArgument('separatorLast', 'string', 'The separator for the last pair.', false, null);
+        $this->registerArgument('separatorLast', 'string', 'The separator for the last pair.');
     }
 
     /**

@@ -85,8 +85,8 @@ final class TrimViewHelper extends AbstractViewHelper
 
     public function initializeArguments(): void
     {
-        $this->registerArgument('value', 'string', 'The string value to be trimmed. If not given, the evaluated child nodes will be used.', false);
-        $this->registerArgument('characters', 'string', 'Optionally, the stripped characters can also be specified using the characters parameter. Simply list all characters that you want to be stripped. With .. you can specify a range of characters.', false);
+        $this->registerArgument('value', 'string', 'The string value to be trimmed. If not given, the evaluated child nodes will be used.');
+        $this->registerArgument('characters', 'string', 'Optionally, the stripped characters can also be specified using the characters parameter. Simply list all characters that you want to be stripped. With .. you can specify a range of characters.');
         $this->registerArgument('side', 'string', 'The side to apply, must be one of this\' CASE_* constants. Defaults to both application.', false, self::SIDE_BOTH);
     }
 
