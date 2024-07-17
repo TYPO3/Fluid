@@ -93,7 +93,7 @@ variable access (e.g. `{variable}`) and ViewHelper usage in inline mode
   when you pass a suspect value to ViewHelpers like `f:for` which require
   arrays.
 * `{checkVariable ? thenVariable : elseVariable}` will for example output the
-  variable `{thenVariable}` if `{checkVariable}` evaluates to TRUE, otherwise
+  variable `{thenVariable}` if `{checkVariable}` evaluates to :php:`true`, otherwise
   output the variable `{elseVariable}`.
 * `{myNumber + 3}` (and other mathematical operations) will for example output
   the sum of `{myNumber}` plus `3`.

@@ -141,7 +141,7 @@ starts:
 .. code-block:: php
 
     $myTemplateProcessor = new MyTemplateProcessor();
-    $myTemplateProcessor->setDoMyMagicThing(TRUE);
+    $myTemplateProcessor->setDoMyMagicThing(true);
     $templateView->setTemplateProcessors([
         $myTemplateProcessor
     ]);

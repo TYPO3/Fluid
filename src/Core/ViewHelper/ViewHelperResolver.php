@@ -166,7 +166,7 @@ class ViewHelperResolver
      * without processing.
      *
      * @param string $namespaceIdentifier
-     * @return bool TRUE if the given namespace is valid
+     * @return bool true if the given namespace is valid
      */
     public function isNamespaceValid($namespaceIdentifier)
     {
@@ -182,7 +182,7 @@ class ViewHelperResolver
      * if the namespace is unknown and not ignored
      *
      * @param string $namespaceIdentifier
-     * @return bool TRUE if the given namespace is valid
+     * @return bool true if the given namespace is valid
      */
     public function isNamespaceValidOrIgnored($namespaceIdentifier)
     {

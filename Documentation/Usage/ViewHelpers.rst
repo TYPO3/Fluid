@@ -93,7 +93,7 @@ attributes. An example argument definition looks like this:
 .. code-block:: php
 
     public function initializeArguments() {
-        $this->registerArgument('myArgument', 'boolean', 'If TRUE, makes ViewHelper do foobar', false, false);
+        $this->registerArgument('myArgument', 'boolean', 'If true, makes ViewHelper do foobar', false, false);
     }
 
 Which translated to human terms means that we:
@@ -114,7 +114,7 @@ above - be callable using:
 
 .. code-block:: xml
 
-    <mypkg:custom.specialFormat myArgument="TRUE">{somevariable}</mypkg:custom.specialFormat>
+    <mypkg:custom.specialFormat myArgument="true">{somevariable}</mypkg:custom.specialFormat>
 
 What the argument does is then decided by the ViewHelper.
 

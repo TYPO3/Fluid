@@ -144,7 +144,7 @@ class VariableExtractor
     }
 
     /**
-     * Returns TRUE if the data type of $subject is potentially compatible
+     * Returns true if the data type of $subject is potentially compatible
      * with the $accessor.
      *
      * @param mixed $subject
