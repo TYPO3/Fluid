@@ -74,7 +74,7 @@ final class HtmlspecialcharsViewHelperTest extends AbstractFunctionalTestCase
             [],
             'already &amp;quot;encoded&amp;quot;',
         ];
-        yield '[argument] render does not convert already converted entities if "doubleEncode" is FALSE' => [
+        yield '[argument] render does not convert already converted entities if "doubleEncode" is false' => [
             '<f:format.htmlspecialchars doubleEncode="false" value="already &quot;encoded&quot;" />',
             [],
             'already &quot;encoded&quot;',
@@ -121,7 +121,7 @@ final class HtmlspecialcharsViewHelperTest extends AbstractFunctionalTestCase
             [],
             'already &amp;quot;encoded&amp;quot;',
         ];
-        yield '[tag content] render does not convert already converted entities if "doubleEncode" is FALSE' => [
+        yield '[tag content] render does not convert already converted entities if "doubleEncode" is false' => [
             '<f:format.htmlspecialchars doubleEncode="false">already &quot;encoded&quot;</f:format.htmlspecialchars>',
             [],
             'already &quot;encoded&quot;',

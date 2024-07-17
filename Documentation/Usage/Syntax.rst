@@ -111,7 +111,7 @@ Variables and types
 
 When using Fluid the standard PHP data types are used by ViewHelpers and the
 engine itself - but when writing Fluid templates you don't always have the
-option of *assigning a properly typed variable like FALSE that you can use when
+option of *assigning a properly typed variable like :php:`false` that you can use when
 a ViewHelper wants a boolean value*, which would be the strict way of passing a
 boolean. To accommodate this, Fluid will convert compatible types into the
 expected type when you call ViewHelpers:

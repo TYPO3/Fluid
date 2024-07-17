@@ -93,7 +93,7 @@ attributes. An example argument definition looks like this:
 .. code-block:: php
 
     public function initializeArguments() {
-        $this->registerArgument('myArgument', 'boolean', 'If TRUE, makes ViewHelper do foobar', FALSE, FALSE);
+        $this->registerArgument('myArgument', 'boolean', 'If TRUE, makes ViewHelper do foobar', false, false);
     }
 
 Which translated to human terms means that we:
@@ -105,9 +105,9 @@ Which translated to human terms means that we:
   Other valid types are `integer`, `string`, `float`, `array`, `DateTime` and
   other class names.
 * Describe the argument's behavior in simple terms.
-* Specify that the argument is not required (the 4th argument is `FALSE`).
+* Specify that the argument is not required (the 4th argument is :php:`false`).
 * Specify that if the argument is not written when calling the ViewHelper,
-  a default value of `FALSE` is assumed (5th argument).
+  a default value of :php:`false` is assumed (5th argument).
 
 The ViewHelper itself would then - assuming the class was named as our example
 above - be callable using:
