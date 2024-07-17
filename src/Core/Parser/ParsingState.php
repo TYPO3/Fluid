@@ -169,7 +169,7 @@ class ParsingState implements ParsedTemplateInterface
     }
 
     /**
-     * Returns TRUE if the current template has a template defined via <f:layout name="..." />
+     * Returns true if the current template has a template defined via <f:layout name="..." />
      *
      * @return bool
      */

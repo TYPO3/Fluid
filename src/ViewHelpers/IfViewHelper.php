@@ -89,7 +89,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *
  * Output::
  *
- *     Everything inside the <f:if> tag is being displayed if the condition evaluates to TRUE.
+ *     Everything inside the <f:if> tag is being displayed if the condition evaluates to true.
  *
  * If / then / else
  * ----------------
@@ -107,7 +107,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *
  * Output::
  *
- *     Everything inside the "then" tag is displayed if the condition evaluates to TRUE.
+ *     Everything inside the "then" tag is displayed if the condition evaluates to true.
  *     Otherwise, everything inside the "else" tag is displayed.
  *
  * Inline notation
@@ -119,7 +119,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *
  * Output::
  *
- *     The value of the "then" attribute is displayed if the condition evaluates to TRUE.
+ *     The value of the "then" attribute is displayed if the condition evaluates to true.
  *     Otherwise, everything the value of the "else" attribute is displayed.
  *
  * Combining multiple conditions
@@ -132,17 +132,17 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *             This is being shown in case both conditions match.
  *         </f:then>
  *         <f:else if="{user.rank} > 200 && ({user.type} == 'contributor' || {user.type} == 'developer')">
- *             This is being displayed in case the first block of the condition evaluates to TRUE and any condition in
- *             the second condition block evaluates to TRUE.
+ *             This is being displayed in case the first block of the condition evaluates to true and any condition in
+ *             the second condition block evaluates to true.
  *         </f:else>
  *         <f:else>
- *             This is being displayed when none of the above conditions evaluated to TRUE.
+ *             This is being displayed when none of the above conditions evaluated to true.
  *         </f:else>
  *     </f:if>
  *
  * Output::
  *
- *     Depending on which expression evaluated to TRUE, that value is displayed.
+ *     Depending on which expression evaluated to true, that value is displayed.
  *     If no expression matched, the contents inside the final "else" tag are displayed.
  *
  * @api
