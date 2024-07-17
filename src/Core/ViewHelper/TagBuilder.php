@@ -144,7 +144,7 @@ class TagBuilder
      * Get an attribute from the $attributes-collection
      *
      * @param string $attributeName name of the attribute
-     * @return string|null The attribute value or NULL if the attribute is not registered
+     * @return string|null The attribute value or null if the attribute is not registered
      * @api
      */
     public function getAttribute($attributeName)

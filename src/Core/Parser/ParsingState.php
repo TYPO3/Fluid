@@ -49,7 +49,7 @@ class ParsingState implements ParsedTemplateInterface
     protected $variableContainer;
 
     /**
-     * The layout name of the current template or NULL if the template does not contain a layout definition
+     * The layout name of the current template or null if the template does not contain a layout definition
      *
      * @var AbstractNode
      */
@@ -161,7 +161,7 @@ class ParsingState implements ParsedTemplateInterface
     /**
      * Returns a variable container which will be then passed to the postParseFacet.
      *
-     * @return VariableProviderInterface The variable container or NULL if none has been set yet
+     * @return VariableProviderInterface The variable container or null if none has been set yet
      */
     public function getVariableContainer()
     {
@@ -180,7 +180,7 @@ class ParsingState implements ParsedTemplateInterface
 
     /**
      * Returns the name of the layout that is defined within the current template via <f:layout name="..." />
-     * If no layout is defined, this returns NULL
+     * If no layout is defined, this returns null.
      * This requires the current rendering context in order to be able to evaluate the layout name
      *
      * @param RenderingContextInterface $renderingContext

@@ -50,7 +50,7 @@ class SimpleFileCache implements FluidCacheInterface
     }
 
     /**
-     * Gets an entry from the cache or NULL if the
+     * Gets an entry from the cache or null if the
      * entry does not exist. Returns true if the cached
      * class file was included, false if it does not
      * exist in the cache directory.
