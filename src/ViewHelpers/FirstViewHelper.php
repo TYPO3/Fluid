@@ -33,7 +33,7 @@ final class FirstViewHelper extends AbstractViewHelper
 
     public function initializeArguments(): void
     {
-        $this->registerArgument('value', 'array', '', false);
+        $this->registerArgument('value', 'array', '');
     }
 
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): mixed
