@@ -103,7 +103,7 @@ final class CaseViewHelper extends AbstractViewHelper
 
     public function initializeArguments(): void
     {
-        $this->registerArgument('value', 'string', 'The input value. If not given, the evaluated child nodes will be used.', false);
+        $this->registerArgument('value', 'string', 'The input value. If not given, the evaluated child nodes will be used.');
         $this->registerArgument('mode', 'string', 'The case to apply, must be one of this\' CASE_* constants. Defaults to uppercase application.', false, self::CASE_UPPER);
     }
 

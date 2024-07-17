@@ -61,8 +61,8 @@ final class ReplaceViewHelper extends AbstractViewHelper
 
     public function initializeArguments(): void
     {
-        $this->registerArgument('value', 'string', '', false);
-        $this->registerArgument('search', 'mixed', '', false);
+        $this->registerArgument('value', 'string', '');
+        $this->registerArgument('search', 'mixed', '');
         $this->registerArgument('replace', 'mixed', '', true);
     }
 
