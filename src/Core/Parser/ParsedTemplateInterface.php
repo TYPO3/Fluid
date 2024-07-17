@@ -60,7 +60,7 @@ interface ParsedTemplateInterface
     public function addCompiledNamespaces(RenderingContextInterface $renderingContext);
 
     /**
-     * Returns TRUE if the current template has a template defined via <f:layout name="..." />
+     * Returns true if the current template has a template defined via <f:layout name="..." />
      *
      * @return bool
      */
@@ -70,12 +70,12 @@ interface ParsedTemplateInterface
      * If the template contains constructs which prevent the compiler from compiling the template
      * correctly, isCompilable() will return false.
      *
-     * @return bool TRUE if the template can be compiled
+     * @return bool true if the template can be compiled
      */
     public function isCompilable();
 
     /**
-     * @return bool TRUE if the template is already compiled
+     * @return bool true if the template is already compiled
      */
     public function isCompiled();
 }

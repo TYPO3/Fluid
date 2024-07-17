@@ -50,7 +50,7 @@ To enable this usage we must then create a ViewHelper class:
          */
         public function initializeArguments() {
             $this->registerArgument('values', 'array', 'Values to use in array_combine');
-            $this->registerArgument('keys', 'array', 'Keys to use in array_combine', TRUE);
+            $this->registerArgument('keys', 'array', 'Keys to use in array_combine', true);
         }
 
         /**

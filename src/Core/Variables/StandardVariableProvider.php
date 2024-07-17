@@ -192,7 +192,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * Checks if this property exists in the VariableContainer.
      *
      * @param string $identifier
-     * @return bool TRUE if $identifier exists
+     * @return bool true if $identifier exists
      * @api
      */
     public function exists($identifier)
@@ -235,7 +235,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * Checks if this property exists in the VariableContainer.
      *
      * @param string $identifier
-     * @return bool TRUE if $identifier exists
+     * @return bool true if $identifier exists
      */
     public function offsetExists($identifier)
     {

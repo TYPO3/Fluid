@@ -21,10 +21,10 @@ final class ExamplesTest extends AbstractFunctionalTestCase
             'example_conditions.php' => [
                 'example_conditions.php',
                 [
-                    'Standard ternary expression: The ternary expression is TRUE',
+                    'Standard ternary expression: The ternary expression is true',
                     'Negated ternary expression without then case: The ternary expression is false',
                     'Negated ternary expression: The ternary expression is false',
-                    'Ternary expression without then case: The ternary expression is TRUE',
+                    'Ternary expression without then case: The ternary expression is true',
                     '1 === TRUE',
                     '(0) === FALSE',
                     '(1) === TRUE',

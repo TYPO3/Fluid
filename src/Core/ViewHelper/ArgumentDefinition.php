@@ -52,7 +52,7 @@ class ArgumentDefinition
      *
      * A value of NULL means "use default behavior" (which is to escape nodes contained in the value).
      *
-     * A value of TRUE means "escape unless escaping is disabled" (e.g. if argument is used in a ViewHelper nested
+     * "true" means "escape unless escaping is disabled" (e.g. if argument is used in a ViewHelper nested
      * within f:format.raw which disables escaping, the argument will not be escaped).
      *
      * "false" means "never escape argument" (as in behavior of f:format.raw, which supports both passing
@@ -68,9 +68,9 @@ class ArgumentDefinition
      * @param string $name Name of argument
      * @param string $type Type of argument
      * @param string $description Description of argument
-     * @param bool $required TRUE if argument is required
+     * @param bool $required true if argument is required
      * @param mixed $defaultValue Default value
-     * @param bool|null $escape Whether or not argument is escaped, or uses default escaping behavior (see class var comment)
+     * @param bool|null $escape Whether argument is escaped, or uses default escaping behavior (see class var comment)
      */
     public function __construct($name, $type, $description, $required, $defaultValue = null, $escape = null)
     {
@@ -115,7 +115,7 @@ class ArgumentDefinition
     /**
      * Get the optionality of the argument
      *
-     * @return bool TRUE if argument is optional
+     * @return bool true if argument is optional
      */
     public function isRequired()
     {

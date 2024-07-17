@@ -114,7 +114,7 @@ class ViewHelperVariableContainer
      *
      * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
      * @param string $key Key of the data
-     * @return bool TRUE if a value for the given ViewHelperName / Key is stored
+     * @return bool true if a value for the given ViewHelperName / Key is stored
      * @api
      */
     public function exists($viewHelperName, $key)

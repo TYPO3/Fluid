@@ -106,9 +106,9 @@ class TagBuilder
     }
 
     /**
-     * Returns TRUE if tag contains content
+     * Returns true if tag contains content
      *
-     * @return bool TRUE if tag contains text
+     * @return bool true if tag contains text
      * @api
      */
     public function hasContent()
@@ -117,7 +117,7 @@ class TagBuilder
     }
 
     /**
-     * Set this to TRUE to force a closing tag
+     * Set this to true to force a closing tag
      * E.g. <textarea> cant be self-closing even if its empty
      *
      * @param bool $forceClosingTag
@@ -129,10 +129,10 @@ class TagBuilder
     }
 
     /**
-     * Returns TRUE if the tag has an attribute with the given name
+     * Returns true if the tag has an attribute with the given name
      *
      * @param string $attributeName name of the attribute
-     * @return bool TRUE if the tag has an attribute with the given name
+     * @return bool true if the tag has an attribute with the given name
      * @api
      */
     public function hasAttribute($attributeName)

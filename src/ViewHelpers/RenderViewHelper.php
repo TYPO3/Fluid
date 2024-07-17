@@ -121,7 +121,7 @@ class RenderViewHelper extends AbstractViewHelper
         $this->registerArgument('partial', 'string', 'Partial to render, with or without section');
         $this->registerArgument('delegate', 'string', 'Optional PHP class name of a permanent, included-in-app ParsedTemplateInterface implementation to override partial/section');
         $this->registerArgument('arguments', 'array', 'Array of variables to be transferred. Use {_all} for all variables', false, []);
-        $this->registerArgument('optional', 'boolean', 'If TRUE, considers the *section* optional. Partial never is.', false, false);
+        $this->registerArgument('optional', 'boolean', 'If true, considers the *section* optional. Partial never is.', false, false);
         $this->registerArgument('default', 'mixed', 'Value (usually string) to be displayed if the section or partial does not exist');
         $this->registerArgument('contentAs', 'string', 'If used, renders the child content and adds it as a template variable with this name for use in the partial/section');
     }

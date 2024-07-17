@@ -28,11 +28,11 @@ $view->assign('varfalse', false);
 $view->assign('vararray1', ['foo' => 'bar']);
 $view->assign('vararray2', ['bar' => 'foo']);
 $view->assign('checkTernary', true);
-$view->assign('ternaryTrue', 'The ternary expression is TRUE');
+$view->assign('ternaryTrue', 'The ternary expression is true');
 $view->assign('ternaryFalse', 'The ternary expression is false');
 $view->assign('asArray', [
     'nested' => [
-        'then' => 'Dotted variable TRUE',
+        'then' => 'Dotted variable true',
         'else' => 'Dotted variable false',
         'check' => true,
     ],
