@@ -227,7 +227,7 @@ class TemplatePaths
      * fallback if no other paths have the file.
      *
      * If the file does not exist in any path,
-     * including fallback path, `NULL` is returned.
+     * including fallback path, `null` is returned.
      *
      * Path configurations filled from TypoScript
      * is automatically recorded in the right
@@ -550,7 +550,7 @@ class TemplatePaths
      * This identifier is based on the template path and last modification date
      *
      * @param string $controller
-     * @param string $action Name of the action. If NULL, will be taken from request.
+     * @param string $action Name of the action. If null, will be taken from request.
      * @return string template identifier
      */
     public function getTemplateIdentifier($controller = 'Default', $action = 'Default')
@@ -573,10 +573,10 @@ class TemplatePaths
 
     /**
      * Resolve the template path and filename for the given action. If $actionName
-     * is NULL, looks into the current request.
+     * is null, looks into the current request.
      *
      * @param string $controller
-     * @param string $action Name of the action. If NULL, will be taken from request.
+     * @param string $action Name of the action. If null, will be taken from request.
      * @return string Full path to template
      * @throws InvalidTemplateResourceException
      */

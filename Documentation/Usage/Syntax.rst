@@ -89,7 +89,7 @@ variable access (e.g. `{variable}`) and ViewHelper usage in inline mode
 *variable access with additional syntax*:
 
 * `{myPossiblyArray as array}` will for example make sure you access
-  `{myPossiblyArray}` as an array even if it is NULL or other, which is useful
+  `{myPossiblyArray}` as an array even if it is :php:`null` or other, which is useful
   when you pass a suspect value to ViewHelpers like `f:for` which require
   arrays.
 * `{checkVariable ? thenVariable : elseVariable}` will for example output the

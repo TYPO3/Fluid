@@ -168,7 +168,7 @@ class RenderViewHelper extends AbstractViewHelper
             throw new \InvalidArgumentException('ViewHelper f:render called without either argument section, partial or delegate and optional flag is false');
         }
         // Replace empty content with default value. If default is
-        // not set, NULL is returned and cast to a new, empty string
+        // not set, null is returned and cast to a new, empty string
         // outside this ViewHelper.
         if ($content === '') {
             $content = $arguments['default'] ?: $tagContent ?: $renderChildrenClosure();

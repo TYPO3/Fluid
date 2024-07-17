@@ -43,7 +43,7 @@ interface ParsedTemplateInterface
 
     /**
      * Returns the name of the layout that is defined within the current template via <f:layout name="..." />
-     * If no layout is defined, this returns NULL
+     * If no layout is defined, this returns null.
      * This requires the current rendering context in order to be able to evaluate the layout name
      *
      * @param RenderingContextInterface $renderingContext
