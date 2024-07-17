@@ -65,7 +65,7 @@ class TemplateCompiler
     }
 
     /**
-     * Returns TRUE only if the TemplateCompiler is in warmup mode.
+     * Returns true only if the TemplateCompiler is in warmup mode.
      */
     public function isWarmupMode()
     {
