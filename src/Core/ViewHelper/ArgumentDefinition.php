@@ -55,7 +55,7 @@ class ArgumentDefinition
      * A value of TRUE means "escape unless escaping is disabled" (e.g. if argument is used in a ViewHelper nested
      * within f:format.raw which disables escaping, the argument will not be escaped).
      *
-     * A value of FALSE means "never escape argument" (as in behavior of f:format.raw, which supports both passing
+     * "false" means "never escape argument" (as in behavior of f:format.raw, which supports both passing
      * argument as actual argument or as tag content, but wants neither to be escaped).
      *
      * @var bool|null

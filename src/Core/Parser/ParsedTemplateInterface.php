@@ -68,14 +68,14 @@ interface ParsedTemplateInterface
 
     /**
      * If the template contains constructs which prevent the compiler from compiling the template
-     * correctly, isCompilable() will return FALSE.
+     * correctly, isCompilable() will return false.
      *
      * @return bool TRUE if the template can be compiled
      */
     public function isCompilable();
 
     /**
-     * @return bool TRUE if the template is already compiled, FALSE otherwise
+     * @return bool TRUE if the template is already compiled
      */
     public function isCompiled();
 }
