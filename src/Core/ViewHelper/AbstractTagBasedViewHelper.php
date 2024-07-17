@@ -133,7 +133,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * @param string $name Name of tag attribute
      * @param string $type Type of the tag attribute
      * @param string $description Description of tag attribute
-     * @param bool $required set to TRUE if tag attribute is required. Defaults to FALSE.
+     * @param bool $required set to TRUE if tag attribute is required. Defaults to false.
      * @param mixed $defaultValue Optional, default value of attribute if one applies
      * @api
      * @deprecated No longer necessary since arbitrary arguments are possible; will be removed with next major version

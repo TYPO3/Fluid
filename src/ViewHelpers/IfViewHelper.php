@@ -101,7 +101,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *             This is being shown in case the condition matches.
  *         </f:then>
  *         <f:else>
- *             This is being displayed in case the condition evaluates to FALSE.
+ *             This is being displayed in case the condition evaluates to false.
  *         </f:else>
  *     </f:if>
  *

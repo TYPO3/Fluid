@@ -153,7 +153,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param string $name Name of the argument
      * @param string $type Type of the argument
      * @param string $description Description of the argument
-     * @param bool $required If TRUE, argument is required. Defaults to FALSE.
+     * @param bool $required If TRUE, argument is required. Defaults to false.
      * @param mixed $defaultValue Default value of argument. Will be used if the argument is not set.
      * @param bool|null $escape Can be toggled to TRUE to force escaping of variables and inline syntax passed as argument value.
      * @return \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
@@ -180,7 +180,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param string $name Name of the argument
      * @param string $type Type of the argument
      * @param string $description Description of the argument
-     * @param bool $required If TRUE, argument is required. Defaults to FALSE.
+     * @param bool $required If TRUE, argument is required. Defaults to false.
      * @param mixed $defaultValue Default value of argument
      * @param bool|null $escape Can be toggled to TRUE to force escaping of variables and inline syntax passed as argument value.
      * @return \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
@@ -425,7 +425,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * The isset() test used fills both those requirements.
      *
      * @param string $argumentName
-     * @return bool TRUE if $argumentName is found, FALSE otherwise
+     * @return bool TRUE if $argumentName is found
      * @api
      */
     protected function hasArgument($argumentName)

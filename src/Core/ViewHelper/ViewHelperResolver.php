@@ -161,12 +161,12 @@ class ViewHelperResolver
     }
 
     /**
-     * Validates the given namespaceIdentifier and returns FALSE
+     * Validates the given namespaceIdentifier and returns false
      * if the namespace is unknown, causing the tag to be rendered
      * without processing.
      *
      * @param string $namespaceIdentifier
-     * @return bool TRUE if the given namespace is valid, otherwise FALSE
+     * @return bool TRUE if the given namespace is valid
      */
     public function isNamespaceValid($namespaceIdentifier)
     {
@@ -178,11 +178,11 @@ class ViewHelperResolver
     }
 
     /**
-     * Validates the given namespaceIdentifier and returns FALSE
+     * Validates the given namespaceIdentifier and returns false
      * if the namespace is unknown and not ignored
      *
      * @param string $namespaceIdentifier
-     * @return bool TRUE if the given namespace is valid, otherwise FALSE
+     * @return bool TRUE if the given namespace is valid
      */
     public function isNamespaceValidOrIgnored($namespaceIdentifier)
     {
