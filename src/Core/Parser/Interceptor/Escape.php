@@ -37,7 +37,7 @@ class Escape implements InterceptorInterface
 
     /**
      * Adds a ViewHelper node using the Format\HtmlspecialcharsViewHelper to the given node.
-     * If "escapingInterceptorEnabled" in the ViewHelper is FALSE, will disable itself inside the ViewHelpers body.
+     * If "escapingInterceptorEnabled" in the ViewHelper is false, will disable itself inside the ViewHelpers body.
      *
      * @param NodeInterface $node
      * @param int $interceptorPosition One of the INTERCEPT_* constants for the current interception point

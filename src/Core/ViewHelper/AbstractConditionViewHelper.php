@@ -20,7 +20,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * To create a custom Condition ViewHelper, you need to subclass this class, and
  * implement your own render() method. Inside there, you should call $this->renderThenChild()
  * if the condition evaluated to TRUE, and $this->renderElseChild() if the condition evaluated
- * to FALSE.
+ * to false.
  *
  * Every Condition ViewHelper has a "then" and "else" argument, so it can be used like:
  * <[aConditionViewHelperName] .... then="condition true" else="condition false" />,
