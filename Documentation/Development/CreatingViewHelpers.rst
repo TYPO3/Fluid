@@ -63,7 +63,7 @@ To enable this usage we must then create a ViewHelper class:
         public function render() {
             $values = $this->arguments['values'];
             $keys = $this->arguments['keys'];
-            if ($values === NULL) {
+            if ($values === null) {
                 $values = $this->renderChildren();
             }
             return array_combine($keys, $values);

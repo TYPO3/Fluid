@@ -50,7 +50,7 @@ class ArgumentDefinition
     /**
      * Escaping instruction, in line with $this->escapeOutput / $this->escapeChildren on ViewHelpers.
      *
-     * A value of NULL means "use default behavior" (which is to escape nodes contained in the value).
+     * "null" means "use default behavior" (which is to escape nodes contained in the value).
      *
      * "true" means "escape unless escaping is disabled" (e.g. if argument is used in a ViewHelper nested
      * within f:format.raw which disables escaping, the argument will not be escaped).

@@ -373,7 +373,7 @@ class TemplateParser
      * @param string $namespaceIdentifier Namespace identifier - being looked up in $this->namespaces
      * @param string $methodIdentifier Method identifier
      * @param array $argumentsObjectTree Arguments object tree
-     * @return NodeInterface|null An instance of ViewHelperNode if identity was valid - NULL if the namespace/identity was not registered
+     * @return NodeInterface|null An instance of ViewHelperNode if identity was valid - null if the namespace/identity was not registered
      * @throws Exception
      */
     protected function initializeViewHelperAndAddItToStack(ParsingState $state, $namespaceIdentifier, $methodIdentifier, $argumentsObjectTree)
