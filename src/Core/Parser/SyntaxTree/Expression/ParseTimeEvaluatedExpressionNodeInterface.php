@@ -20,6 +20,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
  * which call for evaluation during parse-time, please see
  * the PreProcessor pattern instead.
  *
- * @deprecated To be removed again in Fluid 3.0
+ * @deprecated Unused. Will be removed in v4.
  */
 interface ParseTimeEvaluatedExpressionNodeInterface extends ExpressionNodeInterface {}

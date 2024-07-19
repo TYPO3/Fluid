@@ -44,7 +44,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
  * string variable anyway since special implementations or future
  * changes in Fluid may cause initialisation code to be generated.
  *
- * @deprecated Unused. Will be removed. Inline access to the constants and compileWithCallToStaticMethod() instead.
+ * @deprecated Will be removed in v4. Unused. Inline access to the constants and compileWithCallToStaticMethod() instead.
  */
 class ViewHelperCompiler
 {

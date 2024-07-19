@@ -22,7 +22,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 class TemplateCompiler
 {
     /**
-     * @deprecated Unused. Will be removed.
+     * @deprecated Will be removed in v4. Unused.
      */
     public const SHOULD_GENERATE_VIEWHELPER_INVOCATION = '##should_gen_viewhelper##';
 

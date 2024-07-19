@@ -136,7 +136,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * @param bool $required set to true if tag attribute is required. Defaults to false.
      * @param mixed $defaultValue Optional, default value of attribute if one applies
      * @api
-     * @deprecated No longer necessary since arbitrary arguments are possible; will be removed with next major version
+     * @deprecated Will log deprecation in v4, will be removed in v5. No longer necessary since arbitrary arguments are allowed.
      */
     protected function registerTagAttribute($name, $type, $description, $required = false, $defaultValue = null)
     {
@@ -149,7 +149,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * Should be used inside registerArguments();
      *
      * @api
-     * @deprecated No longer necessary since arbitrary arguments are possible; will be removed with next major version
+     * @deprecated Will log deprecation in v4, will be removed in v5. No longer necessary since arbitrary arguments are allowed.
      */
     protected function registerUniversalTagAttributes()
     {
