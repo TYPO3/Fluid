@@ -45,6 +45,7 @@ If using Fluid in combination with TYPO3 CMS, a look at the documentation of
    Installation/Index
    Usage/Index
    Development/Index
+   Changelog/Index
 
 .. Meta Menu
 

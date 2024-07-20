@@ -48,7 +48,7 @@ class ObjectAccessorNode extends AbstractNode
     }
 
     /**
-     * @deprecated Unused. Will be removed.
+     * @deprecated Unused. Will be removed in Fluid v4.
      */
     public function getAccessors(): array
     {

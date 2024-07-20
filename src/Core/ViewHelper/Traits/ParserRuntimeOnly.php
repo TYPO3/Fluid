@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 /**
  * Class ParserRuntimeOnly
  *
- * @deprecated inline to consumers directly.
+ * @deprecated Will be removed in v4. Inline to consumers directly.
  */
 trait ParserRuntimeOnly
 {

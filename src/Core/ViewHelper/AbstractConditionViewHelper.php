@@ -132,7 +132,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * subclasses that will be using this base class in the future. Let this
      * be a warning if someone considers changing this method signature!
      *
-     * @deprecated Deprecated in favor of ClassName::verdict($arguments, renderingContext), will no longer be called in 3.0
+     * @deprecated Will be removed in v4 and no longer be called. Use verdict() instead.
      * @param array<string, mixed> $arguments
      * @return bool
      * @api
