@@ -11,7 +11,7 @@ namespace TYPO3Fluid\Fluid\Core\Variables;
  * Extracts variables from arrays/objects by use
  * of array accessing and basic getter methods.
  *
- * @deprecated Will be removed in Fluid 3.0
+ * @deprecated Will be removed in v4. Use StandardVariableProvider instead.
  */
 class VariableExtractor
 {
