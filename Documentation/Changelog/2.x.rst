@@ -22,7 +22,9 @@ Changelog 2.x
   find such arguments in :php:`$this->additionalArguments` when the call to :php:`registerUniversalTagAttributes()`
   is removed. Alternatively, arguments registered using :php:`registerArgument()` can be found in
   :php:`$this->arguments`.
-
+* Deprecation: Test abstracts :php:`TYPO3Fluid\Fluid\Tests\BaseTestCase` and
+  :php:`TYPO3Fluid\Fluid\Tests\UnitTestCase` have been marked as deprecated and
+  will be removed in Fluid v4. Extend :php:`PHPUnit\Framework\TestCase` directly.
 
 2.9
 ---
@@ -38,7 +40,7 @@ Changelog 2.x
 2.8
 ---
 
-* Deprecation: Method :php:`TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode->getAccessors()
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode->getAccessors()`
   is unused and has been marked as deprecated. It will be removed in Fluid v4.
 * Deprecation: Unused public constant :php:`TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::SHOULD_GENERATE_VIEWHELPER_INVOCATION`
   has been marked as deprecated and will be removed in Fluid v4.
@@ -68,6 +70,6 @@ Changelog 2.x
 2.4
 ---
 
-* Deprecation Class :php:`TYPO3Fluid\Fluid\Core\Variables\VariableExtractor`
+* Deprecation: Class :php:`TYPO3Fluid\Fluid\Core\Variables\VariableExtractor`
   is unused and has been marked as deprecated. It will be removed in Fluid v4.
   Use :php:`StandardVariableProvider` instead.

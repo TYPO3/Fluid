@@ -136,10 +136,11 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * @param bool $required set to true if tag attribute is required. Defaults to false.
      * @param mixed $defaultValue Optional, default value of attribute if one applies
      * @api
-     * @deprecated Will log deprecation in v4, will be removed in v5. No longer necessary since arbitrary arguments are allowed.
+     * @deprecated Will be removed in v5. No longer necessary since arbitrary arguments are allowed.
      */
     protected function registerTagAttribute($name, $type, $description, $required = false, $defaultValue = null)
     {
+        trigger_error('registerTagAttribute() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
         $this->registerArgument($name, $type, $description, $required, $defaultValue);
         self::$tagAttributes[get_class($this)][$name] = $name;
     }
@@ -149,10 +150,11 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * Should be used inside registerArguments();
      *
      * @api
-     * @deprecated Will log deprecation in v4, will be removed in v5. No longer necessary since arbitrary arguments are allowed.
+     * @deprecated Will be removed in v5. No longer necessary since arbitrary arguments are allowed.
      */
     protected function registerUniversalTagAttributes()
     {
+        trigger_error('registerUniversalTagAttributes() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
         $this->registerTagAttribute('class', 'string', 'CSS class(es) for this element');
         $this->registerTagAttribute('dir', 'string', 'Text direction for this HTML element. Allowed strings: "ltr" (left to right), "rtl" (right to left)');
         $this->registerTagAttribute('id', 'string', 'Unique (in this file) identifier for this HTML element.');

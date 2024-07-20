@@ -13,23 +13,6 @@ namespace TYPO3Fluid\Fluid\Core\Variables;
 class StandardVariableProvider implements VariableProviderInterface
 {
     /**
-     * @deprecated Unused. Will be removed in v4.
-     */
-    public const ACCESSOR_ARRAY = 'array';
-    /**
-     * @deprecated Unused. Will be removed in v4.
-     */
-    public const ACCESSOR_GETTER = 'getter';
-    /**
-     * @deprecated Unused. Will be removed in v4.
-     */
-    public const ACCESSOR_ASSERTER = 'asserter';
-    /**
-     * @deprecated Unused. Will be removed in v4
-     */
-    public const ACCESSOR_PUBLICPROPERTY = 'public';
-
-    /**
      * Variables stored in context
      *
      * @var mixed

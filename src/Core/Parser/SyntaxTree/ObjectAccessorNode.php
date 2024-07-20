@@ -48,14 +48,6 @@ class ObjectAccessorNode extends AbstractNode
     }
 
     /**
-     * @deprecated Unused. Will be removed in Fluid v4.
-     */
-    public function getAccessors(): array
-    {
-        return [];
-    }
-
-    /**
      * Evaluate this node and return the correct object.
      *
      * Handles each part (denoted by .) in $this->objectPath in the following order:

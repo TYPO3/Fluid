@@ -13,7 +13,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ParseTimeEvaluatedExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
@@ -688,11 +687,6 @@ class TemplateParser
                             /** @var ExpressionNodeInterface $expressionNode */
                             $expressionNode = new $expressionNodeTypeClassName($matchedVariableSet[0], $matchedVariableSet, $state);
                             try {
-                                // Trigger initial parse-time evaluation to allow the node to manipulate the rendering context.
-                                if ($expressionNode instanceof ParseTimeEvaluatedExpressionNodeInterface) {
-                                    $expressionNode->evaluate($this->renderingContext);
-                                }
-
                                 if ($expressionStartPosition > 0) {
                                     $state->getNodeFromStack()->addChildNode(new TextNode(substr($section, 0, $expressionStartPosition)));
                                 }

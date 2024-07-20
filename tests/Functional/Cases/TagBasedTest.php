@@ -75,10 +75,6 @@ final class TagBasedTest extends AbstractFunctionalTestCase
                 '<test:tagBasedTest additionalAttributes="{data-foo: \'additional\'}" data-foo="attribute" />',
                 '<div data-foo="attribute" />',
             ],
-            'override universal attribute' => [
-                '<test:overrideUniversalAttributeTest />',
-                '<div title="my default" />',
-            ],
         ];
     }
 

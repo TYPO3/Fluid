@@ -7,7 +7,6 @@
 
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
-use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingChildrenException;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
@@ -535,66 +534,61 @@ abstract class AbstractViewHelper implements ViewHelperInterface
         $renderChildrenClosureVariableName = $templateCompiler->variableName('renderChildrenClosure');
         $viewHelperInitializationPhpCode = '';
 
-        try {
-            $convertedViewHelperExecutionCode = $this->compile(
-                $argumentsVariableName,
-                $renderChildrenClosureVariableName,
-                $viewHelperInitializationPhpCode,
-                $this->viewHelperNode,
-                $templateCompiler,
-            );
+        $convertedViewHelperExecutionCode = $this->compile(
+            $argumentsVariableName,
+            $renderChildrenClosureVariableName,
+            $viewHelperInitializationPhpCode,
+            $this->viewHelperNode,
+            $templateCompiler,
+        );
 
-            $accumulatedArgumentInitializationCode = '';
-            $argumentInitializationCode = sprintf('%s = [' . chr(10), $argumentsVariableName);
+        $accumulatedArgumentInitializationCode = '';
+        $argumentInitializationCode = sprintf('%s = [' . chr(10), $argumentsVariableName);
 
-            $arguments = $this->viewHelperNode->getArguments();
-            $argumentDefinitions = $this->viewHelperNode->getArgumentDefinitions();
-            foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
-                if (!array_key_exists($argumentName, $arguments)) {
-                    // Argument *not* given to VH, use default value
-                    $defaultValue = $argumentDefinition->getDefaultValue();
-                    $argumentInitializationCode .= sprintf(
-                        '\'%s\' => %s,' . chr(10),
-                        $argumentName,
-                        is_array($defaultValue) && empty($defaultValue) ? '[]' : var_export($defaultValue, true),
-                    );
-                }
+        $arguments = $this->viewHelperNode->getArguments();
+        $argumentDefinitions = $this->viewHelperNode->getArgumentDefinitions();
+        foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
+            if (!array_key_exists($argumentName, $arguments)) {
+                // Argument *not* given to VH, use default value
+                $defaultValue = $argumentDefinition->getDefaultValue();
+                $argumentInitializationCode .= sprintf(
+                    '\'%s\' => %s,' . chr(10),
+                    $argumentName,
+                    is_array($defaultValue) && empty($defaultValue) ? '[]' : var_export($defaultValue, true),
+                );
             }
-
-            foreach ($arguments as $argumentName => $argumentValue) {
-                if ($argumentValue instanceof NodeInterface) {
-                    $converted = $argumentValue->convert($templateCompiler);
-                    if (!empty($converted['initialization'])) {
-                        $accumulatedArgumentInitializationCode .= $converted['initialization'];
-                    }
-                    $argumentInitializationCode .= sprintf(
-                        '\'%s\' => %s,' . chr(10),
-                        $argumentName,
-                        $converted['execution'],
-                    );
-                } else {
-                    $argumentInitializationCode .= sprintf(
-                        '\'%s\' => %s,' . chr(10),
-                        $argumentName,
-                        $argumentValue,
-                    );
-                }
-            }
-
-            $argumentInitializationCode .= '];' . chr(10);
-
-            // Build up closure which renders the child nodes
-            $initializationPhpCode .= sprintf(
-                '%s = %s;' . chr(10),
-                $renderChildrenClosureVariableName,
-                $templateCompiler->wrapChildNodesInClosure($this->viewHelperNode),
-            );
-
-            $initializationPhpCode .= $accumulatedArgumentInitializationCode . chr(10) . $argumentInitializationCode . $viewHelperInitializationPhpCode;
-        } catch (StopCompilingChildrenException $stopCompilingChildrenException) {
-            // @deprecated: Will be removed in v4. Remove together with StopCompilingChildrenException and simplify surrounding code.
-            $convertedViewHelperExecutionCode = '\'' . str_replace("'", "\'", $stopCompilingChildrenException->getReplacementString()) . '\'';
         }
+
+        foreach ($arguments as $argumentName => $argumentValue) {
+            if ($argumentValue instanceof NodeInterface) {
+                $converted = $argumentValue->convert($templateCompiler);
+                if (!empty($converted['initialization'])) {
+                    $accumulatedArgumentInitializationCode .= $converted['initialization'];
+                }
+                $argumentInitializationCode .= sprintf(
+                    '\'%s\' => %s,' . chr(10),
+                    $argumentName,
+                    $converted['execution'],
+                );
+            } else {
+                $argumentInitializationCode .= sprintf(
+                    '\'%s\' => %s,' . chr(10),
+                    $argumentName,
+                    $argumentValue,
+                );
+            }
+        }
+
+        $argumentInitializationCode .= '];' . chr(10);
+
+        // Build up closure which renders the child nodes
+        $initializationPhpCode .= sprintf(
+            '%s = %s;' . chr(10),
+            $renderChildrenClosureVariableName,
+            $templateCompiler->wrapChildNodesInClosure($this->viewHelperNode),
+        );
+
+        $initializationPhpCode .= $accumulatedArgumentInitializationCode . chr(10) . $argumentInitializationCode . $viewHelperInitializationPhpCode;
         return [
             'initialization' => $initializationPhpCode,
             // @todo: compile() *should* return strings, but it's not enforced in the interface.
