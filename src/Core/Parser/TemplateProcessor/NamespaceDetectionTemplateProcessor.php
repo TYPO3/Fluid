@@ -7,6 +7,7 @@
 
 namespace TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor;
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\Patterns;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -96,9 +97,14 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
             preg_match_all('/' . $namespacePattern . '/', $matches[0], $namespaces, PREG_SET_ORDER);
             foreach ($namespaces as $set) {
                 $namespaceUrl = trim($set[2], '"\'');
-                if (strpos($namespaceUrl, Patterns::NAMESPACEPREFIX) === 0) {
+                if (str_starts_with($namespaceUrl, Patterns::NAMESPACEPREFIX)) {
                     $namespaceUri = substr($namespaceUrl, 20);
                     $namespacePhp = str_replace('/', '\\', $namespaceUri);
+                } elseif (str_starts_with($namespaceUrl, Patterns::NAMESPACEPREFIX_INVALID)) {
+                    throw new Exception(
+                        'Invalid Fluid namespace definition detected: ' . $namespaceUrl . '. Namespaces must always start with ' . Patterns::NAMESPACEPREFIX . '.',
+                        1721467847,
+                    );
                 } elseif (!preg_match('/([^a-z0-9_\\\\]+)/i', $namespaceUrl)) {
                     $namespacePhp = $namespaceUrl;
                     $namespacePhp = preg_replace('/\\\\{2,}/', '\\', $namespacePhp);

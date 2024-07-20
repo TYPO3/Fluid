@@ -13,6 +13,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
 abstract class Patterns
 {
     public const NAMESPACEPREFIX = 'http://typo3.org/ns/';
+    public const NAMESPACEPREFIX_INVALID = 'https://typo3.org/ns/';
     public const NAMESPACESUFFIX = '/ViewHelpers';
 
     /**
