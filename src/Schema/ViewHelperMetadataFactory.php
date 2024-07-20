@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Schema;
 
+use TYPO3Fluid\Fluid\Core\Parser\Patterns;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 
@@ -98,7 +99,7 @@ final class ViewHelperMetadataFactory
 
     private function generateXmlNamespace(string $phpNamespace): string
     {
-        return 'http://typo3.org/ns/' . str_replace('\\', '/', $phpNamespace);
+        return Patterns::NAMESPACEPREFIX . str_replace('\\', '/', $phpNamespace);
     }
 
     private function generateTagName(string $viewHelperName): string
