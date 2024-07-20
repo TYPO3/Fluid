@@ -148,7 +148,8 @@ abstract class AbstractViewHelper implements ViewHelperInterface
 
     /**
      * Register a new argument. Call this method from your ViewHelper subclass
-     * inside the initializeArguments() method.
+     * inside the initializeArguments() method. If an argument with the same name
+     * is already defined, it will be overridden.
      *
      * @param string $name Name of the argument
      * @param string $type Type of the argument
@@ -157,17 +158,10 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param mixed $defaultValue Default value of argument. Will be used if the argument is not set.
      * @param bool|null $escape Can be toggled to true to force escaping of variables and inline syntax passed as argument value.
      * @return \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
-     * @throws Exception
      * @api
      */
     protected function registerArgument($name, $type, $description, $required = false, $defaultValue = null, $escape = null)
     {
-        if (array_key_exists($name, $this->argumentDefinitions)) {
-            throw new Exception(
-                'Argument "' . $name . '" has already been defined, thus it should not be defined again.',
-                1253036401,
-            );
-        }
         $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue, $escape);
         return $this;
     }
@@ -186,6 +180,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @return \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
      * @throws Exception
      * @api
+     * @deprecated Will log deprecation in v4, will be removed in v5. No longer necessary since self::registerArgument() now allows overriding
      */
     protected function overrideArgument($name, $type, $description, $required = false, $defaultValue = null, $escape = null)
     {

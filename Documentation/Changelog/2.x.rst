@@ -6,6 +6,18 @@
 Changelog 2.x
 =============
 
+2.14
+----
+
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper->overrideArgument()`
+  has been marked as deprecated. It will log a deprecation level error message when called in
+  Fluid v4. It will be removed in Fluid v5.
+  :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper->registerArgument()` now no longer throws
+  an exception if an argument is already defined, so calls to
+  :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper->overrideArgument()`
+  can be replaced with :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper->registerArgument()`.
+
+
 2.12
 ----
 
