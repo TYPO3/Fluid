@@ -7,6 +7,7 @@
 
 namespace TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor;
 
+use TYPO3Fluid\Fluid\Core\Parser\Patterns;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -95,7 +96,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
             preg_match_all('/' . $namespacePattern . '/', $matches[0], $namespaces, PREG_SET_ORDER);
             foreach ($namespaces as $set) {
                 $namespaceUrl = trim($set[2], '"\'');
-                if (strpos($namespaceUrl, 'http://typo3.org/ns/') === 0) {
+                if (strpos($namespaceUrl, Patterns::NAMESPACEPREFIX) === 0) {
                     $namespaceUri = substr($namespaceUrl, 20);
                     $namespacePhp = str_replace('/', '\\', $namespaceUri);
                 } elseif (!preg_match('/([^a-z0-9_\\\\]+)/i', $namespaceUrl)) {

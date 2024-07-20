@@ -12,6 +12,7 @@ namespace TYPO3Fluid\Fluid\Tools;
 use Composer\Autoload\ClassLoader;
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult;
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
+use TYPO3Fluid\Fluid\Core\Parser\Patterns;
 use TYPO3Fluid\Fluid\Core\Variables\JSONVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
@@ -145,7 +146,7 @@ final class ConsoleRunner
 
         foreach ($groupedByNamespace as $xmlNamespace => $viewHelpers) {
             $schema = (new SchemaGenerator())->generate($xmlNamespace, $viewHelpers);
-            $fileName = str_replace('http://typo3.org/ns/', '', $xmlNamespace);
+            $fileName = str_replace(Patterns::NAMESPACEPREFIX, '', $xmlNamespace);
             $fileName = str_replace('/', '_', $fileName);
             $fileName = preg_replace('#[^0-9a-zA-Z_]#', '', $fileName);
             file_put_contents($destination . 'schema_' . $fileName . '.xsd', $schema->asXml());
