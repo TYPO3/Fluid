@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Parser\TemplateProcessor;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\NamespaceDetectionTemplateProcessor;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
@@ -46,6 +47,14 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
             ],
             'ignores unknown namespaces' => [
                 '<html xmlns:unknown="http://not.from.here/ns/something" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
+                [
+                    'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
+                    'unknown' => null,
+                ],
+                PHP_EOL,
+            ],
+            'ignores unknown namespaces with https' => [
+                '<html xmlns:unknown="https://not.from.here/ns/something" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
                 [
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
                     'unknown' => null,
@@ -108,5 +117,15 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
         $result = $subject->preProcessSource($templateSource);
         self::assertSame($expectedSource, $result);
         self::assertSame($expectedNamespaces, $viewHelperResolver->getNamespaces());
+    }
+
+    #[Test]
+    public function throwsErrorForInvalidFluidNamespace(): void
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(1721467847);
+        $subject = new NamespaceDetectionTemplateProcessor();
+        $subject->setRenderingContext(new RenderingContext());
+        $subject->preProcessSource('<html xmlns:x="http://typo3.org/ns/X/Y/ViewHelpers" xmlns:z="https://typo3.org/ns/X/Z/ViewHelpers" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>');
     }
 }
