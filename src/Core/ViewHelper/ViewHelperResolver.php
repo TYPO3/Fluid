@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -23,25 +25,19 @@ use TYPO3Fluid\Fluid\Core\Parser\Patterns;
  */
 class ViewHelperResolver
 {
-    /**
-     * @var array
-     */
-    protected $resolvedViewHelperClassNames = [];
+    protected array $resolvedViewHelperClassNames = [];
 
     /**
      * Namespaces requested by the template being rendered,
      * in [shortname => phpnamespace] format.
      *
-     * @var array
+     * @var array<string, string[]|null>
      */
-    protected $namespaces = [
+    protected array $namespaces = [
         'f' => ['TYPO3Fluid\\Fluid\\ViewHelpers'],
     ];
 
-    /**
-     * @return array
-     */
-    public function getNamespaces()
+    public function getNamespaces(): array
     {
         return $this->namespaces;
     }
@@ -78,11 +74,8 @@ class ViewHelperResolver
      * you need to remove or replace previously added namespaces. Be aware
      * that setNamespaces() also removes the default "f" namespace, so
      * when you use this method you should always include the "f" namespace.
-     *
-     * @param string $identifier
-     * @param string|array $phpNamespace
      */
-    public function addNamespace($identifier, $phpNamespace)
+    public function addNamespace(string $identifier, string|array|null $phpNamespace): void
     {
         if (!array_key_exists($identifier, $this->namespaces) || $this->namespaces[$identifier] === null) {
             $this->namespaces[$identifier] = $phpNamespace === null ? null : (array)$phpNamespace;
@@ -98,10 +91,8 @@ class ViewHelperResolver
      * clearing the already added namespaces. Utility method mainly
      * used in compiled templates, where some namespaces can be added
      * from outside and some can be added from compiled values.
-     *
-     * @param array $namespaces
      */
-    public function addNamespaces(array $namespaces)
+    public function addNamespaces(array $namespaces): void
     {
         foreach ($namespaces as $identifier => $namespace) {
             $this->addNamespace($identifier, $namespace);
@@ -119,7 +110,7 @@ class ViewHelperResolver
      * @param string $fluidNamespace
      * @return string
      */
-    public function resolvePhpNamespaceFromFluidNamespace($fluidNamespace)
+    public function resolvePhpNamespaceFromFluidNamespace(string $fluidNamespace): string
     {
         $namespace = $fluidNamespace;
         $suffixLength = strlen(Patterns::NAMESPACESUFFIX);
@@ -149,10 +140,8 @@ class ViewHelperResolver
      * belonged to "f" as a new alias and use that in your templates.
      *
      * Use getNamespaces() to get an array of currently added namespaces.
-     *
-     * @param array $namespaces
      */
-    public function setNamespaces(array $namespaces)
+    public function setNamespaces(array $namespaces): void
     {
         $this->namespaces = [];
         foreach ($namespaces as $identifier => $phpNamespace) {
@@ -165,10 +154,9 @@ class ViewHelperResolver
      * if the namespace is unknown, causing the tag to be rendered
      * without processing.
      *
-     * @param string $namespaceIdentifier
      * @return bool true if the given namespace is valid
      */
-    public function isNamespaceValid($namespaceIdentifier)
+    public function isNamespaceValid(string $namespaceIdentifier): bool
     {
         if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
             return false;
@@ -184,7 +172,7 @@ class ViewHelperResolver
      * @param string $namespaceIdentifier
      * @return bool true if the given namespace is valid
      */
-    public function isNamespaceValidOrIgnored($namespaceIdentifier)
+    public function isNamespaceValidOrIgnored(string $namespaceIdentifier): bool
     {
         if ($this->isNamespaceValid($namespaceIdentifier) === true) {
             return true;
@@ -205,7 +193,7 @@ class ViewHelperResolver
      * @param string $namespaceIdentifier
      * @return bool
      */
-    public function isNamespaceIgnored($namespaceIdentifier)
+    public function isNamespaceIgnored(string $namespaceIdentifier): bool
     {
         if (array_key_exists($namespaceIdentifier, $this->namespaces)) {
             return $this->namespaces[$namespaceIdentifier] === null;
@@ -234,12 +222,9 @@ class ViewHelperResolver
      * If no ViewHelper class can be detected in any of the added
      * PHP namespaces a Fluid Parser Exception is thrown.
      *
-     * @param string $namespaceIdentifier
-     * @param string $methodIdentifier
-     * @return string|null
      * @throws ParserException
      */
-    public function resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier)
+    public function resolveViewHelperClassName(string $namespaceIdentifier, string $methodIdentifier): string
     {
         if (!isset($this->resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier])) {
             $resolvedViewHelperClassName = $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier);
@@ -262,12 +247,8 @@ class ViewHelperResolver
      * Can be overridden by custom implementations to change the way
      * classes are loaded when the class is a ViewHelper - for
      * example making it possible to use a DI-aware class loader.
-     *
-     * @param string $namespace
-     * @param string $viewHelperShortName
-     * @return ViewHelperInterface
      */
-    public function createViewHelperInstance($namespace, $viewHelperShortName)
+    public function createViewHelperInstance(string $namespace, string $viewHelperShortName): ViewHelperInterface
     {
         $className = $this->resolveViewHelperClassName($namespace, $viewHelperShortName);
         return $this->createViewHelperInstanceFromClassName($className);
@@ -278,11 +259,8 @@ class ViewHelperResolver
      * the final method called when creating ViewHelper classes -
      * overriding this method allows custom constructors, dependency
      * injections etc. to be performed on the ViewHelper instance.
-     *
-     * @param string $viewHelperClassName
-     * @return ViewHelperInterface
      */
-    public function createViewHelperInstanceFromClassName($viewHelperClassName)
+    public function createViewHelperInstanceFromClassName(string $viewHelperClassName): ViewHelperInterface
     {
         return new $viewHelperClassName();
     }
@@ -294,10 +272,9 @@ class ViewHelperResolver
      * implementations can if necessary add/remove/replace arguments
      * which will be passed to the ViewHelper.
      *
-     * @param ViewHelperInterface $viewHelper
      * @return ArgumentDefinition[]
      */
-    public function getArgumentDefinitionsForViewHelper(ViewHelperInterface $viewHelper)
+    public function getArgumentDefinitionsForViewHelper(ViewHelperInterface $viewHelper): array
     {
         return $viewHelper->prepareArguments();
     }
@@ -309,7 +286,7 @@ class ViewHelperResolver
      * @param string $methodIdentifier Method identifier, might be hierarchical like "link.url"
      * @return string The fully qualified class name of the viewhelper
      */
-    protected function resolveViewHelperName($namespaceIdentifier, $methodIdentifier)
+    protected function resolveViewHelperName(string $namespaceIdentifier, string $methodIdentifier): string
     {
         $explodedViewHelperName = explode('.', $methodIdentifier);
         if (count($explodedViewHelperName) > 1) {

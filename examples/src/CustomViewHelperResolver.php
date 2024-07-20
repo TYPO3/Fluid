@@ -25,12 +25,8 @@ class CustomViewHelperResolver extends ViewHelperResolver
      * Returns the built-in set of ViewHelper classes with
      * one addition, `f:myLink` which is redirected to anoter
      * class.
-     *
-     * @param string $namespaceIdentifier
-     * @param string $methodIdentifier
-     * @return string
      */
-    public function resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier)
+    public function resolveViewHelperClassName(string $namespaceIdentifier, string $methodIdentifier): string
     {
         if ($namespaceIdentifier === 'f' && $methodIdentifier === 'myLink') {
             return CustomViewHelper::class;
@@ -43,10 +39,9 @@ class CustomViewHelperResolver extends ViewHelperResolver
      * a case which matches our custom ViewHelper in order to
      * manipulate its argument definitions.
      *
-     * @param ViewHelperInterface $viewHelper
      * @return ArgumentDefinition[]
      */
-    public function getArgumentDefinitionsForViewHelper(ViewHelperInterface $viewHelper)
+    public function getArgumentDefinitionsForViewHelper(ViewHelperInterface $viewHelper): array
     {
         $arguments = parent::getArgumentDefinitionsForViewHelper($viewHelper);
         if ($viewHelper instanceof CustomViewHelper) {

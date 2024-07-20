@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -16,46 +18,37 @@ class TagBuilder
 {
     /**
      * Name of the Tag to be rendered
-     *
-     * @var string
      */
-    protected $tagName = '';
+    protected string $tagName = '';
 
     /**
      * Content of the tag to be rendered
-     *
-     * @var string
      */
-    protected $content = '';
+    protected ?string $content = '';
 
     /**
      * Attributes of the tag to be rendered
      *
-     * @var array
+     * @var array<string, mixed>
      */
-    protected $attributes = [];
+    protected array $attributes = [];
 
     /**
      * Specifies whether this tag needs a closing tag.
      * E.g. <textarea> cant be self-closing even if its empty
-     *
-     * @var bool
      */
-    protected $forceClosingTag = false;
+    protected bool $forceClosingTag = false;
 
-    /**
-     * @var bool
-     */
-    protected $ignoreEmptyAttributes = false;
+    protected bool $ignoreEmptyAttributes = false;
 
     /**
      * Constructor
      *
      * @param string $tagName name of the tag to be rendered
-     * @param string $tagContent content of the tag to be rendered
+     * @param string|null $tagContent content of the tag to be rendered
      * @api
      */
-    public function __construct($tagName = '', $tagContent = '')
+    public function __construct(string $tagName = '', ?string $tagContent = '')
     {
         $this->setTagName($tagName);
         $this->setContent($tagContent);
@@ -67,7 +60,7 @@ class TagBuilder
      * @param string $tagName name of the tag to be rendered
      * @api
      */
-    public function setTagName($tagName)
+    public function setTagName(string $tagName): void
     {
         $this->tagName = $tagName;
     }
@@ -78,7 +71,7 @@ class TagBuilder
      * @return string tag name of the tag to be rendered
      * @api
      */
-    public function getTagName()
+    public function getTagName(): string
     {
         return $this->tagName;
     }
@@ -86,10 +79,10 @@ class TagBuilder
     /**
      * Sets the content of the tag
      *
-     * @param string $tagContent content of the tag to be rendered
+     * @param string|null $tagContent content of the tag to be rendered
      * @api
      */
-    public function setContent($tagContent)
+    public function setContent(?string $tagContent): void
     {
         $this->content = $tagContent;
     }
@@ -97,10 +90,10 @@ class TagBuilder
     /**
      * Gets the content of the tag
      *
-     * @return string content of the tag to be rendered
+     * @return string|null content of the tag to be rendered
      * @api
      */
-    public function getContent()
+    public function getContent(): ?string
     {
         return $this->content;
     }
@@ -111,7 +104,7 @@ class TagBuilder
      * @return bool true if tag contains text
      * @api
      */
-    public function hasContent()
+    public function hasContent(): bool
     {
         return $this->content !== '' && $this->content !== null;
     }
@@ -120,10 +113,9 @@ class TagBuilder
      * Set this to true to force a closing tag
      * E.g. <textarea> cant be self-closing even if its empty
      *
-     * @param bool $forceClosingTag
      * @api
      */
-    public function forceClosingTag($forceClosingTag)
+    public function forceClosingTag(bool $forceClosingTag): void
     {
         $this->forceClosingTag = $forceClosingTag;
     }
@@ -135,7 +127,7 @@ class TagBuilder
      * @return bool true if the tag has an attribute with the given name
      * @api
      */
-    public function hasAttribute($attributeName)
+    public function hasAttribute(string $attributeName): bool
     {
         return array_key_exists($attributeName, $this->attributes);
     }
@@ -147,7 +139,7 @@ class TagBuilder
      * @return string|null The attribute value or null if the attribute is not registered
      * @api
      */
-    public function getAttribute($attributeName)
+    public function getAttribute(string $attributeName): ?string
     {
         if (!$this->hasAttribute($attributeName)) {
             return null;
@@ -161,15 +153,12 @@ class TagBuilder
      * @return array Attributes indexed by attribute name
      * @api
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attributes;
     }
 
-    /**
-     * @param bool $ignoreEmptyAttributes
-     */
-    public function ignoreEmptyAttributes($ignoreEmptyAttributes)
+    public function ignoreEmptyAttributes(bool $ignoreEmptyAttributes): void
     {
         $this->ignoreEmptyAttributes = $ignoreEmptyAttributes;
         if ($ignoreEmptyAttributes) {
@@ -188,12 +177,12 @@ class TagBuilder
      * @param bool $escapeSpecialCharacters apply htmlspecialchars to attribute value
      * @api
      */
-    public function addAttribute($attributeName, $attributeValue, $escapeSpecialCharacters = true)
+    public function addAttribute(string $attributeName, $attributeValue, bool $escapeSpecialCharacters = true): void
     {
         if ($escapeSpecialCharacters) {
             $attributeName = htmlspecialchars($attributeName);
         }
-        if (is_array($attributeValue) || $attributeValue instanceof \Traversable) {
+        if (is_iterable($attributeValue)) {
             if (!in_array($attributeName, ['data', 'aria'], true)) {
                 throw new \InvalidArgumentException(
                     sprintf('Value of tag attribute "%s" cannot be of type array.', $attributeName),
@@ -219,10 +208,10 @@ class TagBuilder
      * Adds attributes to the $attributes-collection
      *
      * @param array $attributes collection of attributes to add. key = attribute name, value = attribute value
-     * @param bool $escapeSpecialCharacters apply htmlspecialchars to attribute values#
+     * @param bool $escapeSpecialCharacters apply htmlspecialchars to attribute values
      * @api
      */
-    public function addAttributes(array $attributes, $escapeSpecialCharacters = true)
+    public function addAttributes(array $attributes, bool $escapeSpecialCharacters = true): void
     {
         foreach ($attributes as $attributeName => $attributeValue) {
             $this->addAttribute($attributeName, $attributeValue, $escapeSpecialCharacters);
@@ -235,7 +224,7 @@ class TagBuilder
      * @param string $attributeName name of the attribute to be removed from the tag
      * @api
      */
-    public function removeAttribute($attributeName)
+    public function removeAttribute(string $attributeName): void
     {
         unset($this->attributes[$attributeName]);
     }
@@ -245,7 +234,7 @@ class TagBuilder
      *
      * @api
      */
-    public function reset()
+    public function reset(): void
     {
         $this->tagName = '';
         $this->content = '';
@@ -256,10 +245,9 @@ class TagBuilder
     /**
      * Renders and returns the tag
      *
-     * @return string
      * @api
      */
-    public function render()
+    public function render(): string
     {
         if (empty($this->tagName)) {
             return '';

@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers\StaticCacheable;
 
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers\StaticCacheable\Fixtures\ViewHelpers\CompilableViewHelper;
@@ -35,7 +36,7 @@ final class SharedStaticCompilableViewHelperTest extends AbstractFunctionalTestC
             ];
             public array $called = [];
 
-            public function createViewHelperInstanceFromClassName($viewHelperClassName)
+            public function createViewHelperInstanceFromClassName(string $viewHelperClassName): ViewHelperInterface
             {
                 $this->called[$viewHelperClassName] ??= 0;
                 $this->called[$viewHelperClassName]++;

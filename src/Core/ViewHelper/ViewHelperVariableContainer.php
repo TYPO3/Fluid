@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -7,6 +9,7 @@
 
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
+use Traversable;
 use TYPO3Fluid\Fluid\View\ViewInterface;
 
 /**
@@ -20,14 +23,11 @@ class ViewHelperVariableContainer
      * Two-dimensional object array storing the values. The first dimension is the fully qualified ViewHelper name,
      * and the second dimension is the identifier for the data the ViewHelper wants to store.
      *
-     * @var array
+     * @var array<string, array<string, mixed>>
      */
-    protected $objects = [];
+    protected array $objects = [];
 
-    /**
-     * @var ViewInterface
-     */
-    protected $view;
+    protected ?ViewInterface $view = null;
 
     /**
      * Add a variable to the Variable Container. Make sure that $viewHelperName is ALWAYS set
@@ -38,7 +38,7 @@ class ViewHelperVariableContainer
      * @param mixed $value The value to store
      * @api
      */
-    public function add($viewHelperName, $key, $value)
+    public function add(string $viewHelperName, string $key, mixed $value): void
     {
         $this->addOrUpdate($viewHelperName, $key, $value);
     }
@@ -48,21 +48,14 @@ class ViewHelperVariableContainer
      * array or Traversable (with string keys!).
      *
      * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
-     * @param array|\Traversable $variables An associative array of all variables to add
+     * @param iterable $variables An associative array of all variables to add
      * @api
      */
-    public function addAll($viewHelperName, $variables)
+    public function addAll(string $viewHelperName, iterable $variables): void
     {
-        if (!is_array($variables) && !$variables instanceof \Traversable) {
-            throw new \InvalidArgumentException(
-                'Invalid argument type for $variables in ViewHelperVariableContainer->addAll(). Expects array/Traversable ' .
-                'but received ' . (is_object($variables) ? get_class($variables) : gettype($variables)),
-                1501425195,
-            );
-        }
         $this->objects[$viewHelperName] = array_replace_recursive(
             isset($this->objects[$viewHelperName]) ? $this->objects[$viewHelperName] : [],
-            $variables instanceof \Traversable ? iterator_to_array($variables) : $variables,
+            $variables instanceof Traversable ? iterator_to_array($variables) : $variables,
         );
     }
 
@@ -75,7 +68,7 @@ class ViewHelperVariableContainer
      * @param string $key Key of the data
      * @param mixed $value The value to store
      */
-    public function addOrUpdate($viewHelperName, $key, $value)
+    public function addOrUpdate(string $viewHelperName, string $key, mixed $value): void
     {
         if (!isset($this->objects[$viewHelperName])) {
             $this->objects[$viewHelperName] = [];
@@ -92,7 +85,7 @@ class ViewHelperVariableContainer
      * @return mixed The object stored
      * @api
      */
-    public function get($viewHelperName, $key, $default = null)
+    public function get(string $viewHelperName, string $key, mixed $default = null): mixed
     {
         return $this->exists($viewHelperName, $key) ? $this->objects[$viewHelperName][$key] : $default;
     }
@@ -101,10 +94,10 @@ class ViewHelperVariableContainer
      * Gets all variables stored for a particular ViewHelper
      *
      * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
-     * @param mixed $default
+     * @param array $default
      * @return array
      */
-    public function getAll($viewHelperName, $default = null)
+    public function getAll(string $viewHelperName, array $default = []): array
     {
         return array_key_exists($viewHelperName, $this->objects) ? $this->objects[$viewHelperName] : $default;
     }
@@ -117,7 +110,7 @@ class ViewHelperVariableContainer
      * @return bool true if a value for the given ViewHelperName / Key is stored
      * @api
      */
-    public function exists($viewHelperName, $key)
+    public function exists(string $viewHelperName, string $key): bool
     {
         return isset($this->objects[$viewHelperName]) && array_key_exists($key, $this->objects[$viewHelperName]);
     }
@@ -129,7 +122,7 @@ class ViewHelperVariableContainer
      * @param string $key Key of the data to remove
      * @api
      */
-    public function remove($viewHelperName, $key)
+    public function remove(string $viewHelperName, string $key): void
     {
         unset($this->objects[$viewHelperName][$key]);
     }
@@ -139,7 +132,7 @@ class ViewHelperVariableContainer
      *
      * @param ViewInterface $view View to set
      */
-    public function setView(ViewInterface $view)
+    public function setView(ViewInterface $view): void
     {
         $this->view = $view;
     }
@@ -151,7 +144,7 @@ class ViewHelperVariableContainer
      *
      * @return ViewInterface|null The View, or null if view was not set
      */
-    public function getView()
+    public function getView(): ?ViewInterface
     {
         return $this->view;
     }
@@ -161,7 +154,7 @@ class ViewHelperVariableContainer
      *
      * @return array
      */
-    public function __sleep()
+    public function __sleep(): array
     {
         return ['objects'];
     }
