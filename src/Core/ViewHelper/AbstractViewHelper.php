@@ -592,7 +592,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
 
             $initializationPhpCode .= $accumulatedArgumentInitializationCode . chr(10) . $argumentInitializationCode . $viewHelperInitializationPhpCode;
         } catch (StopCompilingChildrenException $stopCompilingChildrenException) {
-            // @deprecated: Remove together with StopCompilingChildrenException and simplify surrounding code.
+            // @deprecated: Will be removed in v4. Remove together with StopCompilingChildrenException and simplify surrounding code.
             $convertedViewHelperExecutionCode = '\'' . str_replace("'", "\'", $stopCompilingChildrenException->getReplacementString()) . '\'';
         }
         return [

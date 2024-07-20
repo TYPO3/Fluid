@@ -25,7 +25,8 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
  * For example implemented in Cache/StaticViewHelper of Fluid.
  *
  * @api
- * @deprecated This approach has been deprecated. If really needed, in
+ * @deprecated Will be removed in v4.
+ *             This approach has been deprecated. If really needed, in
  *             very rare cases, where a view helper takes care of
  *             children on its own, AbstractViewHelper->convert() can
  *             be overridden, when taking care of the risks commented
