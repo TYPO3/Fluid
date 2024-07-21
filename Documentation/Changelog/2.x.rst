@@ -9,6 +9,22 @@ Changelog 2.x
 2.14
 ----
 
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\View\AbstractTemplateView::initializeRenderingContext()`
+  has been marked as deprecated. It will be removed in Fluid v4.
+  Migration path is to call the rendering context directly via
+  :php:`TYPO3Fluid\Fluid\View\AbstractTemplateView::getRenderingContext()->getViewHelperVariableContainer()->setView()`
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\View\AbstractTemplateView::setCache()`
+  has been marked as deprecated. It will be removed in Fluid v4.
+  Migration path is to call the rendering context directly via
+  :php:`TYPO3Fluid\Fluid\View\AbstractTemplateView::getRenderingContext()->setCache()`
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\View\AbstractTemplateView::getTemplatePaths()`
+  has been marked as deprecated. It will be removed in Fluid v4.
+  Migration path is to call the rendering context directly via
+  :php:`TYPO3Fluid\Fluid\View\AbstractTemplateView::getRenderingContext()->getTemplatePaths()`
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\View\AbstractTemplateView::getViewHelperResolver()`
+  has been marked as deprecated. It will be removed in Fluid v4.
+  Migration path is to call the rendering context directly via
+  :php:`TYPO3Fluid\Fluid\View\AbstractTemplateView::getRenderingContext()->getViewHelperResolver()`
 * Deprecation: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper->overrideArgument()`
   has been marked as deprecated. It will log a deprecation level error message when called in
   Fluid v4. It will be removed in Fluid v5.

@@ -40,7 +40,7 @@ $view->assign('asArray', [
 
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.
-$paths = $view->getTemplatePaths();
+$paths = $view->getRenderingContext()->getTemplatePaths();
 $paths->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/Conditions.html');
 
 // Rendering the View: plain old rendering of single file, no bells and whistles.

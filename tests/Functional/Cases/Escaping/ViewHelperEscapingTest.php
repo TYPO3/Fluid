@@ -45,7 +45,7 @@ final class ViewHelperEscapingTest extends AbstractFunctionalTestCase
         $context->getVariableProvider()->add('value', '<script>alert(1)</script>');
 
         $view = new TemplateView($context);
-        $view->getTemplatePaths()->setTemplateSource($fluidCode);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($fluidCode);
 
         return $view->render();
     }
