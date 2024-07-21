@@ -1,0 +1,46 @@
+.. include:: /Includes.rst.txt
+
+.. _changelog-4.x:
+
+=============
+Changelog 4.x
+=============
+
+4.0
+---
+
+* Deprecation: Calling method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper->registerUniversalTagAttributes()`
+  now emits a E_USER_DEPRECATED level error.
+* Deprecation: Calling method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper->registerTagAttribute()`
+  now emits a E_USER_DEPRECATED level error.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper->evaluateCondition()`
+  and handling has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode->getAccessors()`
+  has been removed.
+* Breaking: Constant :php:`TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::SHOULD_GENERATE_VIEWHELPER_INVOCATION`
+  has been removed.
+* Breaking: Constant :php:`TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider::ACCESSOR_ARRAY`
+  has been removed.
+* Breaking: Constant :php:`TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider::ACCESSOR_GETTER`
+  has been removed.
+* Breaking: Constant :php:`TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider::ACCESSOR_ASSERTER`
+  has been removed.
+* Breaking: Constant :php:`TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider::ACCESSOR_PUBLICPROPERTY`
+  has been removed.
+* Breaking: Static property :php:`TYPO3Fluid\Fluid\Core\Parser\Patterns::$SCAN_PATTERN_ESCAPINGMODIFIER`
+  has been removed.
+* Breaking: Trait :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly`
+  has been removed.
+* Breaking: Interface :php:`TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ParseTimeEvaluatedExpressionNodeInterface`
+  and its handling has been removed.
+* Breaking: Class :php:`TYPO3Fluid\Fluid\Core\Variables\VariableExtractor`
+  has been removed.
+* Breaking: Class :php:`TYPO3Fluid\Fluid\Core\Compiler\ViewHelperCompiler`
+  has been removed.
+* Breaking: Exception :php:`TYPO3Fluid\Fluid\Core\Compiler\StopCompilingChildrenException`
+  and its handling has been removed.
+* Breaking: Test abstracts :php:`TYPO3Fluid\Fluid\Tests\BaseTestCase` and
+  :php:`TYPO3Fluid\Fluid\Tests\UnitTestCase` have been removed.
+* Breaking: Using invalid namespace `https://typo3.org` instead of
+  `http://typo3.org` (https vs. http) throws an exception
+* Important: Minimum PHP version has been raised to ^8.2

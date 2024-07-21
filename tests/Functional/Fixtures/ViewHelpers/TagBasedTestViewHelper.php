@@ -17,6 +17,5 @@ class TagBasedTestViewHelper extends AbstractTagBasedViewHelper
     {
         parent::initializeArguments();
         $this->registerArgument('registeredArgument', 'string', 'test argument');
-        $this->registerTagAttribute('registeredTagAttribute', 'string', 'test argument');
     }
 }

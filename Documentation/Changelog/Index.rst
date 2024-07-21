@@ -13,3 +13,4 @@ The Changelog lists notable deprecation and breaking changes.
     :titlesonly:
 
     2.x
+    4.x
