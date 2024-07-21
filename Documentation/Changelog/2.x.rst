@@ -52,7 +52,7 @@ Changelog 2.x
   has been marked as deprecated and will be removed in Fluid v4.
 * Deprecation: Unused public constant :php:`TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider::ACCESSOR_PUBLICPROPERTY`
   has been marked as deprecated and will be removed in Fluid v4.
-* Deprecation: Unused public constant :php:`TYPO3Fluid\Fluid\Core\Parser\Patterns::$SCAN_PATTERN_ESCAPINGMODIFIER`
+* Deprecation: Unused public static property :php:`TYPO3Fluid\Fluid\Core\Parser\Patterns::$SCAN_PATTERN_ESCAPINGMODIFIER`
   has been marked as deprecated and will be removed in Fluid v4.
 
 2.6
