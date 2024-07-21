@@ -53,20 +53,6 @@ class AbstractViewHelperTest extends TestCase
     }
 
     #[Test]
-    public function overrideArgumentOverwritesExistingArgumentDefinition(): void
-    {
-        $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods([])->getMock();
-        $method1 = new \ReflectionMethod($subject, 'registerArgument');
-        $method1->invoke($subject, 'someName', 'string', 'desc', true);
-        $method2 = new \ReflectionMethod($subject, 'overrideArgument');
-        $method2->invoke($subject, 'someName', 'integer', 'changed desc', true);
-        $expected = [
-            'someName' => new ArgumentDefinition('someName', 'integer', 'changed desc', true),
-        ];
-        self::assertEquals($expected, $subject->prepareArguments());
-    }
-
-    #[Test]
     public function registeringTheSameArgumentNameAgainOverridesArgument(): void
     {
         $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods([])->getMock();
@@ -77,15 +63,6 @@ class AbstractViewHelperTest extends TestCase
             'someName' => new ArgumentDefinition('someName', 'integer', 'changed desc', true),
         ];
         self::assertEquals($expected, $subject->prepareArguments());
-    }
-
-    #[Test]
-    public function overrideArgumentThrowsExceptionWhenTryingToOverwriteAnNonexistingArgument(): void
-    {
-        $this->expectException(\Exception::class);
-        $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods([])->getMock();
-        $method = new \ReflectionMethod($subject, 'overrideArgument');
-        $method->invoke($subject, 'argumentName', 'string', 'description', true);
     }
 
     #[Test]
