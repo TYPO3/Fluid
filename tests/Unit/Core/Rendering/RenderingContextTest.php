@@ -98,11 +98,11 @@ final class RenderingContextTest extends TestCase
     }
 
     #[Test]
-    public function withAttributeThrowsIfValueIsNotInstanceofClassName(): void
+    public function setAttributeThrowsIfValueIsNotInstanceofClassName(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionCode(1719410580);
-        (new RenderingContext())->withAttribute(RenderingContext::class, new stdClass());
+        (new RenderingContext())->setAttribute(RenderingContext::class, new stdClass());
     }
 
     #[Test]
@@ -114,7 +114,8 @@ final class RenderingContextTest extends TestCase
     #[Test]
     public function hasAttributeReturnsTrueIfSet(): void
     {
-        $subject = (new RenderingContext())->withAttribute(stdClass::class, new stdClass());
+        $subject = new RenderingContext();
+        $subject->setAttribute(stdClass::class, new stdClass());
         self::assertTrue($subject->hasAttribute(stdClass::class));
     }
 
@@ -127,11 +128,11 @@ final class RenderingContextTest extends TestCase
     }
 
     #[Test]
-    public function getAttributeReturnsInstanceSetUsingWithAttribute(): void
+    public function getAttributeReturnsInstanceSetUsingSetAttribute(): void
     {
         $object = new stdClass();
         $subject = new RenderingContext();
-        $clonedSubject = $subject->withAttribute(stdClass::class, $object);
-        self::assertEquals($object, $clonedSubject->getAttribute(stdClass::class));
+        $subject->setAttribute(stdClass::class, $object);
+        self::assertEquals($object, $subject->getAttribute(stdClass::class));
     }
 }

@@ -181,16 +181,18 @@ interface RenderingContextInterface
     public function setControllerAction($action);
 
     /**
-     * Return an instance with the specified attribute being attached.
+     * Add an object to this instance.
      *
      * This method allows you to attach arbitrary objects to the
-     * rendering context to be used later e. g. in ViewHelpers.
+     * rendering context to be used later e.g. in ViewHelpers.
+     *
+     * A typical use case is to attach a ServerRequestInterface here.
      *
      * @template T of object
      * @param class-string<T> $className
      * @param T $value
      */
-    public function withAttribute(string $className, object $value): RenderingContextInterface;
+    public function setAttribute(string $className, object $value): void;
 
     /**
      * Return true if an attribute object of that type exists.
