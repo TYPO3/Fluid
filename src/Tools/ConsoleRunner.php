@@ -386,7 +386,7 @@ final class ConsoleRunner
      */
     private function renderSocketRequest($templatePathAndFilename, ViewInterface $view)
     {
-        $view->getTemplatePaths()->setTemplatePathAndFilename($templatePathAndFilename);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplatePathAndFilename($templatePathAndFilename);
         return $view->render();
     }
 
