@@ -21,7 +21,7 @@ $view = $exampleHelper->init();
 
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.
-$paths = $view->getTemplatePaths();
+$paths = $view->getRenderingContext()->getTemplatePaths();
 $paths->setFormat('json');
 
 // Rendering the View: we use the $action argument for the render() method in
