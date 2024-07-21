@@ -179,10 +179,11 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @return \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
      * @throws Exception
      * @api
-     * @deprecated Will log deprecation in v4, will be removed in v5. No longer necessary since self::registerArgument() now allows overriding
+     * @deprecated Will be removed in v5. No longer necessary since self::registerArgument() now allows overriding
      */
     protected function overrideArgument($name, $type, $description, $required = false, $defaultValue = null, $escape = null)
     {
+        trigger_error('overrideArgument() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
         if (!array_key_exists($name, $this->argumentDefinitions)) {
             throw new Exception(
                 'Argument "' . $name . '" has not been defined, thus it can\'t be overridden.',
