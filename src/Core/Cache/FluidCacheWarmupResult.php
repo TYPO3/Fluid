@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -22,15 +24,9 @@ class FluidCacheWarmupResult
     public const RESULT_FAILURE = 'failure';
     public const RESULT_MITIGATIONS = 'mitigations';
 
-    /**
-     * @var array
-     */
-    protected $results = [];
+    protected array $results = [];
 
-    /**
-     * @return self
-     */
-    public function merge()
+    public function merge(): static
     {
         /* @var FluidCacheWarmupResult[] $results */
         $results = func_get_args();
@@ -40,20 +36,12 @@ class FluidCacheWarmupResult
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getResults()
+    public function getResults(): array
     {
         return $this->results;
     }
 
-    /**
-     * @param ParsedTemplateInterface $state
-     * @param string $templatePathAndFilename
-     * @return self
-     */
-    public function add(ParsedTemplateInterface $state, $templatePathAndFilename)
+    public function add(ParsedTemplateInterface $state, string $templatePathAndFilename): static
     {
         $currentlyCompiled = $state->isCompiled();
         $this->results[$templatePathAndFilename] = [

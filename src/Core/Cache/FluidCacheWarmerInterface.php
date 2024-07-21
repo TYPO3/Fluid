@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -28,9 +30,6 @@ interface FluidCacheWarmerInterface
      * completely up to the implementing class. Standard file based
      * template resolving and compiling can be inherited by subclassing
      * the provided StandardCacheWarmer and overriding methods.
-     *
-     * @param RenderingContextInterface $renderingContext
-     * @return FluidCacheWarmupResult
      */
-    public function warm(RenderingContextInterface $renderingContext);
+    public function warm(RenderingContextInterface $renderingContext): FluidCacheWarmupResult;
 }
