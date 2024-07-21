@@ -102,7 +102,7 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
             } else {
                 $source = $this->source;
             }
-            $this->variables = json_decode($source, defined('JSON_OBJECT_AS_ARRAY') ? JSON_OBJECT_AS_ARRAY : 1);
+            $this->variables = json_decode($source, true);
             $this->lastLoaded = time();
         }
     }
