@@ -9,6 +9,14 @@ Changelog 4.x
 4.0
 ---
 
+* Breaking: Method :php:`TYPO3Fluid\Fluid\View\AbstractTemplateView::initializeRenderingContext()`
+  has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\View\AbstractTemplateView::setCache()`
+  has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\View\AbstractTemplateView::getTemplatePaths()`
+  has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\View\AbstractTemplateView::getViewHelperResolver()`
+  has been removed.
 * Breaking: Change visibility of class constants that represent internal Fluid state. The
   following constants have been set to `protected` and can only be accessed by
   `AbstractTemplateView` and its child implementations:
