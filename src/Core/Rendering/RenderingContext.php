@@ -365,14 +365,12 @@ class RenderingContext implements RenderingContextInterface
         return $parserConfiguration;
     }
 
-    public function withAttribute(string $className, object $value): static
+    public function setAttribute(string $className, object $value): void
     {
         if (!$value instanceof $className) {
             throw new \RuntimeException('$value is not an instance of ' . $className, 1719410580);
         }
-        $clonedObject = clone $this;
-        $clonedObject->attributes[$className] = $value;
-        return $clonedObject;
+        $this->attributes[$className] = $value;
     }
 
     public function hasAttribute(string $className): bool
