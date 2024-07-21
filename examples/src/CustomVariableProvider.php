@@ -19,10 +19,7 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
  */
 class CustomVariableProvider extends StandardVariableProvider implements VariableProviderInterface
 {
-    /**
-     * @var int
-     */
-    protected $incrementer = 0;
+    protected int $incrementer = 0;
 
     /**
      * Get a variable by dotted path expression, retrieving the
@@ -30,11 +27,8 @@ class CustomVariableProvider extends StandardVariableProvider implements Variabl
      * If the second variable is passed, it is expected to contain
      * extraction method names (constants from StandardVariableProvider)
      * which indicate how each value is extracted.
-     *
-     * @param string $path
-     * @return mixed
      */
-    public function getByPath($path)
+    public function getByPath(string $path): mixed
     {
         if ($path === 'random') {
             return 'random' . hash('xxh3', (string)rand(0, 999999999));
@@ -45,11 +39,7 @@ class CustomVariableProvider extends StandardVariableProvider implements Variabl
         return parent::getByPath($path);
     }
 
-    /**
-     * @param string $identifier
-     * @return bool
-     */
-    public function exists($identifier)
+    public function exists(string $identifier): bool
     {
         return $identifier === 'incrementer' || $identifier === 'random' || parent::exists($identifier);
     }

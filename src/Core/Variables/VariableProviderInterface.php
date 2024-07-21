@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -28,34 +30,24 @@ interface VariableProviderInterface extends \ArrayAccess
      * of the new VariableProvider as well as take care of any
      * automatically transferred variables (in the default
      * implementation the $settings variable is transferred).
-     *
-     * @param array|\ArrayAccess $variables
-     * @return VariableProviderInterface
      */
-    public function getScopeCopy($variables);
+    public function getScopeCopy(array|\ArrayAccess $variables): VariableProviderInterface;
 
     /**
      * Set the source data used by this VariableProvider. The
      * source can be any type, but the type must of course be
      * supported by the VariableProvider itself.
-     *
-     * @param mixed $source
      */
-    public function setSource($source);
+    public function setSource(mixed $source): void;
 
-    /**
-     * @return mixed
-     */
-    public function getSource();
+    public function getSource(): mixed;
 
     /**
      * Get every variable provisioned by the VariableProvider
      * implementing the interface. Must return an array or
      * ArrayAccess instance!
-     *
-     * @return array|\ArrayAccess
      */
-    public function getAll();
+    public function getAll(): array|\ArrayAccess;
 
     /**
      * Add a variable to the context
@@ -64,25 +56,21 @@ interface VariableProviderInterface extends \ArrayAccess
      * @param mixed $value The variable's value
      * @api
      */
-    public function add($identifier, $value);
+    public function add(string $identifier, mixed $value): void;
 
     /**
      * Get a variable from the context.
      *
-     * @param string $identifier
      * @return mixed The variable value identified by $identifier
      * @api
      */
-    public function get($identifier);
+    public function get(string $identifier): mixed;
 
     /**
      * Get a variable by dotted path expression, retrieving the
      * variable from nested arrays/objects one segment at a time.
-     *
-     * @param string $path
-     * @return mixed
      */
-    public function getByPath($path);
+    public function getByPath(string $path): mixed;
 
     /**
      * Remove a variable from context.
@@ -90,56 +78,40 @@ interface VariableProviderInterface extends \ArrayAccess
      * @param string $identifier The identifier to remove
      * @api
      */
-    public function remove($identifier);
+    public function remove(string $identifier): void;
 
     /**
      * Returns an array of all identifiers available in the context.
      *
-     * @return array Array of identifier strings
+     * @return string[] Array of identifier strings
      */
-    public function getAllIdentifiers();
+    public function getAllIdentifiers(): array;
 
     /**
      * Checks if this property exists in the VariableContainer.
      *
-     * @param string $identifier
      * @return bool true if $identifier exists
      * @api
      */
-    public function exists($identifier);
+    public function exists(string $identifier): bool;
 
     /**
      * Adds a variable to the context.
-     *
-     * @param string $identifier Identifier of the variable to add
-     * @param mixed $value The variable's value
      */
-    #[\ReturnTypeWillChange]
-    public function offsetSet($identifier, $value);
+    public function offsetSet(mixed $identifier, mixed $value): void;
 
     /**
      * Remove a variable from context.
-     *
-     * @param string $identifier The identifier to remove
      */
-    #[\ReturnTypeWillChange]
-    public function offsetUnset($identifier);
+    public function offsetUnset(mixed $identifier): void;
 
     /**
      * Checks if this property exists in the VariableContainer.
-     *
-     * @param string $identifier
-     * @return bool true if $identifier exists
      */
-    #[\ReturnTypeWillChange]
-    public function offsetExists($identifier);
+    public function offsetExists(mixed $identifier): bool;
 
     /**
      * Get a variable from the context.
-     *
-     * @param string $identifier
-     * @return mixed The variable identified by $identifier
      */
-    #[\ReturnTypeWillChange]
-    public function offsetGet($identifier);
+    public function offsetGet(mixed $identifier): mixed;
 }
