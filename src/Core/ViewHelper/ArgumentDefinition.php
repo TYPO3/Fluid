@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -14,38 +16,28 @@ class ArgumentDefinition
 {
     /**
      * Name of argument
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Type of argument
-     *
-     * @var string
      */
-    protected $type;
+    protected string $type;
 
     /**
      * Description of argument
-     *
-     * @var string
      */
-    protected $description;
+    protected string $description;
 
     /**
      * Is argument required?
-     *
-     * @var bool
      */
-    protected $required = false;
+    protected bool $required = false;
 
     /**
      * Default value for argument
-     *
-     * @var mixed
      */
-    protected $defaultValue;
+    protected mixed $defaultValue;
 
     /**
      * Escaping instruction, in line with $this->escapeOutput / $this->escapeChildren on ViewHelpers.
@@ -57,10 +49,8 @@ class ArgumentDefinition
      *
      * "false" means "never escape argument" (as in behavior of f:format.raw, which supports both passing
      * argument as actual argument or as tag content, but wants neither to be escaped).
-     *
-     * @var bool|null
      */
-    protected $escape;
+    protected ?bool $escape;
 
     /**
      * Constructor for this argument definition.
@@ -72,7 +62,7 @@ class ArgumentDefinition
      * @param mixed $defaultValue Default value
      * @param bool|null $escape Whether argument is escaped, or uses default escaping behavior (see class var comment)
      */
-    public function __construct($name, $type, $description, $required, $defaultValue = null, $escape = null)
+    public function __construct(string $name, string $type, string $description, bool $required, mixed $defaultValue = null, ?bool $escape = null)
     {
         $this->name = $name;
         $this->type = $type;
@@ -87,7 +77,7 @@ class ArgumentDefinition
      *
      * @return string Name of argument
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -97,7 +87,7 @@ class ArgumentDefinition
      *
      * @return string Type of argument
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -107,7 +97,7 @@ class ArgumentDefinition
      *
      * @return string Description of argument
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -117,7 +107,7 @@ class ArgumentDefinition
      *
      * @return bool true if argument is optional
      */
-    public function isRequired()
+    public function isRequired(): bool
     {
         return $this->required;
     }
@@ -127,7 +117,7 @@ class ArgumentDefinition
      *
      * @return mixed Default value
      */
-    public function getDefaultValue()
+    public function getDefaultValue(): mixed
     {
         return $this->defaultValue;
     }
@@ -135,7 +125,7 @@ class ArgumentDefinition
     /**
      * @return bool|null
      */
-    public function getEscape()
+    public function getEscape(): ?bool
     {
         return $this->escape;
     }

@@ -39,12 +39,12 @@ class TestViewHelperResolver extends ViewHelperResolver
         $this->override = $instance;
     }
 
-    public function isNamespaceValid($namespaceIdentifier)
+    public function isNamespaceValid(string $namespaceIdentifier): bool
     {
         return $namespaceIdentifier === 'test' || parent::isNamespaceValid($namespaceIdentifier);
     }
 
-    public function isNamespaceIgnored($namespaceIdentifier)
+    public function isNamespaceIgnored(string $namespaceIdentifier): bool
     {
         if ($namespaceIdentifier === 'test') {
             return false;
@@ -52,12 +52,12 @@ class TestViewHelperResolver extends ViewHelperResolver
         return parent::isNamespaceIgnored($namespaceIdentifier);
     }
 
-    public function resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier)
+    public function resolveViewHelperClassName(string $namespaceIdentifier, string $methodIdentifier): string
     {
         return $namespaceIdentifier === 'test' && $methodIdentifier === 'test' && $this->override !== null ? get_class($this->override) : parent::resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier);
     }
 
-    public function createViewHelperInstanceFromClassName($viewHelperClassName)
+    public function createViewHelperInstanceFromClassName(string $viewHelperClassName): ViewHelperInterface
     {
         if ($viewHelperClassName === MutableTestViewHelper::class) {
             return $this->override;
@@ -65,7 +65,7 @@ class TestViewHelperResolver extends ViewHelperResolver
         return parent::createViewHelperInstanceFromClassName($viewHelperClassName);
     }
 
-    public function createViewHelperInstance($namespace, $viewHelperShortName)
+    public function createViewHelperInstance(string $namespace, string $viewHelperShortName): ViewHelperInterface
     {
         return $namespace === 'test' && $viewHelperShortName === 'test' && $this->override !== null ? clone $this->override : parent::createViewHelperInstance($namespace, $viewHelperShortName);
     }

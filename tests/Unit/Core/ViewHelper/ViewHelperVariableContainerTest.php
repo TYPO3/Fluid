@@ -103,14 +103,6 @@ final class ViewHelperVariableContainerTest extends TestCase
     }
 
     #[Test]
-    public function addAllThrowsInvalidArgumentExceptionOnUnsupportedType(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $subject = new ViewHelperVariableContainer();
-        $subject->addAll('Foo\\Bar', new \DateTime('now'));
-    }
-
-    #[Test]
     public function sleepReturnsExpectedPropertyNames(): void
     {
         $subject = new ViewHelperVariableContainer();

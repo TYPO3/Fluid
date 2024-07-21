@@ -35,7 +35,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * ViewHelper class many times throughout the rendering process.
      * @var array
      */
-    private static $argumentDefinitionCache = [];
+    private static array $argumentDefinitionCache = [];
 
     /**
      * Current view helper node

@@ -70,7 +70,7 @@ class AbstractViewHelperTest extends TestCase
     {
         $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods(['prepareArguments'])->getMock();
         $subject->setArguments(['test' => new \ArrayObject()]);
-        $subject->expects(self::once())->method('prepareArguments')->willReturn(['test' => new ArgumentDefinition('test', 'array', false, 'documentation')]);
+        $subject->expects(self::once())->method('prepareArguments')->willReturn(['test' => new ArgumentDefinition('test', 'array', 'documentation', false)]);
         $subject->validateArguments();
     }
 

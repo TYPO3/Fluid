@@ -66,24 +66,9 @@ parameters:
 			path: src/Core/ViewHelper/AbstractViewHelper.php
 
 		-
-			message: "#^Strict comparison using \\=\\=\\= between array\\|string and null will always evaluate to false\\.$#"
-			count: 1
-			path: src/Core/ViewHelper/ViewHelperResolver.php
-
-		-
 			message: "#^Strict comparison using \\=\\=\\= between class\\-string and false will always evaluate to false\\.$#"
 			count: 1
 			path: src/Core/ViewHelper/ViewHelperResolver.php
-
-		-
-			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
-			count: 1
-			path: src/Core/ViewHelper/ViewHelperVariableContainer.php
-
-		-
-			message: "#^Result of && is always false\\.$#"
-			count: 1
-			path: src/Core/ViewHelper/ViewHelperVariableContainer.php
 
 		-
 			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\View\\\\ViewInterface\\:\\:getTemplatePaths\\(\\)\\.$#"
