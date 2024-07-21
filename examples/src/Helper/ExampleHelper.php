@@ -20,7 +20,7 @@ class ExampleHelper
         $view = new TemplateView();
 
         // TemplatePaths object: a subclass can be used if custom resolving is wanted.
-        $paths = $view->getTemplatePaths();
+        $paths = $view->getRenderingContext()->getTemplatePaths();
 
         // Configuring paths: explicit setters used in this example. Paths can also
         // be passed as a ["templateRootPaths" => ["path1/", "path2/"]] constructor
@@ -45,7 +45,7 @@ class ExampleHelper
         if (!is_dir($cachePath)) {
             mkdir($cachePath);
         }
-        $view->setCache(new SimpleFileCache($cachePath));
+        $view->getRenderingContext()->setCache(new SimpleFileCache($cachePath));
 
         return $view;
     }

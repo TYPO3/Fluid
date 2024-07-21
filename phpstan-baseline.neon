@@ -71,8 +71,13 @@ parameters:
 			path: src/Core/ViewHelper/ViewHelperResolver.php
 
 		-
+			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\View\\\\ViewInterface\\:\\:getRenderingContext\\(\\)\\.$#"
+			count: 1
+			path: src/Tools/ConsoleRunner.php
+
+		-
 			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\View\\\\ViewInterface\\:\\:getTemplatePaths\\(\\)\\.$#"
-			count: 2
+			count: 1
 			path: src/Tools/ConsoleRunner.php
 
 		-

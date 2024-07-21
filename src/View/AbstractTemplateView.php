@@ -68,6 +68,8 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
      * Initialize the RenderingContext. This method can be overridden in your
      * View implementation to manipulate the rendering context *before* it is
      * passed during rendering.
+     *
+     * @deprecated Will be removed in v4. Migration path is to call the rendering context directly via self::getRenderingContext()->getViewHelperVariableContainer()->setView()
      */
     public function initializeRenderingContext()
     {
@@ -78,6 +80,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
      * Sets the cache to use in RenderingContext.
      *
      * @param FluidCacheInterface $cache
+     * @deprecated Will be removed in v4. Migration path is to call the rendering context directly via self::getRenderingContext()->setCache()
      */
     public function setCache(FluidCacheInterface $cache)
     {
@@ -88,6 +91,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
      * Gets the TemplatePaths instance from RenderingContext
      *
      * @return TemplatePaths
+     * @deprecated Will be removed in v4. Migration path is to call the rendering context directly via self::getRenderingContext()->getTemplatePaths()
      */
     public function getTemplatePaths()
     {
@@ -98,6 +102,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
      * Gets the ViewHelperResolver instance from RenderingContext
      *
      * @return ViewHelperResolver
+     * @deprecated Will be removed in v4. Migration path is to call the rendering context directly via self::getRenderingContext()->getViewHelperResolver()
      */
     public function getViewHelperResolver()
     {
@@ -122,7 +127,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
     public function setRenderingContext(RenderingContextInterface $renderingContext)
     {
         $this->baseRenderingContext = $renderingContext;
-        $this->initializeRenderingContext();
+        $this->baseRenderingContext->getViewHelperVariableContainer()->setView($this);
     }
 
     /**

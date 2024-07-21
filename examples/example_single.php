@@ -32,7 +32,7 @@ $view->assign('foobar', 'Single template');
 
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.
-$view->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/Single.html');
+$view->getRenderingContext()->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/Single.html');
 
 // Rendering the View: we don't specify the optional `$action` parameter for the
 // `render()` method - and internally, the View doesn't try to resolve an action

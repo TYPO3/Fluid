@@ -120,7 +120,8 @@ Should you need to store the compiled templates in other ways you can implement
 
 Whether you use your own cache class or the default, the `FluidCache`
 *must be passed as third parameter for the View* or it
-*must be assigned using `$view->setCache($cacheInstance)` before calling `$view->render()`*.
+*must be assigned using `$view->getRenderingContext()->setCache($cacheInstance)`
+before calling `$view->render()`*.
 
 TemplateProcessor
 =================

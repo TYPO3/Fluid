@@ -43,7 +43,7 @@ class AbstractTemplateViewTest extends TestCase
         $renderingContext->expects(self::once())->method('getViewHelperResolver')->willReturn($viewHelperResolver);
         $subject = new AbstractTemplateViewTestFixture();
         $subject->setRenderingContext($renderingContext);
-        self::assertSame($viewHelperResolver, $subject->getViewHelperResolver());
+        self::assertSame($viewHelperResolver, $subject->getRenderingContext()->getViewHelperResolver());
     }
 
     #[Test]
