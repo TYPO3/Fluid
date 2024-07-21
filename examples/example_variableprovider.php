@@ -29,7 +29,7 @@ $dynamic2 = 'DYN2'; // used as dynamic part when accessing other variables
 
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.
-$paths = $view->getTemplatePaths();
+$paths = $view->getRenderingContext()->getTemplatePaths();
 $paths->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/VariableProvider.html');
 
 // Assigning a custom VariableProvider which will return two variables:

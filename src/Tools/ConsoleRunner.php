@@ -287,7 +287,7 @@ final class ConsoleRunner
         }
         while ($socket = stream_socket_accept($socketServer, -1)) {
             $input = stream_socket_recvfrom($socket, 1024);
-            $templatePathAndFilename = $this->parseTemplatePathAndFilenameFromHeaders($input, $view->getTemplatePaths());
+            $templatePathAndFilename = $this->parseTemplatePathAndFilenameFromHeaders($input, $view->getRenderingContext()->getTemplatePaths());
             if (!file_exists($templatePathAndFilename)) {
                 $response = $this->createErrorResponse('Not Found', 404);
             } else {

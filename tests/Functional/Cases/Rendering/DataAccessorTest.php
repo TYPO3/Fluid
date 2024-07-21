@@ -95,13 +95,13 @@ final class DataAccessorTest extends AbstractFunctionalTestCase
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);
         $view->assignMultiple($variables);
-        $view->getTemplatePaths()->setTemplateSource($template);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($template);
         self::assertSame($expected, json_decode($view->render(), true));
 
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);
         $view->assignMultiple($variables);
-        $view->getTemplatePaths()->setTemplateSource($template);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($template);
         self::assertSame($expected, json_decode($view->render(), true));
     }
 
@@ -111,7 +111,7 @@ final class DataAccessorTest extends AbstractFunctionalTestCase
         $this->expectException(\Throwable::class);
         $this->expectExceptionCode(0);
         $view = new TemplateView();
-        $view->getTemplatePaths()->setTemplateSource('["{data.privateValue}"]');
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource('["{data.privateValue}"]');
         $view->assignMultiple(['data' => new WithProperties()]);
         $view->render();
     }

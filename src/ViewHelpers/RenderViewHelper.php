@@ -147,8 +147,8 @@ class RenderViewHelper extends AbstractViewHelper
             throw new Exception(
                 'The f:render ViewHelper was used in a context where the ViewHelperVariableContainer does not contain ' .
                 'a reference to the View. Normally this is taken care of by the TemplateView, so most likely this ' .
-                'error is because you overrode AbstractTemplateView->initializeRenderingContext() and did not call ' .
-                '$renderingContext->getViewHelperVariableContainer()->setView($this) or parent::initializeRenderingContext. ' .
+                'error is because you overrode AbstractTemplateView->setRenderingContext() and did not call ' .
+                '$renderingContext->getViewHelperVariableContainer()->setView($this). ' .
                 'This is an issue you must fix in your code as f:render is fully unable to render anything without a View.',
             );
         }

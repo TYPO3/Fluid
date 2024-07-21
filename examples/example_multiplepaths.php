@@ -37,7 +37,7 @@ $view = $exampleHelper->init();
 // the overrides to a path in, for example, another package's Resources folder.
 // Specifying this array can also be done as constructor argument for the
 // TemplatePaths class which can be passed to the View; see view_init.php.
-$view->getTemplatePaths()->fillFromConfigurationArray([
+$view->getRenderingContext()->getTemplatePaths()->fillFromConfigurationArray([
     TemplatePaths::CONFIG_TEMPLATEROOTPATHS => [
         __DIR__ . '/Resources/Private/Templates/',
         __DIR__ . '/ResourceOverrides/Private/Templates/',

@@ -21,7 +21,7 @@ $view = $exampleHelper->init();
 
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.
-$paths = $view->getTemplatePaths();
+$paths = $view->getRenderingContext()->getTemplatePaths();
 $paths->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/LayoutLess.html');
 
 // Rendering the View: we don't specify the optional `$action` parameter for the
