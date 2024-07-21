@@ -11,11 +11,6 @@ parameters:
 			path: src/Core/Compiler/TemplateCompiler.php
 
 		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\ErrorHandler\\\\StandardErrorHandler\\:\\:handleCompilerError\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: src/Core/ErrorHandler/StandardErrorHandler.php
-
-		-
 			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInterface\\:\\:isChildrenEscapingEnabled\\(\\)\\.$#"
 			count: 1
 			path: src/Core/Parser/Interceptor/Escape.php

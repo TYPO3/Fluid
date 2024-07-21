@@ -228,7 +228,7 @@ class StandardVariableProvider implements VariableProviderInterface
                 $subPropertyPath = substr($match, 1, -1);
                 $subPropertyValue = $this->getByPath($subPropertyPath);
                 if ($subPropertyValue !== null) {
-                    $propertyPath = str_replace($match, (string) $subPropertyValue, $propertyPath);
+                    $propertyPath = str_replace($match, (string)$subPropertyValue, $propertyPath);
                 }
             }
         }
