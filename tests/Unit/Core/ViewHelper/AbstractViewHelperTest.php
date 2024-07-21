@@ -67,13 +67,16 @@ class AbstractViewHelperTest extends TestCase
     }
 
     #[Test]
-    public function registeringTheSameArgumentNameAgainThrowsException(): void
+    public function registeringTheSameArgumentNameAgainOverridesArgument(): void
     {
-        $this->expectException(\Exception::class);
         $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods([])->getMock();
         $method = new \ReflectionMethod($subject, 'registerArgument');
         $method->invoke($subject, 'someName', 'string', 'desc', true);
-        $method->invoke($subject, 'someName', 'integer', 'desc', true);
+        $method->invoke($subject, 'someName', 'integer', 'changed desc', true);
+        $expected = [
+            'someName' => new ArgumentDefinition('someName', 'integer', 'changed desc', true),
+        ];
+        self::assertEquals($expected, $subject->prepareArguments());
     }
 
     #[Test]
