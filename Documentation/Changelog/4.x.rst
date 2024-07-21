@@ -9,6 +9,12 @@ Changelog 4.x
 4.0
 ---
 
+* Breaking: Change visibility of class constants that represent internal Fluid state. The
+  following constants have been set to `protected` and can only be accessed by
+  `AbstractTemplateView` and its child implementations:
+  :php:`TYPO3Fluid\Fluid\View\AbstractTemplateView::RENDERING_TEMPLATE`,
+  :php:`TYPO3Fluid\Fluid\View\AbstractTemplateView::RENDERING_PARTIAL`,
+  :php:`TYPO3Fluid\Fluid\View\AbstractTemplateView::RENDERING_LAYOUT`
 * Breaking: Careful addition of method and property type hints throughout the system.
   This should be only mildly breaking and projects should be able to adapt easily.
 * Deprecation: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper->overrideArgument()`

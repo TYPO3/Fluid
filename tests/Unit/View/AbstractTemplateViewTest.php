@@ -145,7 +145,7 @@ class AbstractTemplateViewTest extends TestCase
         $parsedTemplate->expects(self::any())->method('getVariableContainer')->willReturn(new StandardVariableProvider(['sections' => []]));
         $subject = $this->getMockBuilder(AbstractTemplateView::class)->onlyMethods(['getCurrentParsedTemplate', 'getCurrentRenderingType'])->getMock();
         $subject->setRenderingContext($renderingContext);
-        $subject->expects(self::once())->method('getCurrentRenderingType')->willReturn(AbstractTemplateView::RENDERING_LAYOUT);
+        $subject->expects(self::once())->method('getCurrentRenderingType')->willReturn(3);
         $subject->expects(self::once())->method('getCurrentParsedTemplate')->willReturn($parsedTemplate);
         $subject->renderSection('Missing');
     }
@@ -163,7 +163,7 @@ class AbstractTemplateViewTest extends TestCase
         $parsedTemplate->expects(self::any())->method('getVariableContainer')->willReturn(new StandardVariableProvider(['sections' => []]));
         $subject = $this->getMockBuilder(AbstractTemplateView::class)->onlyMethods(['getCurrentParsedTemplate', 'getCurrentRenderingType'])->getMock();
         $subject->setRenderingContext($renderingContext);
-        $subject->expects(self::once())->method('getCurrentRenderingType')->willReturn(AbstractTemplateView::RENDERING_LAYOUT);
+        $subject->expects(self::once())->method('getCurrentRenderingType')->willReturn(3);
         $subject->expects(self::once())->method('getCurrentParsedTemplate')->willReturn($parsedTemplate);
         $subject->renderSection('Missing');
     }
@@ -178,7 +178,7 @@ class AbstractTemplateViewTest extends TestCase
         $parsedTemplate->expects(self::once())->method('isCompiled')->willReturn(true);
         $subject = $this->getMockBuilder(AbstractTemplateView::class)->onlyMethods(['getCurrentParsedTemplate', 'getCurrentRenderingType'])->getMock();
         $subject->setRenderingContext($renderingContext);
-        $subject->expects(self::once())->method('getCurrentRenderingType')->willReturn(AbstractTemplateView::RENDERING_LAYOUT);
+        $subject->expects(self::once())->method('getCurrentRenderingType')->willReturn(3);
         $subject->expects(self::once())->method('getCurrentParsedTemplate')->willReturn($parsedTemplate);
         $subject->renderSection('Section', [], true);
     }
