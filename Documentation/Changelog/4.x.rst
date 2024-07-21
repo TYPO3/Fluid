@@ -27,7 +27,7 @@ Changelog 4.x
   has been removed.
 * Breaking: Constant :php:`TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider::ACCESSOR_PUBLICPROPERTY`
   has been removed.
-* Breaking: Constant :php:`TYPO3Fluid\Fluid\Core\Parser\Patterns::$SCAN_PATTERN_ESCAPINGMODIFIER`
+* Breaking: Static property :php:`TYPO3Fluid\Fluid\Core\Parser\Patterns::$SCAN_PATTERN_ESCAPINGMODIFIER`
   has been removed.
 * Breaking: Trait :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly`
   has been removed.
