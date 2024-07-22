@@ -49,16 +49,8 @@ final class LastViewHelper extends AbstractViewHelper
             );
         }
 
-        $value = self::iteratorToArray($value);
+        $value = iterator_to_array($value);
 
         return array_pop($value);
-    }
-
-    /**
-     * This ensures compatibility with PHP 8.1
-     */
-    private static function iteratorToArray(\Traversable|array $iterator): array
-    {
-        return is_array($iterator) ? $iterator : iterator_to_array($iterator);
     }
 }

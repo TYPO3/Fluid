@@ -84,7 +84,7 @@ final class ReplaceViewHelper extends AbstractViewHelper
                 ), 1710441988);
             }
 
-            $replace = self::iteratorToArray($replace);
+            $replace = iterator_to_array($replace);
 
             $search = array_keys($replace);
             $replace = array_values($replace);
@@ -102,8 +102,8 @@ final class ReplaceViewHelper extends AbstractViewHelper
                 ), 1710441990);
             }
 
-            $search = is_iterable($search) ? self::iteratorToArray($search) : [$search];
-            $replace = is_iterable($replace) ? self::iteratorToArray($replace) : [$replace];
+            $search = is_iterable($search) ? iterator_to_array($search) : [$search];
+            $replace = is_iterable($replace) ? iterator_to_array($replace) : [$replace];
 
             if (\count($search) !== \count($replace)) {
                 throw new \InvalidArgumentException('Count of "search" and "replace" arguments must be the same.', 1710441991);
@@ -111,13 +111,5 @@ final class ReplaceViewHelper extends AbstractViewHelper
         }
 
         return str_replace($search, $replace, (string)$value);
-    }
-
-    /**
-     * This ensures compatibility with PHP 8.1
-     */
-    private static function iteratorToArray(\Traversable|array $iterator): array
-    {
-        return is_array($iterator) ? $iterator : iterator_to_array($iterator);
     }
 }
