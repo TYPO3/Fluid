@@ -91,7 +91,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
      * @return $this
      * @api
      */
-    public function assign($key, $value)
+    public function assign(string $key, mixed $value)
     {
         $this->baseRenderingContext->getVariableProvider()->add($key, $value);
         return $this;
