@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -30,11 +32,7 @@ class StandardVariableProvider implements VariableProviderInterface
         $this->variables = $variables;
     }
 
-    /**
-     * @param array|\ArrayAccess $variables
-     * @return VariableProviderInterface
-     */
-    public function getScopeCopy($variables)
+    public function getScopeCopy(array|\ArrayAccess $variables): VariableProviderInterface
     {
         if (!array_key_exists('settings', $variables) && array_key_exists('settings', $this->variables)) {
             $variables['settings'] = $this->variables['settings'];
@@ -47,18 +45,13 @@ class StandardVariableProvider implements VariableProviderInterface
      * Set the source data used by this VariableProvider. The
      * source can be any type, but the type must of course be
      * supported by the VariableProvider itself.
-     *
-     * @param mixed $source
      */
-    public function setSource($source)
+    public function setSource(mixed $source): void
     {
         $this->variables = $source;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSource()
+    public function getSource(): mixed
     {
         return $this->variables;
     }
@@ -67,10 +60,8 @@ class StandardVariableProvider implements VariableProviderInterface
      * Get every variable provisioned by the VariableProvider
      * implementing the interface. Must return an array or
      * ArrayAccess instance!
-     *
-     * @return array|\ArrayAccess
      */
-    public function getAll()
+    public function getAll(): array|\ArrayAccess
     {
         return $this->variables;
     }
@@ -82,7 +73,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * @param mixed $value The variable's value
      * @api
      */
-    public function add($identifier, $value)
+    public function add(string $identifier, mixed $value): void
     {
         $this->variables[$identifier] = $value;
     }
@@ -94,11 +85,10 @@ class StandardVariableProvider implements VariableProviderInterface
      * if one of the other reserved variables are given, their appropriate value
      * they're representing is returned.
      *
-     * @param string $identifier
      * @return mixed The variable value identified by $identifier
      * @api
      */
-    public function get($identifier)
+    public function get(string $identifier): mixed
     {
         return $this->getByPath($identifier);
     }
@@ -110,7 +100,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * @param string $path
      * @return mixed
      */
-    public function getByPath($path)
+    public function getByPath(string $path): mixed
     {
         $subject = $this->variables;
         $subVariableReferences = explode('.', $this->resolveSubVariableReferences($path));
@@ -154,7 +144,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * @param string $identifier The identifier to remove
      * @api
      */
-    public function remove($identifier)
+    public function remove(string $identifier): void
     {
         if (array_key_exists($identifier, $this->variables)) {
             unset($this->variables[$identifier]);
@@ -164,9 +154,9 @@ class StandardVariableProvider implements VariableProviderInterface
     /**
      * Returns an array of all identifiers available in the context.
      *
-     * @return array Array of identifier strings
+     * @return string[] Array of identifier strings
      */
-    public function getAllIdentifiers()
+    public function getAllIdentifiers(): array
     {
         return array_keys($this->variables);
     }
@@ -174,11 +164,10 @@ class StandardVariableProvider implements VariableProviderInterface
     /**
      * Checks if this property exists in the VariableContainer.
      *
-     * @param string $identifier
      * @return bool true if $identifier exists
      * @api
      */
-    public function exists($identifier)
+    public function exists(string $identifier): bool
     {
         return array_key_exists($identifier, $this->variables);
     }
@@ -188,50 +177,39 @@ class StandardVariableProvider implements VariableProviderInterface
      *
      * @return string[]
      */
-    public function __sleep()
+    public function __sleep(): array
     {
         return ['variables'];
     }
 
     /**
      * Adds a variable to the context.
-     *
-     * @param string $identifier Identifier of the variable to add
-     * @param mixed $value The variable's value
      */
-    public function offsetSet($identifier, $value)
+    public function offsetSet(mixed $identifier, mixed $value): void
     {
         $this->add($identifier, $value);
     }
 
     /**
      * Remove a variable from context.
-     *
-     * @param string $identifier The identifier to remove
      */
-    public function offsetUnset($identifier)
+    public function offsetUnset(mixed $identifier): void
     {
         $this->remove($identifier);
     }
 
     /**
      * Checks if this property exists in the VariableContainer.
-     *
-     * @param string $identifier
-     * @return bool true if $identifier exists
      */
-    public function offsetExists($identifier)
+    public function offsetExists(mixed $identifier): bool
     {
         return $this->exists($identifier);
     }
 
     /**
      * Get a variable from the context.
-     *
-     * @param string $identifier
-     * @return mixed The variable identified by $identifier
      */
-    public function offsetGet($identifier)
+    public function offsetGet(mixed $identifier): mixed
     {
         return $this->get($identifier);
     }
@@ -250,7 +228,7 @@ class StandardVariableProvider implements VariableProviderInterface
                 $subPropertyPath = substr($match, 1, -1);
                 $subPropertyValue = $this->getByPath($subPropertyPath);
                 if ($subPropertyValue !== null) {
-                    $propertyPath = str_replace($match, $subPropertyValue, $propertyPath);
+                    $propertyPath = str_replace($match, (string)$subPropertyValue, $propertyPath);
                 }
             }
         }

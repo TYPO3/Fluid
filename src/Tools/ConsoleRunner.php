@@ -19,9 +19,9 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Exception;
 use TYPO3Fluid\Fluid\Schema\SchemaGenerator;
 use TYPO3Fluid\Fluid\Schema\ViewHelperFinder;
+use TYPO3Fluid\Fluid\View\AbstractTemplateView;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 use TYPO3Fluid\Fluid\View\TemplateView;
-use TYPO3Fluid\Fluid\View\ViewInterface;
 
 /**
  * @internal
@@ -233,11 +233,7 @@ final class ConsoleRunner
         return $view->render($action);
     }
 
-    /**
-     * @param FluidCacheWarmupResult $result
-     * @return string
-     */
-    private function renderWarmupResult(FluidCacheWarmupResult $result)
+    private function renderWarmupResult(FluidCacheWarmupResult $result): string
     {
         $string = PHP_EOL . 'Template cache warmup results' . PHP_EOL . PHP_EOL;
         foreach ($result->getResults() as $templatePathAndFilename => $aspects) {
@@ -270,11 +266,7 @@ final class ConsoleRunner
         return $string;
     }
 
-    /**
-     * @param string $socketIdentifier
-     * @param ViewInterface $view
-     */
-    private function listenIndefinitelyOnSocket($socketIdentifier, ViewInterface $view)
+    private function listenIndefinitelyOnSocket(string $socketIdentifier, AbstractTemplateView $view): void
     {
         if (file_exists($socketIdentifier)) {
             unlink($socketIdentifier);
@@ -304,12 +296,7 @@ final class ConsoleRunner
         }
     }
 
-    /**
-     * @param string $input
-     * @param TemplatePaths $paths
-     * @return string
-     */
-    private function parseTemplatePathAndFilenameFromHeaders($input, TemplatePaths $paths)
+    private function parseTemplatePathAndFilenameFromHeaders(string $input, TemplatePaths $paths): string
     {
         if (strpos($input, "\000") !== false) {
             return $this->parseTemplatePathAndFilenameFromScgiHeaders($input);
@@ -317,12 +304,7 @@ final class ConsoleRunner
         return $this->parseTemplatePathAndFilenameFromProcessedHeaders($input, $paths);
     }
 
-    /**
-     * @param string $input
-     * @param TemplatePaths $paths
-     * @return string
-     */
-    private function parseTemplatePathAndFilenameFromProcessedHeaders($input, TemplatePaths $paths)
+    private function parseTemplatePathAndFilenameFromProcessedHeaders(string $input, TemplatePaths $paths): string
     {
         $matches = [];
         preg_match('/^GET ([^\s]+)/', $input, $matches);
@@ -336,11 +318,7 @@ final class ConsoleRunner
         return $templateRootPath . $uri;
     }
 
-    /**
-     * @param string $input
-     * @return string
-     */
-    private function parseTemplatePathAndFilenameFromScgiHeaders($input)
+    private function parseTemplatePathAndFilenameFromScgiHeaders(string $input): string
     {
         $lines = explode("\000", $input);
         $parameters = [];
@@ -350,11 +328,7 @@ final class ConsoleRunner
         return $parameters['DOCUMENT_ROOT'] . $parameters['REQUEST_URI'];
     }
 
-    /**
-     * @param string $response
-     * @param int $code
-     */
-    private function createErrorResponse($response, $code)
+    private function createErrorResponse(string $response, int $code): string
     {
         $headers = [
             'HTTP/1.1 ' . $code . ' ' . $response,
@@ -362,11 +336,7 @@ final class ConsoleRunner
         return implode("\n", $headers) . "\n\n" . $response;
     }
 
-    /**
-     * @param string $response
-     * @return string
-     */
-    private function createResponse($response)
+    private function createResponse(string $response): string
     {
         $headers = [
             'HTTP/1.1 200 OK',
@@ -380,11 +350,9 @@ final class ConsoleRunner
     }
 
     /**
-     * @param $templatePathAndFilename
-     * @param ViewInterface $view
      * @return string
      */
-    private function renderSocketRequest($templatePathAndFilename, ViewInterface $view)
+    private function renderSocketRequest(string $templatePathAndFilename, AbstractTemplateView $view)
     {
         $view->getRenderingContext()->getTemplatePaths()->setTemplatePathAndFilename($templatePathAndFilename);
         return $view->render();
@@ -395,7 +363,7 @@ final class ConsoleRunner
      * @param string[] $allowed
      * @return array<string, mixed>
      */
-    private function parseAndValidateInputArguments(array $arguments, array $allowed)
+    private function parseAndValidateInputArguments(array $arguments, array $allowed): array
     {
         $argumentPointer = false;
         $parsed = [];
@@ -430,10 +398,7 @@ final class ConsoleRunner
         return $parsed;
     }
 
-    /**
-     * @return string
-     */
-    private function dumpHelpHeader()
+    private function dumpHelpHeader(): string
     {
         return PHP_EOL .
             '----------------------------------------------------------------------------------------------' . PHP_EOL .
@@ -466,10 +431,7 @@ final class ConsoleRunner
         return $parameterString . PHP_EOL;
     }
 
-    /**
-     * @return string
-     */
-    private function dumpRunExamples()
+    private function dumpRunExamples(): string
     {
         return <<< HELP
 Use the CLI utility in the following modes:

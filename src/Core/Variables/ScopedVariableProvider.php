@@ -39,7 +39,7 @@ final class ScopedVariableProvider extends StandardVariableProvider implements V
      * @param string $identifier Identifier of the variable to add
      * @param mixed $value The variable's value
      */
-    public function add($identifier, $value): void
+    public function add(string $identifier, mixed $value): void
     {
         $this->globalVariables->add($identifier, $value);
         $this->localVariables->add($identifier, $value);
@@ -48,7 +48,7 @@ final class ScopedVariableProvider extends StandardVariableProvider implements V
     /**
      * @param string $identifier The identifier to remove
      */
-    public function remove($identifier): void
+    public function remove(string $identifier): void
     {
         $this->globalVariables->remove($identifier);
         $this->localVariables->remove($identifier);
@@ -57,7 +57,7 @@ final class ScopedVariableProvider extends StandardVariableProvider implements V
     /**
      * @param mixed $source
      */
-    public function setSource($source): void
+    public function setSource(mixed $source): void
     {
         $this->globalVariables->setSource($source);
     }
@@ -78,7 +78,7 @@ final class ScopedVariableProvider extends StandardVariableProvider implements V
     /**
      * @param string $identifier
      */
-    public function exists($identifier): bool
+    public function exists(string $identifier): bool
     {
         return $this->localVariables->exists($identifier) || $this->globalVariables->exists($identifier);
     }
@@ -86,7 +86,7 @@ final class ScopedVariableProvider extends StandardVariableProvider implements V
     /**
      * @param string $identifier
      */
-    public function get($identifier): mixed
+    public function get(string $identifier): mixed
     {
         return $this->localVariables->get($identifier) ?? $this->globalVariables->get($identifier);
     }
@@ -94,7 +94,7 @@ final class ScopedVariableProvider extends StandardVariableProvider implements V
     /**
      * @param string $path
      */
-    public function getByPath($path): mixed
+    public function getByPath(string $path): mixed
     {
         $path = $this->resolveSubVariableReferences($path);
         $identifier = explode('.', $path, 2)[0];
@@ -111,10 +111,7 @@ final class ScopedVariableProvider extends StandardVariableProvider implements V
         ));
     }
 
-    /**
-     * @param array|\ArrayAccess $variables
-     */
-    public function getScopeCopy($variables): VariableProviderInterface
+    public function getScopeCopy(array|\ArrayAccess $variables): VariableProviderInterface
     {
         // Instead of cloning the instance of ScopedVariableProvider,
         // only the instance holding global variables can be used here.

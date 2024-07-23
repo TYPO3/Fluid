@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -18,31 +20,20 @@ interface FluidCacheInterface
     /**
      * Gets an entry from the cache or null if the
      * entry does not exist.
-     *
-     * @param string $name
-     * @return mixed
      */
-    public function get($name);
+    public function get(string $name): mixed;
 
     /**
      * Set or updates an entry identified by $name
      * into the cache.
-     *
-     * @param string $name
-     * @param mixed $value
      */
-    public function set($name, $value);
+    public function set(string $name, mixed $value): void;
 
     /**
      * Flushes the cache either by entry or flushes
      * the entire cache if no entry is provided.
-     *
-     * @param string|null $name
      */
-    public function flush($name = null);
+    public function flush(?string $name = null): void;
 
-    /**
-     * @return FluidCacheWarmerInterface
-     */
-    public function getCacheWarmer();
+    public function getCacheWarmer(): FluidCacheWarmerInterface;
 }
