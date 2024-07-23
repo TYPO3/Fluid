@@ -55,7 +55,7 @@ class ViewHelperVariableContainer
     {
         $this->objects[$viewHelperName] = array_replace_recursive(
             isset($this->objects[$viewHelperName]) ? $this->objects[$viewHelperName] : [],
-            $variables instanceof Traversable ? iterator_to_array($variables) : $variables,
+            iterator_to_array($variables),
         );
     }
 

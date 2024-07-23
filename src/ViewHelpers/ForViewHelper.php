@@ -112,12 +112,7 @@ class ForViewHelper extends AbstractViewHelper
         }
 
         if ($arguments['reverse'] === true) {
-            // array_reverse only supports arrays
-            if (is_object($arguments['each'])) {
-                $each = $arguments['each'];
-                $arguments['each'] = iterator_to_array($each);
-            }
-            $arguments['each'] = array_reverse($arguments['each'], true);
+            $arguments['each'] = array_reverse(iterator_to_array($arguments['each']), true);
         }
         if (isset($arguments['iteration'])) {
             $iterationData = [
