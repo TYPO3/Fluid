@@ -23,7 +23,7 @@ interface ViewInterface
      * @return ViewInterface an instance of $this, to enable chaining
      * @api
      */
-    public function assign($key, $value);
+    public function assign(string $key, mixed $value);
 
     /**
      * Add multiple variables to the view data collection
