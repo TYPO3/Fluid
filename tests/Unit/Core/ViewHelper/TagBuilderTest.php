@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -97,8 +98,8 @@ final class TagBuilderTest extends TestCase
         $tagBuilder = new TagBuilder('tag');
         $tagBuilder->addAttribute('attribute1', 'attribute1value');
         $tagBuilder->addAttribute('attribute2', 'attribute2value');
-        $tagBuilder->addAttribute('attribute3', 'attribute3value');
-        self::assertEquals('<tag attribute1="attribute1value" attribute2="attribute2value" attribute3="attribute3value" />', $tagBuilder->render());
+        $tagBuilder->addAttribute(':at-tr$ib.ut_e3#', 'attribute3value');
+        self::assertEquals('<tag attribute1="attribute1value" attribute2="attribute2value" :at-tr$ib.ut_e3#="attribute3value" />', $tagBuilder->render());
     }
 
     #[Test]
@@ -118,6 +119,29 @@ final class TagBuilderTest extends TestCase
         self::expectExceptionMessage('Value of tag attribute "custom" cannot be of type array.');
         $tagBuilder = new TagBuilder('tag');
         $tagBuilder->addAttribute('custom', ['attribute1' => 'data1', 'attribute2' => 'data2']);
+    }
+
+    public static function attributeNamesAreProperlyValidatedDataProvider(): array
+    {
+        return [
+            ['onclick="alert(1)"'],
+            ['onblur=\'alert(1)\''],
+            ['onchange=alert(1)'],
+            ['on \t\n\rchange'],
+            ['on&change'],
+            ['foo/>'],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('attributeNamesAreProperlyValidatedDataProvider')]
+    public function attributeNamesAreProperlyValidated(string $attributeName): void
+    {
+        self::expectException(InvalidArgumentException::class);
+        self::expectExceptionCode(1721982367);
+
+        $tagBuilder = new TagBuilder('tag');
+        $tagBuilder->addAttribute($attributeName, '');
     }
 
     #[Test]
