@@ -24,10 +24,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $exampleHelper = new ExampleHelper();
 $view = $exampleHelper->init();
 
-// Assigning View variables: each variable defined using `assign()` can be used
-// used in the template as {variable}. Variables can be assigned individually
-// like here, or in bulk using `assignMultiple` which accepts an associative
-// array of template variables to assign.
+// Assigning View variables: each variable defined using `assign()` can be used in
+// the template as {variable}. Variables can be assigned individually like here,
+// or in bulk using `assignMultiple` which accepts an associative array of template
+// variables to assign.
 $view->assign('foobar', 'MVC template');
 
 // Rendering the View: in this example we are explicitly rendering the "Default"
