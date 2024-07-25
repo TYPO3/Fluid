@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -15,6 +17,7 @@ use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 
 /**
  * Base class for nodes based on (shorthand) expressions.
+ * @todo add return types with Fluid v5
  */
 abstract class AbstractExpressionNode extends AbstractNode implements ExpressionNodeInterface
 {
@@ -23,12 +26,12 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
      *
      * @var string
      */
-    protected $expression;
+    protected string $expression;
 
     /**
      * @var array
      */
-    protected $matches = [];
+    protected array $matches = [];
 
     /**
      * Constructor.
@@ -37,7 +40,7 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
      * @param array $matches Matches extracted from expression
      * @throws Parser\Exception
      */
-    public function __construct($expression, array $matches)
+    public function __construct(string $expression, array $matches)
     {
         $this->expression = trim($expression, " \t\n\r\0\x0b");
         $this->matches = $matches;
@@ -68,9 +71,6 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
      * The expression and matches can be read from the local
      * instance - and the RenderingContext and other APIs
      * can be accessed via the TemplateCompiler.
-     *
-     * @param TemplateCompiler $templateCompiler
-     * @return array
      */
     public function compile(TemplateCompiler $templateCompiler)
     {
@@ -93,37 +93,23 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
 
     /**
      * Getter for returning the expression before parsing.
-     *
-     * @return string
      */
-    public function getExpression()
+    public function getExpression(): string
     {
         return $this->expression;
     }
 
-    /**
-     * @return array
-     */
-    public function getMatches()
+    public function getMatches(): array
     {
         return $this->matches;
     }
 
-    /**
-     * @param string $part
-     * @return string
-     */
-    protected static function trimPart($part)
+    protected static function trimPart(string $part): string
     {
         return trim($part, " \t\n\r\0\x0b{}");
     }
 
-    /**
-     * @param mixed $candidate
-     * @param RenderingContextInterface $renderingContext
-     * @return mixed
-     */
-    protected static function getTemplateVariableOrValueItself($candidate, RenderingContextInterface $renderingContext)
+    protected static function getTemplateVariableOrValueItself(mixed $candidate, RenderingContextInterface $renderingContext): mixed
     {
         $variables = $renderingContext->getVariableProvider()->getAll();
         $standardVariableProvider = new StandardVariableProvider();
