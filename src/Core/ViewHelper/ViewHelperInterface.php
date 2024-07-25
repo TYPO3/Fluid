@@ -24,6 +24,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  *           in the AbstractViewHelper and maintained.
  *           We'll try to resolve this restriction midterm, but you should
  *           not fully implement ViewHelperInterface yourself for now.
+ * @todo add missing types with Fluid v5
  */
 interface ViewHelperInterface
 {
