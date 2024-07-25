@@ -35,10 +35,8 @@ class ViewHelperInvoker
     /**
      * Invoke the ViewHelper described by the ViewHelperNode, the properties
      * of which will already have been filled by the ViewHelperResolver.
-     *
-     * @return mixed
      */
-    public function invoke(string|ViewHelperInterface $viewHelperClassNameOrInstance, array $arguments, RenderingContextInterface $renderingContext, ?\Closure $renderChildrenClosure = null)
+    public function invoke(string|ViewHelperInterface $viewHelperClassNameOrInstance, array $arguments, RenderingContextInterface $renderingContext, ?\Closure $renderChildrenClosure = null): mixed
     {
         $viewHelperResolver = $renderingContext->getViewHelperResolver();
         if ($viewHelperClassNameOrInstance instanceof ViewHelperInterface) {
