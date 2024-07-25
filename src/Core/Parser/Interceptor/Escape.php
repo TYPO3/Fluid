@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -25,7 +27,7 @@ class Escape implements InterceptorInterface
      *
      * @var bool
      */
-    protected $childrenEscapingEnabled = true;
+    protected bool $childrenEscapingEnabled = true;
 
     /**
      * A stack of ViewHelperNodes which currently disable the interceptor.
@@ -33,18 +35,16 @@ class Escape implements InterceptorInterface
      *
      * @var NodeInterface[]
      */
-    protected $viewHelperNodesWhichDisableTheInterceptor = [];
+    protected array $viewHelperNodesWhichDisableTheInterceptor = [];
 
     /**
      * Adds a ViewHelper node using the Format\HtmlspecialcharsViewHelper to the given node.
      * If "escapingInterceptorEnabled" in the ViewHelper is false, will disable itself inside the ViewHelpers body.
      *
-     * @param NodeInterface $node
      * @param int $interceptorPosition One of the INTERCEPT_* constants for the current interception point
      * @param ParsingState $parsingState the current parsing state. Not needed in this interceptor.
-     * @return NodeInterface
      */
-    public function process(NodeInterface $node, $interceptorPosition, ParsingState $parsingState)
+    public function process(NodeInterface $node, $interceptorPosition, ParsingState $parsingState): NodeInterface
     {
         if ($interceptorPosition === InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER) {
             /** @var ViewHelperNode $node */
@@ -74,7 +74,7 @@ class Escape implements InterceptorInterface
      *
      * @return array Array of INTERCEPT_* constants
      */
-    public function getInterceptionPoints()
+    public function getInterceptionPoints(): array
     {
         return [
             InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER,
