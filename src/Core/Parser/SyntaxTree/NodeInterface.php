@@ -19,23 +19,23 @@ interface NodeInterface
      * Evaluate all child nodes and return the evaluated results.
      *
      * @param RenderingContextInterface $renderingContext
-     * @return mixed Normally, an object is returned - in case it is concatenated with a string, a string is returned.
+     * @return mixed Normally, any type can be returned - in case it is concatenated with a string, a string is returned.
      */
-    public function evaluateChildNodes(RenderingContextInterface $renderingContext);
+    public function evaluateChildNodes(RenderingContextInterface $renderingContext): mixed;
 
     /**
      * Returns all child nodes for a given node.
      *
-     * @return array<\TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface> A list of nodes
+     * @return \TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface[] A list of nodes
      */
-    public function getChildNodes();
+    public function getChildNodes(): array;
 
     /**
      * Appends a sub node to this node. Is used inside the parser to append children
      *
      * @param NodeInterface $childNode The sub node to add
      */
-    public function addChildNode(NodeInterface $childNode);
+    public function addChildNode(NodeInterface $childNode): void;
 
     /**
      * Evaluates the node - can return not only strings, but arbitary objects.

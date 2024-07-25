@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -21,16 +23,15 @@ class RootNode extends AbstractNode
     /**
      * Evaluate the root node, by evaluating the subtree.
      *
-     * @param RenderingContextInterface $renderingContext
      * @return mixed Evaluated subtree
      */
-    public function evaluate(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext): mixed
     {
         return $this->evaluateChildNodes($renderingContext);
     }
 
     /**
-     * @todo: Similar to TemplateCompiler->convertSubNodes(). See it's todo.
+     * @todo: Similar to TemplateCompiler->convertSubNodes(). See its todo.
      */
     public function convert(TemplateCompiler $templateCompiler): array
     {

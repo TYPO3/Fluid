@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -24,7 +26,7 @@ class BooleanNode extends AbstractNode
      *
      * @var NodeInterface[]
      */
-    protected $childNodes = [];
+    protected array $childNodes = [];
 
     /**
      * @var array
@@ -59,12 +61,7 @@ class BooleanNode extends AbstractNode
         return self::evaluateStack($renderingContext, $this->stack);
     }
 
-    /**
-     * @param NodeInterface $node
-     * @param RenderingContextInterface $renderingContext
-     * @return bool
-     */
-    public static function createFromNodeAndEvaluate(NodeInterface $node, RenderingContextInterface $renderingContext)
+    public static function createFromNodeAndEvaluate(NodeInterface $node, RenderingContextInterface $renderingContext): bool
     {
         $booleanNode = new BooleanNode($node);
         return $booleanNode->evaluate($renderingContext);
@@ -74,10 +71,6 @@ class BooleanNode extends AbstractNode
      * Takes a stack of nodes evaluates it with the end result
      * being a single boolean value. Creates new BooleanNodes
      * recursively to process braced expressions as single units.
-     *
-     * @param RenderingContextInterface $renderingContext
-     * @param array $expressionParts
-     * @return bool the boolean value
      */
     public static function evaluateStack(RenderingContextInterface $renderingContext, array $expressionParts): bool
     {
