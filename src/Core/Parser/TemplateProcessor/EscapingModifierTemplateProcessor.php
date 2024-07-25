@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -16,17 +18,11 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class EscapingModifierTemplateProcessor implements TemplateProcessorInterface
 {
-    /**
-     * @var RenderingContextInterface
-     */
-    protected $renderingContext;
+    protected RenderingContextInterface $renderingContext;
 
     public const SCAN_PATTERN_ESCAPINGMODIFIER = '/{(escaping|escapingEnabled)\s*=*\s*(true|false|on|off)\s*}/i';
 
-    /**
-     * @param RenderingContextInterface $renderingContext
-     */
-    public function setRenderingContext(RenderingContextInterface $renderingContext)
+    public function setRenderingContext(RenderingContextInterface $renderingContext): void
     {
         $this->renderingContext = $renderingContext;
     }
@@ -35,11 +31,8 @@ class EscapingModifierTemplateProcessor implements TemplateProcessorInterface
      * Pre-process the template source before it is
      * returned to the TemplateParser or passed to
      * the next TemplateProcessorInterface instance.
-     *
-     * @param string $templateSource
-     * @return string
      */
-    public function preProcessSource($templateSource)
+    public function preProcessSource(string $templateSource): string
     {
         if (strpos($templateSource, '{escaping') === false) {
             // No escaping modifier detected - early return to skip preg processing
