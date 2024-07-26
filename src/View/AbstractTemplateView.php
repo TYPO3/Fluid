@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -20,6 +22,8 @@ use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
  * Abstract Fluid Template View.
  *
  * Contains the fundamental methods which any Fluid based template view needs.
+ *
+ * @todo add return types with Fluid v5
  */
 abstract class AbstractTemplateView extends AbstractView implements TemplateAwareViewInterface
 {
