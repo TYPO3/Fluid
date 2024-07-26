@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -86,40 +88,40 @@ class BooleanParser
      * expression string that is used by the peek function to look for the part of
      * the expression that needs to be focused on next. This cursor is changed
      * by the consume method, by "consuming" part of the expression.
-     *
-     * @var int
      */
-    protected $cursor = 0;
+    protected int $cursor = 0;
 
     /**
      * Expression that is parsed through peek and consume methods
-     *
-     * @var string
      */
-    protected $expression;
+    protected string $expression;
 
     /**
      * Context containing all variables that are references in the expression
-     *
-     * @var array
      */
-    protected $context;
+    protected array $context = [];
 
     /**
      * Switch to enable compiling
-     *
-     * @var bool
      */
-    protected $compileToCode = false;
+    protected bool $compileToCode = false;
 
     /**
      * Evaluate a expression to a boolean
      *
      * @param string $expression to be parsed
      * @param array $context containing variables that can be used in the expression
-     * @return bool
+     * @return mixed
+     *
+     * @todo further investigate return types of all evaluate* and parse* methods. Expected
+     *       return type would be something like bool|string, but in fact these methods return
+     *       all kinds of types, which are probably converted to bool anyways in the end.
+     *       Also, the global switch of $compileToCode seems very dirty. If that is really
+     *       necessary, there should be two separate implementations: One that generates code
+     *       for cache storage (using string as return type) and one for immediate execution
+     *       (using bool).
      */
-    public function evaluate($expression, $context)
+    public function evaluate(string $expression, array $context)
     {
         $this->context = $context;
         $this->expression = $expression;
@@ -131,9 +133,8 @@ class BooleanParser
      * Parse and compile an expression into an php equivalent
      *
      * @param string $expression to be parsed
-     * @return string
      */
-    public function compile($expression)
+    public function compile(string $expression): string
     {
         $this->expression = $expression;
         $this->cursor = 0;
@@ -146,9 +147,8 @@ class BooleanParser
      * tokenizing regex offset by the internally tracked cursor.
      *
      * @param bool $includeWhitespace return surrounding whitespace with token
-     * @return string
      */
-    protected function peek($includeWhitespace = false)
+    protected function peek(bool $includeWhitespace = false): string
     {
         preg_match(static::TOKENREGEX, mb_substr($this->expression, $this->cursor), $matches);
         if ($includeWhitespace === true) {
@@ -160,10 +160,8 @@ class BooleanParser
     /**
      * Consume part of the current expression by setting the internal cursor
      * to the position of the string in the expression and it's length
-     *
-     * @param string $string
      */
-    protected function consume($string)
+    protected function consume(string $string): void
     {
         if (mb_strlen($string) === 0) {
             return;
@@ -320,35 +318,24 @@ class BooleanParser
 
     /**
      * Evaluate an "and" comparison
-     *
-     * @param mixed $x
-     * @param mixed $y
-     * @return bool
      */
-    protected function evaluateAnd($x, $y)
+    protected function evaluateAnd(mixed $x, mixed $y): bool
     {
         return $x && $y;
     }
 
     /**
      * Evaluate an "or" comparison
-     *
-     * @param mixed $x
-     * @param mixed $y
-     * @return bool
      */
-    protected function evaluateOr($x, $y)
+    protected function evaluateOr(mixed $x, mixed $y): bool
     {
         return $x || $y;
     }
 
     /**
      * Evaluate an "not" comparison
-     *
-     * @param mixed $x
-     * @return bool|string
      */
-    protected function evaluateNot($x)
+    protected function evaluateNot(mixed $x): bool
     {
         return !$x;
     }
@@ -356,12 +343,9 @@ class BooleanParser
     /**
      * Compare two variables based on a specified comparator
      *
-     * @param mixed $x
-     * @param mixed $y
-     * @param string $comparator
-     * @return bool|string
+     * @return mixed returns string if $compileToCode is set to true
      */
-    protected function evaluateCompare($x, $y, $comparator)
+    protected function evaluateCompare(mixed $x, mixed $y, string $comparator)
     {
         // enfore strong comparison for comparing two objects
         if ($comparator === '==' && is_object($x) && is_object($y)) {
@@ -420,11 +404,9 @@ class BooleanParser
      * converting true/false keywords into boolean or trim the final string of
      * quotation marks
      *
-     * @param string $x
-     * @param array $context
      * @return mixed
      */
-    protected function evaluateTerm($x, $context)
+    protected function evaluateTerm(string $x, array $context)
     {
         if (isset($context[$x]) || (mb_strpos($x, '{') === 0 && mb_substr($x, -1) === '}')) {
             if ($this->compileToCode === true) {
@@ -463,7 +445,7 @@ class BooleanParser
         return trim($x, '\'"');
     }
 
-    public static function convertNodeToBoolean($value)
+    public static function convertNodeToBoolean(mixed $value)
     {
         if ($value instanceof \Countable) {
             return count($value) > 0;
