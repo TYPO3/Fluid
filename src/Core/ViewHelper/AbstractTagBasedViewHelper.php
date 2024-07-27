@@ -115,7 +115,9 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         }
 
         foreach ($this->additionalArguments as $argumentName => $argumentValue) {
-            $this->tag->addAttribute($argumentName, $argumentValue);
+            if ((string)$argumentValue !== '') {
+                $this->tag->addAttribute($argumentName, $argumentValue);
+            }
         }
 
         if (isset(self::$tagAttributes[get_class($this)])) {
