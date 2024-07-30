@@ -26,11 +26,6 @@ parameters:
 			path: src/Core/Parser/ParsingState.php
 
 		-
-			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInterface\\:\\:setViewHelperNode\\(\\)\\.$#"
-			count: 1
-			path: src/Core/Parser/SyntaxTree/ViewHelperNode.php
-
-		-
 			message: "#^Binary operation \"\\+\" between non\\-empty\\-string and 0 results in an error\\.$#"
 			count: 1
 			path: src/Core/Parser/TemplateParser.php

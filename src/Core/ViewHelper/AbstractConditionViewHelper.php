@@ -30,6 +30,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * Make sure to NOT OVERRIDE the constructor.
  *
  * @api
+ * @todo add missing types with Fluid v5
  */
 abstract class AbstractConditionViewHelper extends AbstractViewHelper
 {

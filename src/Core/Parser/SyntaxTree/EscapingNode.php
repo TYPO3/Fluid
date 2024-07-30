@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -8,7 +10,6 @@
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -24,11 +25,6 @@ class EscapingNode extends AbstractNode
      */
     protected NodeInterface $node;
 
-    /**
-     * Constructor.
-     *
-     * @param NodeInterface $node
-     */
     public function __construct(NodeInterface $node)
     {
         $this->node = $node;
@@ -37,10 +33,10 @@ class EscapingNode extends AbstractNode
     /**
      * Return the value associated to the syntax tree.
      *
-     * @param RenderingContextInterface $renderingContext
-     * @return mixed the value stored in this node/subtree.
+     * @return mixed escaped string if evaluated node is of type string or is stringable; otherwise
+     *               the evaluated value of the node will be returned as-is
      */
-    public function evaluate(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext): mixed
     {
         $evaluated = $this->node->evaluate($renderingContext);
         if (is_string($evaluated) || (is_object($evaluated) && method_exists($evaluated, '__toString'))) {
@@ -58,9 +54,8 @@ class EscapingNode extends AbstractNode
      * NumericNode does not allow adding child nodes, so this will always throw an exception.
      *
      * @param NodeInterface $childNode The sub node to add
-     * @throws Parser\Exception
      */
-    public function addChildNode(NodeInterface $childNode)
+    public function addChildNode(NodeInterface $childNode): void
     {
         $this->node = $childNode;
     }

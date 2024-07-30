@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -18,10 +20,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class CastingExpressionNode extends AbstractExpressionNode
 {
-    /**
-     * @var array
-     */
-    protected static $validTypes = [
+    protected static array $validTypes = [
         'integer', 'boolean', 'string', 'float', 'array', 'DateTime',
     ];
 
@@ -31,7 +30,7 @@ class CastingExpressionNode extends AbstractExpressionNode
      * of the expression can also be a variable containing the type
      * of the variable.
      */
-    public static $detectionExpression = '/
+    public static string $detectionExpression = '/
 		(
 			{                                # Start of shorthand syntax
 				(?:                          # Math expression is composed of...
@@ -42,13 +41,7 @@ class CastingExpressionNode extends AbstractExpressionNode
 			}                                # End of shorthand syntax
 		)/x';
 
-    /**
-     * @param RenderingContextInterface $renderingContext
-     * @param string $expression
-     * @param array $matches
-     * @return int|float
-     */
-    public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches)
+    public static function evaluateExpression(RenderingContextInterface $renderingContext, string $expression, array $matches): mixed
     {
         $expression = trim($expression, '{}');
         list($variable, $type) = explode(' as ', $expression);
@@ -68,12 +61,7 @@ class CastingExpressionNode extends AbstractExpressionNode
         return self::convertStatic($variable, $type);
     }
 
-    /**
-     * @param mixed $variable
-     * @param string $type
-     * @return mixed
-     */
-    protected static function convertStatic($variable, $type)
+    protected static function convertStatic(mixed $variable, string $type): mixed
     {
         $value = null;
         if ($type === 'integer') {
@@ -92,23 +80,15 @@ class CastingExpressionNode extends AbstractExpressionNode
         return $value;
     }
 
-    /**
-     * @param mixed $variable
-     * @return \DateTime|false
-     */
-    protected static function convertToDateTime($variable)
+    protected static function convertToDateTime(mixed $variable): \DateTime|false
     {
-        if (preg_match_all('/[a-z]+/i', $variable)) {
+        if (is_string($variable) || $variable instanceof \Stringable && preg_match_all('/[a-z]+/i', $variable)) {
             return new \DateTime($variable);
         }
-        return \DateTime::createFromFormat('U', (int)$variable);
+        return \DateTime::createFromFormat('U', (string)(int)$variable);
     }
 
-    /**
-     * @param mixed $variable
-     * @return array
-     */
-    protected static function convertToArray($variable)
+    protected static function convertToArray(mixed $variable): array
     {
         if (is_array($variable)) {
             return $variable;

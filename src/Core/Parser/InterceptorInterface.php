@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -12,6 +14,8 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 /**
  * An interceptor interface. Interceptors are used in the parsing stage to change
  * the syntax tree of a template, e.g. by adding viewhelper nodes.
+ *
+ * @todo add return types with Fluid v5
  */
 interface InterceptorInterface
 {

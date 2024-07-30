@@ -18,6 +18,7 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
  * The abstract base class for all view helpers.
  *
  * @api
+ * @todo add missing types with Fluid v5
  */
 abstract class AbstractViewHelper implements ViewHelperInterface
 {

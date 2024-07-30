@@ -13,6 +13,7 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * convenience methods to register default attributes, ...
  *
  * @api
+ * @todo add missing types with Fluid v5
  */
 abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
 {

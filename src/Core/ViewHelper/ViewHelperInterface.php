@@ -24,6 +24,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  *           in the AbstractViewHelper and maintained.
  *           We'll try to resolve this restriction midterm, but you should
  *           not fully implement ViewHelperInterface yourself for now.
+ * @todo add missing types with Fluid v5
  */
 interface ViewHelperInterface
 {
@@ -50,7 +51,7 @@ interface ViewHelperInterface
     /**
      * Initialize the arguments of the ViewHelper, and call the render() method of the ViewHelper.
      *
-     * @return string the rendered ViewHelper.
+     * @return mixed the rendered ViewHelper.
      */
     public function initializeArgumentsAndRender();
 
@@ -117,7 +118,7 @@ interface ViewHelperInterface
      * @param array<string, mixed> $arguments
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
-     * @return string the resulting string which is directly shown
+     * @return mixed the resulting value from the ViewHelper
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext);
 

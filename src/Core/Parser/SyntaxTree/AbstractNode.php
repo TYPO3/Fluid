@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -21,16 +23,18 @@ abstract class AbstractNode implements NodeInterface
      *
      * @var NodeInterface[]
      */
-    protected $childNodes = [];
+    protected array $childNodes = [];
 
     /**
      * Evaluate all child nodes and return the evaluated results.
      *
-     * @param RenderingContextInterface $renderingContext
-     * @return mixed Normally, an object is returned - in case it is concatenated with a string, a string is returned.
+     * @return mixed If no child nodes exist, null is returned; If exactly one child node exists,
+     *               the evaluated value of that node is returned, which can be anything (because
+     *               ViewHelpers can return any type); If more than one child node exists, all nodes
+     *               will be converted to string and will be concatenated
      * @throws Parser\Exception
      */
-    public function evaluateChildNodes(RenderingContextInterface $renderingContext)
+    public function evaluateChildNodes(RenderingContextInterface $renderingContext): mixed
     {
         $evaluatedNodes = [];
         foreach ($this->getChildNodes() as $childNode) {
@@ -43,16 +47,14 @@ abstract class AbstractNode implements NodeInterface
         if (count($evaluatedNodes) === 1) {
             return $evaluatedNodes[0];
         }
-        return implode('', array_map([$this, 'castToString'], $evaluatedNodes));
+        return implode('', array_map($this->castToString(...), $evaluatedNodes));
     }
 
     /**
-     * @param NodeInterface $node
-     * @param RenderingContextInterface $renderingContext
-     * @param bool $cast
-     * @return mixed
+     * @return mixed Returns string if $cast is set to true, else it can return anything (because
+     *               ViewHelpers can return any type).
      */
-    protected function evaluateChildNode(NodeInterface $node, RenderingContextInterface $renderingContext, $cast)
+    protected function evaluateChildNode(NodeInterface $node, RenderingContextInterface $renderingContext, bool $cast): mixed
     {
         $output = $node->evaluate($renderingContext);
         if ($cast) {
@@ -61,11 +63,7 @@ abstract class AbstractNode implements NodeInterface
         return $output;
     }
 
-    /**
-     * @param mixed $value
-     * @return string
-     */
-    protected function castToString($value)
+    protected function castToString(mixed $value): string
     {
         if (is_object($value) && !method_exists($value, '__toString')) {
             throw new Parser\Exception('Cannot cast object of type "' . get_class($value) . '" to string.', 1273753083);
@@ -83,7 +81,7 @@ abstract class AbstractNode implements NodeInterface
      *
      * @return NodeInterface[] A list of nodes
      */
-    public function getChildNodes()
+    public function getChildNodes(): array
     {
         return $this->childNodes;
     }
@@ -93,7 +91,7 @@ abstract class AbstractNode implements NodeInterface
      *
      * @param NodeInterface $childNode The sub node to add
      */
-    public function addChildNode(NodeInterface $childNode)
+    public function addChildNode(NodeInterface $childNode): void
     {
         $this->childNodes[] = $childNode;
     }

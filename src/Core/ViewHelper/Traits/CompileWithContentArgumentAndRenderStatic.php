@@ -20,6 +20,8 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
  * an argument value must be checked and used instead of
  * the normal render children closure, if that named
  * argument is specified and not empty.
+ *
+ * @todo add missing types with Fluid v5
  */
 trait CompileWithContentArgumentAndRenderStatic
 {

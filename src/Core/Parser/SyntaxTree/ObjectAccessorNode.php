@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -20,10 +22,8 @@ class ObjectAccessorNode extends AbstractNode
 {
     /**
      * Object path which will be called. Is a list like "post.name.email"
-     *
-     * @var string
      */
-    protected $objectPath;
+    protected string $objectPath;
 
     /**
      * Constructor. Takes an object path as input.
@@ -33,7 +33,7 @@ class ObjectAccessorNode extends AbstractNode
      *
      * @param string $objectPath An Object Path, like object1.object2.object3
      */
-    public function __construct($objectPath)
+    public function __construct(string $objectPath)
     {
         $this->objectPath = $objectPath;
     }
@@ -58,10 +58,9 @@ class ObjectAccessorNode extends AbstractNode
      * The first part of the object path has to be a variable in the
      * VariableProvider.
      *
-     * @param RenderingContextInterface $renderingContext
      * @return mixed The evaluated object, can be any object type.
      */
-    public function evaluate(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext): mixed
     {
         $objectPath = strtolower($this->objectPath);
         $variableProvider = $renderingContext->getVariableProvider();

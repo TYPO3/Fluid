@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -13,6 +15,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Interface for shorthand expression node types
+ * @todo add return types with Fluid v5
  */
 interface ExpressionNodeInterface extends NodeInterface
 {
@@ -35,7 +38,7 @@ interface ExpressionNodeInterface extends NodeInterface
      * @param array $matches
      * @return mixed
      */
-    public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches);
+    public static function evaluateExpression(RenderingContextInterface $renderingContext, string $expression, array $matches);
 
     /**
      * Compiles the ExpressionNode, returning an array with

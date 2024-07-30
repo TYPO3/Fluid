@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -21,6 +23,8 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * For example, allowing an implementer to extract
  * custom instructions from the template which are
  * then used to manipulate how ViewHelpers resolve.
+ *
+ * @todo add return types with Fluid v5
  */
 interface TemplateProcessorInterface
 {
@@ -34,8 +38,7 @@ interface TemplateProcessorInterface
      * returned to the TemplateParser or passed to
      * the next TemplateProcessorInterface instance.
      *
-     * @param string $templateSource
      * @return string
      */
-    public function preProcessSource($templateSource);
+    public function preProcessSource(string $templateSource);
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -24,7 +26,7 @@ class TernaryExpressionNode extends AbstractExpressionNode
      * Pattern which detects ternary conditions written in shorthand
      * syntax, e.g. {checkvar ? thenvar : elsevar}.
      */
-    public static $detectionExpression = '/
+    public static string $detectionExpression = '/
 		(
 			{                                                               # Start of shorthand syntax
 				(?:                                                         # Math expression is composed of...
@@ -40,15 +42,9 @@ class TernaryExpressionNode extends AbstractExpressionNode
     /**
      * Filter out variable names form expression
      */
-    protected static $variableDetection = '/[^\'_a-zA-Z0-9\.\\\\]{0,1}([_a-zA-Z0-9\.\\\\]*)[^\']{0,1}/';
+    protected static string $variableDetection = '/[^\'_a-zA-Z0-9\.\\\\]{0,1}([_a-zA-Z0-9\.\\\\]*)[^\']{0,1}/';
 
-    /**
-     * @param RenderingContextInterface $renderingContext
-     * @param string $expression
-     * @param array $matches
-     * @return mixed
-     */
-    public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches)
+    public static function evaluateExpression(RenderingContextInterface $renderingContext, string $expression, array $matches): mixed
     {
         $parts = preg_split('/([\?:])/s', $expression);
         $parts = array_map([__CLASS__, 'trimPart'], $parts);
@@ -69,12 +65,7 @@ class TernaryExpressionNode extends AbstractExpressionNode
         return static::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($else), $renderingContext);
     }
 
-    /**
-     * @param mixed $candidate
-     * @param RenderingContextInterface $renderingContext
-     * @return mixed
-     */
-    public static function getTemplateVariableOrValueItself($candidate, RenderingContextInterface $renderingContext)
+    public static function getTemplateVariableOrValueItself(mixed $candidate, RenderingContextInterface $renderingContext): mixed
     {
         $suspect = parent::getTemplateVariableOrValueItself($candidate, $renderingContext);
         if ($suspect === $candidate) {
@@ -85,12 +76,8 @@ class TernaryExpressionNode extends AbstractExpressionNode
 
     /**
      * Gather all context variables used in the expression
-     *
-     * @param RenderingContextInterface $renderingContext
-     * @param string $expression
-     * @return array
      */
-    public static function gatherContext($renderingContext, $expression)
+    public static function gatherContext(RenderingContextInterface $renderingContext, string $expression): array
     {
         $context = [];
         if (preg_match_all(static::$variableDetection, $expression, $matches) > 0) {
@@ -115,10 +102,9 @@ class TernaryExpressionNode extends AbstractExpressionNode
      * instance - and the RenderingContext and other APIs
      * can be accessed via the TemplateCompiler.
      *
-     * @param TemplateCompiler $templateCompiler
      * @return array<string, string>
      */
-    public function compile(TemplateCompiler $templateCompiler)
+    public function compile(TemplateCompiler $templateCompiler): array
     {
         $parts = preg_split('/([\?:])/s', $this->getExpression());
         $parts = array_map([__CLASS__, 'trimPart'], $parts);

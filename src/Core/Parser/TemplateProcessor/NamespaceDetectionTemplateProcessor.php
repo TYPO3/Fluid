@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -23,15 +25,9 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
 {
     public const NAMESPACE_DECLARATION = '/(?<!\\\\){namespace\s*(?P<identifier>[a-zA-Z\*]+[a-zA-Z0-9\.\*]*)\s*(=\s*(?P<phpNamespace>(?:[A-Za-z0-9\.]+|Tx)(?:\\\\\w+)+)\s*)?}/m';
 
-    /**
-     * @var RenderingContextInterface
-     */
-    protected $renderingContext;
+    protected RenderingContextInterface $renderingContext;
 
-    /**
-     * @param RenderingContextInterface $renderingContext
-     */
-    public function setRenderingContext(RenderingContextInterface $renderingContext)
+    public function setRenderingContext(RenderingContextInterface $renderingContext): void
     {
         $this->renderingContext = $renderingContext;
     }
@@ -40,11 +36,8 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
      * Pre-process the template source before it is
      * returned to the TemplateParser or passed to
      * the next TemplateProcessorInterface instance.
-     *
-     * @param string $templateSource
-     * @return string
      */
-    public function preProcessSource($templateSource)
+    public function preProcessSource(string $templateSource): string
     {
         $templateSource = $this->replaceCdataSectionsByEmptyLines($templateSource);
         $templateSource = $this->registerNamespacesFromTemplateSource($templateSource);
@@ -55,11 +48,8 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
      * Replaces all cdata sections with empty lines to exclude it from further
      * processing in the templateParser while maintaining the line-count
      * of the template string for the exception handler to reference to.
-     *
-     * @param string $templateSource
-     * @return string
      */
-    public function replaceCdataSectionsByEmptyLines($templateSource)
+    public function replaceCdataSectionsByEmptyLines(string $templateSource): string
     {
         $parts = preg_split('/(\<\!\[CDATA\[|\]\]\>)/', $templateSource, -1, PREG_SPLIT_DELIM_CAPTURE);
 
@@ -81,11 +71,8 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
 
     /**
      * Register all namespaces that are declared inside the template string
-     *
-     * @param string $templateSource
-     * @return string
      */
-    public function registerNamespacesFromTemplateSource($templateSource)
+    public function registerNamespacesFromTemplateSource(string $templateSource): string
     {
         $viewHelperResolver = $this->renderingContext->getViewHelperResolver();
         $matches = [];
