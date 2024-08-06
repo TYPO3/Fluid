@@ -42,7 +42,7 @@ class ObjectAccessorNode extends AbstractNode
      * @internal Internally used for building up cached templates; do not use directly!
      * @return string
      */
-    public function getObjectPath()
+    public function getObjectPath(): string
     {
         return $this->objectPath;
     }
