@@ -166,13 +166,6 @@ final class TemplateParserTest extends TestCase
         self::assertFalse($parsedTemplate->isCompilable());
     }
 
-    #[Test]
-    public function parseThrowsExceptionWhenStringArgumentMissing(): void
-    {
-        $this->expectException(\Exception::class);
-        (new TemplateParser())->parse(123);
-    }
-
     public static function quotedStrings(): array
     {
         return [
@@ -331,6 +324,7 @@ final class TemplateParserTest extends TestCase
     #[Test]
     public function parseArgumentsWorksAsExpected(string $argumentsString, array $expected): void
     {
+        // @todo replace crazy unit tests with proper functional tests
         $context = new RenderingContext();
         $viewHelper = $this->getMockBuilder(CommentViewHelper::class)->onlyMethods(['validateAdditionalArguments'])->getMock();
         $viewHelper->expects(self::once())->method('validateAdditionalArguments');
@@ -352,6 +346,7 @@ final class TemplateParserTest extends TestCase
     #[Test]
     public function buildArgumentObjectTreeBuildsObjectTreeForComplexString(): void
     {
+        // @todo replace crazy unit tests with proper functional tests
         $rootNode = new RootNode();
         $objectTree = $this->createMock(ParsingState::class);
         $objectTree->expects(self::once())->method('getRootNode')->willReturn($rootNode);
@@ -372,7 +367,7 @@ final class TemplateParserTest extends TestCase
         $parsingStateMock = $this->createMock(ParsingState::class);
         $parsingStateMock->expects(self::once())->method('getNodeFromStack')->willReturn($nodeMock);
         $subject = $this->getMockBuilder(TemplateParser::class)->onlyMethods(['recursiveArrayHandler'])->getMock();
-        $subject->expects(self::any())->method('recursiveArrayHandler')->willReturn('processedArrayText');
+        $subject->expects(self::any())->method('recursiveArrayHandler')->willReturn(['processedArrayText']);
         $method = new \ReflectionMethod($subject, 'arrayHandler');
         $method->invoke($subject, $parsingStateMock, ['arrayText']);
     }
