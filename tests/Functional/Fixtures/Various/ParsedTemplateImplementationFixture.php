@@ -12,50 +12,51 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 
 class ParsedTemplateImplementationFixture implements ParsedTemplateInterface
 {
-    public function setIdentifier($identifier)
+    public function setIdentifier(string $identifier): void
     {
         // stub
     }
 
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return 'myIdentifier';
     }
 
-    public function render(RenderingContextInterface $renderingContext)
+    public function render(RenderingContextInterface $renderingContext): mixed
     {
         return 'rendered by fixture';
     }
 
-    public function getVariableContainer()
+    public function getVariableContainer(): VariableProviderInterface
     {
         return new StandardVariableProvider();
     }
 
-    public function getLayoutName(RenderingContextInterface $renderingContext)
+    public function getLayoutName(RenderingContextInterface $renderingContext): ?string
     {
         return null;
     }
 
-    public function addCompiledNamespaces(RenderingContextInterface $renderingContext)
+    public function addCompiledNamespaces(RenderingContextInterface $renderingContext): void
     {
         // stub
     }
 
-    public function hasLayout()
+    public function hasLayout(): bool
     {
         return false;
     }
 
-    public function isCompilable()
+    public function isCompilable(): bool
     {
         return false;
     }
 
-    public function isCompiled()
+    public function isCompiled(): bool
     {
         return false;
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -7,6 +9,7 @@
 
 namespace TYPO3Fluid\Fluid\Core\Parser;
 
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 
@@ -16,55 +19,39 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
  */
 interface ParsedTemplateInterface
 {
-    /**
-     * @param string $identifier
-     */
-    public function setIdentifier($identifier);
+    public function setIdentifier(string $identifier);
 
-    /**
-     * @return string
-     */
-    public function getIdentifier();
+    public function getIdentifier(): string;
 
     /**
      * Render the parsed template with rendering context
      *
      * @param RenderingContextInterface $renderingContext The rendering context to use
-     * @return string Rendered string
      */
-    public function render(RenderingContextInterface $renderingContext);
+    public function render(RenderingContextInterface $renderingContext): mixed;
 
     /**
      * Returns a variable container used in the PostParse Facet.
-     *
-     * @return VariableProviderInterface
      */
-    public function getVariableContainer();
+    public function getVariableContainer(): VariableProviderInterface;
 
     /**
      * Returns the name of the layout that is defined within the current template via <f:layout name="..." />
      * If no layout is defined, this returns null.
      * This requires the current rendering context in order to be able to evaluate the layout name
-     *
-     * @param RenderingContextInterface $renderingContext
-     * @return string|null
      */
-    public function getLayoutName(RenderingContextInterface $renderingContext);
+    public function getLayoutName(RenderingContextInterface $renderingContext): string|null|NodeInterface;
 
     /**
      * Method generated on compiled templates to add ViewHelper namespaces which were defined in-template
      * and add those to the ones already defined in the ViewHelperResolver.
-     *
-     * @param RenderingContextInterface $renderingContext
      */
-    public function addCompiledNamespaces(RenderingContextInterface $renderingContext);
+    public function addCompiledNamespaces(RenderingContextInterface $renderingContext): void;
 
     /**
      * Returns true if the current template has a template defined via <f:layout name="..." />
-     *
-     * @return bool
      */
-    public function hasLayout();
+    public function hasLayout(): bool;
 
     /**
      * If the template contains constructs which prevent the compiler from compiling the template
@@ -72,10 +59,10 @@ interface ParsedTemplateInterface
      *
      * @return bool true if the template can be compiled
      */
-    public function isCompilable();
+    public function isCompilable(): bool;
 
     /**
      * @return bool true if the template is already compiled
      */
-    public function isCompiled();
+    public function isCompiled(): bool;
 }

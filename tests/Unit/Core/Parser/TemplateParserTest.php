@@ -154,7 +154,7 @@ final class TemplateParserTest extends TestCase
         $compiler->expects(self::atLeastOnce())->method('has')->willReturn(false);
         $compiler->expects(self::atLeastOnce())->method('store')->willReturnOnConsecutiveCalls(
             self::throwException(new StopCompilingException()),
-            true,
+            '',
         );
         $context->setTemplateCompiler($compiler);
         $context->setVariableProvider(new StandardVariableProvider());
@@ -352,15 +352,16 @@ final class TemplateParserTest extends TestCase
     #[Test]
     public function buildArgumentObjectTreeBuildsObjectTreeForComplexString(): void
     {
+        $rootNode = new RootNode();
         $objectTree = $this->createMock(ParsingState::class);
-        $objectTree->expects(self::once())->method('getRootNode')->willReturn('theRootNode');
+        $objectTree->expects(self::once())->method('getRootNode')->willReturn($rootNode);
         $subject = $this->getMockBuilder(TemplateParser::class)
             ->onlyMethods(['splitTemplateAtDynamicTags', 'buildObjectTree'])
             ->getMock();
         $subject->expects(self::atLeastOnce())->method('splitTemplateAtDynamicTags')->with('a <very> {complex} string')->willReturn(['split string']);
         $subject->expects(self::atLeastOnce())->method('buildObjectTree')->with(['split string'])->willReturn($objectTree);
         $method = new \ReflectionMethod($subject, 'buildArgumentObjectTree');
-        self::assertEquals('theRootNode', $method->invoke($subject, 'a <very> {complex} string'));
+        self::assertSame($rootNode, $method->invoke($subject, 'a <very> {complex} string'));
     }
 
     #[Test]

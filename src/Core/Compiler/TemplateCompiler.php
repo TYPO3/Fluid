@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -24,25 +26,13 @@ class TemplateCompiler
     public const MODE_NORMAL = 'normal';
     public const MODE_WARMUP = 'warmup';
 
-    /**
-     * @var array
-     */
-    protected $syntaxTreeInstanceCache = [];
+    protected array $syntaxTreeInstanceCache = [];
 
-    /**
-     * @var RenderingContextInterface
-     */
-    protected $renderingContext;
+    protected RenderingContextInterface $renderingContext;
 
-    /**
-     * @var string
-     */
-    protected $mode = self::MODE_NORMAL;
+    protected string $mode = self::MODE_NORMAL;
 
-    /**
-     * @var ParsedTemplateInterface
-     */
-    protected $currentlyProcessingState;
+    protected ?ParsedTemplateInterface $currentlyProcessingState = null;
 
     private int $variableCounter = 0;
 
@@ -54,7 +44,7 @@ class TemplateCompiler
      * Cannot be reversed once done - should only be used from within
      * FluidCacheWarmerInterface implementations!
      */
-    public function enterWarmupMode()
+    public function enterWarmupMode(): void
     {
         $this->mode = static::MODE_WARMUP;
     }
@@ -62,53 +52,37 @@ class TemplateCompiler
     /**
      * Returns true only if the TemplateCompiler is in warmup mode.
      */
-    public function isWarmupMode()
+    public function isWarmupMode(): bool
     {
         return $this->mode === static::MODE_WARMUP;
     }
 
-    /**
-     * @return ParsedTemplateInterface|null
-     */
-    public function getCurrentlyProcessingState()
+    public function getCurrentlyProcessingState(): ?ParsedTemplateInterface
     {
         return $this->currentlyProcessingState;
     }
 
-    /**
-     * @param RenderingContextInterface $renderingContext
-     */
-    public function setRenderingContext(RenderingContextInterface $renderingContext)
+    public function setRenderingContext(RenderingContextInterface $renderingContext): void
     {
         $this->renderingContext = $renderingContext;
     }
 
-    /**
-     * @return RenderingContextInterface
-     */
-    public function getRenderingContext()
+    public function getRenderingContext(): RenderingContextInterface
     {
         return $this->renderingContext;
     }
 
-    public function disable()
+    public function disable(): void
     {
         throw new StopCompilingException('Compiling stopped');
     }
 
-    /**
-     * @return bool
-     */
-    public function isDisabled()
+    public function isDisabled(): bool
     {
         return !$this->renderingContext->isCacheEnabled();
     }
 
-    /**
-     * @param string $identifier
-     * @return bool
-     */
-    public function has($identifier)
+    public function has(string $identifier): bool
     {
         $identifier = $this->sanitizeIdentifier($identifier);
 
@@ -124,11 +98,7 @@ class TemplateCompiler
         return false;
     }
 
-    /**
-     * @param string $identifier
-     * @return ParsedTemplateInterface
-     */
-    public function get($identifier)
+    public function get(string $identifier): ParsedTemplateInterface
     {
         $identifier = $this->sanitizeIdentifier($identifier);
 
@@ -149,17 +119,12 @@ class TemplateCompiler
     /**
      * Resets the currently processing state
      */
-    public function reset()
+    public function reset(): void
     {
         $this->currentlyProcessingState = null;
     }
 
-    /**
-     * @param string $identifier
-     * @param ParsingState $parsingState
-     * @return string|null
-     */
-    public function store($identifier, ParsingState $parsingState)
+    public function store(string $identifier, ParsingState $parsingState): ?string
     {
         if ($this->isDisabled()) {
             $parsingState->setCompilable(false);
@@ -194,13 +159,13 @@ class TemplateCompiler
         $templateCode = sprintf(
             '<?php' . chr(10) .
             '%s {' . chr(10) .
-            '    public function getLayoutName(\\TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface $renderingContext) {' . chr(10) .
+            '    public function getLayoutName(\\TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface $renderingContext): ?string {' . chr(10) .
             '        %s;' . chr(10) .
             '    }' . chr(10) .
-            '    public function hasLayout() {' . chr(10) .
+            '    public function hasLayout(): bool {' . chr(10) .
             '        return %s;' . chr(10) .
             '    }' . chr(10) .
-            '    public function addCompiledNamespaces(\TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface $renderingContext) {' . chr(10) .
+            '    public function addCompiledNamespaces(\TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface $renderingContext): void {' . chr(10) .
             '        $renderingContext->getViewHelperResolver()->addNamespaces(%s);' . chr(10) .
             '    }' . chr(10) .
             '    %s' . chr(10) .
@@ -216,9 +181,9 @@ class TemplateCompiler
     }
 
     /**
-     * @param RootNode|string $storedLayoutNameArgument
+     * @todo this type is crazy, this should really be something like NodeInterface|string
      */
-    protected function generateCodeForLayoutName($storedLayoutNameArgument): string
+    protected function generateCodeForLayoutName(NodeInterface|string|int|float|null|bool $storedLayoutNameArgument): string
     {
         if ($storedLayoutNameArgument instanceof RootNode) {
             $convertedCode = $storedLayoutNameArgument->convert($this);
@@ -252,10 +217,9 @@ class TemplateCompiler
      * Replaces special characters by underscores
      * @see http://www.php.net/manual/en/language.variables.basics.php
      *
-     * @param string $identifier
      * @return string the sanitized identifier
      */
-    protected function sanitizeIdentifier($identifier)
+    protected function sanitizeIdentifier(string $identifier): string
     {
         return (string)preg_replace('([^a-zA-Z0-9_\x7f-\xff])', '_', $identifier);
     }
@@ -271,7 +235,7 @@ class TemplateCompiler
                 '/**' . chr(10) .
                 ' * %s' . chr(10) .
                 ' */' . chr(10) .
-                'public function %s(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {' . chr(10) .
+                'public function %s(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext): mixed {' . chr(10) .
                 '    return %s;' . chr(10) .
                 '}' . chr(10),
                 $comment,
@@ -283,7 +247,7 @@ class TemplateCompiler
             '/**' . chr(10) .
             ' * %s' . chr(10) .
             ' */' . chr(10) .
-            'public function %s(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {' . chr(10) .
+            'public function %s(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext): mixed {' . chr(10) .
             '    %s' . chr(10) .
             '    return %s;' . chr(10) .
             '}' . chr(10),
@@ -296,19 +260,13 @@ class TemplateCompiler
 
     /**
      * Returns a unique variable name by appending a global index to the given prefix
-     *
-     * @param string $prefix
      */
-    public function variableName($prefix): string
+    public function variableName(string $prefix): string
     {
         return '$' . $prefix . $this->variableCounter++;
     }
 
-    /**
-     * @param NodeInterface $node
-     * @return string
-     */
-    public function wrapChildNodesInClosure(NodeInterface $node)
+    public function wrapChildNodesInClosure(NodeInterface $node): string
     {
         $closure = '';
         $closure .= 'function() use ($renderingContext) {' . chr(10);
@@ -322,12 +280,8 @@ class TemplateCompiler
     /**
      * Wraps one ViewHelper argument evaluation in a closure that can be
      * rendered by passing a rendering context.
-     *
-     * @param ViewHelperNode $node
-     * @param string $argumentName
-     * @return string
      */
-    public function wrapViewHelperNodeArgumentEvaluationInClosure(ViewHelperNode $node, $argumentName)
+    public function wrapViewHelperNodeArgumentEvaluationInClosure(ViewHelperNode $node, string $argumentName): string
     {
         $arguments = $node->getArguments();
         $argument = $arguments[$argumentName];
