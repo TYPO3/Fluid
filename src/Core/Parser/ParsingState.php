@@ -7,7 +7,6 @@
 
 namespace TYPO3Fluid\Fluid\Core\Parser;
 
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -49,17 +48,9 @@ class ParsingState implements ParsedTemplateInterface
     protected $variableContainer;
 
     /**
-     * The layout name of the current template or null if the template does not contain a layout definition
-     *
-     * @var AbstractNode
-     */
-    protected $layoutNameNode;
-
-    /**
      * @var bool
      */
     protected $compilable = true;
-
     /**
      * @param string $identifier
      */
