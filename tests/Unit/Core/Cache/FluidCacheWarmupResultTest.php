@@ -30,15 +30,15 @@ final class FluidCacheWarmupResultTest extends TestCase
         $expected = [
             'baz' => [
                 'compilable' => false,
-                'compiled' => null,
-                'hasLayout' => null,
-                'compiledClassName' => null,
+                'compiled' => false,
+                'hasLayout' => false,
+                'compiledClassName' => '',
             ],
             'foo' => [
                 'compilable' => false,
-                'compiled' => null,
-                'hasLayout' => null,
-                'compiledClassName' => null,
+                'compiled' => false,
+                'hasLayout' => false,
+                'compiledClassName' => '',
             ],
         ];
         self::assertSame($expected, $subject->getResults());
@@ -57,9 +57,9 @@ final class FluidCacheWarmupResultTest extends TestCase
         $expected = [
             'baz' => [
                 'compilable' => false,
-                'compiled' => null,
-                'hasLayout' => null,
-                'compiledClassName' => null,
+                'compiled' => false,
+                'hasLayout' => false,
+                'compiledClassName' => '',
             ],
         ];
         self::assertSame($expected, $subject->getResults());

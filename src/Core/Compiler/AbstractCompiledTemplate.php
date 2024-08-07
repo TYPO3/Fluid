@@ -19,28 +19,17 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
  */
 abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
 {
-    /**
-     * @param string $identifier
-     */
-    public function setIdentifier($identifier)
+    public function setIdentifier(string $identifier): void
     {
         // void, ignored.
     }
 
-    /**
-     * @return string
-     */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return static::class;
     }
 
-    /**
-     * Returns a variable container used in the PostParse Facet.
-     *
-     * @return VariableProviderInterface
-     */
-    public function getVariableContainer()
+    public function getVariableContainer(): VariableProviderInterface
     {
         return new StandardVariableProvider();
     }
@@ -51,46 +40,30 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
      * @param RenderingContextInterface $renderingContext The rendering context to use
      * @return string Rendered string
      */
-    public function render(RenderingContextInterface $renderingContext)
+    public function render(RenderingContextInterface $renderingContext): mixed
     {
         return '';
     }
 
-    /**
-     * @return bool
-     */
-    public function isCompilable()
+    public function isCompilable(): bool
     {
         return false;
     }
 
-    /**
-     * @return bool
-     */
-    public function isCompiled()
+    public function isCompiled(): bool
     {
         return true;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasLayout()
+    public function hasLayout(): bool
     {
         return false;
     }
 
-    /**
-     * @param RenderingContextInterface $renderingContext
-     * @return string
-     */
-    public function getLayoutName(RenderingContextInterface $renderingContext)
+    public function getLayoutName(RenderingContextInterface $renderingContext): ?string
     {
         return '';
     }
 
-    /**
-     * @param RenderingContextInterface $renderingContext
-     */
-    public function addCompiledNamespaces(RenderingContextInterface $renderingContext) {}
+    public function addCompiledNamespaces(RenderingContextInterface $renderingContext): void {}
 }
