@@ -21,6 +21,7 @@ use TYPO3Fluid\Fluid\View\TemplatePaths;
 
 /**
  * Contract for the rendering context
+ * @todo add return types with Fluid v5
  */
 interface RenderingContextInterface
 {

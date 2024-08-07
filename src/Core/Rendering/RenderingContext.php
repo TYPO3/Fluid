@@ -30,6 +30,7 @@ use TYPO3Fluid\Fluid\View\TemplatePaths;
 
 /**
  * The rendering context that contains useful information during rendering time of a Fluid template
+ * @todo add missing types with Fluid v5
  */
 class RenderingContext implements RenderingContextInterface
 {

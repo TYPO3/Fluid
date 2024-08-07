@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -16,65 +18,52 @@ class Configuration
     /**
      * @var bool
      */
-    protected $viewHelperArgumentEscapingEnabled = true;
+    protected bool $viewHelperArgumentEscapingEnabled = true;
 
     /**
      * Generic interceptors registered with the configuration.
      *
      * @var InterceptorInterface[]
      */
-    protected $interceptors = [];
+    protected array $interceptors = [];
 
     /**
      * Escaping interceptors registered with the configuration.
      *
      * @var InterceptorInterface[]
      */
-    protected $escapingInterceptors = [];
+    protected array $escapingInterceptors = [];
 
-    /**
-     * @return bool
-     */
-    public function isViewHelperArgumentEscapingEnabled()
+    public function isViewHelperArgumentEscapingEnabled(): bool
     {
         return $this->viewHelperArgumentEscapingEnabled;
     }
 
-    /**
-     * @param bool $viewHelperArgumentEscapingEnabled
-     */
-    public function setViewHelperArgumentEscapingEnabled($viewHelperArgumentEscapingEnabled): void
+    public function setViewHelperArgumentEscapingEnabled(bool $viewHelperArgumentEscapingEnabled): void
     {
-        $this->viewHelperArgumentEscapingEnabled = (bool)$viewHelperArgumentEscapingEnabled;
+        $this->viewHelperArgumentEscapingEnabled = $viewHelperArgumentEscapingEnabled;
     }
 
     /**
      * Adds an interceptor to apply to values coming from object accessors.
-     *
-     * @param InterceptorInterface $interceptor
      */
-    public function addInterceptor(InterceptorInterface $interceptor)
+    public function addInterceptor(InterceptorInterface $interceptor): void
     {
         $this->addInterceptorToArray($interceptor, $this->interceptors);
     }
 
     /**
      * Adds an escaping interceptor to apply to values coming from object accessors if escaping is enabled
-     *
-     * @param InterceptorInterface $interceptor
      */
-    public function addEscapingInterceptor(InterceptorInterface $interceptor)
+    public function addEscapingInterceptor(InterceptorInterface $interceptor): void
     {
         $this->addInterceptorToArray($interceptor, $this->escapingInterceptors);
     }
 
     /**
      * Adds an interceptor to apply to values coming from object accessors.
-     *
-     * @param InterceptorInterface $interceptor
-     * @param array $interceptorArray
      */
-    protected function addInterceptorToArray(InterceptorInterface $interceptor, array &$interceptorArray)
+    protected function addInterceptorToArray(InterceptorInterface $interceptor, array &$interceptorArray): void
     {
         foreach ($interceptor->getInterceptionPoints() as $interceptionPoint) {
             if (!isset($interceptorArray[$interceptionPoint])) {
@@ -93,7 +82,7 @@ class Configuration
      * @param int $interceptionPoint one of the InterceptorInterface::INTERCEPT_* constants,
      * @return InterceptorInterface[]
      */
-    public function getInterceptors($interceptionPoint): array
+    public function getInterceptors(int $interceptionPoint): array
     {
         return $this->interceptors[$interceptionPoint] ?? [];
     }
@@ -104,7 +93,7 @@ class Configuration
      * @param int $interceptionPoint one of the InterceptorInterface::INTERCEPT_* constants,
      * @return InterceptorInterface[]
      */
-    public function getEscapingInterceptors($interceptionPoint): array
+    public function getEscapingInterceptors(int $interceptionPoint): array
     {
         return $this->escapingInterceptors[$interceptionPoint] ?? [];
     }
