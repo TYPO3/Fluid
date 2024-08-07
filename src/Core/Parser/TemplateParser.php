@@ -54,11 +54,6 @@ class TemplateParser
     protected $configuration;
 
     /**
-     * @var array
-     */
-    protected $settings;
-
-    /**
      * @var RenderingContextInterface
      */
     protected $renderingContext;
