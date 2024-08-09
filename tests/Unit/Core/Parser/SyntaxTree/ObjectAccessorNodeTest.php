@@ -28,6 +28,9 @@ final class ObjectAccessorNodeTest extends TestCase
             [['foo' => ['bar' => 'test'], 'dynamic' => 'bar'], 'foo.{dynamic}', 'test'],
             [['foo' => ['bar' => 'test'], 'dynamic' => ['sub' => 'bar']], 'foo.{dynamic.sub}', 'test'],
             [['foo' => ['bar' => 'test'], 'dynamic' => ['sub' => 'bar'], 'baz' => 'sub'], 'foo.{dynamic.{baz}}', 'test'],
+            [[], 'true', true],
+            [[], 'false', false],
+            [[], 'null', null],
         ];
     }
 
@@ -43,7 +46,7 @@ final class ObjectAccessorNodeTest extends TestCase
         $variableContainer = new StandardVariableProvider($variables);
         $renderingContext->expects(self::any())->method('getVariableProvider')->willReturn($variableContainer);
         $value = $node->evaluate($renderingContext);
-        self::assertEquals($expected, $value);
+        self::assertSame($expected, $value);
     }
 
     #[Test]

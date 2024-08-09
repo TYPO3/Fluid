@@ -12,6 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use TYPO3Fluid\Fluid\Core\Variables\InvalidVariableIdentifierException;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Variables\Fixtures\StandardVariableProviderModelFixture;
 
@@ -433,5 +434,14 @@ final class StandardVariableProviderTest extends TestCase
         $subject->setSource($variables);
         $result = $subject->getByPath($path);
         self::assertEquals($expected, $result);
+    }
+
+    #[Test]
+    public function exceptionIsThrownForInvalidVariableIdentifier(): void
+    {
+        self::expectException(InvalidVariableIdentifierException::class);
+        self::expectExceptionCode(1723131119);
+        $subject = new StandardVariableProvider();
+        $subject->add('TrUe', false);
     }
 }

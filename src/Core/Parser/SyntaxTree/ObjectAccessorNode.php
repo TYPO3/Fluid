@@ -62,29 +62,42 @@ class ObjectAccessorNode extends AbstractNode
      */
     public function evaluate(RenderingContextInterface $renderingContext): mixed
     {
-        $objectPath = strtolower($this->objectPath);
         $variableProvider = $renderingContext->getVariableProvider();
-        if ($objectPath === '_all') {
-            return $variableProvider->getAll();
-        }
-        return $variableProvider->getByPath($this->objectPath);
+        return match (strtolower($this->objectPath)) {
+            '_all' => $variableProvider->getAll(),
+            'true' => true,
+            'false' => false,
+            'null' => null,
+            default => $variableProvider->getByPath($this->objectPath),
+        };
     }
 
     public function convert(TemplateCompiler $templateCompiler): array
     {
-        $path = $this->objectPath;
-        if ($path === '_all') {
-            return [
+        return match (strtolower($this->objectPath)) {
+            '_all' => [
                 'initialization' => '',
                 'execution' => '$renderingContext->getVariableProvider()->getAll()',
-            ];
-        }
-        return [
-            'initialization' => '',
-            'execution' => sprintf(
-                '$renderingContext->getVariableProvider()->getByPath(\'%s\')',
-                $path,
-            ),
-        ];
+            ],
+            'true' => [
+                'initialization' => '',
+                'execution' => 'true',
+            ],
+            'false' => [
+                'initialization' => '',
+                'execution' => 'false',
+            ],
+            'null' => [
+                'initialization' => '',
+                'execution' => 'null',
+            ],
+            default => [
+                'initialization' => '',
+                'execution' => sprintf(
+                    '$renderingContext->getVariableProvider()->getByPath(\'%s\')',
+                    $this->objectPath,
+                ),
+            ],
+        };
     }
 }
