@@ -14,6 +14,8 @@ namespace TYPO3Fluid\Fluid\Core\Variables;
  */
 class StandardVariableProvider implements VariableProviderInterface
 {
+    protected array $disallowedIdentifiers = ['null', 'true', 'false', '_all'];
+
     /**
      * Variables stored in context
      *
@@ -75,6 +77,9 @@ class StandardVariableProvider implements VariableProviderInterface
      */
     public function add(string $identifier, mixed $value): void
     {
+        if (in_array(strtolower($identifier), $this->disallowedIdentifiers)) {
+            throw new InvalidVariableIdentifierException('Invalid variable identifier: ' . $identifier, 1723131119);
+        }
         $this->variables[$identifier] = $value;
     }
 
