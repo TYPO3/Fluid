@@ -17,5 +17,12 @@ class TagBasedTestViewHelper extends AbstractTagBasedViewHelper
     {
         parent::initializeArguments();
         $this->registerArgument('registeredArgument', 'string', 'test argument');
+        $this->registerArgument('registeredBooleanArgument', 'boolean', 'boolean argument', false, false);
+    }
+
+    public function render(): string
+    {
+        $this->tag->addAttribute('registeredBooleanArgument', $this->arguments['registeredBooleanArgument']);
+        return $this->tag->render();
     }
 }

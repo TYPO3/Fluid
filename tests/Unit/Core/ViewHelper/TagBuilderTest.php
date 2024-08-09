@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
@@ -241,5 +242,27 @@ final class TagBuilderTest extends TestCase
         $tagBuilder = new TagBuilder('foo');
         $tagBuilder->setTagName('');
         self::assertEquals('', $tagBuilder->render());
+    }
+
+    public static function handlesBooleanAttributesCorrectlyDataProvider(): array
+    {
+        return [
+            'value false' => [false, '<foo />'],
+            'value true' => [true, '<foo async="async" />'],
+            'value null' => [null, '<foo async="" />'],
+            'string false' => ['false', '<foo async="false" />'],
+            'string true' => ['true', '<foo async="true" />'],
+            'string null' => ['null', '<foo async="null" />'],
+            'atttribute name' => ['async', '<foo async="async" />'],
+        ];
+    }
+
+    #[DataProvider('handlesBooleanAttributesCorrectlyDataProvider')]
+    #[Test]
+    public function handlesBooleanAttributesCorrectly(mixed $attributeValue, string $expected): void
+    {
+        $tagBuilder = new TagBuilder('foo');
+        $tagBuilder->addAttribute('async', $attributeValue);
+        self::assertEquals($expected, $tagBuilder->render());
     }
 }

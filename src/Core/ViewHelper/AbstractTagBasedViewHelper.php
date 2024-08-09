@@ -116,8 +116,11 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         }
 
         foreach ($this->additionalArguments as $argumentName => $argumentValue) {
+            // This condition is left here for compatibility reasons. Removing this will be a breaking change
+            // because TagBuilder renders empty strings as empty attributes (as it should be). We might remove
+            // this condition in the future to have a clean solution.
             if ($argumentValue !== null && $argumentValue !== '') {
-                $this->tag->addAttribute($argumentName, (string)$argumentValue);
+                $this->tag->addAttribute($argumentName, $argumentValue);
             }
         }
 

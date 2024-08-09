@@ -25,67 +25,136 @@ final class TagBasedTest extends AbstractFunctionalTestCase
                 [],
                 '<div />',
             ],
-            'empty registered tag attribute' => [
-                '<test:tagBasedTest registeredTagAttribute="" />',
-                "{test:tagBasedTest(registeredTagAttribute: '')}",
+
+            // Arguments that are explicitly defined with type boolean
+            // still retain the original boolean behavior:
+            // string input is interpreted in a way that "true" equals true
+            // and "false" equals false
+            'string as registered bool attribute' => [
+                '<test:tagBasedTest registeredBooleanArgument="test" />',
+                "{test:tagBasedTest(registeredBooleanArgument: 'test')}",
+                [],
+                '<div registeredBooleanArgument="registeredBooleanArgument" />',
+            ],
+            'string true as registered bool attribute' => [
+                '<test:tagBasedTest registeredBooleanArgument="true" />',
+                "{test:tagBasedTest(registeredBooleanArgument: 'true')}",
+                [],
+                '<div registeredBooleanArgument="registeredBooleanArgument" />',
+            ],
+            'string false as registered bool attribute' => [
+                '<test:tagBasedTest registeredBooleanArgument="false" />',
+                "{test:tagBasedTest(registeredBooleanArgument: 'false')}",
                 [],
                 '<div />',
             ],
-            'true as registered tag attribute' => [
-                '<test:tagBasedTest registeredTagAttribute="{var}" />',
-                '{test:tagBasedTest(registeredTagAttribute: var)}',
+            'string null as registered bool attribute' => [
+                '<test:tagBasedTest registeredBooleanArgument="null" />',
+                "{test:tagBasedTest(registeredBooleanArgument: 'null')}",
+                [],
+                '<div registeredBooleanArgument="registeredBooleanArgument" />', // @todo this should probably behave differently
+            ],
+            'empty registered bool attribute' => [
+                '<test:tagBasedTest registeredBooleanArgument="" />',
+                "{test:tagBasedTest(registeredBooleanArgument: '')}",
+                [],
+                '<div />',
+            ],
+            'variable with true as registered bool attribute' => [
+                '<test:tagBasedTest registeredBooleanArgument="{var}" />',
+                '{test:tagBasedTest(registeredBooleanArgument: var)}',
                 ['var' => true],
-                '<div registeredTagAttribute="1" />',
+                '<div registeredBooleanArgument="registeredBooleanArgument" />',
             ],
-            'false as registered tag attribute' => [
-                '<test:tagBasedTest registeredTagAttribute="{var}" />',
-                '{test:tagBasedTest(registeredTagAttribute: var)}',
+            'variable with false as registered bool attribute' => [
+                '<test:tagBasedTest registeredBooleanArgument="{var}" />',
+                '{test:tagBasedTest(registeredBooleanArgument: var)}',
                 ['var' => false],
-                '<div registeredTagAttribute="" />',
+                '<div />',
             ],
-            'null as registered tag attribute' => [
-                '<test:tagBasedTest registeredTagAttribute="{var}" />',
-                '{test:tagBasedTest(registeredTagAttribute: var)}',
+            'variable with null as registered bool attribute' => [
+                '<test:tagBasedTest registeredBooleanArgument="{var}" />',
+                '{test:tagBasedTest(registeredBooleanArgument: var)}',
                 ['var' => null],
                 '<div />',
             ],
-            'undefined variable as registered tag attribute' => [
-                '<test:tagBasedTest registeredTagAttribute="{var}" />',
-                '{test:tagBasedTest(registeredTagAttribute: var)}',
+            'undefined variable as registered bool attribute' => [
+                '<test:tagBasedTest registeredBooleanArgument="{var}" />',
+                '{test:tagBasedTest(registeredBooleanArgument: var)}',
                 [],
                 '<div />',
             ],
-            'registered tag attribute' => [
-                '<test:tagBasedTest registeredTagAttribute="test" />',
-                "{test:tagBasedTest(registeredTagAttribute: 'test')}",
-                [],
-                '<div registeredTagAttribute="test" />',
+            'casted variable as registered bool attribute' => [
+                '<test:tagBasedTest registeredBooleanArgument="{var as boolean}" />',
+                '{test:tagBasedTest(registeredBooleanArgument: \'{var as boolean}\')}',
+                ['var' => '0'],
+                '<div />',
             ],
-            'unregistered argument' => [
+            'boolean literal true as registered bool attribute' => [
+                '<test:tagBasedTest registeredBooleanArgument="{true}" />',
+                '{test:tagBasedTest(registeredBooleanArgument: true)}',
+                [],
+                '<div registeredBooleanArgument="registeredBooleanArgument" />',
+            ],
+            'boolean literal false as registered bool attribute' => [
+                '<test:tagBasedTest registeredBooleanArgument="{false}" />',
+                '{test:tagBasedTest(registeredBooleanArgument: false)}',
+                [],
+                '<div />',
+            ],
+            'null literal as registered bool attribute' => [
+                '<test:tagBasedTest registeredBooleanArgument="{null}" />',
+                '{test:tagBasedTest(registeredBooleanArgument: null)}',
+                [],
+                '<div />',
+            ],
+
+            // Unregistered ViewHelper arguments take strings as-is. To
+            // create a boolean argument, the passed value needs to have
+            // the correct type, either boolean or null
+            'string as unregistered argument' => [
                 '<test:tagBasedTest foo="bar" />',
                 "{test:tagBasedTest(foo: 'bar')}",
                 [],
                 '<div foo="bar" />',
             ],
+            'string true as unregistered argument' => [
+                '<test:tagBasedTest foo="true" />',
+                "{test:tagBasedTest(foo: 'true')}",
+                [],
+                '<div foo="true" />',
+            ],
+            'string false as unregistered argument' => [
+                '<test:tagBasedTest foo="false" />',
+                "{test:tagBasedTest(foo: 'false')}",
+                [],
+                '<div foo="false" />',
+            ],
+            'string null as unregistered argument' => [
+                '<test:tagBasedTest foo="null" />',
+                "{test:tagBasedTest(foo: 'null')}",
+                [],
+                '<div foo="null" />',
+            ],
             'empty unregistered argument' => [
                 '<test:tagBasedTest foo="" />',
                 "{test:tagBasedTest(foo: '')}",
                 [],
-                '<div />',
+                '<div />', // @todo this should render an empty attribute, however this would be a breaking change in templates
             ],
-            'true as unregistered argument' => [
+            'variable with true as unregistered argument' => [
                 '<test:tagBasedTest foo="{var}" />',
                 '{test:tagBasedTest(foo: var)}',
                 ['var' => true],
-                '<div foo="1" />',
+                '<div foo="foo" />',
             ],
-            'false as unregistered argument' => [
+            'variable with false as unregistered argument' => [
                 '<test:tagBasedTest foo="{var}" />',
                 '{test:tagBasedTest(foo: var)}',
                 ['var' => false],
-                '<div foo="" />',
+                '<div />',
             ],
-            'null as unregistered argument' => [
+            'variable with null as unregistered argument' => [
                 '<test:tagBasedTest foo="{var}" />',
                 '{test:tagBasedTest(foo: var)}',
                 ['var' => null],
@@ -97,6 +166,31 @@ final class TagBasedTest extends AbstractFunctionalTestCase
                 [],
                 '<div />',
             ],
+            'casted variable as unregistered argument' => [
+                '<test:tagBasedTest foo="{var as boolean}" />',
+                '{test:tagBasedTest(foo: \'{var as boolean}\')}',
+                ['var' => '0'],
+                '<div />',
+            ],
+            'boolean literal true as unregistered argument' => [
+                '<test:tagBasedTest async="{true}" />',
+                '{test:tagBasedTest(async: true)}',
+                [],
+                '<div async="async" />',
+            ],
+            'boolean literal false as unregistered argument' => [
+                '<test:tagBasedTest async="{false}" />',
+                '{test:tagBasedTest(async: false)}',
+                [],
+                '<div />',
+            ],
+            'null literal as unregistered argument' => [
+                '<test:tagBasedTest async="{null}" />',
+                '{test:tagBasedTest(async: null)}',
+                [],
+                '<div />',
+            ],
+
             'data array' => [
                 '<test:tagBasedTest data="{foo: \'bar\', more: 1}" />',
                 '{test:tagBasedTest(data: {foo: \'bar\', more: 1})}',
@@ -176,7 +270,7 @@ final class TagBasedTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
         $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
         $output = $view->render();
-        self::assertEquals($expected, $output);
+        self::assertEquals($expected, $output, 'tag variant uncached');
 
         $view = new TemplateView();
         $view->assignMultiple($variables);
@@ -184,7 +278,7 @@ final class TagBasedTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($sourceInline);
         $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
         $output = $view->render();
-        self::assertEquals($expected, $output);
+        self::assertEquals($expected, $output, 'inline variant uncached');
 
         // Second run to test cached template parsing
         $view = new TemplateView();
@@ -193,7 +287,7 @@ final class TagBasedTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
         $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
         $output = $view->render();
-        self::assertEquals($expected, $output);
+        self::assertEquals($expected, $output, 'tag variant cached');
 
         $view = new TemplateView();
         $view->assignMultiple($variables);
@@ -201,7 +295,7 @@ final class TagBasedTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($sourceInline);
         $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
         $output = $view->render();
-        self::assertEquals($expected, $output);
+        self::assertEquals($expected, $output, 'inline variant cached');
     }
 
     public static function throwsErrorForInvalidArgumentTypesDatProvider(): array
