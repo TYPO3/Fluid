@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Escaping;
 
+use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
@@ -320,8 +323,24 @@ final class ViewHelperEscapingTest extends AbstractFunctionalTestCase
         self::assertSame('<div class="' . self::ESCAPED . '" />', $this->renderCode($viewHelper, '<test:test class="{value}" />'), 'Tag attribute is escaped');
         self::assertSame('<div data-foo="' . self::ESCAPED . '" />', $this->renderCode($viewHelper, '<test:test data="{foo: value}" />'), 'Tag data attribute values are escaped');
         self::assertSame('<div foo="' . self::ESCAPED . '" />', $this->renderCode($viewHelper, '<test:test additionalAttributes="{foo: value}" />'), 'Tag additional attributes values are escaped');
-        self::assertSame('<div data-&gt;' . self::ESCAPED . '&lt;="1" />', $this->renderCode($viewHelper, '<test:test data=\'{"><script>alert(1)</script><": 1}\' />'), 'Tag data attribute keys are escaped');
-        self::assertSame('<div &gt;' . self::ESCAPED . '&lt;="1" />', $this->renderCode($viewHelper, '<test:test additionalAttributes=\'{"><script>alert(1)</script><": 1}\' />'), 'Tag additional attributes keys are escaped');
         self::assertSame('<div data-foo="' . self::ESCAPED . '" />', $this->renderCode($viewHelper, '<test:test data-foo="{value}" />'), 'Tag unregistered data attribute is escaped');
+    }
+
+    public static function tagBasedViewHelperValidatesAttributeNamesDataProvider(): array
+    {
+        return [
+            ['<test:test data=\'{"><script>alert(1)</script><": 1}\' />'],
+            ['<test:test additionalAttributes=\'{"><script>alert(1)</script><": 1}\' />'],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('tagBasedViewHelperValidatesAttributeNamesDataProvider')]
+    public function tagBasedViewHelperValidatesAttributeNames(string $template): void
+    {
+        self::expectException(InvalidArgumentException::class);
+        self::expectExceptionCode(1721982367);
+        $viewHelper = new TagBasedTestViewHelper();
+        $this->renderCode($viewHelper, $template);
     }
 }
