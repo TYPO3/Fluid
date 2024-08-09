@@ -12,6 +12,8 @@ namespace TYPO3Fluid\Fluid\Core\Variables;
  */
 class StandardVariableProvider implements VariableProviderInterface
 {
+    protected array $disallowedIdentifiers = ['null', 'true', 'false', '_all'];
+
     /**
      * @deprecated Unused. Will be removed in v4.
      */
@@ -101,6 +103,9 @@ class StandardVariableProvider implements VariableProviderInterface
      */
     public function add($identifier, $value)
     {
+        if (in_array(strtolower($identifier), $this->disallowedIdentifiers)) {
+            @trigger_error('The specified variable identifier "' . $identifier . '" will no longer be allowed in Fluid v4.', E_USER_DEPRECATED);
+        }
         $this->variables[$identifier] = $value;
     }
 
