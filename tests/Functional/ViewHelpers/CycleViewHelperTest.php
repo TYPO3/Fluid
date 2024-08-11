@@ -80,4 +80,32 @@ final class CycleViewHelperTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($template);
         self::assertSame($expected, $view->render());
     }
+
+    #[Test]
+    public function cycleValuesInArray(): void
+    {
+        $source = '<f:for each="{items}" as="item"><f:cycle values="{cycles}" as="cycled">{cycled}</f:cycle></f:for>';
+        $variables = [
+            'items' => [0, 1, 2, 3],
+            'cycles' => ['a', 'b'],
+        ];
+
+        $view = new TemplateView();
+        $view->assignMultiple($variables);
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $output = $view->render();
+        self::assertStringContainsString('abab', $output);
+        self::assertStringNotContainsString('aa', $output);
+        self::assertStringNotContainsString('bb', $output);
+
+        $view = new TemplateView();
+        $view->assignMultiple($variables);
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $output = $view->render();
+        self::assertStringContainsString('abab', $output);
+        self::assertStringNotContainsString('aa', $output);
+        self::assertStringNotContainsString('bb', $output);
+    }
 }

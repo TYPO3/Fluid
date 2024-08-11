@@ -7,14 +7,14 @@ declare(strict_types=1);
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\Tests\Functional\Cases;
+namespace TYPO3Fluid\Fluid\Tests\Functional\Core\ViewHelper;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-final class TagBasedTest extends AbstractFunctionalTestCase
+final class TagBasedViewHelperTest extends AbstractFunctionalTestCase
 {
     public static function renderTagBasedViewHelperDataProvider(): array
     {

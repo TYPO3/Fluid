@@ -7,9 +7,9 @@ declare(strict_types=1);
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects;
+namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\Objects;
 
-class WithCamelCaseGetter
+class WithEverything
 {
     /**
      * @var string

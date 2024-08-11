@@ -7,18 +7,18 @@ declare(strict_types=1);
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering;
+namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Parser\SyntaxTree;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
-use TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects\WithCamelCaseGetter;
-use TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects\WithEverything;
-use TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects\WithProperties;
-use TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects\WithUpperCaseGetter;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\Objects\WithCamelCaseGetter;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\Objects\WithEverything;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\Objects\WithProperties;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\Objects\WithUpperCaseGetter;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-final class DataAccessorTest extends AbstractFunctionalTestCase
+final class ObjectAccessorNodeTest extends AbstractFunctionalTestCase
 {
     public static function renderDataProvider(): array
     {

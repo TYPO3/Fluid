@@ -7,7 +7,7 @@ declare(strict_types=1);
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Escaping;
+namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Parser\Interceptor;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -15,7 +15,7 @@ use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-final class EscapingTest extends AbstractFunctionalTestCase
+final class EscapeInterceptorTest extends AbstractFunctionalTestCase
 {
     public static function getTemplateCodeFixturesAndExpectations(): array
     {
