@@ -15,7 +15,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler\Fixtures\AbstractCompiledTemplateTestFixture;
 
-class AbstractCompiledTemplateTest extends TestCase
+final class AbstractCompiledTemplateTest extends TestCase
 {
     #[Test]
     public function setIdentifierDoesNotChangeObject(): void

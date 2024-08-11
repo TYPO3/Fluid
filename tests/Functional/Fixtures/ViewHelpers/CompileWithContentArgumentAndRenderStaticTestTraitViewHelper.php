@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 
-class CompileWithContentArgumentAndRenderStaticTestTraitViewHelper extends AbstractViewHelper implements ViewHelperInterface
+final class CompileWithContentArgumentAndRenderStaticTestTraitViewHelper extends AbstractViewHelper implements ViewHelperInterface
 {
     use CompileWithContentArgumentAndRenderStatic;
 

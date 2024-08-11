@@ -27,7 +27,7 @@ use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers\MutableTestViewHelper
  * The resolver will reply "yes, namespace known" when asked
  * if a namespace "test" exists.
  */
-class TestViewHelperResolver extends ViewHelperResolver
+final class TestViewHelperResolver extends ViewHelperResolver
 {
     /**
      * @var ViewHelperInterface|null

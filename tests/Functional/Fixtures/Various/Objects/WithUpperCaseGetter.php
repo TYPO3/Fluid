@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\Objects;
 
-class WithUpperCaseGetter
+final class WithUpperCaseGetter
 {
     /**
      * @var string

@@ -12,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various;
 /**
  * Dummy object to test Viewhelper behavior on objects with a toArray() method
  */
-class UserWithToArray extends UserWithToString
+final class UserWithToArray extends UserWithToString
 {
     /**
      * @return array

@@ -18,4 +18,4 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
  *
  * See AbstractViewHelperTest->testCallRenderMethod* tests!
  */
-class RenderMethodFreeDefaultRenderStaticViewHelper extends AbstractViewHelper implements ViewHelperInterface {}
+final class RenderMethodFreeDefaultRenderStaticViewHelper extends AbstractViewHelper implements ViewHelperInterface {}

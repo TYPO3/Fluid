@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
 
-class CompileWithContentArgumentAndRenderStaticFirstRegisteredOptionalArgumentAfterRequiredArgumentAsRenderChildrenViewHelper extends AbstractViewHelper
+final class CompileWithContentArgumentAndRenderStaticFirstRegisteredOptionalArgumentAfterRequiredArgumentAsRenderChildrenViewHelper extends AbstractViewHelper
 {
     // ViewHelper tests this trait functionalities.
     use CompileWithContentArgumentAndRenderStatic;

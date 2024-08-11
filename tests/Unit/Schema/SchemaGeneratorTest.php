@@ -16,7 +16,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Schema\SchemaGenerator;
 use TYPO3Fluid\Fluid\Schema\ViewHelperMetadata;
 
-class SchemaGeneratorTest extends TestCase
+final class SchemaGeneratorTest extends TestCase
 {
     public static function generateSchemaDataProvider(): iterable
     {

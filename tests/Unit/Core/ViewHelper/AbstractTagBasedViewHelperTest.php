@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
 
-class AbstractTagBasedViewHelperTest extends TestCase
+final class AbstractTagBasedViewHelperTest extends TestCase
 {
     #[Test]
     public function renderCallsRenderOnTagBuilder(): void

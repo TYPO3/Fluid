@@ -11,7 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
-class MutableTestViewHelper extends AbstractViewHelper
+final class MutableTestViewHelper extends AbstractViewHelper
 {
     public function prepareArguments(): array
     {

@@ -11,7 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
-class TestViewHelper2 extends AbstractViewHelper
+final class TestViewHelper2 extends AbstractViewHelper
 {
     public function initializeArguments(): void
     {

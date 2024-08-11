@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers;
 
-class EscapeChildrenEnabledAndEscapeOutputEnabledViewHelper extends AbstractEscapingViewHelper
+final class EscapeChildrenEnabledAndEscapeOutputEnabledViewHelper extends AbstractEscapingViewHelper
 {
     protected $escapeChildren = true;
     protected $escapeOutput = true;

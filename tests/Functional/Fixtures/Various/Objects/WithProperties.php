@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\Objects;
 
-class WithProperties
+final class WithProperties
 {
     /**
      * @var string

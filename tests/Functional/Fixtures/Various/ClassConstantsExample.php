@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various;
 
-class ClassConstantsExample
+final class ClassConstantsExample
 {
     public const FOO = 'foo';
 }

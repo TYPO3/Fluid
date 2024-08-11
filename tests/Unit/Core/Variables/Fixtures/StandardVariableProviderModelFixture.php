@@ -12,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables\Fixtures;
 /**
  * Used by StandardVariableProviderTest
  */
-class StandardVariableProviderModelFixture
+final class StandardVariableProviderModelFixture
 {
     public string $existingPublicProperty = 'existingPublicPropertyValue';
 

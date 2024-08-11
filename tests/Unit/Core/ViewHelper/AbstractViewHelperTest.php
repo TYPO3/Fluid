@@ -23,7 +23,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Fixtures\RenderMethodFreeDefaultRenderStaticViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Fixtures\RenderMethodFreeViewHelper;
 
-class AbstractViewHelperTest extends TestCase
+final class AbstractViewHelperTest extends TestCase
 {
     public static function getFirstElementOfNonEmptyTestValues(): array
     {

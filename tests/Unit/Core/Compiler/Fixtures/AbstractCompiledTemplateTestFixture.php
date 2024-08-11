@@ -14,4 +14,4 @@ use TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate;
 /**
  * Subject fixture for AbstractCompiledTemplateTest
  */
-class AbstractCompiledTemplateTestFixture extends AbstractCompiledTemplate {}
+final class AbstractCompiledTemplateTestFixture extends AbstractCompiledTemplate {}

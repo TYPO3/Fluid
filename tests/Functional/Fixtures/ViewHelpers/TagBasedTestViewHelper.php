@@ -11,7 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 
-class TagBasedTestViewHelper extends AbstractTagBasedViewHelper
+final class TagBasedTestViewHelper extends AbstractTagBasedViewHelper
 {
     public function initializeArguments(): void
     {

@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various;
 
-class ArrayAccessExample implements \ArrayAccess
+final class ArrayAccessExample implements \ArrayAccess
 {
     public function __construct(private array $data) {}
 

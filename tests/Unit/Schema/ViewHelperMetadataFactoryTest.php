@@ -23,7 +23,7 @@ use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\WithoutDocumentation
 use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\WithoutInterfaceViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\WrongDirectoryViewHelper;
 
-class ViewHelperMetadataFactoryTest extends TestCase
+final class ViewHelperMetadataFactoryTest extends TestCase
 {
     public static function createObjectDataProvider(): iterable
     {
