@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various;
 
-class IterableExample implements \Iterator
+final class IterableExample implements \Iterator
 {
     public function __construct(private array $data) {}
 

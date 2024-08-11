@@ -18,7 +18,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
 
-class AbstractNodeTest extends TestCase
+final class AbstractNodeTest extends TestCase
 {
     #[Test]
     public function evaluateChildNodesPassesRenderingContextToChildNodes(): void

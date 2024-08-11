@@ -22,7 +22,7 @@ use TYPO3Fluid\Fluid\Tests\Unit\View\Fixtures\AbstractTemplateViewTestFixture;
 use TYPO3Fluid\Fluid\View\AbstractTemplateView;
 use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
 
-class AbstractTemplateViewTest extends TestCase
+final class AbstractTemplateViewTest extends TestCase
 {
     #[Test]
     public function getRenderingContextReturnsPreviouslySetRenderingContext(): void

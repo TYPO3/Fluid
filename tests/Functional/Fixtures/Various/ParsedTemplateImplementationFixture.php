@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 
-class ParsedTemplateImplementationFixture implements ParsedTemplateInterface
+final class ParsedTemplateImplementationFixture implements ParsedTemplateInterface
 {
     public function setIdentifier(string $identifier): void
     {
