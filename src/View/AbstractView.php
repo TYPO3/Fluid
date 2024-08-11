@@ -24,7 +24,7 @@ abstract class AbstractView implements ViewInterface
     /**
      * Renders the view
      *
-     * @return string The rendered view
+     * @return mixed The rendered view
      * @api
      */
     public function render()

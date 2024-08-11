@@ -123,7 +123,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
      * If "layoutName" is set in a PostParseFacet callback, it will render the file with the given layout.
      *
      * @param string|null $actionName If set, this action's template will be rendered instead of the one defined in the context.
-     * @return string Rendered Template
+     * @return mixed Rendered Template
      * @api
      */
     public function render($actionName = null)
