@@ -490,6 +490,15 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => false],
             0,
         ];
+        /**
+         * @todo This should work but doesn't at the moment. This is probably related to the boolean
+         * parser not converting variable nodes correctly. There is a related todo in the BooleanParserTest.
+        yield 'test' => [
+            '<f:if condition="{test}"><f:then>then</f:then><f:else>else</f:else></f:if>',
+            ['test' => '""'],
+            'then',
+        ];
+         */
     }
 
     #[DataProvider('renderDataProvider')]
