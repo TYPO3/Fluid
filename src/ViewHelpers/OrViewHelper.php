@@ -57,10 +57,10 @@ class OrViewHelper extends AbstractViewHelper
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
         $alternative = $arguments['alternative'];
-        $arguments = (array)$arguments['arguments'];
+        $sprintfArguments = (array)$arguments['arguments'];
 
-        if (empty($arguments)) {
-            $arguments = null;
+        if (empty($sprintfArguments)) {
+            $sprintfArguments = null;
         }
 
         $content = $renderChildrenClosure();
@@ -70,7 +70,7 @@ class OrViewHelper extends AbstractViewHelper
         }
 
         if (false === empty($content)) {
-            $content = null !== $arguments ? vsprintf($content, $arguments) : $content;
+            $content = null !== $sprintfArguments ? vsprintf($content, $sprintfArguments) : $content;
         }
 
         return $content;
