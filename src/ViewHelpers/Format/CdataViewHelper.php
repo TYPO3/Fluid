@@ -84,4 +84,12 @@ class CdataViewHelper extends AbstractViewHelper
     ) {
         return sprintf('<![CDATA[%s]]>', $renderChildrenClosure());
     }
+
+    /**
+     * Explicitly set argument name to be used as content.
+     */
+    public function resolveContentArgumentName(): string
+    {
+        return 'value';
+    }
 }

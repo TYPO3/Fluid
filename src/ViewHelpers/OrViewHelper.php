@@ -75,4 +75,12 @@ class OrViewHelper extends AbstractViewHelper
 
         return $content;
     }
+
+    /**
+     * Explicitly set argument name to be used as content.
+     */
+    public function resolveContentArgumentName(): string
+    {
+        return 'content';
+    }
 }

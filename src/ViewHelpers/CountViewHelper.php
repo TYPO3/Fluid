@@ -84,4 +84,12 @@ class CountViewHelper extends AbstractViewHelper
         }
         return count($countable);
     }
+
+    /**
+     * Explicitly set argument name to be used as content.
+     */
+    public function resolveContentArgumentName(): string
+    {
+        return 'subject';
+    }
 }

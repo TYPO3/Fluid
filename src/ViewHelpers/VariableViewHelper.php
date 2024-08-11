@@ -57,4 +57,12 @@ class VariableViewHelper extends AbstractViewHelper
         $value = $renderChildrenClosure();
         $renderingContext->getVariableProvider()->add($arguments['name'], $value);
     }
+
+    /**
+     * Explicitly set argument name to be used as content.
+     */
+    public function resolveContentArgumentName(): string
+    {
+        return 'value';
+    }
 }

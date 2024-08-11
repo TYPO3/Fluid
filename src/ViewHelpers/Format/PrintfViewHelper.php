@@ -91,4 +91,12 @@ class PrintfViewHelper extends AbstractViewHelper
     {
         return vsprintf($renderChildrenClosure(), $arguments['arguments']);
     }
+
+    /**
+     * Explicitly set argument name to be used as content.
+     */
+    public function resolveContentArgumentName(): string
+    {
+        return 'value';
+    }
 }
