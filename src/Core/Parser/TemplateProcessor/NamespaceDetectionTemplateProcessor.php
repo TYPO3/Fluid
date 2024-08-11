@@ -48,6 +48,9 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
      * Replaces all cdata sections with empty lines to exclude it from further
      * processing in the templateParser while maintaining the line-count
      * of the template string for the exception handler to reference to.
+     *
+     * @todo It should be evaluated if this is really necessary. If it is, it should
+     * be moved to a separate TemplateProcessor (which would be a breaking change)
      */
     public function replaceCdataSectionsByEmptyLines(string $templateSource): string
     {
