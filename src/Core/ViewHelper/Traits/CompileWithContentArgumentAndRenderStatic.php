@@ -7,9 +7,7 @@
 
 namespace TYPO3Fluid\Fluid\Core\ViewHelper\Traits;
 
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Exception;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 
 /**
  * Class CompilableWithContentArgumentAndRenderStatic
@@ -21,7 +19,9 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
  * the normal render children closure, if that named
  * argument is specified and not empty.
  *
- * @todo add missing types with Fluid v5
+ * @deprecated Will be removed in v5. No longer necessary since resolveContentArgumentName() has been
+ * integrated into AbstractViewHelper with v4. Name has to be specified explicitly by overriding the
+ * method, implicit definition (= first optional argument) is no longer supported.
  */
 trait CompileWithContentArgumentAndRenderStatic
 {
@@ -71,6 +71,7 @@ trait CompileWithContentArgumentAndRenderStatic
      */
     public function render()
     {
+        trigger_error('CompileWithContentArgumentAndRenderStatic has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
         return static::renderStatic(
             $this->arguments,
             $this->buildRenderChildrenClosure(),
@@ -79,73 +80,13 @@ trait CompileWithContentArgumentAndRenderStatic
     }
 
     /**
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     * @return string
-     */
-    public function compile(
-        $argumentsName,
-        $closureName,
-        &$initializationPhpCode,
-        ViewHelperNode $node,
-        TemplateCompiler $compiler,
-    ) {
-        $execution = sprintf(
-            '%s::renderStatic(%s, %s, $renderingContext)',
-            static::class,
-            $argumentsName,
-            $closureName,
-        );
-
-        $contentArgumentName = $this->resolveContentArgumentName();
-        $initializationPhpCode .= sprintf(
-            '%s = (%s[\'%s\'] !== null) ? function() use (%s) { return %s[\'%s\']; } : %s;',
-            $closureName,
-            $argumentsName,
-            $contentArgumentName,
-            $argumentsName,
-            $argumentsName,
-            $contentArgumentName,
-            $closureName,
-        );
-        return $execution;
-    }
-
-    /**
-     * Helper which is mostly needed when calling renderStatic() from within
-     * render().
-     *
-     * No public API yet.
-     *
-     * @return \Closure
-     */
-    protected function buildRenderChildrenClosure()
-    {
-        $argumentName = $this->resolveContentArgumentName();
-        $arguments = $this->arguments;
-        if (!empty($argumentName) && isset($arguments[$argumentName])) {
-            $renderChildrenClosure = function () use ($arguments, $argumentName) {
-                return $arguments[$argumentName];
-            };
-        } else {
-            $self = clone $this;
-            $renderChildrenClosure = function () use ($self) {
-                return $self->renderChildren();
-            };
-        }
-        return $renderChildrenClosure;
-    }
-
-    /**
      * @return string
      */
     public function resolveContentArgumentName()
     {
+        trigger_error('CompileWithContentArgumentAndRenderStatic has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
         if (empty($this->contentArgumentName)) {
-            $registeredArguments = call_user_func_array([$this, 'prepareArguments'], []);
+            $registeredArguments = $this->prepareArguments();
             foreach ($registeredArguments as $registeredArgument) {
                 if (!$registeredArgument->isRequired()) {
                     $this->contentArgumentName = $registeredArgument->getName();
@@ -158,5 +99,10 @@ trait CompileWithContentArgumentAndRenderStatic
             );
         }
         return $this->contentArgumentName;
+    }
+
+    public function getContentArgumentName(): ?string
+    {
+        return $this->resolveContentArgumentName();
     }
 }

@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\Core\ViewHelper\Traits;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Exception;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
@@ -90,6 +91,7 @@ final class CompileWithContentArgumentAndRenderStaticTest extends AbstractFuncti
 
     #[DataProvider('compileWithContentArgumentAndRenderStaticDataProvider')]
     #[Test]
+    #[IgnoreDeprecations]
     public function compileWithContentArgumentAndRenderStatic(string $source, array $expected): void
     {
         $view = new TemplateView();
@@ -112,6 +114,7 @@ final class CompileWithContentArgumentAndRenderStaticTest extends AbstractFuncti
     }
 
     #[Test]
+    #[IgnoreDeprecations]
     public function resolveContentArgumentNameThrowsExceptionIfNoArgumentsAvailable(): void
     {
         $this->expectException(Exception::class);

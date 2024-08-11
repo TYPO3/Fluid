@@ -147,6 +147,17 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     }
 
     /**
+     * Returns the name of variable that contains the value to use instead of render children closure, if specified.
+     * ViewHelpers that want to use contentArgumentName are expected to override this method with their own implementation.
+     *
+     * @api
+     */
+    public function getContentArgumentName(): ?string
+    {
+        return null;
+    }
+
+    /**
      * Register a new argument. Call this method from your ViewHelper subclass
      * inside the initializeArguments() method. If an argument with the same name
      * is already defined, it will be overridden.
@@ -284,11 +295,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      */
     public function renderChildren()
     {
-        if ($this->renderChildrenClosure !== null) {
-            $closure = $this->renderChildrenClosure;
-            return $closure();
-        }
-        return $this->viewHelperNode->evaluateChildNodes($this->renderingContext);
+        return $this->buildRenderChildrenClosure()();
     }
 
     /**
@@ -301,10 +308,23 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      */
     protected function buildRenderChildrenClosure()
     {
-        $self = clone $this;
-        return function () use ($self) {
-            return $self->renderChildren();
-        };
+        $argumentName = $this->getContentArgumentName();
+        $arguments = $this->arguments;
+        if ($argumentName !== null && isset($arguments[$argumentName])) {
+            $renderChildrenClosure = function () use ($arguments, $argumentName) {
+                return $arguments[$argumentName];
+            };
+        } else {
+            $self = clone $this;
+            $renderChildrenClosure = function () use ($self) {
+                if ($self->renderChildrenClosure !== null) {
+                    $closure = $self->renderChildrenClosure;
+                    return $closure();
+                }
+                return $self->viewHelperNode->evaluateChildNodes($self->renderingContext);
+            };
+        }
+        return $renderChildrenClosure;
     }
 
     /**
@@ -479,12 +499,28 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      */
     public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
     {
-        return sprintf(
+        $execution = sprintf(
             '%s::renderStatic(%s, %s, $renderingContext)',
-            get_class($this),
+            static::class,
             $argumentsName,
             $closureName,
         );
+
+        $contentArgumentName = $this->getContentArgumentName();
+        if ($contentArgumentName !== null) {
+            $initializationPhpCode .= sprintf(
+                '%s = (%s[\'%s\'] !== null) ? function() use (%s) { return %s[\'%s\']; } : %s;',
+                $closureName,
+                $argumentsName,
+                $contentArgumentName,
+                $argumentsName,
+                $argumentsName,
+                $contentArgumentName,
+                $closureName,
+            );
+        }
+
+        return $execution;
     }
 
     /**
