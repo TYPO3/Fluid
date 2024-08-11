@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\TemplateCompiler\\:\\:get\\(\\) should return TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\ParsedTemplateInterface but returns TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\UncompilableTemplateInterface\\.$#"
-			count: 1
-			path: src/Core/Compiler/TemplateCompiler.php
-
-		-
 			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInterface\\:\\:isChildrenEscapingEnabled\\(\\)\\.$#"
 			count: 1
 			path: src/Core/Parser/Interceptor/Escape.php

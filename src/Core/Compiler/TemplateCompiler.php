@@ -98,7 +98,7 @@ class TemplateCompiler
         return false;
     }
 
-    public function get(string $identifier): ParsedTemplateInterface
+    public function get(string $identifier): ParsedTemplateInterface|UncompilableTemplateInterface
     {
         $identifier = $this->sanitizeIdentifier($identifier);
 
