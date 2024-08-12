@@ -62,4 +62,12 @@ class InlineViewHelper extends AbstractViewHelper
     ) {
         return $renderingContext->getTemplateParser()->parse((string)$renderChildrenClosure())->render($renderingContext);
     }
+
+    /**
+     * Explicitly set argument name to be used as content.
+     */
+    public function resolveContentArgumentName(): string
+    {
+        return 'code';
+    }
 }
