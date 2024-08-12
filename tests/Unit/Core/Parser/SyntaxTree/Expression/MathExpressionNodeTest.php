@@ -21,10 +21,11 @@ final class MathExpressionNodeTest extends TestCase
     public static function getEvaluateExpressionTestValues(): array
     {
         return [
-            ['1 gabbagabbahey 1', [], 0],
             ['1 + 1', [], 2],
             ['1 +
                    1', [], 2],
+            [' 1 + 2', [], 3],
+            ['1 + 2 ', [], 3],
             ['2 - 1', [], 1],
             ['2 % 4', [], 2],
             ['2 * 4', [], 8],
@@ -52,6 +53,12 @@ final class MathExpressionNodeTest extends TestCase
     #[Test]
     public function testEvaluateExpression(string $expression, array $variables, $expected): void
     {
+        // evaluateExpression() will really only be called if the regular expression pattern matches in the first
+        // place. So it doesn't make sense to test everything in isolation here. For now, we test the pattern manually
+        // to at least make sure that the test case will actually work in templates.
+        // @todo there should really be API for this, like canInterpret() or similar
+        self::assertEquals(1, preg_match(MathExpressionNode::$detectionExpression, '{' . $expression . '}'));
+
         $renderingContext = new RenderingContext();
         $renderingContext->setVariableProvider(new StandardVariableProvider($variables));
         $result = MathExpressionNode::evaluateExpression($renderingContext, $expression, []);
