@@ -67,7 +67,7 @@ final class MutableTestViewHelper extends AbstractViewHelper
         return $clone;
     }
 
-    public function resolveContentArgumentName(): string
+    public function getContentArgumentName(): string
     {
         return 'content';
     }
@@ -75,9 +75,6 @@ final class MutableTestViewHelper extends AbstractViewHelper
     public function render()
     {
         $argumentDefinitions = $this->prepareArguments();
-        if (isset($argumentDefinitions['content'])) {
-            return $this->arguments['content'] ?: $this->renderChildren();
-        }
         if (isset($argumentDefinitions['output'])) {
             return $this->arguments['output'];
         }

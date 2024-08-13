@@ -19,7 +19,7 @@ use TYPO3Fluid\Fluid\Core\Exception;
  * the normal render children closure, if that named
  * argument is specified and not empty.
  *
- * @deprecated Will be removed in v5. No longer necessary since resolveContentArgumentName() has been
+ * @deprecated Will be removed in v5. No longer necessary since getContentArgumentName() has been
  * integrated into AbstractViewHelper with v4. Name has to be specified explicitly by overriding the
  * method, implicit definition (= first optional argument) is no longer supported.
  */
