@@ -11,7 +11,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Wrapper for PHPs :php:`nl2br` function.
@@ -40,7 +40,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  */
 final class Nl2brViewHelper extends AbstractViewHelper
 {
-    use CompileWithContentArgumentAndRenderStatic;
+    use CompileWithRenderStatic;
 
     /**
      * @var bool
@@ -60,7 +60,7 @@ final class Nl2brViewHelper extends AbstractViewHelper
     /**
      * Explicitly set argument name to be used as content.
      */
-    public function resolveContentArgumentName(): string
+    public function getContentArgumentName(): string
     {
         return 'value';
     }

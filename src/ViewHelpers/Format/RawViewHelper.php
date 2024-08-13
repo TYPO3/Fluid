@@ -11,7 +11,7 @@ use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Outputs an argument/value without any escaping. Is normally used to output
@@ -60,7 +60,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  */
 class RawViewHelper extends AbstractViewHelper
 {
-    use CompileWithContentArgumentAndRenderStatic;
+    use CompileWithRenderStatic;
 
     /**
      * @var bool
@@ -98,7 +98,7 @@ class RawViewHelper extends AbstractViewHelper
      */
     public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
     {
-        $contentArgumentName = $this->resolveContentArgumentName();
+        $contentArgumentName = $this->getContentArgumentName();
         return sprintf(
             'isset(%s[\'%s\']) ? %s[\'%s\'] : %s()',
             $argumentsName,
@@ -112,7 +112,7 @@ class RawViewHelper extends AbstractViewHelper
     /**
      * Explicitly set argument name to be used as content.
      */
-    public function resolveContentArgumentName(): string
+    public function getContentArgumentName(): string
     {
         return 'value';
     }

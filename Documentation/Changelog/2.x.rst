@@ -9,6 +9,9 @@ Changelog 2.x
 2.15
 ----
 
+* Deprecation: Trait :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic`
+  has been marked as deprecated. It will log a deprecation level error message when called in
+  Fluid v4. It will be removed in Fluid v5.
 * Deprecation: Variable names `true`, `false` and `null` will log a deprecation level error message because these
   identifiers will become a Fluid language feature with v4.
 
