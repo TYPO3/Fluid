@@ -7,6 +7,8 @@
 
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
+use InvalidArgumentException;
+
 /**
  * Tag builder. Can be easily accessed in AbstractTagBasedViewHelper
  *
@@ -180,7 +182,8 @@ class TagBuilder
     /**
      * Adds an attribute to the $attributes-collection
      *
-     * @param string $attributeName name of the attribute to be added to the tag
+     * @param string $attributeName name of the attribute to be added to the tag. Be extremely
+     *                              careful if this value is user-provided input!
      * @param string|\Traversable|array|null $attributeValue attribute value, can only be array or traversable
      *                                                       if the attribute name is either "data" or "area". In
      *                                                       that special case, multiple attributes will be created
@@ -190,9 +193,25 @@ class TagBuilder
      */
     public function addAttribute($attributeName, $attributeValue, $escapeSpecialCharacters = true)
     {
-        if ($escapeSpecialCharacters) {
-            $attributeName = htmlspecialchars($attributeName);
+        // Limit attribute names to ASCII characters to keep validation reasonably simple
+        // The regular expression lists all printable ASCII characters (0x20 to 0x7F) more or
+        // less in the order they are defined in the standard.
+        // The following characters are excluded and thus not allowed in attribute names to prevent
+        // certain XSS security issues:
+        // - Space and Delete character
+        // - Single (') and double quotes (")
+        // - Less than (<) and greater than (>)
+        // - Equals sign (=)
+        // - Forward slash (/)
+        // - Ampersand (&)
+        // Please note that we cannot fully prevent XSS here because browsers interpret the
+        // value of certain attributes prefixed with "on" (e. g. "onclick") as JavaScript,
+        // which might even be desired functionality.
+        // Please be extremely careful when using user-provided content as attribute name!
+        if (preg_match('/[^0-9A-Za-z!#\$%()*+,\.:;?@\\[\]\^_`{|}~-]/', $attributeName)) {
+            throw new InvalidArgumentException('Invalid attribute name provided: ' . $attributeName, 1721982367);
         }
+
         if (is_array($attributeValue) || $attributeValue instanceof \Traversable) {
             if (!in_array($attributeName, ['data', 'aria'], true)) {
                 throw new \InvalidArgumentException(
