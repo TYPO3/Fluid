@@ -51,6 +51,11 @@ parameters:
 			path: src/Core/Parser/TemplateParser.php
 
 		-
+			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInterface\\:\\:getContentArgumentName\\(\\)\\.$#"
+			count: 1
+			path: src/Core/Parser/TemplateParser.php
+
+		-
 			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInterface\\:\\:isChildrenEscapingEnabled\\(\\)\\.$#"
 			count: 1
 			path: src/Core/Parser/TemplateParser.php
@@ -104,6 +109,21 @@ parameters:
 			message: "#^Method TYPO3Fluid\\\\Fluid\\\\ViewHelpers\\\\Format\\\\HtmlspecialcharsViewHelper\\:\\:render\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/ViewHelpers/Format/HtmlspecialcharsViewHelper.php
+
+		-
+			message: "#^Call to method getRenderingContext\\(\\) on an unknown class TYPO3Fluid\\\\Fluid\\\\Tests\\\\Functional\\\\Core\\\\ViewHelper\\\\Traits\\\\TemplateView\\.$#"
+			count: 6
+			path: tests/Functional/Core/ViewHelper/Traits/CompileWithContentArgumentAndRenderStaticTest.php
+
+		-
+			message: "#^Call to method render\\(\\) on an unknown class TYPO3Fluid\\\\Fluid\\\\Tests\\\\Functional\\\\Core\\\\ViewHelper\\\\Traits\\\\TemplateView\\.$#"
+			count: 2
+			path: tests/Functional/Core/ViewHelper/Traits/CompileWithContentArgumentAndRenderStaticTest.php
+
+		-
+			message: "#^Instantiated class TYPO3Fluid\\\\Fluid\\\\Tests\\\\Functional\\\\Core\\\\ViewHelper\\\\Traits\\\\TemplateView not found\\.$#"
+			count: 2
+			path: tests/Functional/Core/ViewHelper/Traits/CompileWithContentArgumentAndRenderStaticTest.php
 
 		-
 			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with TYPO3Fluid\\\\Fluid\\\\Tests\\\\Functional\\\\Fixtures\\\\Various\\\\UserWithoutToString and string will always evaluate to false\\.$#"
