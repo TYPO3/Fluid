@@ -96,9 +96,6 @@ class ForViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
      * @return string
      * @throws ViewHelper\Exception
      */

@@ -51,9 +51,6 @@ class SpacelessViewHelper extends AbstractViewHelper
     protected $escapeOutput = false;
 
     /**
-     * @param array $arguments
-     * @param \Closure $childClosure
-     * @param RenderingContextInterface $renderingContext
      * @return string
      */
     public static function renderStatic(array $arguments, \Closure $childClosure, RenderingContextInterface $renderingContext)

@@ -157,8 +157,6 @@ class IfViewHelper extends AbstractConditionViewHelper
     }
 
     /**
-     * @param array $arguments
-     * @param RenderingContextInterface $renderingContext
      * @return bool
      */
     public static function verdict(array $arguments, RenderingContextInterface $renderingContext)
