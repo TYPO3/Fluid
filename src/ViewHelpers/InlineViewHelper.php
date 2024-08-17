@@ -50,9 +50,6 @@ class InlineViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
      * @return mixed|string
      */
     public static function renderStatic(
