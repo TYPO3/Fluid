@@ -1,0 +1,8 @@
+{testString}
+<f:for each="{testArray}" as="items">
+    {testArray -> f:count()}
+    <f:for each="{items}" as="item">
+        {item -> f:format.nl2br()}
+    </f:for>
+</f:for>
+{testString -> f:format.cdata()}
