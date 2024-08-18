@@ -11,7 +11,6 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -32,8 +31,8 @@ final class ForViewHelperTest extends AbstractFunctionalTestCase
     #[Test]
     public function renderThrowsExceptionIfSubjectIsInvalid(): void
     {
-        $this->expectException(Exception::class);
-        $this->expectExceptionCode(1248728393);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionCode(1256475113);
         $view = new TemplateView();
         $view->assignMultiple(['value' => new \stdClass()]);
         $view->getRenderingContext()->setCache(self::$cache);
