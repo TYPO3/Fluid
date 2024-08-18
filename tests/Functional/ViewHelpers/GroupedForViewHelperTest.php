@@ -11,11 +11,10 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ArrayAccessExample;
 use TYPO3Fluid\Fluid\View\TemplateView;
-use TYPO3Fluid\Fluid\ViewHelpers\GroupedForViewHelper;
 
 final class GroupedForViewHelperTest extends AbstractFunctionalTestCase
 {
@@ -24,13 +23,13 @@ final class GroupedForViewHelperTest extends AbstractFunctionalTestCase
     {
         $this->expectException(Exception::class);
         $this->expectExceptionCode(1253108907);
-        $arguments = [
-            'each' => new \stdClass(),
-            'as' => '',
-            'groupBy' => '',
-            'groupKey' => '',
-        ];
-        GroupedForViewHelper::renderStatic($arguments, function () {}, new RenderingContext());
+        $source = '<f:groupedFor each="{items}" as="group" groupBy="by"></f:groupedFor>';
+
+        $view = new TemplateView();
+        $view->assign('items', new ArrayAccessExample([]));
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $view->render();
     }
 
     #[Test]
@@ -38,25 +37,25 @@ final class GroupedForViewHelperTest extends AbstractFunctionalTestCase
     {
         $this->expectException(Exception::class);
         $this->expectExceptionCode(1253120365);
-        $arguments = [
-            'each' => ['some', 'simple', 'array'],
-            'as' => '',
-            'groupBy' => '',
-            'groupKey' => '',
-        ];
-        GroupedForViewHelper::renderStatic($arguments, function () {}, new RenderingContext());
+        $source = '<f:groupedFor each="{items}" as="group" groupBy="by"></f:groupedFor>';
+
+        $view = new TemplateView();
+        $view->assign('items', ['some', 'simple', 'array']);
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $view->render();
     }
 
     #[Test]
     public function renderStaticReturnsEmptyStringWhenEachIsNull(): void
     {
-        $arguments = [
-            'each' => null,
-            'as' => '',
-            'groupBy' => '',
-            'groupKey' => '',
-        ];
-        self::assertSame('', GroupedForViewHelper::renderStatic($arguments, function () {}, new RenderingContext()));
+        $source = '<f:groupedFor each="{items}" as="group" groupBy="by"></f:groupedFor>';
+
+        $view = new TemplateView();
+        $view->assign('items', null);
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        self::assertSame('', $view->render());
     }
 
     public static function renderDataProvider(): \Generator
