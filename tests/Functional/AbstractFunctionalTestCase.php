@@ -36,14 +36,14 @@ abstract class AbstractFunctionalTestCase extends TestCase
      */
     protected static string $cachePath;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
         self::$cachePath = sys_get_temp_dir() . '/' . 'fluid-functional-tests-' . hash('xxh3', __CLASS__);
         mkdir(self::$cachePath);
         self::$cache = (new SimpleFileCache(self::$cachePath));
     }
 
-    public static function tearDownAfterClass(): void
+    public function tearDown(): void
     {
         self::$cache->flush();
         rmdir(self::$cachePath);
