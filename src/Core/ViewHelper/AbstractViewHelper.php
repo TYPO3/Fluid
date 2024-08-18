@@ -258,33 +258,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
         $this->validateArguments();
         $this->initialize();
 
-        return $this->callRenderMethod();
-    }
-
-    /**
-     * Call the render() method and handle errors.
-     *
-     * @return string the rendered ViewHelper
-     * @throws Exception
-     */
-    protected function callRenderMethod()
-    {
-        if (method_exists($this, 'render')) {
-            return $this->render();
-        }
-        if ((new \ReflectionMethod($this, 'renderStatic'))->getDeclaringClass()->getName() !== AbstractViewHelper::class) {
-            // Method is safe to call - will not recurse through ViewHelperInvoker via the default
-            // implementation of renderStatic() on this class.
-            return static::renderStatic($this->arguments, $this->buildRenderChildrenClosure(), $this->renderingContext);
-        }
-        throw new Exception(
-            sprintf(
-                'ViewHelper class "%s" does not declare a "render()" method and inherits the default "renderStatic". ' .
-                'Executing this ViewHelper would cause infinite recursion - please either implement "render()" or ' .
-                '"renderStatic()" on your ViewHelper class',
-                get_class($this),
-            ),
-        );
+        return $this->render();
     }
 
     /**
@@ -309,8 +283,9 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     }
 
     /**
-     * Helper which is mostly needed when calling renderStatic() from within
-     * render().
+     * Creates a closure that renders a view helper's child nodes. It also takes
+     * into account the contentArgumentName, which if defined leads to that argument
+     * being rendered instead.
      *
      * No public API yet.
      *
@@ -492,6 +467,36 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     }
 
     /**
+     * Main render method of the ViewHelper. Every modern ViewHelper implementation
+     * must implement this method.
+     *
+     * @todo Remove fallback implementation for renderStatic() and declare as abstract with Fluid v5
+     *
+     * @return mixed
+     */
+    public function render()
+    {
+        if (!method_exists(static::class, 'renderStatic')) {
+            throw new Exception(
+                sprintf(
+                    'ViewHelper class "%s" does not declare a "render()" method. Also, no implementation of "renderStatic"' .
+                    'could be found to use as fallback. Please implement "render()" on your ViewHelper class',
+                    static::class,
+                ),
+            );
+        }
+
+        // This covers the edge case where a ViewHelper implements neither CompileWithRenderStatic nor
+        // CompileWithContentArgumentAndRenderStatic, but still uses renderStatic().
+        trigger_error('renderStatic() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
+        return static::renderStatic(
+            $this->arguments,
+            $this->buildRenderChildrenClosure(),
+            $this->renderingContext,
+        );
+    }
+
+    /**
      * You only should override this method *when you absolutely know what you
      * are doing*, and really want to influence the generated PHP code during
      * template compilation directly.
@@ -528,7 +533,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
     {
         $execution = sprintf(
-            '%s::renderStatic(%s, %s, $renderingContext)',
+            '$renderingContext->getViewHelperInvoker()->invoke(%s::class, %s, $renderingContext, %s)',
             static::class,
             $argumentsName,
             $closureName,
@@ -549,22 +554,6 @@ abstract class AbstractViewHelper implements ViewHelperInterface
         }
 
         return $execution;
-    }
-
-    /**
-     * Default implementation of static rendering; useful API method if your ViewHelper
-     * when compiled is able to render itself statically to increase performance. This
-     * default implementation will simply delegate to the ViewHelperInvoker.
-     *
-     * @param array<string, mixed> $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
-     * @return mixed
-     */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
-    {
-        $viewHelperClassName = get_called_class();
-        return $renderingContext->getViewHelperInvoker()->invoke($viewHelperClassName, $arguments, $renderingContext, $renderChildrenClosure);
     }
 
     /**

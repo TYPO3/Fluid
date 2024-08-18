@@ -19,7 +19,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 final class GroupedForViewHelperTest extends AbstractFunctionalTestCase
 {
     #[Test]
-    public function renderStaticThrowsExceptionWhenEachIsNotTraversable(): void
+    public function renderThrowsExceptionWhenEachIsNotTraversable(): void
     {
         $this->expectException(Exception::class);
         $this->expectExceptionCode(1253108907);
@@ -33,7 +33,7 @@ final class GroupedForViewHelperTest extends AbstractFunctionalTestCase
     }
 
     #[Test]
-    public function renderStaticThrowsExceptionWhenEachIsOneDimensionalArray(): void
+    public function renderThrowsExceptionWhenEachIsOneDimensionalArray(): void
     {
         $this->expectException(Exception::class);
         $this->expectExceptionCode(1253120365);
@@ -47,7 +47,7 @@ final class GroupedForViewHelperTest extends AbstractFunctionalTestCase
     }
 
     #[Test]
-    public function renderStaticReturnsEmptyStringWhenEachIsNull(): void
+    public function renderReturnsEmptyStringWhenEachIsNull(): void
     {
         $source = '<f:groupedFor each="{items}" as="group" groupBy="by"></f:groupedFor>';
 

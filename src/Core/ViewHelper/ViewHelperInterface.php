@@ -78,27 +78,6 @@ interface ViewHelperInterface
     public function validateAdditionalArguments(array $arguments);
 
     /**
-     * Here follows a more detailed description of the arguments of this function:
-     *
-     * $arguments contains a plain array of all arguments this ViewHelper has received,
-     * including the default argument values if an argument has not been specified
-     * in the ViewHelper invocation.
-     *
-     * $renderChildrenClosure is a closure you can execute instead of $this->renderChildren().
-     * It returns the rendered child nodes, so you can simply do $renderChildrenClosure() to execute
-     * it. It does not take any parameters.
-     *
-     * $renderingContext contains references to the VariableProvider and the
-     * ViewHelperVariableContainer.
-     *
-     * @param array<string, mixed> $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
-     * @return mixed the resulting value from the ViewHelper
-     */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext);
-
-    /**
      * Called when being inside a cached template.
      *
      * @param \Closure $renderChildrenClosure

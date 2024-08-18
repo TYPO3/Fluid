@@ -25,8 +25,13 @@ Changelog 4.x
   :php:`TYPO3Fluid\Fluid\View\AbstractTemplateView::RENDERING_LAYOUT`
 * Breaking: Careful addition of method and property type hints throughout the system.
   This should be only mildly breaking and projects should be able to adapt easily.
+* Deprecation: Trait :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic`
+  now emits a E_USER_DEPRECATED level error.
 * Deprecation: Trait :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic`
   now emits a E_USER_DEPRECATED level error.
+* Deprecation: Static method :php:`renderStatic()` on ViewHelpers that don't use :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic`
+  or :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic` now emits a
+  E_USER_DEPRECATED level error.
 * Deprecation: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper->overrideArgument()`
   now emits a E_USER_DEPRECATED level error.
 * Deprecation: Calling method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper->registerUniversalTagAttributes()`

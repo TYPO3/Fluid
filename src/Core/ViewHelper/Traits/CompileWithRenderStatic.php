@@ -14,7 +14,8 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper\Traits;
  * any ViewHelper that conforms to the `renderStatic`
  * method pattern.
  *
- * @todo add missing types with Fluid v5
+ * @deprecated Will be removed in v5. The non-static render() method
+ *             should be used instead
  */
 trait CompileWithRenderStatic
 {
@@ -27,6 +28,7 @@ trait CompileWithRenderStatic
      */
     public function render()
     {
+        trigger_error('CompileWithRenderStatic has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
         return static::renderStatic(
             $this->arguments,
             $this->buildRenderChildrenClosure(),
