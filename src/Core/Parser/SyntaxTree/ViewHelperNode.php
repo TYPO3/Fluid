@@ -11,7 +11,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 
@@ -48,9 +47,7 @@ class ViewHelperNode extends AbstractNode
         $this->arguments = $arguments;
         $this->viewHelperClassName = $resolver->resolveViewHelperClassName($namespace, $identifier);
         $this->uninitializedViewHelper = $resolver->createViewHelperInstanceFromClassName($this->viewHelperClassName);
-        if ($this->uninitializedViewHelper instanceof AbstractViewHelper) {
-            $this->uninitializedViewHelper->setViewHelperNode($this);
-        }
+        $this->uninitializedViewHelper->setViewHelperNode($this);
         // Note: RenderingContext required here though replaced later. See https://github.com/TYPO3Fluid/Fluid/pull/93
         $this->uninitializedViewHelper->setRenderingContext($renderingContext);
         $this->argumentDefinitions = $resolver->getArgumentDefinitionsForViewHelper($this->uninitializedViewHelper);
@@ -146,11 +143,6 @@ class ViewHelperNode extends AbstractNode
         // the current ViewHelperNode to a viewhelper instance to ensure correct context.
         // See https://github.com/TYPO3/Fluid/issues/804
         // @todo We should evaluate if we can get rid of this state and better pass it around.
-        // @todo The ViewHelperInterface does not contain the setViewHelperNode() method. Most likely ViewHelper are
-        //       created using the AbstractViewHelper class as base, which contains this method. However, we need
-        //       to check for method to exists before calling it.
-        if (method_exists($this->uninitializedViewHelper, 'setViewHelperNode')) {
-            $this->uninitializedViewHelper->setViewHelperNode($this);
-        }
+        $this->uninitializedViewHelper->setViewHelperNode($this);
     }
 }
