@@ -69,6 +69,16 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     protected $renderingContext;
 
     /**
+     * Stores rendering contexts in a situation where ViewHelpers are called recursively from inside
+     * one of their child nodes. In that case, the rendering context can change during the recursion,
+     * but needs to be restored properly after each run. Thus, we store a stack of rendering contexts
+     * to be able to restore the initial state of the ViewHelper.
+     *
+     * @var RenderingContextInterface[]
+     */
+    protected array $renderingContextStack = [];
+
+    /**
      * @var \Closure
      */
     protected $renderChildrenClosure;
@@ -307,23 +317,19 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      */
     protected function buildRenderChildrenClosure()
     {
-        $argumentName = $this->getContentArgumentName();
-        $arguments = $this->arguments;
-        if ($argumentName !== null && isset($arguments[$argumentName])) {
-            $renderChildrenClosure = function () use ($arguments, $argumentName) {
-                return $arguments[$argumentName];
-            };
-        } else {
-            $self = clone $this;
-            $renderChildrenClosure = function () use ($self) {
-                if ($self->renderChildrenClosure !== null) {
-                    $closure = $self->renderChildrenClosure;
-                    return $closure();
-                }
-                return $self->viewHelperNode->evaluateChildNodes($self->renderingContext);
-            };
+        $contentArgumentName = $this->getContentArgumentName();
+        if ($contentArgumentName !== null && isset($this->arguments[$contentArgumentName])) {
+            return fn() => $this->arguments[$contentArgumentName];
         }
-        return $renderChildrenClosure;
+        if ($this->renderChildrenClosure !== null) {
+            return $this->renderChildrenClosure;
+        }
+        return function () {
+            $this->renderingContextStack[] = $this->renderingContext;
+            $result = $this->viewHelperNode->evaluateChildNodes($this->renderingContext);
+            $this->setRenderingContext(array_pop($this->renderingContextStack));
+            return $result;
+        };
     }
 
     /**
