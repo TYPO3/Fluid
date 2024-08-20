@@ -270,7 +270,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     protected function callRenderMethod()
     {
         if (method_exists($this, 'render')) {
-            return call_user_func([$this, 'render']);
+            return $this->render();
         }
         if ((new \ReflectionMethod($this, 'renderStatic'))->getDeclaringClass()->getName() !== AbstractViewHelper::class) {
             // Method is safe to call - will not recurse through ViewHelperInvoker via the default
@@ -496,8 +496,30 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * are doing*, and really want to influence the generated PHP code during
      * template compilation directly.
      *
-     * @param string $argumentsName
-     * @param string $closureName
+     * This method is called on compilation time.
+     *
+     * It has to return a *single* PHP statement without semi-colon or newline
+     * at the end, which will be embedded at various places.
+     *
+     * Furthermore, it can append PHP code to the variable $initializationPhpCode.
+     * In this case, all statements have to end with semi-colon and newline.
+     *
+     * Outputting new variables
+     * ========================
+     * If you want create a new PHP variable, you need to use
+     * $templateCompiler->variableName('nameOfVariable') for this, as all variables
+     * need to be globally unique.
+     *
+     * Return Value
+     * ============
+     * Besides returning a single string, it can also return the constant
+     * \TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::SHOULD_GENERATE_VIEWHELPER_INVOCATION
+     * which means that after the $initializationPhpCode, the ViewHelper invocation
+     * is built as normal. This is especially needed if you want to build new arguments
+     * at run-time, as it is done for the AbstractConditionViewHelper.
+     *
+     * @param string $argumentsName Name of the variable in which the ViewHelper arguments are stored
+     * @param string $closureName Name of the closure which can be executed to render the child nodes
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler

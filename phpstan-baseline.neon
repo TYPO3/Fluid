@@ -1,27 +1,7 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInterface\\:\\:isChildrenEscapingEnabled\\(\\)\\.$#"
-			count: 1
-			path: src/Core/Parser/Interceptor/Escape.php
-
-		-
-			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInterface\\:\\:isOutputEscapingEnabled\\(\\)\\.$#"
-			count: 1
-			path: src/Core/Parser/Interceptor/Escape.php
-
-		-
 			message: "#^Binary operation \"\\+\" between non\\-empty\\-string and 0 results in an error\\.$#"
-			count: 1
-			path: src/Core/Parser/TemplateParser.php
-
-		-
-			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInterface\\:\\:getContentArgumentName\\(\\)\\.$#"
-			count: 1
-			path: src/Core/Parser/TemplateParser.php
-
-		-
-			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInterface\\:\\:isChildrenEscapingEnabled\\(\\)\\.$#"
 			count: 1
 			path: src/Core/Parser/TemplateParser.php
 

@@ -19,7 +19,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  *           extend AbstractViewHelper or some other abstract that
  *           extends AbstractViewHelper with own view helper
  *           implementations.
- *           This interface ships a couple of methods for internal use
+ *           This interface currently only ships internal Fluid API,
  *           which may change. Those methods are "correctly" implemented
  *           in the AbstractViewHelper and maintained.
  *           We'll try to resolve this restriction midterm, but you should
@@ -38,10 +38,14 @@ interface ViewHelperInterface
      */
     public function setArguments(array $arguments);
 
+    public function getContentArgumentName(): ?string;
+
     /**
      * @param NodeInterface[] $nodes
      */
     public function setChildNodes(array $nodes);
+
+    public function setViewHelperNode(ViewHelperNode $node);
 
     /**
      * @param RenderingContextInterface $renderingContext
@@ -54,34 +58,6 @@ interface ViewHelperInterface
      * @return mixed the rendered ViewHelper.
      */
     public function initializeArgumentsAndRender();
-
-    /**
-     * Initializes the view helper before invoking the render method.
-     *
-     * Override this method to solve tasks before the view helper content is rendered.
-     */
-    public function initialize();
-
-    /**
-     * Helper method which triggers the rendering of everything between the
-     * opening and the closing tag.
-     *
-     * @return mixed The finally rendered child nodes.
-     */
-    public function renderChildren();
-
-    /**
-     * Validate arguments, and throw exception if arguments do not validate.
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function validateArguments();
-
-    /**
-     * Initialize all arguments. You need to override this method and call
-     * $this->registerArgument(...) inside this method, to register all your arguments.
-     */
-    public function initializeArguments();
 
     /**
      * Method which can be implemented in any ViewHelper if that ViewHelper desires
@@ -123,38 +99,6 @@ interface ViewHelperInterface
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext);
 
     /**
-     * This method is called on compilation time.
-     *
-     * It has to return a *single* PHP statement without semi-colon or newline
-     * at the end, which will be embedded at various places.
-     *
-     * Furthermore, it can append PHP code to the variable $initializationPhpCode.
-     * In this case, all statements have to end with semi-colon and newline.
-     *
-     * Outputting new variables
-     * ========================
-     * If you want create a new PHP variable, you need to use
-     * $templateCompiler->variableName('nameOfVariable') for this, as all variables
-     * need to be globally unique.
-     *
-     * Return Value
-     * ============
-     * Besides returning a single string, it can also return the constant
-     * \TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::SHOULD_GENERATE_VIEWHELPER_INVOCATION
-     * which means that after the $initializationPhpCode, the ViewHelper invocation
-     * is built as normal. This is especially needed if you want to build new arguments
-     * at run-time, as it is done for the AbstractConditionViewHelper.
-     *
-     * @param string $argumentsName Name of the variable in which the ViewHelper arguments are stored
-     * @param string $closureName Name of the closure which can be executed to render the child nodes
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     * @return string
-     */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler);
-
-    /**
      * Called when being inside a cached template.
      *
      * @param \Closure $renderChildrenClosure
@@ -185,4 +129,14 @@ interface ViewHelperInterface
      * @return array{initialization: string, execution: string}
      */
     public function convert(TemplateCompiler $templateCompiler): array;
+
+    /**
+     * @return bool
+     */
+    public function isChildrenEscapingEnabled();
+
+    /**
+     * @return bool
+     */
+    public function isOutputEscapingEnabled();
 }
