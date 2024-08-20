@@ -9,10 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Modifies the case of an input string to upper- or lowercase or capitalization.
@@ -67,8 +65,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 final class CaseViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * Directs the input string being converted to "lowercase"
      */
@@ -111,15 +107,13 @@ final class CaseViewHelper extends AbstractViewHelper
      * Changes the case of the input string
      * @throws Exception
      */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string
+    public function render(): string
     {
-        $value = $arguments['value'];
-        $mode = $arguments['mode'];
-
+        $value = $this->arguments['value'];
+        $mode = $this->arguments['mode'];
         if ($value === null) {
-            $value = (string)$renderChildrenClosure();
+            $value = (string)$this->renderChildren();
         }
-
         switch ($mode) {
             case self::CASE_LOWER:
                 $output = mb_strtolower($value, 'utf-8');
@@ -145,7 +139,6 @@ final class CaseViewHelper extends AbstractViewHelper
             default:
                 throw new Exception('The case mode "' . $mode . '" supplied to Fluid\'s format.case ViewHelper is not supported.', 1358349150);
         }
-
         return $output;
     }
 }

@@ -9,9 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Formats a number with custom precision, decimal point and grouped thousands.
@@ -42,8 +40,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 final class NumberViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * Output is escaped already. We must not escape children, to avoid double encoding.
      *
@@ -61,12 +57,12 @@ final class NumberViewHelper extends AbstractViewHelper
     /**
      * Format the numeric value as a number with grouped thousands, decimal point and precision.
      */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string
+    public function render(): string
     {
-        $decimals = (int)$arguments['decimals'];
-        $decimalSeparator = $arguments['decimalSeparator'];
-        $thousandsSeparator = $arguments['thousandsSeparator'];
-        $stringToFormat = $renderChildrenClosure();
+        $decimals = (int)$this->arguments['decimals'];
+        $decimalSeparator = $this->arguments['decimalSeparator'];
+        $thousandsSeparator = $this->arguments['thousandsSeparator'];
+        $stringToFormat = $this->renderChildren();
         return number_format((float)$stringToFormat, $decimals, $decimalSeparator, $thousandsSeparator);
     }
 }

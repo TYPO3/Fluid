@@ -7,9 +7,7 @@
 
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Inline Fluid rendering ViewHelper
@@ -34,8 +32,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class InlineViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     protected $escapeChildren = false;
 
     protected $escapeOutput = false;
@@ -52,12 +48,9 @@ class InlineViewHelper extends AbstractViewHelper
     /**
      * @return mixed|string
      */
-    public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext,
-    ) {
-        return $renderingContext->getTemplateParser()->parse((string)$renderChildrenClosure())->render($renderingContext);
+    public function render()
+    {
+        return $this->renderingContext->getTemplateParser()->parse((string)$this->renderChildren())->render($this->renderingContext);
     }
 
     /**

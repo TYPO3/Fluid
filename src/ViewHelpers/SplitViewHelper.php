@@ -9,9 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * The SplitViewHelper splits a string by the specified separator, which
@@ -61,8 +59,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 final class SplitViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * @var bool
      */
@@ -75,13 +71,12 @@ final class SplitViewHelper extends AbstractViewHelper
         $this->registerArgument('limit', 'int', 'If limit is positive, a maximum of $limit items will be returned. If limit is negative, all items except for the last $limit items will be returned. 0 will be treated as 1.', false, PHP_INT_MAX);
     }
 
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): array
+    public function render(): array
     {
-        $value = $arguments['value'] ?? $renderChildrenClosure();
+        $value = $this->arguments['value'] ?? $this->renderChildren();
         if (!is_string($value)) {
             throw new \InvalidArgumentException('Value to be split must be a string: ' . $value, 1705250408);
         }
-
-        return explode($arguments['separator'], $value, $arguments['limit']);
+        return explode($this->arguments['separator'], $value, $this->arguments['limit']);
     }
 }

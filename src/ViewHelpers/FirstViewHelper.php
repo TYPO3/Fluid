@@ -9,9 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * The FirstViewHelper returns the first item of an array.
@@ -29,17 +27,14 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 final class FirstViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     public function initializeArguments(): void
     {
         $this->registerArgument('value', 'array', '');
     }
 
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): mixed
+    public function render(): mixed
     {
-        $value = $arguments['value'] ?? $renderChildrenClosure();
-
+        $value = $this->arguments['value'] ?? $this->renderChildren();
         if ($value === null || !is_iterable($value)) {
             $givenType = get_debug_type($value);
             throw new \InvalidArgumentException(
@@ -48,9 +43,7 @@ final class FirstViewHelper extends AbstractViewHelper
                 1712220569,
             );
         }
-
         $value = iterator_to_array($value);
-
         return array_shift($value);
     }
 }
