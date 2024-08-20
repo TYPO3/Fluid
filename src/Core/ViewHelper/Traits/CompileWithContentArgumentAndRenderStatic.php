@@ -20,7 +20,7 @@ use TYPO3Fluid\Fluid\Core\Exception;
  * argument is specified and not empty.
  *
  * @deprecated Will be removed in v5. No longer necessary since getContentArgumentName() has been
- * integrated into AbstractViewHelper with v4. Name has to be specified explicitly by overriding the
+ * integrated into AbstractViewHelper with v2.15. Name has to be specified explicitly by overriding the
  * method, implicit definition (= first optional argument) is no longer supported.
  */
 trait CompileWithContentArgumentAndRenderStatic
