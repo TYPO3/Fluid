@@ -7,9 +7,6 @@
 
 namespace TYPO3Fluid\Fluid\Core\ViewHelper\Traits;
 
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-
 /**
  * Class CompilableWithRenderStatic
  *
@@ -39,27 +36,4 @@ trait CompileWithRenderStatic
      * @return \Closure
      */
     abstract protected function buildRenderChildrenClosure();
-
-    /**
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     * @return string
-     */
-    public function compile(
-        $argumentsName,
-        $closureName,
-        &$initializationPhpCode,
-        ViewHelperNode $node,
-        TemplateCompiler $compiler,
-    ) {
-        return sprintf(
-            '%s::renderStatic(%s, %s, $renderingContext)',
-            static::class,
-            $argumentsName,
-            $closureName,
-        );
-    }
 }

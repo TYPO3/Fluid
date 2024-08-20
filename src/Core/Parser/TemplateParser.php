@@ -589,7 +589,7 @@ class TemplateParser
         $isBoolean = $hasDefinition && ($argumentDefinition->getType() === 'boolean' || $argumentDefinition->getType() === 'bool');
         $escapingEnabled = $this->configuration->isViewHelperArgumentEscapingEnabled();
         $isArgumentEscaped = $hasDefinition && $argumentDefinition->getEscape() === true;
-        $isContentArgument = $hasDefinition && method_exists($viewHelper, 'resolveContentArgumentName') && $argumentDefinition->getName() === $viewHelper->resolveContentArgumentName();
+        $isContentArgument = $hasDefinition && $argumentDefinition->getName() === $viewHelper->getContentArgumentName();
         if ($isContentArgument) {
             return !$isBoolean && ($viewHelper->isChildrenEscapingEnabled() || $isArgumentEscaped);
         }
