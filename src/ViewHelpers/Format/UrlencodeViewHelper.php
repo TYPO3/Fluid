@@ -12,7 +12,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 use Stringable;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Encodes the given string according to http://www.faqs.org/rfcs/rfc3986.html
@@ -45,7 +45,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  */
 final class UrlencodeViewHelper extends AbstractViewHelper
 {
-    use CompileWithContentArgumentAndRenderStatic;
+    use CompileWithRenderStatic;
 
     /**
      * Output is escaped already. We must not escape children, to avoid double encoding.
@@ -80,7 +80,7 @@ final class UrlencodeViewHelper extends AbstractViewHelper
     /**
      * Explicitly set argument name to be used as content.
      */
-    public function resolveContentArgumentName(): string
+    public function getContentArgumentName(): string
     {
         return 'value';
     }
