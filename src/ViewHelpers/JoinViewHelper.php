@@ -9,9 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * The JoinViewHelper combines elements from an array into a single string.
@@ -58,8 +56,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 final class JoinViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     public function initializeArguments(): void
     {
         $this->registerArgument('value', 'array', 'An array');
@@ -70,12 +66,11 @@ final class JoinViewHelper extends AbstractViewHelper
     /**
      * @return string The concatenated string
      */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string
+    public function render(): string
     {
-        $value = $arguments['value'] ?? $renderChildrenClosure();
-        $separator = $arguments['separator'] ?? '';
-        $separatorLast = $arguments['separatorLast'] ?? null;
-
+        $value = $this->arguments['value'] ?? $this->renderChildren();
+        $separator = $this->arguments['separator'] ?? '';
+        $separatorLast = $this->arguments['separatorLast'] ?? null;
         if ($value === null || !is_iterable($value)) {
             $givenType = get_debug_type($value);
             throw new \InvalidArgumentException(
@@ -84,17 +79,13 @@ final class JoinViewHelper extends AbstractViewHelper
                 1256475113,
             );
         }
-
         $value = iterator_to_array($value);
-
         if (\count($value) < 2) {
             return (string)array_pop($value);
         }
-
         if ($separatorLast === null || $separatorLast === $separator) {
             return implode($separator, $value);
         }
-
         return implode($separator, \array_slice($value, 0, -1)) . $separatorLast . $value[\count($value) - 1];
     }
 }

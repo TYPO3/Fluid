@@ -7,12 +7,10 @@
 
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\ScopedVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * This ViewHelper cycles through the specified values.
@@ -68,8 +66,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class CycleViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * @var bool
      */
@@ -85,34 +81,28 @@ class CycleViewHelper extends AbstractViewHelper
     /**
      * @return mixed
      */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public function render()
     {
-        $values = $arguments['values'];
-        $as = $arguments['as'];
+        $values = $this->arguments['values'];
+        $as = $this->arguments['as'];
         if ($values === null) {
-            return $renderChildrenClosure();
+            return $this->renderChildren();
         }
         $values = static::initializeValues($values);
-        $index = static::initializeIndex($as, $renderingContext->getViewHelperVariableContainer());
-
+        $index = static::initializeIndex($as, $this->renderingContext->getViewHelperVariableContainer());
         $currentValue = isset($values[$index]) ? $values[$index] : null;
-
         $scopedVariableProvider = new ScopedVariableProvider(
-            $renderingContext->getVariableProvider(),
+            $this->renderingContext->getVariableProvider(),
             new StandardVariableProvider([$as => $currentValue]),
         );
-        $renderingContext->setVariableProvider($scopedVariableProvider);
-
-        $output = $renderChildrenClosure();
-
-        $renderingContext->setVariableProvider($scopedVariableProvider->getGlobalVariableProvider());
-
+        $this->renderingContext->setVariableProvider($scopedVariableProvider);
+        $output = $this->renderChildren();
+        $this->renderingContext->setVariableProvider($scopedVariableProvider->getGlobalVariableProvider());
         $index++;
         if (!isset($values[$index])) {
             $index = 0;
         }
-        $renderingContext->getViewHelperVariableContainer()->addOrUpdate(static::class, $as, $index);
-
+        $this->renderingContext->getViewHelperVariableContainer()->addOrUpdate(static::class, $as, $index);
         return $output;
     }
 

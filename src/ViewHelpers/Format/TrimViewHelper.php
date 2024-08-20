@@ -9,10 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * This ViewHelper strips whitespace (or other characters) from the beginning and end of a string.
@@ -68,8 +66,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 final class TrimViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     private const SIDE_BOTH = 'both';
     private const SIDE_LEFT = 'left';
     private const SIDE_START = 'start';
@@ -93,22 +89,19 @@ final class TrimViewHelper extends AbstractViewHelper
     /**
      * @return string the trimmed value
      */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public function render()
     {
-        $value = $arguments['value'];
-        $characters = $arguments['characters'];
-        $side = $arguments['side'];
-
+        $value = $this->arguments['value'];
+        $characters = $this->arguments['characters'];
+        $side = $this->arguments['side'];
         if ($value === null) {
-            $value = (string)$renderChildrenClosure();
+            $value = (string)$this->renderChildren();
         } else {
             $value = (string)$value;
         }
-
         if ($characters === null) {
             $characters = " \t\n\r\0\x0B";
         }
-
         return match ($side) {
             self::SIDE_BOTH => trim($value, $characters),
             self::SIDE_LEFT, self::SIDE_START => ltrim($value, $characters),

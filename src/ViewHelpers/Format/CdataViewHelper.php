@@ -7,9 +7,7 @@
 
 namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Outputs an argument/value without any escaping and wraps it with CDATA tags.
@@ -57,8 +55,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class CdataViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * @var bool
      */
@@ -77,12 +73,9 @@ class CdataViewHelper extends AbstractViewHelper
     /**
      * @return string
      */
-    public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext,
-    ) {
-        return sprintf('<![CDATA[%s]]>', $renderChildrenClosure());
+    public function render()
+    {
+        return sprintf('<![CDATA[%s]]>', $this->renderChildren());
     }
 
     /**

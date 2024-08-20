@@ -10,9 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 
 use Stringable;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Encodes the given string according to http://www.faqs.org/rfcs/rfc3986.html
@@ -45,8 +43,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 final class UrlencodeViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * Output is escaped already. We must not escape children, to avoid double encoding.
      *
@@ -65,9 +61,9 @@ final class UrlencodeViewHelper extends AbstractViewHelper
      * @see https://www.php.net/manual/function.rawurlencode.php
      * @return string
      */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string
+    public function render(): string
     {
-        $value = $renderChildrenClosure();
+        $value = $this->renderChildren();
         if (is_array($value)) {
             throw new \InvalidArgumentException('Specified array cannot be converted to string.', 1700821579);
         }

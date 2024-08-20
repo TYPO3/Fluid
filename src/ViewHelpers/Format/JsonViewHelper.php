@@ -9,9 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Wrapper for PHPs :php:`json_encode` function.
@@ -50,8 +48,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 final class JsonViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * @var bool
      */
@@ -75,11 +71,11 @@ final class JsonViewHelper extends AbstractViewHelper
      * @see https://www.php.net/manual/function.json-encode.php
      * @return string|false
      */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public function render()
     {
-        $value = $renderChildrenClosure();
+        $value = $this->renderChildren();
         $options = JSON_HEX_TAG;
-        if ($arguments['forceObject'] !== false) {
+        if ($this->arguments['forceObject'] !== false) {
             $options = $options | JSON_FORCE_OBJECT;
         }
         return json_encode($value, $options);

@@ -9,9 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * The ReplaceViewHelper replaces one or multiple strings with other
@@ -57,8 +55,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 final class ReplaceViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     public function initializeArguments(): void
     {
         $this->registerArgument('value', 'string', '');
@@ -66,16 +62,14 @@ final class ReplaceViewHelper extends AbstractViewHelper
         $this->registerArgument('replace', 'mixed', '', true);
     }
 
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string
+    public function render(): string
     {
-        $value = $arguments['value'] ?? $renderChildrenClosure();
-        $search = $arguments['search'];
-        $replace = $arguments['replace'];
-
+        $value = $this->arguments['value'] ?? $this->renderChildren();
+        $search = $this->arguments['search'];
+        $replace = $this->arguments['replace'];
         if ($value === null || (!is_scalar($value) && !$value instanceof \Stringable)) {
             throw new \InvalidArgumentException('A stringable value must be provided.', 1710441987);
         }
-
         if ($search === null) {
             if (!is_iterable($replace)) {
                 throw new \InvalidArgumentException(sprintf(
@@ -109,7 +103,6 @@ final class ReplaceViewHelper extends AbstractViewHelper
                 throw new \InvalidArgumentException('Count of "search" and "replace" arguments must be the same.', 1710441991);
             }
         }
-
         return str_replace($search, $replace, (string)$value);
     }
 }

@@ -7,11 +7,9 @@
 
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\ScopedVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Declares new variables which are aliases of other variables.
@@ -58,8 +56,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class AliasViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * @var bool
      */
@@ -74,17 +70,14 @@ class AliasViewHelper extends AbstractViewHelper
     /**
      * @return mixed
      */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public function render()
     {
-        $globalVariableProvider = $renderingContext->getVariableProvider();
-        $localVariableProvider = new StandardVariableProvider($arguments['map']);
+        $globalVariableProvider = $this->renderingContext->getVariableProvider();
+        $localVariableProvider = new StandardVariableProvider($this->arguments['map']);
         $scopedVariableProvider = new ScopedVariableProvider($globalVariableProvider, $localVariableProvider);
-        $renderingContext->setVariableProvider($scopedVariableProvider);
-
-        $output = $renderChildrenClosure();
-
-        $renderingContext->setVariableProvider($globalVariableProvider);
-
+        $this->renderingContext->setVariableProvider($scopedVariableProvider);
+        $output = $this->renderChildren();
+        $this->renderingContext->setVariableProvider($globalVariableProvider);
         return $output;
     }
 }
