@@ -537,6 +537,10 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
      * @return mixed
+     * @deprecated renderStatic() on ViewHelpers will still be called in v4, but will log a
+     *             deprecation level error message. It will no longer be called in v5.
+     *             This concrete fallback implementation in AbstractViewHelper will be removed
+     *             with v4.
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
