@@ -214,7 +214,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
      * @param string $sectionName Name of section to render
      * @param array $variables The variables to use
      * @param bool $ignoreUnknown Ignore an unknown section and just return an empty string
-     * @return string rendered template for the section
+     * @return mixed rendered template for the section
      * @throws InvalidSectionException
      */
     public function renderSection($sectionName, array $variables = [], $ignoreUnknown = false)
@@ -295,7 +295,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
      * @param string|null $sectionName
      * @param array $variables
      * @param bool $ignoreUnknown Ignore an unknown section and just return an empty string
-     * @return string
+     * @return mixed
      */
     public function renderPartial($partialName, $sectionName = null, array $variables = [], $ignoreUnknown = false)
     {
