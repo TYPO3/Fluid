@@ -27,17 +27,21 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * or as well use the "then" and "else" child nodes.
  *
  * @see \TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper for a more detailed explanation and a simple usage example.
- * Make sure to NOT OVERRIDE the constructor.
  *
  * @api
  * @todo add missing types with Fluid v5
  */
 abstract class AbstractConditionViewHelper extends AbstractViewHelper
 {
-    /**
-     * @var bool
-     */
     protected $escapeOutput = false;
+
+    private ?\Closure $thenClosure = null;
+    private ?\Closure $elseClosure = null;
+
+    /**
+     * @var array<array{'condition': \Closure, 'body': \Closure}>
+     */
+    private array $elseIfClosures = [];
 
     /**
      * Initializes the "then" and "else" arguments
@@ -53,7 +57,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * Method which only gets called if the template is not compiled. For static calling,
      * the then/else nodes are converted to closures and condition evaluation closures.
      *
-     * @return string the rendered string
+     * @return mixed
      * @api
      */
     public function render()
@@ -62,48 +66,6 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
             return $this->renderThenChild();
         }
         return $this->renderElseChild();
-    }
-
-    /**
-     * @param array<string, mixed> $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
-     * @return mixed
-     */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
-    {
-        $mainConditionVerdict = static::verdict($arguments, $renderingContext);
-        if ($mainConditionVerdict) {
-            // The condition argument evaluated to true. Return the "then" argument as string,
-            // execute f:then child or general body closure, or return empty string.
-            if (isset($arguments['then'])) {
-                return $arguments['then'];
-            }
-            if (isset($arguments['__then'])) {
-                return $arguments['__then']();
-            }
-            return '';
-        }
-        if (!empty($arguments['__elseIf'])) {
-            // The condition argument evaluated to false. For each "f:else if",
-            // evaluate its condition and return its executed body closure if verdict is true.
-            foreach ($arguments['__elseIf'] as $elseIf) {
-                if ($elseIf['condition']()) {
-                    return $elseIf['body']();
-                }
-            }
-        }
-        if (isset($arguments['else'])) {
-            // The condition argument evaluated to false. If there
-            // is an else argument, return as string.
-            return $arguments['else'];
-        }
-        if (!empty($arguments['__else'])) {
-            // The condition argument evaluated to false. If there is
-            // an f:else body closure, return its executed body.
-            return $arguments['__else']();
-        }
-        return '';
     }
 
     /**
@@ -130,8 +92,21 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      */
     protected function renderThenChild()
     {
+        // Prefer "then" ViewHelper argument if present
         if ($this->hasArgument('then')) {
             return $this->arguments['then'];
+        }
+
+        // Closure might be present if ViewHelper is called from a cached template
+        if ($this->thenClosure !== null) {
+            return ($this->thenClosure)();
+        }
+
+        // The following code can only be evaluated for uncached templates where the node structure
+        // is still available. If it's not, it has already been executed during compilation and we can
+        // assume that the condition wasn't met
+        if (!$this->viewHelperNode instanceof ViewHelperNode) {
+            return '';
         }
 
         $elseViewHelperEncountered = false;
@@ -158,13 +133,37 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * If else attribute is not set, iterates through child nodes and renders ElseViewHelper.
      * If else attribute is not set and no ElseViewHelper is found, an empty string will be returned.
      *
-     * @return string rendered ElseViewHelper or an empty string if no ThenViewHelper was found
+     * @return mixed rendered ElseViewHelper or an empty string if no ThenViewHelper was found
      * @api
      */
     protected function renderElseChild()
     {
+        // Closures are present if ViewHelper is called from a cached template
+        if ($this->elseIfClosures !== []) {
+            // Check each "f:else if" by evaluating its "condition" closure; evaluate and return
+            // the "body" closure if condition is met
+            foreach ($this->elseIfClosures as $elseIf) {
+                if ($elseIf['condition']()) {
+                    return $elseIf['body']();
+                }
+            }
+        }
+
+        // Prefer "else" ViewHelper argument if present
         if ($this->hasArgument('else')) {
             return $this->arguments['else'];
+        }
+
+        // Closure might be present if ViewHelper is called from a cached template
+        if ($this->elseClosure !== null) {
+            return ($this->elseClosure)();
+        }
+
+        // The following code can only be evaluated for uncached templates where the node structure
+        // is still available. If it's not, it has already been executed during compilation and we can
+        // assume that the condition wasn't met
+        if (!$this->viewHelperNode instanceof ViewHelperNode) {
+            return '';
         }
 
         /** @var ViewHelperNode|null $elseNode */
@@ -184,6 +183,18 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         }
 
         return $elseNode instanceof ViewHelperNode ? $elseNode->evaluate($this->renderingContext) : '';
+    }
+
+    /**
+     * Receives special ViewHelper arguments from compiled templates containing the
+     * individual renderChildrenClosures for the condition cases (then/elseif/else)
+     * and stores them in class properties for later use.
+     */
+    public function handleAdditionalArguments(array $arguments): void
+    {
+        $this->thenClosure = $arguments['__then'] ?? null;
+        $this->elseIfClosures = $arguments['__elseIf'] ?? [];
+        $this->elseClosure = $arguments['__else'] ?? null;
     }
 
     /**
@@ -297,7 +308,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                 $accumulatedArgumentInitializationCode . chr(10) .
                 $argumentInitializationCode,
             'execution' => sprintf(
-                '%s::renderStatic(%s, static fn() => \'\', $renderingContext)' . chr(10),
+                '$renderingContext->getViewHelperInvoker()->invoke(%s::class, %s, $renderingContext)' . chr(10),
                 get_class($this),
                 $argumentsVariableName,
             ),
