@@ -107,7 +107,7 @@ final class BooleanParserTest extends TestCase
 
             /*
              * @todo This should work but doesn't at the moment. This is probably related to the boolean
-             * parser not converting variable nodes correctly. There is a related todo in the IfThenElseViewHelperTest.
+             *       parser not converting variable nodes correctly. There is a related todo in the IfThenElseViewHelperTest.
             ['{foo}', true, ['foo' => '""']],
              */
         ];
