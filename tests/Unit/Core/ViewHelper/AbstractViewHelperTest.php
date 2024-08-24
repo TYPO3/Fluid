@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
@@ -144,14 +145,15 @@ final class AbstractViewHelperTest extends TestCase
         $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods([])->getMock();
         $result = $subject->compile('foobar', 'baz', $init, $node, new TemplateCompiler());
         self::assertEmpty($init);
-        self::assertEquals(get_class($subject) . '::renderStatic(foobar, baz, $renderingContext)', $result);
+        self::assertEquals('$renderingContext->getViewHelperInvoker()->invoke(' . get_class($subject) . '::class, foobar, $renderingContext, baz)', $result);
     }
 
     #[Test]
+    #[IgnoreDeprecations]
     public function testCallRenderMethodCanRenderViewHelperWithoutRenderMethodAndCallsRenderStatic(): void
     {
         $subject = new RenderMethodFreeViewHelper();
-        $method = new \ReflectionMethod($subject, 'callRenderMethod');
+        $method = new \ReflectionMethod($subject, 'render');
         $subject->setRenderingContext(new RenderingContext());
         $result = $method->invoke($subject);
         self::assertSame('I was rendered', $result);
@@ -162,7 +164,7 @@ final class AbstractViewHelperTest extends TestCase
     {
         $this->expectException(Exception::class);
         $subject = new RenderMethodFreeDefaultRenderStaticViewHelper();
-        $method = new \ReflectionMethod($subject, 'callRenderMethod');
+        $method = new \ReflectionMethod($subject, 'render');
         $subject->setRenderingContext(new RenderingContext());
         $method->invoke($subject);
     }

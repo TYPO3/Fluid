@@ -15,6 +15,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 final class CompilableViewHelper extends AbstractViewHelper
 {
+    // We leave this here as a test case for the deprecated feature
     use CompileWithRenderStatic;
 
     /**
