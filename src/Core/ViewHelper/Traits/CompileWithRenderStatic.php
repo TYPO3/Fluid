@@ -13,6 +13,9 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper\Traits;
  * Provides default methods for rendering and compiling
  * any ViewHelper that conforms to the `renderStatic`
  * method pattern.
+ *
+ * @deprecated Will be removed in v5. The non-static render() method
+ *             should be used instead
  */
 trait CompileWithRenderStatic
 {

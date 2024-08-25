@@ -9,9 +9,16 @@ Changelog 2.x
 2.15
 ----
 
+* Deprecation: Trait :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic`
+  has been marked as deprecated. It will log a deprecation level error message when called in
+  Fluid v4. It will be removed in Fluid v5.
 * Deprecation: Trait :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic`
   has been marked as deprecated. It will log a deprecation level error message when called in
   Fluid v4. It will be removed in Fluid v5.
+* Deprecation: Static method :php:`renderStatic()` on ViewHelpers that don't use :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic`
+  or :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic`
+  have been marked as deprecated. They will log a deprecation level error message when called in
+  Fluid v4. `renderStatic()` will no longer be called in Fluid v5.
 * Deprecation: Variable names `true`, `false` and `null` will log a deprecation level error message because these
   identifiers will become a Fluid language feature with v4.
 
