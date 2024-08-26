@@ -60,25 +60,63 @@ This is called a "chain" and works like this:
 
 .. code-block:: xml
 
-    <f:if condition="{myArray}">
-        <f:for each="{myArray}" as="item">
-            <f:render section="MySection" />
-        </f:for>
-    </f:if>
+    <f:format.trim>
+        <f:replace search="foo" replace="bar">
+            <f:format.case mode="upper">
+                {myString}
+            </f:format.case>
+        </f:replace>
+    </f:format.trim>
 
 Can also be expressed like:
 
 .. code-block:: xml
 
-    {f:render(section: 'MySection') -> f:for(each: myArray, as: 'item') -> f:if(condition: myArray)}
+    {myString -> f:format.case(mode:'upper') -> f:replace(search:'foo',replace:'bar') -> f:format.trim()}
 
 The latter syntax is quicker to parse but obviously does not allow for inserting
-any (X)HTML elements around the tags.
+any (X)HTML elements around the single ViewHelper calls.
 
-**It will not always fit your design to use the inline mode but doing so
-whenever possible is better for performance**. You will eliminate any whitespace
-that also needs parsing and keep the number of nodes you generate as low as
-possible.
+Examples with control flow structures
+-------------------------------------
+
+Here's some inline examples of how to include `f:if` or `f:for` ViewHelpers in
+a chain:
+
+.. code-block:: xml
+
+    <f:variable name="myCondition" value="0" />
+    <f:variable name="myVar" value="myValue" />
+    {myVar -> f:if(condition: myCondition)} <!-- doesn't out variable -->
+
+    <f:variable name="myCondition" value="1" />
+    <f:variable name="myVar" value="myValue" />
+    {myVar -> f:if(condition: myCondition)} <!-- outputs variable -->
+
+    <f:variable name="items" value="{0:'item1',1:'item2'}" />
+    {item -> f:for(each: items, as: 'item')} <!-- outputs items -->
+
+Here's another more complex example:
+
+.. code-block:: xml
+
+    <f:variable name="myArray" value="{0:'foo',1:'',2:'bar'}" />
+    <f:for each="{myArray}" as="item">
+        <f:if condition="{item}">
+            <f:render section="MySection" arguments="{item:item}" />
+        </f:if>
+    </f:for>
+
+And its inline syntax variant:
+
+.. code-block:: xml
+
+    <f:variable name="myArray" value="{0:'foo',1:'',2:'bar'}" />
+    {f:render(section:'MySection',arguments:'{item:item}') -> f:if(condition:item) -> f:for(each:myArray,as:'item')}
+
+Please note that in chained inline notation the `f:if` ViewHelpers should not
+have their usual `then` or `else` attributes, for them would directly output
+their value and thus break the chain!
 
 Expressions
 ===========
@@ -91,7 +129,7 @@ variable access (e.g. `{variable}`) and ViewHelper usage in inline mode
 * `{myPossiblyArray as array}` will for example make sure you access
   `{myPossiblyArray}` as an array even if it is :php:`null` or other, which is useful
   when you pass a suspect value to ViewHelpers like `f:for` which require
-  arrays.
+  arrays. Other cast types are: `integer`, `boolean`, `string`, `float` and `DateTime`.
 * `{checkVariable ? thenVariable : elseVariable}` will for example output the
   variable `{thenVariable}` if `{checkVariable}` evaluates to :php:`true`, otherwise
   output the variable `{elseVariable}`.
