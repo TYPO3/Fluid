@@ -9,6 +9,32 @@ Changelog 2.x
 2.15
 ----
 
+* Deprecation: First parameter of method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->__construct()`
+  is deprecated. The Constructor will be removed with Fluid v5.
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->fillFromConfigurationArray()`
+  has been marked as deprecated. It will log a deprecation level error message when called in
+  Fluid v4.
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->fillDefaultsByPackageName()`
+  has been marked as deprecated. It will log a deprecation level error message when called in
+  Fluid v4.
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->ensureAbsolutePaths()`
+  has been marked as deprecated. It will log a deprecation level error message when called in
+  Fluid v4.
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->extractPathArrays()`
+  has been marked as deprecated. It will log a deprecation level error message when called in
+  Fluid v4.
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->getPackagePath()`
+  has been marked as deprecated. It will log a deprecation level error message when called in
+  Fluid v4.
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->toArray()`
+  has been marked as deprecated. It will log a deprecation level error message when called in
+  Fluid v4.
+* Deprecation: Constant :php:`TYPO3Fluid\Fluid\View\TemplatePaths::DEFAULT_TEMPLATES_DIRECTORY`
+  has been marked as deprecated and will be removed in Fluid v5.
+* Deprecation: Constant :php:`TYPO3Fluid\Fluid\View\TemplatePaths::DEFAULT_LAYOUTS_DIRECTORY`
+  has been marked as deprecated and will be removed in Fluid v5.
+* Deprecation: Constant :php:`TYPO3Fluid\Fluid\View\TemplatePaths::DEFAULT_PARTIALS_DIRECTORY`
+  has been marked as deprecated and will be removed in Fluid v5.
 * Deprecation: Trait :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic`
   has been marked as deprecated. It will log a deprecation level error message when called in
   Fluid v4. It will be removed in Fluid v5.
