@@ -39,10 +39,19 @@ use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
  */
 class TemplatePaths
 {
-    public const DEFAULT_FORMAT = 'html';
+    /**
+     * @deprecated will be removed with Fluid v5
+     */
     public const DEFAULT_TEMPLATES_DIRECTORY = 'Resources/Private/Templates/';
+    /**
+     * @deprecated will be removed with Fluid v5
+     */
     public const DEFAULT_LAYOUTS_DIRECTORY = 'Resources/Private/Layouts/';
+    /**
+     * @deprecated will be removed with Fluid v5
+     */
     public const DEFAULT_PARTIALS_DIRECTORY = 'Resources/Private/Partials/';
+    public const DEFAULT_FORMAT = 'html';
     public const CONFIG_TEMPLATEROOTPATHS = 'templateRootPaths';
     public const CONFIG_LAYOUTROOTPATHS = 'layoutRootPaths';
     public const CONFIG_PARTIALROOTPATHS = 'partialRootPaths';
@@ -109,6 +118,10 @@ class TemplatePaths
     protected $format = self::DEFAULT_FORMAT;
 
     /**
+     * This constructor will be removed with Fluid v5 as the underlying methods are
+     * deprecated and will be removed with Fluid v5 as well. The appropriate setters
+     * (like setTemplateRootPaths()) should be called instead.
+     *
      * @param array|string|null $packageNameOrArray
      */
     public function __construct($packageNameOrArray = null)
@@ -122,6 +135,8 @@ class TemplatePaths
 
     /**
      * @return array
+     * @deprecated will be removed in Fluid v5; use the individual getters instead. Sanitation is not necessary
+     *             because setters already sanitize input values
      */
     public function toArray()
     {
@@ -366,6 +381,8 @@ class TemplatePaths
      *
      * @param array $paths
      * @api
+     * @deprecated will be removed with Fluid v5; appropriate setters (like setTemplateRootPaths())
+     *             should be called instead
      */
     public function fillFromConfigurationArray(array $paths)
     {
@@ -385,6 +402,8 @@ class TemplatePaths
      *
      * @param string $packageName
      * @api
+     * @deprecated will be removed with Fluid v5; appropriate setters (like setTemplateRootPaths())
+     *             should be called instead
      */
     public function fillDefaultsByPackageName($packageName)
     {
@@ -449,6 +468,7 @@ class TemplatePaths
      *
      * @param array $reference
      * @return array
+     * @deprecated will be removed with Fluid v5
      */
     protected function ensureAbsolutePaths(array $reference)
     {
@@ -477,6 +497,7 @@ class TemplatePaths
      *
      * @param array $paths
      * @return array
+     * @deprecated will be removed with Fluid v5
      */
     protected function extractPathArrays(array $paths)
     {
@@ -506,6 +527,7 @@ class TemplatePaths
     /**
      * @param string $packageName
      * @return string
+     * @deprecated will be removed with Fluid v5
      */
     protected function getPackagePath($packageName)
     {
