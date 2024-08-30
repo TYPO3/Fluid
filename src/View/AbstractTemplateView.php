@@ -146,7 +146,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
             $output = $parsedTemplate->render($this->baseRenderingContext);
             $this->stopRendering();
         } else {
-            $layoutName = $parsedTemplate->getLayoutName($this->baseRenderingContext);
+            $layoutName = (string)$parsedTemplate->getLayoutName($this->baseRenderingContext);
             try {
                 $parsedLayout = $templateParser->getOrParseAndStoreTemplate(
                     $templatePaths->getLayoutIdentifier($layoutName),
