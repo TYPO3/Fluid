@@ -25,6 +25,26 @@ Changelog 4.x
   :php:`TYPO3Fluid\Fluid\View\AbstractTemplateView::RENDERING_LAYOUT`
 * Breaking: Careful addition of method and property type hints throughout the system.
   This should be only mildly breaking and projects should be able to adapt easily.
+* Deprecation: First parameter of method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->__construct()`
+  is deprecated. The Constructor will be removed with Fluid v5.
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->fillFromConfigurationArray()`
+  now emits a E_USER_DEPRECATED level error.
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->fillDefaultsByPackageName()`
+  now emits a E_USER_DEPRECATED level error.
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->ensureAbsolutePaths()`
+  now emits a E_USER_DEPRECATED level error.
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->extractPathArrays()`
+  now emits a E_USER_DEPRECATED level error.
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->getPackagePath()`
+  now emits a E_USER_DEPRECATED level error.
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->toArray()`
+  now emits a E_USER_DEPRECATED level error.
+* Deprecation: Constant :php:`TYPO3Fluid\Fluid\View\TemplatePaths::DEFAULT_TEMPLATES_DIRECTORY`
+  has been marked as deprecated and will be removed in Fluid v5.
+* Deprecation: Constant :php:`TYPO3Fluid\Fluid\View\TemplatePaths::DEFAULT_LAYOUTS_DIRECTORY`
+  has been marked as deprecated and will be removed in Fluid v5.
+* Deprecation: Constant :php:`TYPO3Fluid\Fluid\View\TemplatePaths::DEFAULT_PARTIALS_DIRECTORY`
+  has been marked as deprecated and will be removed in Fluid v5.
 * Deprecation: Trait :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic`
   now emits a E_USER_DEPRECATED level error.
 * Deprecation: Trait :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic`
