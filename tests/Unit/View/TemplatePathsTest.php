@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\View;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
@@ -92,6 +93,7 @@ final class TemplatePathsTest extends TestCase
     }
 
     #[Test]
+    #[IgnoreDeprecations]
     public function testFillByPackageName(): void
     {
         $instance = new TemplatePaths('TYPO3Fluid.Fluid');
@@ -99,6 +101,7 @@ final class TemplatePathsTest extends TestCase
     }
 
     #[Test]
+    #[IgnoreDeprecations]
     public function testFillByConfigurationArray(): void
     {
         $instance = new TemplatePaths([
@@ -130,6 +133,7 @@ final class TemplatePathsTest extends TestCase
     }
 
     #[Test]
+    #[IgnoreDeprecations]
     public function testToArray(): void
     {
         $subject = $this->getMockBuilder(TemplatePaths::class)->onlyMethods(['sanitizePath'])->getMock();

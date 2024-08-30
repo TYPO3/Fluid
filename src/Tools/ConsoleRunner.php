@@ -155,7 +155,7 @@ final class ConsoleRunner
     }
 
     /**
-     * @param array<string, string> $arguments
+     * @param array<string, string|array> $arguments
      */
     private function handleRunCommand(array $arguments): string
     {
@@ -190,7 +190,9 @@ final class ConsoleRunner
             $context->setCache($cache);
         }
         $paths = $context->getTemplatePaths();
-        $paths->fillFromConfigurationArray($arguments);
+        $paths->setTemplateRootPaths($arguments[self::ARGUMENT_TEMPLATEROOTPATHS] ?? []);
+        $paths->setLayoutRootPaths($arguments[self::ARGUMENT_LAYOUTROOTPATHS] ?? []);
+        $paths->setPartialRootPaths($arguments[self::ARGUMENT_PARTIALROOTPATHS] ?? []);
         if (isset($arguments[self::ARGUMENT_TEMPLATEFILE])) {
             $paths->setTemplatePathAndFilename($arguments[self::ARGUMENT_TEMPLATEFILE]);
         } elseif (isset($arguments[self::ARGUMENT_CONTROLLERNAME])) {
