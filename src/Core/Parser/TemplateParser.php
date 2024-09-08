@@ -30,7 +30,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
  *           are various different ways to extend Fluid, the main
  *           syntax tree should not be tampered with.
  * @todo: Declare final with next major.
- * @todo fix underlying types and activate strict types in this file
+ * @todo: fix underlying types and activate strict types in this file
+ * @todo: Remove state from this class and introduce separate context from RenderingContext
+ *        (maybe existing Configuration class can be used for that?)
  */
 class TemplateParser
 {
