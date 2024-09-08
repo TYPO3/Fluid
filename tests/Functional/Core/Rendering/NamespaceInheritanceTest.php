@@ -21,25 +21,25 @@ final class NamespaceInheritanceTest extends AbstractFunctionalTestCase
     {
         return [
             'namespace provided via php api' => [
-                '<f:layout name="NamespaceInheritanceLayout" /><f:section name="Main"><test:tagBasedTest location="Template" /></f:section>',
+                '<f:cache.disable /><f:layout name="NamespaceInheritanceLayout" /><f:section name="Main"><test:tagBasedTest location="Template" /></f:section>',
                 ['test' => 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers'],
                 [],
             ],
             // @todo this should probably not work
             'namespace provided to layout and partials via inline namespace declaration in template' => [
-                '{namespace test=TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers}<f:layout name="NamespaceInheritanceLayout" /><f:section name="Main"><test:tagBasedTest location="Template" /></f:section>',
+                '{namespace test=TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers}<f:cache.disable /><f:layout name="NamespaceInheritanceLayout" /><f:section name="Main"><test:tagBasedTest location="Template" /></f:section>',
                 [],
                 [],
             ],
             // @todo this should probably not work
             'namespace provided to layout and partials via xml namespace declaration in template' => [
-                '<html xmlns:test="http://typo3.org/ns/TYPO3Fluid/Fluid/Tests/Functional/Fixtures/ViewHelpers"><f:layout name="NamespaceInheritanceLayout" /><f:section name="Main"><test:tagBasedTest location="Template" /></f:section>',
+                '<html xmlns:test="http://typo3.org/ns/TYPO3Fluid/Fluid/Tests/Functional/Fixtures/ViewHelpers"><f:cache.disable /><f:layout name="NamespaceInheritanceLayout" /><f:section name="Main"><test:tagBasedTest location="Template" /></f:section>',
                 [],
                 [],
             ],
             // @todo this should probably not work
             'namespace inherited from template to dynamic layout' => [
-                '<html xmlns:test="http://typo3.org/ns/TYPO3Fluid/Fluid/Tests/Functional/Fixtures/ViewHelpers"><f:layout name="{myLayout}" /><f:section name="Main"><test:tagBasedTest location="Template" /></f:section>',
+                '<html xmlns:test="http://typo3.org/ns/TYPO3Fluid/Fluid/Tests/Functional/Fixtures/ViewHelpers"><f:cache.disable /><f:layout name="{myLayout}" /><f:section name="Main"><test:tagBasedTest location="Template" /></f:section>',
                 [],
                 ['myLayout' => 'NamespaceInheritanceLayout'],
             ],
@@ -50,7 +50,7 @@ final class NamespaceInheritanceTest extends AbstractFunctionalTestCase
     #[DataProvider('namespacesAreInheritedToLayoutAndPartialsDataProvider')]
     public function namespacesAreInheritedToLayoutAndPartials(string $source, array $predefinedNamespaces, array $variables): void
     {
-        $expectedResult = '<div location="Layout" />' . "\n\n" . '<div location="Template" />' . "\n\n" . '<div location="NestedPartial" />' . "\n\n" . '<div location="Partial" />' . "\n\n";
+        $expectedResult = "\n" . '<div location="Layout" />' . "\n\n" . '<div location="Template" />' . "\n\n\n\n" . '<div location="NestedPartial" />' . "\n\n" . '<div location="Partial" />' . "\n\n";
 
         // Uncached
         $view = new TemplateView();
@@ -62,15 +62,9 @@ final class NamespaceInheritanceTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setPartialRootPaths([__DIR__ . '/../../Fixtures/Partials/']);
         self::assertSame($expectedResult, $view->render());
 
-        // Cached
-        $view = new TemplateView();
-        $view->getRenderingContext()->setCache(self::$cache);
-        $view->getRenderingContext()->getViewHelperResolver()->addNamespaces($predefinedNamespaces);
-        $view->assignMultiple($variables);
-        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
-        $view->getRenderingContext()->getTemplatePaths()->setLayoutRootPaths([__DIR__ . '/../../Fixtures/Layouts/']);
-        $view->getRenderingContext()->getTemplatePaths()->setPartialRootPaths([__DIR__ . '/../../Fixtures/Partials/']);
-        self::assertSame($expectedResult, $view->render());
+        // @todo Cached state is currently not relevant here, since caching needs to be disabled for all affected templates to get robust testing results
+        //       With enabled caching, there is interference between the test cases because the "in-memory" cache of TemplateCompiler is re-used and thus
+        //       test cases might be green even if they should actually be red. See https://github.com/TYPO3/Fluid/issues/975
     }
 
     public static function namespaceDefinedInParentNotValidInChildrenDataProvider(): array
