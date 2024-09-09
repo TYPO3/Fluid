@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Core\Variables;
 
+use Psr\Container\ContainerInterface;
+
 /**
  * Class StandardVariableProvider
  */
@@ -117,6 +119,10 @@ class StandardVariableProvider implements VariableProviderInterface
                 continue;
             }
             if (is_object($subject)) {
+                if ($subject instanceof ContainerInterface && $subject->has($pathSegment)) {
+                    $subject = $subject->get($pathSegment);
+                    continue;
+                }
                 $upperCasePropertyName = ucfirst($pathSegment);
                 $getMethod = 'get' . $upperCasePropertyName;
                 if (method_exists($subject, $getMethod)) {
