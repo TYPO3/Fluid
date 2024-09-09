@@ -10,7 +10,8 @@
     "license": ["LGPL-3.0-or-later"],
     "require": {
         "php": "^8.2",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+	"psr/container": "^2.0"
     },
     "config": {
         "sort-packages": true
