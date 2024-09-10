@@ -14,6 +14,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Variables\InvalidVariableIdentifierException;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Variables\Fixtures\StandardVariableProviderContainerFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Variables\Fixtures\StandardVariableProviderModelFixture;
 
 final class StandardVariableProviderTest extends TestCase
@@ -241,6 +242,69 @@ final class StandardVariableProviderTest extends TestCase
             'access not existing object detail returns null' => [
                 [
                     'user' => new StandardVariableProviderModelFixture(''),
+                ],
+                'user.invalid',
+                null,
+            ],
+            'access container' => [
+                [
+                    'user' => new StandardVariableProviderContainerFixture(['name' => 'Foobar Name']),
+                ],
+                'user.name',
+                'Foobar Name',
+            ],
+            'access container getter that returns empty string' => [
+                [
+                    'user' => new StandardVariableProviderContainerFixture(['name' => '']),
+                ],
+                'user.name',
+                '',
+            ],
+            'access container getter that returns FALSE' => [
+                [
+                    'user' => new StandardVariableProviderContainerFixture(['name' => false]),
+                ],
+                'user.name',
+                false,
+            ],
+            'access container getter that returns object' => [
+                [
+                    'user' => new StandardVariableProviderContainerFixture(['object' => new \stdClass()]),
+                ],
+                'user.object',
+                new \stdClass(),
+            ],
+            'access container getter that returns object recursive' => [
+                [
+                    'user' => new StandardVariableProviderContainerFixture(['object' => new StandardVariableProviderModelFixture('Foobar Name')]),
+                ],
+                'user.object.name',
+                'Foobar Name',
+            ],
+            'access container getter that returns container recursive' => [
+                [
+                    'user' => new StandardVariableProviderContainerFixture(['object' => new StandardVariableProviderContainerFixture(['name' => 'Foobar Name'])]),
+                ],
+                'user.object.name',
+                'Foobar Name',
+            ],
+            'access container getter that returns array' => [
+                [
+                    'user' => new StandardVariableProviderContainerFixture(['array' => ['foo' => 'bar']]),
+                ],
+                'user.array',
+                ['foo' => 'bar'],
+            ],
+            'access container getter that returns value of array' => [
+                [
+                    'user' => new StandardVariableProviderContainerFixture(['array' => ['foo' => 'bar']]),
+                ],
+                'user.array.foo',
+                'bar',
+            ],
+            'access container not existing returns null' => [
+                [
+                    'user' => new StandardVariableProviderContainerFixture(['name' => 'Foobar Name']),
                 ],
                 'user.invalid',
                 null,
