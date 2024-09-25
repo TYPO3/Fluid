@@ -12,6 +12,8 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Core\ViewHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Variables\Fixtures\UserRoleBackedEnum;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Variables\Fixtures\UserRoleEnum;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
 final class TagBasedViewHelperTest extends AbstractFunctionalTestCase
@@ -256,6 +258,15 @@ final class TagBasedViewHelperTest extends AbstractFunctionalTestCase
                 '{test:tagBasedTest(additionalAttributes: {data-foo: \'additional\'}, data-foo: \'attribute\')}',
                 [],
                 '<div data-foo="attribute" />',
+            ],
+            'enum attribute value' => [
+                '<test:tagBasedTest userRole="{userRole}" userRoleBacked="{userRoleBacked}" />',
+                '{test:tagBasedTest(userRole: userRole, userRoleBacked: userRoleBacked)}',
+                [
+                    'userRole' => UserRoleEnum::GUEST,
+                    'userRoleBacked' => UserRoleBackedEnum::EDITOR,
+                ],
+                '<div userRole="GUEST" userRoleBacked="2" />',
             ],
         ];
     }
