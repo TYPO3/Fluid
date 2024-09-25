@@ -14,6 +14,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Variables\Fixtures\UserRoleBackedEnum;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Variables\Fixtures\UserRoleEnum;
 
 final class TagBuilderTest extends TestCase
 {
@@ -158,6 +160,15 @@ final class TagBuilderTest extends TestCase
         $tagBuilder = new TagBuilder('tag');
         $tagBuilder->addAttribute('foo', '<not to be escaped>', false);
         self::assertEquals('<tag foo="<not to be escaped>" />', $tagBuilder->render());
+    }
+
+    #[Test]
+    public function attributesSupportEnum(): void
+    {
+        $tagBuilder = new TagBuilder('tag');
+        $tagBuilder->addAttribute('attribute1', UserRoleEnum::GUEST);
+        $tagBuilder->addAttribute('attribute2', UserRoleBackedEnum::GUEST);
+        self::assertEquals('<tag attribute1="GUEST" attribute2="3" />', $tagBuilder->render());
     }
 
     #[Test]

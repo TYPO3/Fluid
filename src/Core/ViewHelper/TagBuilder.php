@@ -173,7 +173,7 @@ class TagBuilder
      *
      * @param string $attributeName name of the attribute to be added to the tag. Be extremely
      *                              careful if this value is user-provided input!
-     * @param string|bool|\Traversable|array|null $attributeValue attribute value, can only be array or traversable
+     * @param string|bool|\Traversable|array|null|\UnitEnum|\BackedEnum $attributeValue attribute value, can only be array or traversable
      *                                                       if the attribute name is either "data" or "area". In
      *                                                       that special case, multiple attributes will be created
      *                                                       with either "data-" or "area-" as prefix
@@ -221,6 +221,12 @@ class TagBuilder
 
             if ($attributeValue === true) {
                 $attributeValue = $attributeName;
+            }
+
+            if ($attributeValue instanceof \BackedEnum) {
+                $attributeValue = (string)$attributeValue->value;
+            } elseif ($attributeValue instanceof \UnitEnum) {
+                $attributeValue = $attributeValue->name;
             }
 
             if (trim((string)$attributeValue) === '' && $this->ignoreEmptyAttributes) {
