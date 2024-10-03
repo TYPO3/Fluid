@@ -22,6 +22,10 @@ final class ViewHelperFinder
     private const FILE_SUFFIX = 'ViewHelper.php';
 
     private ViewHelperMetadataFactory $viewHelperMetadataFactory;
+    /**
+     * @var \Throwable[] $lastErrors
+     */
+    private array $lastErrors = [];
 
     public function __construct(?ViewHelperMetadataFactory $viewHelperMetadataFactory = null)
     {
@@ -33,6 +37,7 @@ final class ViewHelperFinder
      */
     public function findViewHelpersInComposerProject(ClassLoader $autoloader): array
     {
+        $this->lastErrors = [];
         $viewHelpers = [];
         foreach ($autoloader->getPrefixesPsr4() as $namespace => $paths) {
             foreach ($paths as $path) {
@@ -40,6 +45,14 @@ final class ViewHelperFinder
             }
         }
         return $viewHelpers;
+    }
+
+    /**
+     * @return \Throwable[]
+     */
+    public function getLastErrors(): array
+    {
+        return $this->lastErrors;
     }
 
     /**
@@ -77,6 +90,10 @@ final class ViewHelperFinder
                 $viewHelpers[] = $this->viewHelperMetadataFactory->createFromViewhelperClass($className);
             } catch (\InvalidArgumentException) {
                 // Just ignore this class
+            } catch (\Throwable $t) {
+                // Catch all Throwables to mitigate technical debt of a ViewHelper
+                // and avoid aborting the whole generation
+                $this->lastErrors[] = $t;
             }
         }
         return $viewHelpers;
