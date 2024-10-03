@@ -48,7 +48,7 @@ final class ViewHelperFinder
     }
 
     /**
-     * @return string[]
+     * @return \Throwable[]
      */
     public function getLastErrors(): array
     {
