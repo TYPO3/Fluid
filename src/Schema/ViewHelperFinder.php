@@ -23,7 +23,7 @@ final class ViewHelperFinder
 
     private ViewHelperMetadataFactory $viewHelperMetadataFactory;
     /**
-     * @var string[] $lastErrors
+     * @var \Throwable[] $lastErrors
      */
     private array $lastErrors = [];
 
@@ -93,7 +93,7 @@ final class ViewHelperFinder
             } catch (\Throwable $t) {
                 // Catch all Throwables to mitigate technical debt of a ViewHelper
                 // and avoid aborting the whole generation
-                $this->lastErrors[] = $t->getMessage();
+                $this->lastErrors[] = $t;
             }
         }
         return $viewHelpers;
