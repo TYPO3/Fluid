@@ -91,6 +91,8 @@ final class ViewHelperFinder
             } catch (\InvalidArgumentException) {
                 // Just ignore this class
             } catch (\Throwable $t) {
+                // Catch all Throwables to mitigate technical debt of a ViewHelper
+                // and avoid aborting the whole generation
                 $this->lastErrors[] = $t->getMessage();
             }
         }
