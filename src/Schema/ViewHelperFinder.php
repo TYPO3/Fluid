@@ -60,6 +60,9 @@ final class ViewHelperFinder
      */
     private function findViewHelperFilesInPath(string $namespace, string $path): array
     {
+        if (!is_dir($path)) {
+            return [];
+        }
         $viewHelpers = [];
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS | FilesystemIterator::CURRENT_AS_PATHNAME),
