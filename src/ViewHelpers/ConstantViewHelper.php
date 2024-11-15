@@ -35,8 +35,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  *    {f:constant(name: '\Vendor\Package\Class::CONSTANT')}
  *
- * Get enum value
- * --------------
+ * Get enum case
+ * -------------
  *
  * ::
  *
