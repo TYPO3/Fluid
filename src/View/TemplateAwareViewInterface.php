@@ -13,12 +13,14 @@ namespace TYPO3Fluid\Fluid\View;
  * Optional addition to ViewInterface if the view deals with template files.
  *
  * @api
+ * @todo add return types with Fluid v5
  */
 interface TemplateAwareViewInterface
 {
     /**
+     * @todo as the outfacing interface, this (and its implementations) should actually return a string
      * @param string $templateName A template name to render, e.g. "Main/Index"
-     * @return string The rendered view
+     * @return mixed The rendered view
      * @api
      */
     public function render(string $templateName = '');
