@@ -82,7 +82,7 @@ class CastingExpressionNode extends AbstractExpressionNode
 
     protected static function convertToDateTime(mixed $variable): \DateTime|false
     {
-        if (is_string($variable) || $variable instanceof \Stringable && preg_match_all('/[a-z]+/i', $variable)) {
+        if (is_string($variable) || $variable instanceof \Stringable && preg_match_all('/[a-z]+/i', (string)$variable)) {
             return new \DateTime($variable);
         }
         return \DateTime::createFromFormat('U', (string)(int)$variable);
