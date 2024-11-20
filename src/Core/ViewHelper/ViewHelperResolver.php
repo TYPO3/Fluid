@@ -229,7 +229,7 @@ class ViewHelperResolver
         if (!isset($this->resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier])) {
             $resolvedViewHelperClassName = $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier);
             $actualViewHelperClassName = implode('\\', array_map('ucfirst', explode('.', $resolvedViewHelperClassName)));
-            if (false === class_exists($actualViewHelperClassName) || $actualViewHelperClassName === false) {
+            if (!class_exists($actualViewHelperClassName)) {
                 throw new ParserException(sprintf(
                     'The ViewHelper "<%s:%s>" could not be resolved.' . chr(10) .
                     'Based on your spelling, the system would load the class "%s", however this class does not exist.',
