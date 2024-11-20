@@ -19,20 +19,8 @@ parameters:
 			path: src/Core/Parser/TemplateParser.php
 
 		-
-			message: '#^Call to function is_array\(\) with list\<array\<string\>\> will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Core/Parser/TemplateParser.php
-
-		-
 			message: '#^Method TYPO3Fluid\\Fluid\\Core\\Parser\\TemplateParser\:\:initializeViewHelperAndAddItToStack\(\) should return TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\ViewHelperNode\|null but returns TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\NodeInterface\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Core/Parser/TemplateParser.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and true will always evaluate to true\.$#'
-			identifier: identical.alwaysTrue
 			count: 1
 			path: src/Core/Parser/TemplateParser.php
 
