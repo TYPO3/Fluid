@@ -67,12 +67,6 @@ parameters:
 			path: src/Core/ViewHelper/AbstractViewHelper.php
 
 		-
-			message: '#^Strict comparison using \=\=\= between class\-string and false will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Core/ViewHelper/ViewHelperResolver.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_unique expects an array of values castable to string, array\<array\<string\>\|string\> given\.$#'
 			identifier: argument.type
 			count: 2
