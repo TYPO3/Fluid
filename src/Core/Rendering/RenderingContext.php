@@ -90,7 +90,7 @@ class RenderingContext implements RenderingContextInterface
     protected $templateCompiler;
 
     /**
-     * @var FluidCacheInterface
+     * @var FluidCacheInterface|null
      */
     protected $cache;
 
