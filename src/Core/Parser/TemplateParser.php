@@ -626,30 +626,28 @@ class TemplateParser
                     $detectionExpression = $expressionNodeTypeClassName::$detectionExpression;
                     $matchedVariables = [];
                     preg_match_all($detectionExpression, $section, $matchedVariables, PREG_SET_ORDER);
-                    if (is_array($matchedVariables) === true) {
-                        foreach ($matchedVariables as $matchedVariableSet) {
-                            $expressionStartPosition = strpos($section, $matchedVariableSet[0]);
-                            /** @var ExpressionNodeInterface $expressionNode */
-                            $expressionNode = new $expressionNodeTypeClassName($matchedVariableSet[0], $matchedVariableSet, $state);
-                            try {
-                                if ($expressionStartPosition > 0) {
-                                    $state->getNodeFromStack()->addChildNode(new TextNode(substr($section, 0, $expressionStartPosition)));
-                                }
-
-                                $this->callInterceptor($expressionNode, InterceptorInterface::INTERCEPT_EXPRESSION, $state);
-                                $state->getNodeFromStack()->addChildNode($expressionNode);
-
-                                $expressionEndPosition = $expressionStartPosition + strlen($matchedVariableSet[0]);
-                                if ($expressionEndPosition < strlen($section)) {
-                                    $this->textAndShorthandSyntaxHandler($state, substr($section, $expressionEndPosition), $context);
-                                    break;
-                                }
-                            } catch (ExpressionException $error) {
-                                $this->textHandler(
-                                    $state,
-                                    $this->renderingContext->getErrorHandler()->handleExpressionError($error),
-                                );
+                    foreach ($matchedVariables as $matchedVariableSet) {
+                        $expressionStartPosition = strpos($section, $matchedVariableSet[0]);
+                        /** @var ExpressionNodeInterface $expressionNode */
+                        $expressionNode = new $expressionNodeTypeClassName($matchedVariableSet[0], $matchedVariableSet, $state);
+                        try {
+                            if ($expressionStartPosition > 0) {
+                                $state->getNodeFromStack()->addChildNode(new TextNode(substr($section, 0, $expressionStartPosition)));
                             }
+
+                            $this->callInterceptor($expressionNode, InterceptorInterface::INTERCEPT_EXPRESSION, $state);
+                            $state->getNodeFromStack()->addChildNode($expressionNode);
+
+                            $expressionEndPosition = $expressionStartPosition + strlen($matchedVariableSet[0]);
+                            if ($expressionEndPosition < strlen($section)) {
+                                $this->textAndShorthandSyntaxHandler($state, substr($section, $expressionEndPosition), $context);
+                                break;
+                            }
+                        } catch (ExpressionException $error) {
+                            $this->textHandler(
+                                $state,
+                                $this->renderingContext->getErrorHandler()->handleExpressionError($error),
+                            );
                         }
                     }
                 }
