@@ -223,24 +223,6 @@ parameters:
 			path: tests/Functional/Fixtures/ViewHelpers/ContentArgumentNameWithoutEscapeChildrenViewHelper.php
 
 		-
-			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\AbstractViewHelper'' and TYPO3Fluid\\Fluid\\ViewHelpers\\Cache\\DisableViewHelper will always evaluate to true\.$#'
-			identifier: staticMethod.alreadyNarrowedType
-			count: 1
-			path: tests/Functional/ViewHelpers/Cache/DisableViewHelperTest.php
-
-		-
-			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\AbstractViewHelper'' and TYPO3Fluid\\Fluid\\ViewHelpers\\Cache\\StaticViewHelper will always evaluate to true\.$#'
-			identifier: staticMethod.alreadyNarrowedType
-			count: 1
-			path: tests/Functional/ViewHelpers/Cache/StaticViewHelperTest.php
-
-		-
-			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\AbstractViewHelper'' and TYPO3Fluid\\Fluid\\ViewHelpers\\Cache\\WarmupViewHelper will always evaluate to true\.$#'
-			identifier: staticMethod.alreadyNarrowedType
-			count: 1
-			path: tests/Functional/ViewHelpers/Cache/WarmupViewHelperTest.php
-
-		-
 			message: '#^Call to TYPO3Fluid\\Fluid\\Core\\ViewHelper\\AbstractViewHelper\:\:initializeArguments\(\) on a separate line has no effect\.$#'
 			identifier: staticMethod.resultUnused
 			count: 1
