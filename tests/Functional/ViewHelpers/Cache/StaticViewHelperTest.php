@@ -10,20 +10,11 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers\Cache;
 
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
-use TYPO3Fluid\Fluid\ViewHelpers\Cache\StaticViewHelper;
 
 final class StaticViewHelperTest extends AbstractFunctionalTestCase
 {
-    #[Test]
-    public function viewHelperCanBeInstantiated(): void
-    {
-        $subject = new StaticViewHelper();
-        self::assertInstanceOf(AbstractViewHelper::class, $subject);
-    }
-
     #[Test]
     public function templateUsingViewHelperCanBeRendered(): void
     {
