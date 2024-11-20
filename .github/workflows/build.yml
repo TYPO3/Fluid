@@ -48,5 +48,6 @@ jobs:
 
       - name: Documentation integrity
         run: |
-          FLUID_DOCUMENTATION_OUTPUT_DIR=Documentation/ViewHelpers vendor/bin/fluidDocumentation generate vendor/t3docs/fluid-documentation-generator/config/fluidStandalone/*
+          FLUID_DOCUMENTATION_OUTPUT_DIR=DocumentationTemp vendor/bin/fluidDocumentation generate vendor/t3docs/fluid-documentation-generator/config/fluidStandalone/*
+          cp -r DocumentationTemp/Fluid DocumentationTemp/Fluid.json Documentation/ViewHelpers/ && rm -r DocumentationTemp
           git add Documentation/*; git status; git status | grep -q "nothing to commit, working tree clean"

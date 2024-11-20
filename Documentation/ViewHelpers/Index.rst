@@ -1,7 +1,8 @@
+:orphan:
 ..  This reStructured text file has been automatically generated, do not change.
 ..  include:: /Includes.rst.txt
 
-..  _start:
+..  _viewhelper-reference:
 
 ==============================
 Fluid ViewHelper Documentation
@@ -23,8 +24,8 @@ This documentation is generated from PHP Source code of Fluid.
 Content
 -------
 
-..  toctree::
+..  menu::
     :titlesonly:
 
     Fluid/Index
-
+    SchemaFiles
