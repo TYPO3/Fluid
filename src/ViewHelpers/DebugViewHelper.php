@@ -54,7 +54,6 @@ class DebugViewHelper extends AbstractViewHelper
 
     public function initializeArguments()
     {
-        parent::initializeArguments();
         $this->registerArgument('typeOnly', 'boolean', 'If true, debugs only the type of variables', false, false);
         $this->registerArgument('levels', 'integer', 'Levels to render when rendering nested objects/arrays', false, 5);
         $this->registerArgument('html', 'boolean', 'Render HTML. If false, output is indented plaintext', false, false);

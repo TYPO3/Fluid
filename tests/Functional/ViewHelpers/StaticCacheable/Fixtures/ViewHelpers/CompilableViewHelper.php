@@ -23,7 +23,6 @@ final class CompilableViewHelper extends AbstractViewHelper
      */
     public function initializeArguments(): void
     {
-        parent::initializeArguments();
         $this->registerArgument('page', 'int', 'The page');
     }
 

@@ -73,7 +73,6 @@ class CycleViewHelper extends AbstractViewHelper
 
     public function initializeArguments()
     {
-        parent::initializeArguments();
         $this->registerArgument('values', 'array', 'The array or object implementing \ArrayAccess (for example \SplObjectStorage) to iterated over');
         $this->registerArgument('as', 'string', 'The name of the iteration variable', true);
     }

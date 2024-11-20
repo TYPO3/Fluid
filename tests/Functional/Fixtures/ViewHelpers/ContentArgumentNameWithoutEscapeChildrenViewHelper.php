@@ -17,7 +17,6 @@ final class ContentArgumentNameWithoutEscapeChildrenViewHelper extends AbstractV
 
     public function initializeArguments(): void
     {
-        parent::initializeArguments();
         $this->registerArgument('value', 'string', '');
     }
 

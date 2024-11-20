@@ -70,7 +70,6 @@ class PrintfViewHelper extends AbstractViewHelper
 {
     public function initializeArguments()
     {
-        parent::initializeArguments();
         $this->registerArgument('value', 'string', 'String to format');
         $this->registerArgument('arguments', 'array', 'The arguments for vsprintf', false, []);
     }

@@ -27,7 +27,6 @@ final class CompileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForC
 
     public function initializeArguments(): void
     {
-        parent::initializeArguments();
         $this->registerArgument('firstOptionalArgument', 'string', 'First optional argument which is used as render children.');
         $this->registerArgument('secondOptionalArgument', 'string', 'Second optional argument which is used as render children.');
     }

@@ -113,7 +113,6 @@ class RenderViewHelper extends AbstractViewHelper
 
     public function initializeArguments()
     {
-        parent::initializeArguments();
         $this->registerArgument('section', 'string', 'Section to render - combine with partial to render section in partial');
         $this->registerArgument('partial', 'string', 'Partial to render, with or without section');
         $this->registerArgument('delegate', 'string', 'Optional PHP class name of a permanent, included-in-app ParsedTemplateInterface implementation to override partial/section');

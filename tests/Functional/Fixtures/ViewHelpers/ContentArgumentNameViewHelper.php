@@ -15,7 +15,6 @@ final class ContentArgumentNameViewHelper extends AbstractViewHelper
 {
     public function initializeArguments(): void
     {
-        parent::initializeArguments();
         $this->registerArgument('value', 'string', '');
     }
 
