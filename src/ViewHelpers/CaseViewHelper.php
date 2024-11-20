@@ -28,7 +28,6 @@ class CaseViewHelper extends AbstractViewHelper
 
     public function initializeArguments()
     {
-        parent::initializeArguments();
         $this->registerArgument('value', 'mixed', 'Value to match in this case', true);
     }
 

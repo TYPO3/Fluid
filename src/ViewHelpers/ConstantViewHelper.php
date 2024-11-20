@@ -46,7 +46,6 @@ class ConstantViewHelper extends AbstractViewHelper
 {
     public function initializeArguments(): void
     {
-        parent::initializeArguments();
         $this->registerArgument('name', 'string', 'String representation of a PHP constant or enum');
     }
 

@@ -64,7 +64,6 @@ class SwitchViewHelper extends AbstractViewHelper
 
     public function initializeArguments()
     {
-        parent::initializeArguments();
         $this->registerArgument('expression', 'mixed', 'Expression to switch', true);
     }
 

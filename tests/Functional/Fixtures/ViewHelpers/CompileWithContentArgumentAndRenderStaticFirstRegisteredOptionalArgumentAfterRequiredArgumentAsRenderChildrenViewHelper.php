@@ -25,7 +25,6 @@ final class CompileWithContentArgumentAndRenderStaticFirstRegisteredOptionalArgu
 
     public function initializeArguments(): void
     {
-        parent::initializeArguments();
         $this->registerArgument('requiredArgument', 'string', 'demo required argument before optional argument', true);
         $this->registerArgument('firstOptionalArgument', 'string', 'First optional argument which is used as render children.');
     }
