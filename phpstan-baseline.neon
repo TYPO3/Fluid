@@ -239,9 +239,3 @@ parameters:
 			identifier: staticMethod.resultUnused
 			count: 1
 			path: tests/Unit/Core/Fixtures/TestViewHelper.php
-
-		-
-			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true will always evaluate to true\.$#'
-			identifier: staticMethod.alreadyNarrowedType
-			count: 1
-			path: tests/Unit/Core/Parser/TemplateParserTest.php

@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
@@ -556,6 +557,7 @@ final class TemplateParserTest extends TestCase
     }
 
     #[Test]
+    #[DoesNotPerformAssertions]
     public function abortIfRequiredArgumentsAreMissingDoesNotThrowExceptionIfRequiredArgumentExists(): void
     {
         $expectedArguments = [
@@ -568,8 +570,6 @@ final class TemplateParserTest extends TestCase
         $subject = new TemplateParser();
         $method = new \ReflectionMethod($subject, 'abortIfRequiredArgumentsAreMissing');
         $method->invoke($subject, $expectedArguments, $actualArguments);
-        // dummy assertion to avoid "did not perform any assertions" error
-        self::assertTrue(true);
     }
 
     #[Test]
