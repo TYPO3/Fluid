@@ -25,12 +25,6 @@ parameters:
 			path: src/Core/Parser/TemplateParser.php
 
 		-
-			message: '#^Property TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContext\:\:\$errorHandler \(TYPO3Fluid\\Fluid\\Core\\ErrorHandler\\ErrorHandlerInterface\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: src/Core/Rendering/RenderingContext.php
-
-		-
 			message: '#^Strict comparison using \!\=\= between string and null will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
 			count: 1

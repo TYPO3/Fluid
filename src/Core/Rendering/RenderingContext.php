@@ -36,7 +36,7 @@ use TYPO3Fluid\Fluid\View\TemplatePaths;
 class RenderingContext implements RenderingContextInterface
 {
     /**
-     * @var ErrorHandlerInterface
+     * @var ErrorHandlerInterface|null
      */
     protected $errorHandler;
 
