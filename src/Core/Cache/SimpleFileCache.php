@@ -89,9 +89,7 @@ class SimpleFileCache implements FluidCacheInterface
             $this->flushByName($name);
         } else {
             $files = $this->getCachedFilenames();
-            if (is_array($files)) {
-                array_walk($files, [$this, 'flushByFilename']);
-            }
+            array_walk($files, [$this, 'flushByFilename']);
         }
     }
 
