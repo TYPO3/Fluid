@@ -6,18 +6,13 @@
 Installation
 ============
 
-1.  Include as composer dependency using
+Fluid is distributed through composer. It can be added to your project by
+executing the following command:
 
-    .. code-block:: bash
+..  code-block:: bash
 
-        composer require typo3fluid/fluid
+    composer require typo3fluid/fluid
 
-2.  Run
-
-    .. code-block:: bash
-
-        composer install
-
-    to generate the vendor class autoloader.
-
-3.  The classes from `TYPO3.Fluid` can now be used in your composer project.
+To get started with Fluid, take a look at the
+:ref:`Fluid Syntax <fluid-syntax>` as well as the
+:ref:`Getting Started Guide <getting-started>`.

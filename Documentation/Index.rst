@@ -14,8 +14,7 @@ Fluid Rendering Engine
     en
 
 :Author:
-    Claus Due, Sebastian Kurfürst, Karsten Dambekalns, Robert Lemke & Fluid
-    contributors
+    Fluid contributors
 
 :License:
     This document is published under the
@@ -38,15 +37,33 @@ If using Fluid in combination with TYPO3 CMS, a look at the documentation of
 
 **Table of Contents:**
 
-.. toctree::
-   :maxdepth: 2
-   :titlesonly:
+..  toctree::
+    :caption: About Fluid
+    :maxdepth: 1
+    :titlesonly:
 
-   Installation/Index
-   Usage/Index
-   Development/Index
-   ViewHelpers/Index
-   Changelog/Index
+    Introduction/Index
+    Installation/Index
+    Usage/Index
+    Syntax/Index
+
+..  toctree::
+    :caption: ViewHelper Reference
+    :maxdepth: 1
+    :titlesonly:
+
+    ViewHelpers/Fluid/Index
+    ViewHelpers/SchemaFiles
+
+..  toctree::
+    :caption: Appendix
+    :maxdepth: 1
+    :titlesonly:
+
+    Extending/Index
+    Integrating/Index
+    Internals/Index
+    Changelog/Index
 
 .. Meta Menu
 
