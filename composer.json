@@ -21,7 +21,7 @@
         "friendsofphp/php-cs-fixer": "^3.59.3",
         "phpstan/phpstan": "^2.0.2",
         "phpstan/phpstan-phpunit": "^2.0.1",
-        "phpunit/phpunit": "^11.2.5",
+        "phpunit/phpunit": "^11.4.3",
         "psr/container": "^2.0",
         "t3docs/fluid-documentation-generator": "^4.3"
     },
