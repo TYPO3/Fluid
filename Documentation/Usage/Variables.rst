@@ -2,9 +2,9 @@
 
 .. _variables:
 
-===============
+=========
 Variables
-===============
+=========
 
 Assign a variable in PHP:
 
@@ -26,6 +26,22 @@ The result:
 
 In the template's HTML code, wrap the variable name into curly
 braces to output it.
+
+.. _variable-all:
+
+Special _all Variable
+=========================
+
+The special variable `{_all}` contains an array with all variables that are currently
+defined in your template. This can be helpful for debugging purposes, but also if you
+want to pass all variables to a partial:
+
+..  code-block:: xml
+
+    <f:render partial="MyPartial" arguments="{_all}" />
+
+However, be advised that this makes it more difficult to re-use partials, so it's recommend
+to only pass the variables that are actually needed in the partial.
 
 .. _variable-scopes:
 
