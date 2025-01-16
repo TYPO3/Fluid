@@ -38,20 +38,20 @@ and Partials may both contain and render sections, but Layouts may only
 The API
 =======
 
-Fluid uses a class called `TemplatePaths` which gets passed to the
-`TemplateView` and can resolve and deliver template file paths and sources.
+Fluid uses a class called `TemplatePaths` which is part of the view's `RenderingContext`
+and can resolve and deliver template file paths and sources.
 In order to change the default paths you can set new ones in the `TemplatePaths`
-object before you pass it to the `TemplateView`:
+associated with your `RenderingContext`:
 
 .. code-block:: php
 
+    // Create your view
+    $view = new \TYPO3Fluid\Fluid\View\TemplateView();
     // set up paths object with arrays of paths with files
-    $paths = new \TYPO3Fluid\Fluid\View\TemplatePaths();
+    $paths = $view->getRenderingContext()->getTemplatePaths();
     $paths->setTemplateRootPaths(['/path/to/templates/']);
     $paths->setLayoutRootPaths(['/path/to/layouts/']);
     $paths->setPartialRootPaths(['/path/to/partials/']);
-    // pass the constructed TemplatePaths instance to the View
-    $view = new \TYPO3Fluid\Fluid\View\TemplateView($paths);
 
 Note that paths are *always defined as arrays*. In the default `TemplatePaths`
 implementation, Fluid supports lookups in multiple template file locations -
