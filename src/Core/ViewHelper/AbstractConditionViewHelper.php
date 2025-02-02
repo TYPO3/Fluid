@@ -54,8 +54,6 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
 
     /**
      * Renders <f:then> child if $condition is true, otherwise renders <f:else> child.
-     * Method which only gets called if the template is not compiled. For static calling,
-     * the then/else nodes are converted to closures and condition evaluation closures.
      *
      * @return mixed
      * @api
