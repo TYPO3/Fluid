@@ -285,13 +285,13 @@ final class GroupedForViewHelperTest extends AbstractFunctionalTestCase
             'Balthasar Bux' . chr(10),
         ];
 
-        $invoice1->date = new \DateTime('1980-12-13');
+        $invoice1->date = new \DateTime('1980-12-13', new \DateTimeZone('UTC'));
         $invoice1->id = 1;
         $invoice2 = new \stdClass();
-        $invoice2->date = new \DateTime('2010-07-04');
+        $invoice2->date = new \DateTime('2010-07-04', new \DateTimeZone('UTC'));
         $invoice2->id = 2;
         $invoice3 = new \stdClass();
-        $invoice3->date = new \DateTime('1980-12-13');
+        $invoice3->date = new \DateTime('1980-12-13', new \DateTimeZone('UTC'));
         $invoice3->id = 3;
         yield 'group multidimensional array by child DateTime object' => [
             '<f:groupedFor each="{invoices}" as="invoices" groupBy="date" groupKey="myGroupKey">' .
