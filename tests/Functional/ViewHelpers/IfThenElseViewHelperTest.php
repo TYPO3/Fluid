@@ -374,9 +374,6 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => false, 'thenVariable' => 'thenArgument'],
             '',
         ];
-
-        /*
-         * @todo: broken non-compiled, ok compiled
         yield 'else argument, else if child, if verdict false, elseif verdict true' => [
             '<f:if condition="{verdict}" else="elseArgument">' .
                 '<f:else if="{verdictElseIf}">elseIfChild</f:else>' .
@@ -384,7 +381,6 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => false, 'verdictElseIf' => true],
             'elseIfChild',
         ];
-        */
 
         yield 'inline syntax, then argument, verdict true' => [
             '{f:if(condition:\'{verdict}\', then:\'thenArgument\')}',

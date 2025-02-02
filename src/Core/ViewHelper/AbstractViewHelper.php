@@ -39,8 +39,9 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     private static array $argumentDefinitionCache = [];
 
     /**
-     * Current view helper node
-     * @var ViewHelperNode
+     * Current view helper node; null if template is cached
+     *
+     * @var ViewHelperNode|null
      */
     protected $viewHelperNode;
 
