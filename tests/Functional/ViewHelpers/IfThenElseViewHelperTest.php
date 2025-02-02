@@ -54,7 +54,7 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
         yield 'else argument, verdict true' => [
             '<f:if condition="{verdict}" else="elseArgument" />',
             ['verdict' => true],
-            null,
+            '',
         ];
         yield 'else argument, verdict false' => [
             '<f:if condition="{verdict}" else="elseArgument" />',
@@ -396,8 +396,7 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
         yield 'inline syntax, else argument, verdict true' => [
             '{f:if(condition:\'{verdict}\', else:\'elseArgument\')}',
             ['verdict' => true],
-            // @todo: wtf?
-            null,
+            '',
         ];
         yield 'inline syntax, else argument, verdict false' => [
             '{f:if(condition:\'{verdict}\', else:\'elseArgument\')}',
