@@ -176,7 +176,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                     if ($arguments['if']->evaluate($this->renderingContext)) {
                         return $childNode->evaluate($this->renderingContext);
                     }
-                } else {
+                } elseif ($elseNode === null) {
                     $elseNode = $childNode;
                 }
             }
