@@ -147,8 +147,10 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
             }
         }
 
-        // Prefer "else" ViewHelper argument if present
-        if ($this->hasArgument('else')) {
+        // Prefer "else" ViewHelper argument if present and template is cached
+        // For uncached templates, child ViewHelpers need to be evaluated first to make
+        // sure that no else-if matches (see below)
+        if ($this->hasArgument('else') && !$this->viewHelperNode instanceof ViewHelperNode) {
             return $this->arguments['else'];
         }
 
@@ -178,6 +180,12 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                     $elseNode = $childNode;
                 }
             }
+        }
+
+        // If no else-if matches here and an else argument exists, this is prefered over
+        // a possible f:else ViewHelper. See above for the same implementation for cached templates
+        if ($this->hasArgument('else')) {
+            return $this->arguments['else'];
         }
 
         return $elseNode instanceof ViewHelperNode ? $elseNode->evaluate($this->renderingContext) : '';
