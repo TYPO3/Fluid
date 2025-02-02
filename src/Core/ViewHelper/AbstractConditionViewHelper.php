@@ -97,7 +97,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
 
         // Closure might be present if ViewHelper is called from a cached template
         if ($this->thenClosure !== null) {
-            return ($this->thenClosure)();
+            return ($this->thenClosure)() ?? '';
         }
 
         // The following code can only be evaluated for uncached templates where the node structure
@@ -123,7 +123,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         if ($elseViewHelperEncountered) {
             return '';
         }
-        return $this->renderChildren();
+        return $this->renderChildren() ?? '';
     }
 
     /**
@@ -142,7 +142,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
             // the "body" closure if condition is met
             foreach ($this->elseIfClosures as $elseIf) {
                 if ($elseIf['condition']()) {
-                    return $elseIf['body']();
+                    return $elseIf['body']() ?? '';
                 }
             }
         }
@@ -156,7 +156,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
 
         // Closure might be present if ViewHelper is called from a cached template
         if ($this->elseClosure !== null) {
-            return ($this->elseClosure)();
+            return ($this->elseClosure)() ?? '';
         }
 
         // The following code can only be evaluated for uncached templates where the node structure
@@ -188,7 +188,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
             return $this->arguments['else'];
         }
 
-        return $elseNode instanceof ViewHelperNode ? $elseNode->evaluate($this->renderingContext) : '';
+        return $elseNode instanceof ViewHelperNode ? $elseNode->evaluate($this->renderingContext) ?? '' : '';
     }
 
     /**
