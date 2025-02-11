@@ -36,6 +36,19 @@ This also works for object properties:
 
     <p>{product.name}: {product.price}</p>
 
+These object properties are obtained by evaluating a fallback chain,
+which includes various getter methods as well as direct property access.
+For example, the following PHP-equivalents would be checked for `{product.name}`:
+
+..  code-block:: php
+
+    $product->getName()
+    $product->isName()
+    $product->hasName()
+    $product->name
+
+Also, both `ArrayAccess` and the PSR `ContainerInterface` are supported.
+
 ..  _dynamic-properties:
 
 Dynamic keys/properties
