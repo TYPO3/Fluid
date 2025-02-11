@@ -168,6 +168,71 @@ being omitted from the tag.
     <my:viewHelper async="{myEmptyString}" />
     Result: <div />
 
+.. _condition-viewhelpers:
+
+Condition ViewHelpers
+=====================
+
+Condition ViewHelpers are another special type of ViewHelper that allow to check for certain
+conditions within a template. They extend from a different base class called
+`AbstractConditionViewHelper <https://github.com/TYPO3/Fluid/blob/main/src/Core/ViewHelper/AbstractConditionViewHelper.php>`_.
+
+All condition ViewHelpers have in common that a `then` and one or multiple `else` clauses
+can be defined. There are multiple ways to do this, and almost all combinations imaginable
+are possible.
+
+The generic and most used condition ViewHelper is :ref:`<f:if> <typo3fluid-fluid-if>`.
+
+then/else as argument
+---------------------
+
+Then and else can be defined as ViewHelper arguments:
+
+..  code-block:: xml
+
+    <!-- then and else -->
+    <f:if condition="{myVar} == 'test'" then="variable is test" else="variable is something else" />
+    {f:if(condition: '{myVar} == \'test\'', then: 'variable is test', else: 'variable is something else')}
+
+    <!-- only then -->
+    <f:if condition="{myVar} == 'test'" then="variable is test" />
+    {f:if(condition: '{myVar} == \'test\'', then: 'variable is test')}
+
+    <!-- only else -->
+    <f:if condition="{myVar} == 'test'" else="variable is something else" />
+    {f:if(condition: '{myVar} == \'test\'', else: 'variable is something else')}
+
+then/else as child ViewHelpers
+------------------------------
+
+With the tag syntax, it is also possible to define more advanced conditions:
+
+..  code-block:: xml
+
+    <!-- only then -->
+    <f:if condition="{myVar} == 'test'">
+        variable is test
+    </f:if>
+
+    <!-- then and else -->
+    <f:if condition="{myVar} == 'test'">
+        <f:then>variable is test</f:then>
+        <f:else>variable is something else</f:else>
+    </f:if>
+
+    <!-- only else -->
+    <f:if condition="{myVar} == 'test'">
+        <f:else>variable is something else</f:else>
+    </f:if>
+
+    <!-- multiple else-if -->
+    <f:if condition="{myVar} == 'test'">
+        <f:then>variable is test</f:then>
+        <f:else if="{myVar} == 'foo'">variable is foo</f:else>
+        <f:else if="{myVar} == 'bar'">variable is bar</f:else>
+        <f:else>variable is something else</f:else>
+    </f:if>
+
 .. _understanding-viewhelpers:
 
 Understanding ViewHelpers
