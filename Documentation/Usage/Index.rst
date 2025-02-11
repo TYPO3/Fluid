@@ -24,7 +24,7 @@ Usage
 
         Discover the intricacies of variables in Fluid templates
 
-        ..  card-footer:: :ref:`Learn about Variables <creating-expressionnodes>`
+        ..  card-footer:: :ref:`Learn about Variables <variables>`
             :button-style: btn btn-secondary stretched-link
 
     ..  card:: File Structure
