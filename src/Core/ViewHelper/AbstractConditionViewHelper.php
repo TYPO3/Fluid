@@ -120,10 +120,21 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
             }
         }
 
+        // If there's a f:else viewhelper, but no matching f:then, the ViewHelper should return a string
         if ($elseViewHelperEncountered) {
             return '';
         }
-        return $this->renderChildren() ?? '';
+
+        // If there's no f:then or f:else, the direct children of the ViewHelper are used as f:then
+        $children = $this->renderChildren();
+        if ($children !== null) {
+            return $children;
+        }
+
+        // If there were no children present, but an else handling is specified as ViewHelper argument,
+        // the Viewhelper again should return a string (same behavior as above). If no then/else handling
+        // is present at all, the ViewHelper should return the verdict as boolean
+        return $this->hasArgument('else') ? '' : true;
     }
 
     /**
@@ -188,7 +199,20 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
             return $this->arguments['else'];
         }
 
-        return $elseNode instanceof ViewHelperNode ? $elseNode->evaluate($this->renderingContext) ?? '' : '';
+        // If a f:else node exists, evaluate its content
+        if ($elseNode instanceof ViewHelperNode) {
+            return $elseNode->evaluate($this->renderingContext) ?? '';
+        }
+
+        // If only the condition is specified, but no then/else handling, the whole ViewHelper should
+        // return the verdict as boolean. Most code paths have already been eliminated until this point,
+        // so the existence of a valid then decides if the boolean should be returned
+        if (!$this->hasArgument('then') && $this->viewHelperNode->getChildNodes() === []) {
+            return false;
+        }
+
+        // If some kind of then handling has been specified, the ViewHelper always returns a string
+        return '';
     }
 
     /**
@@ -295,12 +319,20 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
             }
         }
         if (!$thenChildEncountered && $elseIfCounter === 0 && !$elseChildEncountered && !isset($node->getArguments()['then'])) {
-            // If there is no then argument, and there are neither "f:then", "f:else" nor "f:else if" children,
-            // then the entire body is considered the "then" child.
-            $argumentInitializationCode .= sprintf(
-                '\'__then\' => %s,' . chr(10),
-                $templateCompiler->wrapChildNodesInClosure($node),
-            );
+            if (!isset($node->getArguments()['else']) && $node->getChildNodes() === []) {
+                // If the ViewHelper has no then or else specified in any supported way, the verdict will be
+                // returned directly. This allows usage of custom condition-based ViewHelpers in f:if, like
+                // <f:if condition="{my:conditionBasedViewHelper()} || somethingElse">
+                $argumentInitializationCode .= '\'__then\' => function () { return true; },' . chr(10);
+                $argumentInitializationCode .= '\'__else\' => function () { return false; },' . chr(10);
+            } else {
+                // If there is no then argument, and there are neither "f:then", "f:else" nor "f:else if" children,
+                // then the entire body is considered the "then" child.
+                $argumentInitializationCode .= sprintf(
+                    '\'__then\' => %s,' . chr(10),
+                    $templateCompiler->wrapChildNodesInClosure($node),
+                );
+            }
         }
 
         if ($elseIfCounter > 0) {

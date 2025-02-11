@@ -233,6 +233,38 @@ With the tag syntax, it is also possible to define more advanced conditions:
         <f:else>variable is something else</f:else>
     </f:if>
 
+Get verdict by omitting then/else
+---------------------------------
+
+..  versionadded:: Fluid 4.1
+
+If neither `then` nor `else` in any of the accepted forms is specified, the ViewHelper
+returns the verdict of the condition as boolean. This value can be used for further
+processing in the template, for example in complex conditions:
+
+..  code-block:: xml
+
+    <!-- The variable will contain the result of the condition as boolean -->
+    <f:variable
+        name="isEitherTestOrFoo"
+        value="{f:if(condition: '{myVar} == \'test\' || {myVar} == \'foo\'')}"
+    />
+
+    <!-- This example combines two custom condition ViewHelpers to a larger condition -->
+    <f:if condition="{my:customCondition(value: variableToCheck)} || {my:otherCondition(value: variableToCheck)}">
+        ...
+    </f:if>
+
+This syntax can also be helpful in combination with a
+`Tag-Based ViewHelper <https://docs.typo3.org/permalink/typo3fluid/fluid:tagbased-viewhelpers>`_:
+
+..  code-block:: xml
+
+    <!-- disabled attribute is set if either no first name or no last name is set -->
+    <my:tagBased
+        disabled="{f:if(condition: '!{firstName} || !{lastName}')}"
+    />
+
 .. _understanding-viewhelpers:
 
 Understanding ViewHelpers

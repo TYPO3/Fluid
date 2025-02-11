@@ -382,6 +382,27 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             'elseIfChild',
         ];
 
+        yield 'if returns result, verdict false' => [
+            '<f:if condition="{verdict}"></f:if>',
+            ['verdict' => false],
+            false,
+        ];
+        yield 'if returns result, self-closing, verdict false' => [
+            '<f:if condition="{verdict}" />',
+            ['verdict' => false],
+            false,
+        ];
+        yield 'if returns result, verdict true' => [
+            '<f:if condition="{verdict}"></f:if>',
+            ['verdict' => true],
+            true,
+        ];
+        yield 'if returns result, self-closing, verdict true' => [
+            '<f:if condition="{verdict}" />',
+            ['verdict' => true],
+            true,
+        ];
+
         yield 'inline syntax, then argument, verdict true' => [
             '{f:if(condition:\'{verdict}\', then:\'thenArgument\')}',
             ['verdict' => true],
@@ -485,6 +506,18 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => false],
             0,
         ];
+
+        yield 'inline syntax, if returns result, verdict false' => [
+            '{f:if(condition: verdict)}',
+            ['verdict' => false],
+            false,
+        ];
+        yield 'inline syntax, if returns result, verdict true' => [
+            '{f:if(condition: verdict)}',
+            ['verdict' => true],
+            true,
+        ];
+
         /*
          * @todo This should work but doesn't at the moment. This is probably related to the boolean
          *       parser not converting variable nodes correctly. There is a related todo in the BooleanParserTest.
