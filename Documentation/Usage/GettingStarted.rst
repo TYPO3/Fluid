@@ -8,8 +8,8 @@ Getting Started
 
 Before you can start writing your own Fluid template files, you first need to make
 sure that the environment is set up properly. If you are using a framework like
-TYPO3, this might already the case. However, if you are starting from scratch, you
-need do some preparations in PHP first:
+TYPO3, this might already be the case. However, if you are starting from scratch, you
+need to do some preparations in PHP first:
 
 .. _create-view:
 
