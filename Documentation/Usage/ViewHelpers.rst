@@ -13,7 +13,7 @@ How to use ViewHelpers
 
 ViewHelpers are special tags in the template which provide more complex
 functionality such as loops or special formatting of values. The functionality
-of a ViewHelper is implemented in PHP, every ViewHelper has its own PHP class.
+of a ViewHelper is implemented in PHP, an each ViewHelper has its own PHP class.
 
 See the :ref:`ViewHelper Reference <viewhelper-reference>` for a complete
 list of all available ViewHelpers.
@@ -48,7 +48,7 @@ in :ref:`Fluid ViewHelper Syntax <fluid-syntax-viewhelpers>`.
 Registering/importing ViewHelpers
 =================================
 
-When you need to use third-party ViewHelpers in your templates there are multiple
+When you need to use third-party ViewHelpers in your templates, there are multiple
 equally valid options.
 
 You can use the PHP API to register a namespace that should be
@@ -80,7 +80,7 @@ example: `foo` is the alias name).
 
 .. _tagbased-viewhelpers:
 
-Tag-Based ViewHelpers
+Tag-based ViewHelpers
 =====================
 
 Tag-based ViewHelpers are special ViewHelpers that extend a different base class called
@@ -153,14 +153,14 @@ Of course, any variable containing a boolean can be supplied as well:
 
     <my:viewHelper async="{isAsync}" />
 
-It is also possible to cast a string to a boolean
+It is also possible to cast a string to a boolean:
 
 ..  code-block:: xml
 
     <my:viewHelper async="{myString as boolean}" />
 
-For backwards compatibility empty strings still lead to the attribute
-being omitted from the tag.
+For backwards compatibility, empty strings still lead to the attribute
+being omitted from the tag:
 
 ..  code-block:: xml
 
@@ -186,7 +186,7 @@ The generic and most used condition ViewHelper is :ref:`<f:if> <typo3fluid-fluid
 then/else as argument
 ---------------------
 
-Then and else can be defined as ViewHelper arguments:
+You can define `then` and `else` as ViewHelper arguments:
 
 ..  code-block:: xml
 
@@ -243,21 +243,21 @@ If you want to learn more about a specific ViewHelper or if you are using a cust
 ViewHelper that isn't documented, you can take a look at the ViewHelper source code, written
 in PHP.
 
-Each ViewHelper has a corresponding php file, which contains a class that describes the
+Each ViewHelper has a corresponding PHP file, which contains a class that describes the
 ViewHelper's arguments as well as its behavior in the template. Such classes are usually placed
 in the `Vendor\Package\ViewHelpers` PHP namespace (where `Vendor` and `Package` are placeholders
 for actual values) and follow the following naming convention:
 
-*   `f:format.raw` becomes PHP class :php:`TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper`
-*   `f:render` becomes PHP class :php:`TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper`
-*   `mypkg:custom.specialFormat` becomes PHP class
+*   `f:format.raw` results from the PHP class :php:`TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper`
+*   `f:render` results from the PHP class :php:`TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper`
+*   `mypkg:custom.specialFormat` results from the PHP class
     :php:`My\Package\ViewHelpers\Custom\SpecialFormatViewHelper`, assuming you added
-    `xmlns:mpkg="http://typo3.org/ns/My/Package/ViewHelpers"` or alternative namespace
+    `xmlns:mpkg="http://typo3.org/ns/My/Package/ViewHelpers"` or an alternative namespace
     registration (see above).
 
 The arguments a ViewHelper supports will be verbosely registered in the
 `initializeArguments()` function of each ViewHelper class. Inspect this method to
-see the names, types, descriptions, required flag and default value of all
+see the names, types, descriptions, required flags and default values of all
 attributes. An example argument definition looks like this:
 
 .. code-block:: php
@@ -275,9 +275,9 @@ Which translated to human terms means that we:
     other class names. The *array of* syntax can also be used, for example `string[]` or
     `Vendor\Package\MyClass[]`.
 *   Describe the argument's behavior in simple terms.
-*   The argument is not required (the 4th argument is :php:`false`).
-*   If the argument is not defined when calling the ViewHelper,
-    a default value of :php:`false` is assumed (5th argument).
+*   Define that the argument is not required (the 4th argument is :php:`false`).
+*   Set a default value of :php:`false` (5th argument), if the argument is not
+    defined when calling the ViewHelper. 
 
 The ViewHelper itself would then be callable like this:
 
