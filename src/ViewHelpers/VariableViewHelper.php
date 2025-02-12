@@ -7,6 +7,7 @@
 
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
+use TYPO3Fluid\Fluid\Core\Variables\ScopedVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -38,12 +39,17 @@ class VariableViewHelper extends AbstractViewHelper
     {
         $this->registerArgument('value', 'mixed', 'Value to assign. If not in arguments then taken from tag content');
         $this->registerArgument('name', 'string', 'Name of variable to create', true);
+        $this->registerArgument('scope', 'string', 'The scope of this variable', defaultValue: 'global');
     }
 
     public function render()
     {
         $value = $this->renderChildren();
-        $this->renderingContext->getVariableProvider()->add($this->arguments['name'], $value);
+        $variableProvider = $this->renderingContext->getVariableProvider();
+        if ($this->arguments['scope'] === 'local' && $variableProvider instanceof ScopedVariableProvider) {
+            $variableProvider = $variableProvider->getLocalVariableProvider();
+        }
+        $variableProvider->add($this->arguments['name'], $value);
     }
 
     /**
