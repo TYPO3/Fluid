@@ -13,7 +13,7 @@ Fluid Syntax: Variables
 Accessing variables
 ===================
 
-Variables in Fluid can be accessed with the following syntax:
+Variables in Fluid can be accessed with the following braces :html:`{}` syntax:
 
 ..  code-block:: html
 
@@ -24,7 +24,7 @@ Variables in Fluid can be accessed with the following syntax:
 Arrays and objects
 ------------------
 
-Use the dot ``.`` to access array keys:
+Use the dot character :html:`.` to access array keys:
 
 ..  code-block:: html
 
@@ -65,7 +65,7 @@ It is possible to access array or object values by a dynamic index:
 Reserved variable names
 =======================
 
-The following variable names are reserved and may not be used:
+The following variable names are **reserved** and *must not* be used:
 
 *   `_all`
 *   `true`
