@@ -23,15 +23,16 @@ Layouts automatically have access to all variables defined within the template.
 They don't have access to all template variables, instead the required variables
 need to be provided to the partial when it is used.
 
-When referring to these the names are used with an uppercase starting letter
-(i.e. the name of the type). When referring to any file containing Fluid, the
-word "templates" is sometimes used (i.e. lowercase starting letter) and in this
-case refers to all the types above as a group.
+..  note::
+    When referring to these files, the names are used with a uppercase starting
+    letter (i.e., the name of the type). When referring to any file containing Fluid, the
+    term "templates" is sometimes used (i.e., lowercase starting letter), and in this
+    case refers to all of the above types as a group.
 
-Inside Templates and Partials a special `<f:section>` container can be used to
-define sections that can be rendered using the `<f:render>` tag. Both Templates
-and Partials may both contain and render sections, but Layouts may only
-**render** sections.
+Inside Templates and Partials, the :ref:`<f:section> ViewHelper <typo3fluid-fluid-section>`
+can be used to define sections that can be rendered using the
+:ref:`<f:render> ViewHelper <typo3fluid-fluid-render>`. Both Templates and Partials
+may define and render sections, but Layouts may **only render** sections and partials.
 
 .. _templatepaths-api:
 
@@ -57,7 +58,7 @@ Note that paths are *always defined as arrays*. In the default `TemplatePaths`
 implementation, Fluid supports lookups in multiple template file locations -
 which is very useful if you are rendering template files from another package
 and wish to replace just a few template files. By adding your own template files
-path *last in the paths arrays* Fluid will check those paths *first*.
+path *last in the paths arrays*, Fluid will check those paths *first*.
 
 .. _templates:
 
@@ -90,8 +91,8 @@ does not:
 * When no Layout is used, *the template is rendered directly* and will output
   everything not contained in an `<f:section>`
 * When a Layout is used, *the Template itself is not rendered directly*.
-  Instead, the Template defines any number of `<f:section>` which contain the
-  pieces that will be rendered from the layout using `<f:render>`
+  Instead, the Template defines any number of `<f:section>` containers which
+  contain the pieces that will be rendered from the layout using `<f:render>`
 
 You can choose freely between using a layout and not using one - even when
 rendering templates in an MVC context, some templates might use layouts and
@@ -149,7 +150,7 @@ The partial then expects the variable `{address}` with all the properties
 required to render an address; street, city, etc.
 
 A partial may or may not contain `<f:section>`. If it does contain `<f:section>`
-containers then the contents of those containers can be rendered anywhere,
+containers, then the contents of those containers can be rendered anywhere,
 including inside the Partial itself, by `<f:render partial="NameOfPartial" section="NameOfSection" />`.
 Partials without sections can be rendered by just
 `<f:render partial="NameOfPartial" />` (with or without `arguments`).
