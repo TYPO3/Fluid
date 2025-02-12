@@ -13,7 +13,7 @@ How to use ViewHelpers
 
 ViewHelpers are special tags in the template which provide more complex
 functionality such as loops or special formatting of values. The functionality
-of a ViewHelper is implemented in PHP, an each ViewHelper has its own PHP class.
+of a ViewHelper is implemented in PHP, and each ViewHelper has its own PHP class.
 
 See the :ref:`ViewHelper Reference <viewhelper-reference>` for a complete
 list of all available ViewHelpers.
