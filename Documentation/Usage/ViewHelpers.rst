@@ -277,7 +277,7 @@ Which translated to human terms means that we:
 *   Describe the argument's behavior in simple terms.
 *   Define that the argument is not required (the 4th argument is :php:`false`).
 *   Set a default value of :php:`false` (5th argument), if the argument is not
-    defined when calling the ViewHelper. 
+    provided when calling the ViewHelper. 
 
 The ViewHelper itself would then be callable like this:
 
