@@ -19,18 +19,18 @@ Boolean conditions can be used as ViewHelper arguments, whenever the datatype
 `boolean` is given, e.g. in the `condition` argument of the
 :ref:`<f:if> ViewHelper <typo3fluid-fluid-if>`.
 
-1.  The expression can be a variable which is evaluated as follows:
+1.  The expression can be a variable, which is evaluated as follows:
 
-    *   number: evaluates to `true`, if is not `0`.
-    *   array: evaluates to `true` if it contains at least one element
+    *   Number: Evaluates to `true` if it is *not* `0`.
+    *   Array: Evaluates to `true` if it contains at least one element.
 
 2.  The expression can be a statement consisting of: `term1 operator term2`, for
-    example `{variable} > 3`
+    example `{variable} > 3`.
 
-    *   The operator can be one of `>`, `>=`, `<`, `<=`,
-        `==`, `===`, `!=`, `!==` or `%`,
+    *   The operator can be one of of the following: `>`, `>=`, `<`, `<=`,
+        `==`, `===`, `!=`, `!==`, or `%`.
 
-3.  The previous expressions can be combined with `||` (or) or `&&` (and).
+3.  The previous expressions can be combined with `||` (logical OR) or `&&` (logical AND).
 
 
 Examples:
@@ -81,11 +81,11 @@ both in tag and inline syntax:
     {f:render(section: 'MySection', optional: true)}
 
 If a ViewHelper argument is defined as `boolean`, it is also possible to provide
-values of different types, which will then be converted to boolean implicitly:
+values of different types, which will then be implicitly converted to a boolean:
 
 .. code-block:: xml
 
     <f:render section="MySection" optional="1" />
 
-This can be used to remain compatible to Fluid 2, which didn't support boolean literals
+This can be used to remain compatible to Fluid 2, which did not support boolean literals
 in all cases.
