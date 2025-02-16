@@ -8,7 +8,8 @@
 Fluid Syntax: ViewHelpers
 =========================
 
-ViewHelper calls can be written in two distinct syntaxes: Tag syntax and inline syntax.
+ViewHelper calls can be written using two distinct syntaxes—tag syntax and inline syntax.
+
 ViewHelpers are grouped into namespaces and can be organized in folders.
 
 When a ViewHelper is called in a template, you specify the namespace identifier, followed
@@ -57,10 +58,10 @@ Inline syntax
 
 ..  tip::
 
-    There is an online converter from tag-based syntax to inline syntax:
+    There is an online tool to convert tag-based syntax to inline syntax:
     `Fluid Converter <https://fluid-to-inline-converter.com/>`__
 
-The inline syntax works within curly braces `{}`. Most ViewHelpers can also be used with
+The inline syntax works using curly braces `{}`. Most ViewHelpers can also be used with
 the inline syntax, although the syntax might get more complicated depending on the use case.
 
 ..  code-block:: xml
@@ -97,8 +98,8 @@ ViewHelper syntax comparison
 ============================
 
 Depending on the situation, it might be better to use the inline syntax instead of the
-tag syntax and vice versa. Here's a more complex example that shows where the inline
-syntax is still possible, but might make things more complicated.
+tag syntax and vice versa. Here is a more complex example that shows where the inline
+syntax is still possible, but might make things more complicated:
 
 .. code-block:: xml
 
@@ -116,8 +117,8 @@ And its inline syntax variant:
     <f:variable name="myArray" value="{0: 'foo', 1: '', 2: 'bar'}" />
     {f:render(section:'MySection', arguments: {item: item}) -> f:if(condition: item) -> f:for(each: myArray, as: 'item')}
 
-Please note that in chained inline notation the `f:if` ViewHelpers should not
-have their usual `then` or `else` attributes, for them would directly output
+Please note that, in chained inline notation, the `f:if` ViewHelpers should not
+use their usual `then` or `else` attributes, as they would directly output
 their value and thus break the chain!
 
 
@@ -127,7 +128,7 @@ ViewHelper namespaces
 =====================
 
 There are two syntax variants to import a ViewHelper namespace into a template.
-In the following examples `blog` is the namespace available within the Fluid template and
+In the following examples, `blog` is the namespace available within the Fluid template and
 `MyVendor\BlogExample\ViewHelpers` is the PHP namespace to import into Fluid.
 
 By default, the `f` namespace is predefined by Fluid. Depending on your setup,
@@ -135,8 +136,8 @@ additional global namespaces, defined directly via the
 :ref:`ViewHelperResolver <viewhelperresolver>`, might
 be available.
 
-html tag with xmlns
--------------------
+HTML tag syntax with xmlns attribute
+------------------------------------
 
 ..  code-block:: xml
 
@@ -146,24 +147,24 @@ html tag with xmlns
     >
     </html>
 
-This is useful for various IDEs and HTML auto-completion. The :html:`<html>`
+This is useful for various IDEs and HTML autocompletion. The :html:`<html>`
 element itself will not be rendered if the attribute
 :html:`data-namespace-typo3-fluid="true"` is specified.
 
-The namespace is built using the fixed `http://typo3.org/ns` prefix followed
-by the vendor name, package name and the fixed `ViewHelpers` suffix.
+The namespace is built using the fixed `http://typo3.org/ns/` prefix followed
+by the vendor name, package name, and the fixed `ViewHelpers` suffix.
 
 ..  important::
-    Do not use `https://typo3.org` (HTTPS instead of HTTP). Fluid would not be
-    able to detect this namespace to convert it to PHP class name prefixes.
+    Do not use `https://typo3.org/` (HTTPS instead of HTTP). Fluid would not be
+    able to detect this namespace to convert it to the PHP class name prefixes.
     Remember: This is a unique XML namespace, it does not need to contain a valid URI.
 
-curly braces syntax
+Curly braces syntax
 -------------------
 
 ..  code-block:: xml
 
     {namespace blog=MyVendor\BlogExample\ViewHelpers}
 
-Each of the rows will result in a blank line. Multiple import statements can go
-into a single or multiple lines.
+Any line that uses the curly braces syntax results in a blank line. Multiple
+statements can be on either one line or across multiple lines.

@@ -16,7 +16,7 @@ such XSD schemas to XML namespace URLs (:html:`xmlns="..."`) which you can inclu
 Fluid templates.
 
 Fluid includes the necessary CLI command to generate such schema files for all
-available ViewHelpers within your project.
+available ViewHelpers within your project:
 
 ..  code-block:: bash
 
@@ -34,7 +34,7 @@ each available namespace in the current directory, for example:
     schema_TYPO3Fluid_Fluid_ViewHelpers.xsd
 
 You can specify a different destination directory by providing the `--destination`
-argument. If the directory doesn't exist, it will be created.
+argument. If the directory doesn't exist, it will be created:
 
 ..  code-block:: bash
 

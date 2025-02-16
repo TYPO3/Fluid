@@ -24,7 +24,7 @@ They don't have access to all template variables, instead the required variables
 need to be provided to the partial when it is used.
 
 ..  note::
-    When referring to these files, the names are used with a uppercase starting
+    When referring to these files, the names are used with an uppercase starting
     letter (i.e., the name of the type). When referring to any file containing Fluid, the
     term "templates" is sometimes used (i.e., lowercase starting letter), and in this
     case refers to all of the above types as a group.

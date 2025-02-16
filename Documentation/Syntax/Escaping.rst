@@ -13,7 +13,8 @@ Fluid Syntax: Escaping
 Escaping behavior in inline syntax
 ==================================
 
-At a certain nesting level, `'` needs to be escaped with a backslash:
+At a certain nesting level, single quotes :xml:`'` required for the
+inline syntax need to be escaped with a backslash:
 
 ..  code-block:: xml
 
@@ -31,8 +32,8 @@ are different approaches to achieve this.
 Passing variables to inline ViewHelpers
 ---------------------------------------
 
-If only a variable is passed as a ViewHelper argument, the single quotes and  curly braces
-can be omitted:
+If only a variable is passed as a ViewHelper argument, the single quotes :xml:`'`
+and curly braces :xml:`{}` can be omitted:
 
 ..  code-block:: xml
 
@@ -42,7 +43,7 @@ can be omitted:
 Using ViewHelper chaining if possible
 -------------------------------------
 
-A lot of ViewHelpers that perform changes on a single value also accept that value as
+Many ViewHelpers that perform changes on a single value also accept that value as a
 child value. This allows a much cleaner syntax if you combine multiple ViewHelpers for
 one value:
 
@@ -56,12 +57,12 @@ Workarounds for syntax collision with JS and CSS
 ================================================
 
 While it is generally advisable to avoid inline JavaScript and CSS code within
-Fluid templates, sometimes it might be unavoidable. This might lead to collisions
-between Fluid's inline or variable syntax and the curly braces used in JavaScript
-and CSS.
+Fluid templates, sometimes it may be unavoidable. This can lead to collisions
+between Fluid's inline or variable syntax and the curly braces :xml:`{}`
+syntax characters used in JavaScript and CSS.
 
 Currently, there is no clean way to solve this due to limitations of Fluid's parser.
-This would need a bigger rewrite, which is not yet feasible due to other more pressing
+This would need a bigger rewrite, which is not yet feasible because of other more pressing
 issues. However, there are workarounds that might be applicable in your use case.
 
 f:format.json ViewHelper

@@ -51,11 +51,11 @@ Type casting
 ============
 
 The `as` expression can be used to convert variables to a different type.
-`{myPossiblyArray as array}` will for example make sure you access
-`{myPossiblyArray}` as an array even if it is of another type :php:`null`, which is
-useful when you pass a suspect value to a ViewHelper like `f:for` which requires
-an array as input. Other supported cast types are: `integer`, `boolean`, `string`,
-`float` and `DateTime`.
+For example, `{myPossiblyArray as array}` will ensure that `{myPossiblyArray}`
+is accessed as an array even if it is of a different type such as :php:`null`, which is
+useful if you are passing a value to a ViewHelper like :ref:`<f:for> <typo3fluid-fluid-for>`
+that requires an array as input. Other supported types for casting are: `integer`,
+`boolean`, `string`, `float` and `DateTime`.
 
 If you use `as array` on a string that contains comma-separated values, the
 string is split at each comma, similar to PHP's
@@ -80,10 +80,10 @@ result in:
 
 .. _ternary-expressions:
 
-Ternary Expressions
+Ternary expressions
 ===================
 
-Fluid supports the ternary operator for variables. It is a shortcut to switch
+Fluid supports the ternary operator for variables, allowing you to switch
 between two variables based on the value of a variable. For static values,
 like a string, this is **not** supported.
 
@@ -91,5 +91,5 @@ like a string, this is **not** supported.
 
     {checkVariable ? thenVariable : elseVariable}
 
-If `{checkVariable}` evaluates to :php:`true`, variable `{thenVariable}` will be
-used, otherwise `{elseVariable}` will be used.
+If `{checkVariable}` evaluates to :php:`true`, variable `{thenVariable}` is
+used, otherwise variable `{elseVariable}` is used.
