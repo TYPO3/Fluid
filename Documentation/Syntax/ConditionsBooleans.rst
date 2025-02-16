@@ -27,7 +27,7 @@ Boolean conditions can be used as ViewHelper arguments, whenever the datatype
 2.  The expression can be a statement consisting of: `term1 operator term2`, for
     example `{variable} > 3`.
 
-    *   The operator can be one of of the following: `>`, `>=`, `<`, `<=`,
+    *   The operator can be one of the following: `>`, `>=`, `<`, `<=`,
         `==`, `===`, `!=`, `!==`, or `%`.
 
 3.  The previous expressions can be combined with `||` (logical OR) or `&&` (logical AND).
