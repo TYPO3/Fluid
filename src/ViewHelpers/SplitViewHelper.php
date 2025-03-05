@@ -19,6 +19,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * This ViewHelper mimicks PHP's :php:`explode()` function.
  *
+ * The following examples store the result in a variable because an array cannot
+ * be outputted directly in a template.
  *
  * Examples
  * ========
@@ -27,7 +29,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * -----------------------
  * ::
  *
- *    <f:split value="1,5,8" separator="," />
+ *    <f:variable name="result"><f:split value="1,5,8" separator="," /></f:variable>
  *
  * .. code-block:: text
  *
@@ -39,7 +41,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * ::
  *
- *    <f:split separator="-">1-5-8</f:split>
+ *    <f:variable name="result"><f:split separator="-">1-5-8</f:split></f:variable>
  *
  * .. code-block:: text
  *
@@ -51,7 +53,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * ::
  *
- *    <f:split value="1,5,8" separator="," limit="2" />
+ *    <f:variable name="result"><f:split value="1,5,8" separator="," limit="2" /></f:variable>
  *
  * .. code-block:: text
  *
