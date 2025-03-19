@@ -12,7 +12,7 @@
                edit-on-github-branch="main"
                edit-on-github="TYPO3/Fluid"
                typo3-core-preferred="stable"
-               interlink-shortcode="typo3fluid/fluid"
+               interlink-shortcode="fluid"
     />
     <project title="Fluid Explained"
              release="main (development)"
