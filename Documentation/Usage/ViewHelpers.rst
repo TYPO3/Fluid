@@ -256,7 +256,7 @@ processing in the template, for example in complex conditions:
     </f:if>
 
 This syntax can also be helpful in combination with a
-`Tag-Based ViewHelper <https://docs.typo3.org/permalink/typo3fluid/fluid:tagbased-viewhelpers>`_:
+`Tag-Based ViewHelper <https://docs.typo3.org/permalink/fluid:tagbased-viewhelpers>`_:
 
 ..  code-block:: xml
 
@@ -309,7 +309,7 @@ Which translated to human terms means that we:
 *   Describe the argument's behavior in simple terms.
 *   Define that the argument is not required (the 4th argument is :php:`false`).
 *   Set a default value of :php:`false` (5th argument), if the argument is not
-    provided when calling the ViewHelper. 
+    provided when calling the ViewHelper.
 
 The ViewHelper itself would then be callable like this:
 
