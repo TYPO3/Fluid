@@ -29,7 +29,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *     {oldvariable -> f:format.htmlspecialchars() -> f:variable(name: 'newvariable')}
  *     <f:variable name="myvariable"><f:format.htmlspecialchars>{oldvariable}</f:format.htmlspecialchars></f:variable>
  *
- * @see \TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper
  * @api
  */
 class VariableViewHelper extends AbstractViewHelper
