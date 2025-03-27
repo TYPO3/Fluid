@@ -25,7 +25,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
  *   Transforms the input string to its uppercase representation
  *
  * ``capital``
- *   Transforms the input string to its first letter upper-cased, i.e. capitalization
+ *   Transforms the input string to its first letter upper-cased, i.e. Capitalization
  *
  * ``uncapital``
  *   Transforms the input string to its first letter lower-cased, i.e. uncapitalization
