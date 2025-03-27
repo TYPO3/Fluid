@@ -20,15 +20,19 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
  *
  * ``lower``
  *   Transforms the input string to its lowercase representation
+ *   Example: "Hello World" -> "hello world"
  *
  * ``upper``
  *   Transforms the input string to its uppercase representation
+ *   Example: "Hello World" -> "HELLO WORLD"
  *
  * ``capital``
- *   Transforms the input string to its first letter upper-cased, i.e. Capitalization
+ *   Transforms the input string to its first letter upper-cased, i.e. capitalization
+ *   Example: "hello world" -> "Hello world"
  *
  * ``uncapital``
  *   Transforms the input string to its first letter lower-cased, i.e. uncapitalization
+ *   Example: "Hello World" -> "hello World"
  *
  * ``capitalWords``
  *   Not supported yet: Transforms the input string to each containing word being capitalized
