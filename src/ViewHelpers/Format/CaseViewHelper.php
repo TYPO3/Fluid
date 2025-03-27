@@ -27,7 +27,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
  *   Example: "Hello World" -> "HELLO WORLD"
  *
  * ``capital``
- *   Transforms the input string to its first letter upper-cased, i.e. capitalization
+ *   Transforms the input string to its first letter upper-cased, i.e. Capitalization
  *   Example: "hello world" -> "Hello world"
  *
  * ``uncapital``
