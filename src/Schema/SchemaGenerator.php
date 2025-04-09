@@ -30,6 +30,12 @@ final class SchemaGenerator
             if (isset($metadata->docTags['@deprecated'])) {
                 $documentation .= "\n@deprecated " . $metadata->docTags['@deprecated'];
             }
+            // Add links from "@see" annotations. No HTML formatting means
+            // non-clickable links, but copy+paste from a URL is then possible
+            // for further reading
+            if (isset($metadata->docTags['@see'])) {
+                $documentation .= "\n@see " . $metadata->docTags['@see'];
+            }
             $documentation = trim($documentation);
 
             // Add documentation to xml

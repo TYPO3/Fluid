@@ -101,6 +101,61 @@ final class SchemaGeneratorTest extends TestCase
                 '</xsd:element>' .
                 '</xsd:schema>' . "\n",
             ],
+            'deprecatedViewHelperWithFurtherReading' => [
+                'http://typo3.org/ns/Vendor/Package/ViewHelpers',
+                [
+                    new ViewHelperMetadata(
+                        'Vendor\\Package\\ViewHelpers\\MyViewHelper',
+                        'Vendor\\Package',
+                        'MyViewHelper',
+                        'myViewHelper',
+                        '',
+                        'http://typo3.org/ns/Vendor/Package/ViewHelpers',
+                        [
+                            '@deprecated' => 'since 1.2.3, will be removed in 2.0.0',
+                            '@see' => 'https://docs.typo3.org/somelink',
+                        ],
+                        [],
+                        false,
+                    ),
+                ],
+                '<?xml version="1.0" encoding="UTF-8"?>' . "\n" .
+                '<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://typo3.org/ns/Vendor/Package/ViewHelpers">' .
+                '<xsd:element name="myViewHelper">' .
+                '<xsd:annotation><xsd:documentation><![CDATA[@deprecated since 1.2.3, will be removed in 2.0.0' . "\n" . '@see https://docs.typo3.org/somelink]]></xsd:documentation></xsd:annotation>' .
+                '<xsd:complexType mixed="true">' .
+                '<xsd:sequence><xsd:any minOccurs="0"/></xsd:sequence>' .
+                '</xsd:complexType>' .
+                '</xsd:element>' .
+                '</xsd:schema>' . "\n",
+            ],
+            'viewHelperWithFurtherReading' => [
+                'http://typo3.org/ns/Vendor/Package/ViewHelpers',
+                [
+                    new ViewHelperMetadata(
+                        'Vendor\\Package\\ViewHelpers\\MyViewHelper',
+                        'Vendor\\Package',
+                        'MyViewHelper',
+                        'myViewHelper',
+                        '',
+                        'http://typo3.org/ns/Vendor/Package/ViewHelpers',
+                        [
+                            '@see' => 'https://docs.typo3.org/somelink',
+                        ],
+                        [],
+                        false,
+                    ),
+                ],
+                '<?xml version="1.0" encoding="UTF-8"?>' . "\n" .
+                '<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://typo3.org/ns/Vendor/Package/ViewHelpers">' .
+                '<xsd:element name="myViewHelper">' .
+                '<xsd:annotation><xsd:documentation><![CDATA[@see https://docs.typo3.org/somelink]]></xsd:documentation></xsd:annotation>' .
+                '<xsd:complexType mixed="true">' .
+                '<xsd:sequence><xsd:any minOccurs="0"/></xsd:sequence>' .
+                '</xsd:complexType>' .
+                '</xsd:element>' .
+                '</xsd:schema>' . "\n",
+            ],
             'argumentTypes' => [
                 'http://typo3.org/ns/Vendor/Package/ViewHelpers',
                 [
