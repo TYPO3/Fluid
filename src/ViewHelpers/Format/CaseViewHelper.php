@@ -19,19 +19,24 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
  * Possible modes are:
  *
  * ``lower``
- *   Transforms the input string to its lowercase representation
+ *   Transforms the input string to lowercase
+ *   Example: "Hello World" -> "hello world"
  *
  * ``upper``
- *   Transforms the input string to its uppercase representation
+ *   Transforms the input string to uppercase
+ *   Example: "Hello World" -> "HELLO WORLD"
  *
  * ``capital``
- *   Transforms the input string to its first letter upper-cased, i.e. capitalization
+ *   Transforms the first character of the input string to uppercase
+ *   Example: "hello world" -> "Hello world"
  *
  * ``uncapital``
- *   Transforms the input string to its first letter lower-cased, i.e. uncapitalization
+ *   Transforms the input string to its first letter lower-cased
+ *   Example: "Hello World" -> "hello World"
  *
  * ``capitalWords``
- *   Not supported yet: Transforms the input string to each containing word being capitalized
+ *   Transforms the input string to capitalize each word
+ *   Example: "hello world" -> "Hello World"
  *
  * Note that the behavior will be the same as in the appropriate PHP function `mb_convert_case`_;
  * especially regarding locale and multibyte behavior.
