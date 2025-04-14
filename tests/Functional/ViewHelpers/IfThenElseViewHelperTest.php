@@ -509,12 +509,12 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
         yield 'inline syntax, then argument int 1, verdict truthy expression' => [
             '{f:if(condition:\'{integer} == 1\', then: 1)}',
             ['integer' => 1],
-            '',
+            1,
         ];
         yield 'inline syntax, else argument int 1, verdict falsy expression' => [
             '{f:if(condition:\'{integer} == 1\', else: 1)}',
             ['integer' => 0],
-            '',
+            1,
         ];
         yield 'inline syntax, else argument int 1, verdict truthy expression' => [
             '{f:if(condition:\'{integer} == 1\', else: 1)}',
