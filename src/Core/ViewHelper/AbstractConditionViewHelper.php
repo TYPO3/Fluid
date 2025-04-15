@@ -91,7 +91,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
     protected function renderThenChild()
     {
         // Prefer "then" ViewHelper argument if present
-        if ($this->hasArgument('then')) {
+        if ($this->viewHelperNode instanceof ViewHelperNode && array_key_exists('then', $this->viewHelperNode->getArguments())) {
             return $this->arguments['then'];
         }
 
@@ -134,7 +134,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         // If there were no children present, but an else handling is specified as ViewHelper argument,
         // the Viewhelper again should return a string (same behavior as above). If no then/else handling
         // is present at all, the ViewHelper should return the verdict as boolean
-        return $this->hasArgument('else') ? null : true;
+        return array_key_exists('else', $this->viewHelperNode->getArguments()) ? null : true;
     }
 
     /**
@@ -195,7 +195,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
 
         // If no else-if matches here and an else argument exists, this is prefered over
         // a possible f:else ViewHelper. See above for the same implementation for cached templates
-        if ($this->hasArgument('else')) {
+        if (array_key_exists('else', $this->viewHelperNode->getArguments())) {
             return $this->arguments['else'];
         }
 
@@ -207,7 +207,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         // If only the condition is specified, but no then/else handling, the whole ViewHelper should
         // return the verdict as boolean. Most code paths have already been eliminated until this point,
         // so the existence of a valid then decides if the boolean should be returned
-        if (!$this->hasArgument('then') && $this->viewHelperNode->getChildNodes() === []) {
+        if (!array_key_exists('then', $this->viewHelperNode->getArguments()) && $this->viewHelperNode->getChildNodes() === []) {
             return false;
         }
 
@@ -240,38 +240,6 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
 
         $argumentsVariableName = $templateCompiler->variableName('arguments');
         $argumentInitializationCode = sprintf('%s = [' . chr(10), $argumentsVariableName);
-
-        $accumulatedArgumentInitializationCode = '';
-        $arguments = $node->getArguments();
-        $argumentDefinitions = $node->getArgumentDefinitions();
-        foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
-            if (!array_key_exists($argumentName, $arguments)) {
-                // Argument *not* given to VH, use default value
-                $defaultValue = $argumentDefinition->getDefaultValue();
-                $argumentInitializationCode .= sprintf(
-                    '\'%s\' => %s,' . chr(10),
-                    $argumentName,
-                    is_array($defaultValue) && empty($defaultValue) ? '[]' : var_export($defaultValue, true),
-                );
-            } elseif ($arguments[$argumentName] instanceof NodeInterface) {
-                // Argument *is* given to VH and is a node, resolve
-                $converted = $arguments[$argumentName]->convert($templateCompiler);
-                $accumulatedArgumentInitializationCode .= $converted['initialization'];
-                $argumentInitializationCode .= sprintf(
-                    '\'%s\' => %s,' . chr(10),
-                    $argumentName,
-                    $converted['execution'],
-                );
-            } else {
-                // Argument *is* given to VH and is a simple type.
-                // @todo: Why is this not a node object as well? See f:if inline syntax tests.
-                $argumentInitializationCode .= sprintf(
-                    '\'%s\' => %s,' . chr(10),
-                    $argumentName,
-                    $arguments[$argumentName],
-                );
-            }
-        }
 
         $thenChildEncountered = false;
         $elseChildEncountered = false;
@@ -318,8 +286,58 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                 }
             }
         }
-        if (!$thenChildEncountered && $elseIfCounter === 0 && !$elseChildEncountered && !isset($node->getArguments()['then'])) {
-            if (!isset($node->getArguments()['else']) && $node->getChildNodes() === []) {
+
+        $accumulatedArgumentInitializationCode = '';
+        $arguments = $node->getArguments();
+        $argumentDefinitions = $node->getArgumentDefinitions();
+        foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
+            if (!array_key_exists($argumentName, $arguments)) {
+                // Argument *not* given to VH, use default value
+                $defaultValue = $argumentDefinition->getDefaultValue();
+                $argumentInitializationCode .= sprintf(
+                    '\'%s\' => %s,' . chr(10),
+                    $argumentName,
+                    is_array($defaultValue) && empty($defaultValue) ? '[]' : var_export($defaultValue, true),
+                );
+            } elseif ($arguments[$argumentName] instanceof NodeInterface) {
+                // Argument *is* given to VH and is a node, resolve
+                $converted = $arguments[$argumentName]->convert($templateCompiler);
+                $accumulatedArgumentInitializationCode .= $converted['initialization'];
+
+                if ($argumentName === 'then' || $argumentName === 'else') {
+                    $argumentInitializationCode .= sprintf(
+                        '\'__%s\' => %s,' . chr(10),
+                        $argumentName,
+                        'function () use ($renderingContext) { return ' . $converted['execution'] . ';}',
+                    );
+                } else {
+                    $argumentInitializationCode .= sprintf(
+                        '\'%s\' => %s,' . chr(10),
+                        $argumentName,
+                        $converted['execution'],
+                    );
+                }
+            } else {
+                // Argument *is* given to VH and is a simple type.
+                // @todo: Why is this not a node object as well? See f:if inline syntax tests.
+                if ($argumentName === 'then' || $argumentName === 'else') {
+                    $argumentInitializationCode .= sprintf(
+                        '\'__%s\' => %s,' . chr(10),
+                        $argumentName,
+                        'function () use ($renderingContext) { return ' . $arguments[$argumentName] . ';}',
+                    );
+                } else {
+                    $argumentInitializationCode .= sprintf(
+                        '\'%s\' => %s,' . chr(10),
+                        $argumentName,
+                        $arguments[$argumentName],
+                    );
+                }
+            }
+        }
+
+        if (!$thenChildEncountered && $elseIfCounter === 0 && !$elseChildEncountered && !array_key_exists('then', $node->getArguments())) {
+            if (!array_key_exists('else', $node->getArguments()) && $node->getChildNodes() === []) {
                 // If the ViewHelper has no then or else specified in any supported way, the verdict will be
                 // returned directly. This allows usage of custom condition-based ViewHelpers in f:if, like
                 // <f:if condition="{my:conditionBasedViewHelper()} || somethingElse">
