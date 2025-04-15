@@ -531,6 +531,11 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => false],
             0,
         ];
+        yield 'inline syntax, then argument using variable, verdict false' => [
+            '<f:variable name="foo" value="valueOfFoo" /><f:section name="mySection">{f:if(condition: true, then: "{foo}{baz}")}</f:section><f:render section="mySection" arguments="{baz: foo}" />',
+            [],
+            'valueOfFoo',
+        ];
 
         yield 'inline syntax, if returns result, verdict false' => [
             '{f:if(condition: verdict)}',
