@@ -308,7 +308,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                     $argumentInitializationCode .= sprintf(
                         '\'__%s\' => %s,' . chr(10),
                         $argumentName,
-                        'function () use ($renderingContext) { return ' . $converted['execution'] . ';}',
+                        'fn () => (' . $converted['execution'] . ')',
                     );
                 } else {
                     $argumentInitializationCode .= sprintf(
@@ -324,7 +324,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                     $argumentInitializationCode .= sprintf(
                         '\'__%s\' => %s,' . chr(10),
                         $argumentName,
-                        'function () use ($renderingContext) { return ' . $arguments[$argumentName] . ';}',
+                        'fn () => (' . $arguments[$argumentName] . ')',
                     );
                 } else {
                     $argumentInitializationCode .= sprintf(
