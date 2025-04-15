@@ -506,6 +506,21 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => true],
             null,
         ];
+        yield 'inline syntax, then argument null, verdict true' => [
+            '{f:if(condition:\'{verdict}\', then: null)}',
+            ['verdict' => true],
+            null,
+        ];
+        yield 'inline syntax, else argument non existing variable, verdict false' => [
+            '{f:if(condition:\'{verdict}\', else: foo)}',
+            ['verdict' => false],
+            null,
+        ];
+        yield 'inline syntax, else argument null, verdict false' => [
+            '{f:if(condition:\'{verdict}\', else: null)}',
+            ['verdict' => false],
+            null,
+        ];
         yield 'inline syntax, then argument int 1, else argument int 0, verdict false' => [
             '{f:if(condition:\'{verdict}\', then:1, else:0)}',
             ['verdict' => false],
