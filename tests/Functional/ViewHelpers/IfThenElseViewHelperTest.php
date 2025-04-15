@@ -75,6 +75,11 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => false],
             null,
         ];
+        yield 'leading whitespace, empty result body, verdict true' => [
+            ' <f:if condition="{verdict}"><f:variable name="foo" value="bar" /></f:if>',
+            ['verdict' => true],
+            ' ',
+        ];
         yield 'then body, then child, verdict true, prefers child' => [
             '<f:if condition="{verdict}">' .
                 'thenBody' .
