@@ -90,12 +90,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      */
     protected function renderThenChild()
     {
-        // Prefer "then" ViewHelper argument if present
-        if ($this->viewHelperNode instanceof ViewHelperNode && array_key_exists('then', $this->viewHelperNode->getArguments())) {
-            return $this->arguments['then'];
-        }
-
-        // Closure might be present if ViewHelper is called from a cached template
+        // In cached templates, a closure is defined if any variant of "then" has been specified
         if ($this->thenClosure !== null) {
             return ($this->thenClosure)();
         }
@@ -107,6 +102,18 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
             return null;
         }
 
+        // node arguments are used because the ViewHelper arguments are already merged with default
+        // values, which makes it impossible to differentiate between "argument is not defined" and
+        // "argument returns null"
+        $nodeArguments = $this->viewHelperNode->getArguments();
+
+        // Prefer "then" ViewHelper argument if present
+        if (array_key_exists('then', $nodeArguments)) {
+            return $this->arguments['then'];
+        }
+
+        // Search for f:then ViewHelper and identify possible f:else to decide how the tag's children should
+        // be interpreted afterwards
         $elseViewHelperEncountered = false;
         foreach ($this->viewHelperNode->getChildNodes() as $childNode) {
             if ($childNode instanceof ViewHelperNode
@@ -120,28 +127,28 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
             }
         }
 
-        // If there's a f:else viewhelper, but no matching f:then, the ViewHelper should return a string
+        // If there's a f:else viewhelper, but no matching f:then, the ViewHelper should return "null" as default
         if ($elseViewHelperEncountered) {
             return null;
         }
 
-        // If there's no f:then or f:else, the direct children of the ViewHelper are used as f:then
-        if (count($this->viewHelperNode->getChildNodes()) > 0) {
+        // If there's no f:then or f:else, the direct children of the ViewHelper are used as f:then if present
+        if ($this->viewHelperNode->getChildNodes() !== []) {
             return $this->renderChildren();
         }
 
         // If there were no children present, but an else handling is specified as ViewHelper argument,
-        // the Viewhelper again should return a string (same behavior as above). If no then/else handling
-        // is present at all, the ViewHelper should return the verdict as boolean
-        return array_key_exists('else', $this->viewHelperNode->getArguments()) ? null : true;
+        // the Viewhelper again should return a "null" as default. If no then/else handling is present at all,
+        // the ViewHelper should return the verdict as boolean
+        return array_key_exists('else', $nodeArguments) ? null : true;
     }
 
     /**
      * Returns value of "else" attribute.
      * If else attribute is not set, iterates through child nodes and renders ElseViewHelper.
-     * If else attribute is not set and no ElseViewHelper is found, an empty string will be returned.
+     * If else attribute is not set and no ElseViewHelper is found, null will be returned.
      *
-     * @return mixed rendered ElseViewHelper or an empty string if no ThenViewHelper was found
+     * @return mixed rendered ElseViewHelper or null if no ThenViewHelper was found
      * @api
      */
     protected function renderElseChild()
@@ -155,13 +162,6 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                     return $elseIf['body']();
                 }
             }
-        }
-
-        // Prefer "else" ViewHelper argument if present and template is cached
-        // For uncached templates, child ViewHelpers need to be evaluated first to make
-        // sure that no else-if matches (see below)
-        if ($this->hasArgument('else') && !$this->viewHelperNode instanceof ViewHelperNode) {
-            return $this->arguments['else'];
         }
 
         // Closure might be present if ViewHelper is called from a cached template
@@ -192,9 +192,14 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
             }
         }
 
+        // node arguments are used because the ViewHelper arguments are already merged with default
+        // values, which makes it impossible to differentiate between "argument is not defined" and
+        // "argument returns null"
+        $nodeArguments = $this->viewHelperNode->getArguments();
+
         // If no else-if matches here and an else argument exists, this is prefered over
         // a possible f:else ViewHelper. See above for the same implementation for cached templates
-        if (array_key_exists('else', $this->viewHelperNode->getArguments())) {
+        if (array_key_exists('else', $nodeArguments)) {
             return $this->arguments['else'];
         }
 
@@ -206,11 +211,11 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         // If only the condition is specified, but no then/else handling, the whole ViewHelper should
         // return the verdict as boolean. Most code paths have already been eliminated until this point,
         // so the existence of a valid then decides if the boolean should be returned
-        if (!array_key_exists('then', $this->viewHelperNode->getArguments()) && $this->viewHelperNode->getChildNodes() === []) {
+        if (!array_key_exists('then', $nodeArguments) && $this->viewHelperNode->getChildNodes() === []) {
             return false;
         }
 
-        // If some kind of then handling has been specified, the ViewHelper always returns a string
+        // If some kind of then handling has been specified, the ViewHelper always returns "null" as default
         return null;
     }
 
