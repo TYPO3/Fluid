@@ -126,9 +126,8 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         }
 
         // If there's no f:then or f:else, the direct children of the ViewHelper are used as f:then
-        $children = $this->renderChildren();
-        if ($children !== null) {
-            return $children;
+        if (count($this->viewHelperNode->getChildNodes()) > 0) {
+            return $this->renderChildren();
         }
 
         // If there were no children present, but an else handling is specified as ViewHelper argument,
