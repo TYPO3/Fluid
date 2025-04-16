@@ -268,6 +268,28 @@ class TemplateCompiler
     }
 
     /**
+     * Generates PHP code for the arguments part of ViewHelper calls in cached templates
+     *
+     * @param array{string: string|array{string: string}} $argumentsCode
+     * @return string
+     */
+    public function generateViewHelperArgumentsCode(array $argumentsCode): string
+    {
+        $lines = [];
+        foreach ($argumentsCode as $argumentName => $argumentCode) {
+            $lines[] = sprintf(
+                '\'%s\' => %s,',
+                $argumentName,
+                is_array($argumentCode) ? $this->generateViewHelperArgumentsCode($argumentCode) : $argumentCode,
+            );
+        }
+        return sprintf(
+            '[' . chr(10) . '%s' . chr(10) . ']',
+            implode(chr(10), $lines),
+        );
+    }
+
+    /**
      * Returns a unique variable name by appending a global index to the given prefix
      */
     public function variableName(string $prefix): string

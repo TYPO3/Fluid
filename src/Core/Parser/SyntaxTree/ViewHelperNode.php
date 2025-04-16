@@ -82,7 +82,8 @@ class ViewHelperNode extends AbstractNode
 
     /**
      * @internal only needed for compiling templates
-     * @return NodeInterface[]
+     * @return array<NodeInterface|scalar> For simple values, an argument might also be scalar
+     *                                     because of Fluid's compiler optimizations
      */
     public function getArguments(): array
     {
