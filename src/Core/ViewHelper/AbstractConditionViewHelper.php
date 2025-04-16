@@ -301,16 +301,15 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                 );
             } elseif ($arguments[$argumentName] instanceof NodeInterface) {
                 // Argument *is* given to VH and is a node, resolve
-                $converted = $arguments[$argumentName]->convert($templateCompiler);
-                $accumulatedArgumentInitializationCode .= $converted['initialization'];
-
                 if ($argumentName === 'then' || $argumentName === 'else') {
                     $argumentInitializationCode .= sprintf(
                         '\'__%s\' => %s,' . chr(10),
                         $argumentName,
-                        'fn () => (' . $converted['execution'] . ')',
+                        $templateCompiler->wrapViewHelperNodeArgumentEvaluationInClosure($node, $argumentName),
                     );
                 } else {
+                    $converted = $arguments[$argumentName]->convert($templateCompiler);
+                    $accumulatedArgumentInitializationCode .= $converted['initialization'];
                     $argumentInitializationCode .= sprintf(
                         '\'%s\' => %s,' . chr(10),
                         $argumentName,
@@ -324,7 +323,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                     $argumentInitializationCode .= sprintf(
                         '\'__%s\' => %s,' . chr(10),
                         $argumentName,
-                        'fn () => (' . $arguments[$argumentName] . ')',
+                        'function () use ($renderingContext) { return ' . $arguments[$argumentName] . ';}',
                     );
                 } else {
                     $argumentInitializationCode .= sprintf(
