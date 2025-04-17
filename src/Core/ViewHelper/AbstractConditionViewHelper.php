@@ -97,14 +97,14 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
 
         // Closure might be present if ViewHelper is called from a cached template
         if ($this->thenClosure !== null) {
-            return ($this->thenClosure)() ?? '';
+            return ($this->thenClosure)();
         }
 
         // The following code can only be evaluated for uncached templates where the node structure
         // is still available. If it's not, it has already been executed during compilation and we can
         // assume that the condition wasn't met
         if (!$this->viewHelperNode instanceof ViewHelperNode) {
-            return '';
+            return null;
         }
 
         $elseViewHelperEncountered = false;
@@ -122,7 +122,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
 
         // If there's a f:else viewhelper, but no matching f:then, the ViewHelper should return a string
         if ($elseViewHelperEncountered) {
-            return '';
+            return null;
         }
 
         // If there's no f:then or f:else, the direct children of the ViewHelper are used as f:then
@@ -134,7 +134,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         // If there were no children present, but an else handling is specified as ViewHelper argument,
         // the Viewhelper again should return a string (same behavior as above). If no then/else handling
         // is present at all, the ViewHelper should return the verdict as boolean
-        return $this->hasArgument('else') ? '' : true;
+        return $this->hasArgument('else') ? null : true;
     }
 
     /**
@@ -153,7 +153,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
             // the "body" closure if condition is met
             foreach ($this->elseIfClosures as $elseIf) {
                 if ($elseIf['condition']()) {
-                    return $elseIf['body']() ?? '';
+                    return $elseIf['body']();
                 }
             }
         }
@@ -167,14 +167,14 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
 
         // Closure might be present if ViewHelper is called from a cached template
         if ($this->elseClosure !== null) {
-            return ($this->elseClosure)() ?? '';
+            return ($this->elseClosure)();
         }
 
         // The following code can only be evaluated for uncached templates where the node structure
         // is still available. If it's not, it has already been executed during compilation and we can
         // assume that the condition wasn't met
         if (!$this->viewHelperNode instanceof ViewHelperNode) {
-            return '';
+            return null;
         }
 
         /** @var ViewHelperNode|null $elseNode */
@@ -201,7 +201,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
 
         // If a f:else node exists, evaluate its content
         if ($elseNode instanceof ViewHelperNode) {
-            return $elseNode->evaluate($this->renderingContext) ?? '';
+            return $elseNode->evaluate($this->renderingContext);
         }
 
         // If only the condition is specified, but no then/else handling, the whole ViewHelper should
@@ -212,7 +212,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         }
 
         // If some kind of then handling has been specified, the ViewHelper always returns a string
-        return '';
+        return null;
     }
 
     /**
