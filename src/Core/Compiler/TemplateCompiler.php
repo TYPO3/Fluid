@@ -23,6 +23,15 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class TemplateCompiler
 {
+    /**
+     * Variable name to be used to transfer information about template sections
+     * from the ViewHelper context to the TemplateView and the TemplateCompiler
+     *
+     * @todo This data-shuffling between parser, compiler and renderer should be
+     *       avoided in the future.
+     */
+    public const SECTIONS_VARIABLE = '1457379500_sections';
+
     public const MODE_NORMAL = 'normal';
     public const MODE_WARMUP = 'warmup';
 
@@ -197,9 +206,9 @@ class TemplateCompiler
     protected function generateSectionCodeFromParsingState(ParsingState $parsingState): string
     {
         $generatedRenderFunctions = '';
-        if ($parsingState->getVariableContainer()->exists('1457379500_sections')) {
+        if ($parsingState->getVariableContainer()->exists(static::SECTIONS_VARIABLE)) {
             // @todo: refactor to $parsedTemplate->getSections()
-            $sections = $parsingState->getVariableContainer()->get('1457379500_sections');
+            $sections = $parsingState->getVariableContainer()->get(static::SECTIONS_VARIABLE);
             foreach ($sections as $sectionName => $sectionRootNode) {
                 $generatedRenderFunctions .= $this->generateCodeForSection(
                     // @todo: Verify this is *always* an instance of RootNode

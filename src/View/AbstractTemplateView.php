@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\View;
 
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\PassthroughSourceException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
@@ -219,7 +220,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
             $output = $parsedTemplate->$methodNameOfSection($renderingContext);
             $this->stopRendering();
         } else {
-            $sections = $parsedTemplate->getVariableContainer()->get('1457379500_sections');
+            $sections = $parsedTemplate->getVariableContainer()->get(TemplateCompiler::SECTIONS_VARIABLE);
             if (!isset($sections[$sectionName])) {
                 if ($ignoreUnknown) {
                     return '';

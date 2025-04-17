@@ -123,8 +123,8 @@ class SectionViewHelper extends AbstractViewHelper
     {
         $nameArgument = $arguments['name'];
         $sectionName = $nameArgument->getText();
-        $sections = $variableContainer['1457379500_sections'] ? $variableContainer['1457379500_sections'] : [];
+        $sections = $variableContainer[TemplateCompiler::SECTIONS_VARIABLE] ? $variableContainer[TemplateCompiler::SECTIONS_VARIABLE] : [];
         $sections[$sectionName] = $node;
-        $variableContainer['1457379500_sections'] = $sections;
+        $variableContainer[TemplateCompiler::SECTIONS_VARIABLE] = $sections;
     }
 }
