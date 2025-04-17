@@ -31,12 +31,6 @@ parameters:
 			path: src/Core/Variables/JSONVariableProvider.php
 
 		-
-			message: '#^Instanceof between TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\NodeInterface and TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\NodeInterface will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: src/Core/ViewHelper/AbstractConditionViewHelper.php
-
-		-
 			message: '#^Call to TYPO3Fluid\\Fluid\\Core\\ViewHelper\\AbstractViewHelper\:\:handleAdditionalArguments\(\) on a separate line has no effect\.$#'
 			identifier: staticMethod.resultUnused
 			count: 1
@@ -47,12 +41,6 @@ parameters:
 			identifier: staticMethod.resultUnused
 			count: 1
 			path: src/Core/ViewHelper/AbstractTagBasedViewHelper.php
-
-		-
-			message: '#^Instanceof between TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\NodeInterface and TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\NodeInterface will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: src/Core/ViewHelper/AbstractViewHelper.php
 
 		-
 			message: '#^Method TYPO3Fluid\\Fluid\\Core\\ViewHelper\\AbstractViewHelper\:\:handleAdditionalArguments\(\) has TYPO3Fluid\\Fluid\\Core\\ViewHelper\\Exception in PHPDoc @throws tag but it''s not thrown\.$#'

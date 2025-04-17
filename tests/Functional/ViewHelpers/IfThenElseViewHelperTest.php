@@ -75,6 +75,26 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => false],
             null,
         ];
+        yield 'leading whitespace, empty result body, verdict true' => [
+            ' <f:if condition="{verdict}"><f:variable name="foo" value="bar" /></f:if>',
+            ['verdict' => true],
+            ' ',
+        ];
+        yield 'leading whitespace, empty result body with whitespaces, verdict true' => [
+            ' <f:if condition="{verdict}"><f:format.trim> <f:variable name="foo" value="bar" /> </f:format.trim></f:if>',
+            ['verdict' => true],
+            ' ',
+        ];
+        yield 'leading whitespace, empty result in then, verdict true' => [
+            ' <f:if condition="{verdict}" then="{f:variable(name: \'foo\', value: \'bar\')}" />',
+            ['verdict' => true],
+            ' ',
+        ];
+        yield 'inline syntax, leading whitespace, empty result body, verdict true' => [
+            ' {f:if(condition: verdict, then: "{f:variable(name: \'foo\', value: \'bar\')}")}',
+            ['verdict' => true],
+            ' ',
+        ];
         yield 'then body, then child, verdict true, prefers child' => [
             '<f:if condition="{verdict}">' .
                 'thenBody' .
@@ -501,10 +521,38 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => true],
             1,
         ];
+        yield 'inline syntax, then argument non existing variable, verdict true' => [
+            '{f:if(condition:\'{verdict}\', then: foo)}',
+            ['verdict' => true],
+            null,
+        ];
+        yield 'inline syntax, then argument null, verdict true' => [
+            '{f:if(condition:\'{verdict}\', then: null)}',
+            ['verdict' => true],
+            null,
+        ];
+        yield 'inline syntax, else argument non existing variable, verdict false' => [
+            '{f:if(condition:\'{verdict}\', else: foo)}',
+            ['verdict' => false],
+            null,
+        ];
+        yield 'inline syntax, else argument null, verdict false' => [
+            '{f:if(condition:\'{verdict}\', else: null)}',
+            ['verdict' => false],
+            null,
+        ];
         yield 'inline syntax, then argument int 1, else argument int 0, verdict false' => [
             '{f:if(condition:\'{verdict}\', then:1, else:0)}',
             ['verdict' => false],
             0,
+        ];
+        // This is a special case to test a compiled template where one of the variables, used in the condition "then", is in another scope.
+        // This is important to check if the compiled template does still have access to the variable as it does use an anonymous function which
+        // changes the variable access scope in PHP.
+        yield 'inline syntax, then argument using variable, verdict false' => [
+            '<f:variable name="foo" value="valueOfFoo" /><f:section name="mySection">{f:if(condition: true, then: "{foo}{baz}")}</f:section><f:render section="mySection" arguments="{baz: foo}" />',
+            [],
+            'valueOfFoo',
         ];
 
         yield 'inline syntax, if returns result, verdict false' => [
