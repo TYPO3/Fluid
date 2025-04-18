@@ -8,8 +8,8 @@
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
@@ -558,14 +558,16 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     }
 
     /**
-     * Save the associated ViewHelper node in a static public class variable.
-     * called directly after the ViewHelper was built.
-     *
-     * @param ViewHelperNode $node
-     * @param array<string, TextNode> $arguments
-     * @param VariableProviderInterface $variableContainer
+     * @param array<string, NodeInterface> $arguments Unevaluated ViewHelper arguments
      */
-    public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer) {}
+    public static function nodeInitializedEvent(ViewHelperNode $node, array $arguments, ParsingState $parsingState): void
+    {
+        // Call previous event method to not break compatibility with existing ViewHelpers
+        // @todo Trigger deprecation notice with Fluid 5, remove with Fluid 6
+        if (method_exists(static::class, 'postParseEvent')) {
+            static::postParseEvent($node, $arguments, $parsingState->getVariableContainer());
+        }
+    }
 
     /**
      * Resets the ViewHelper state.

@@ -343,7 +343,7 @@ class TemplateParser
 
             $this->callInterceptor($currentViewHelperNode, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, $state);
             $viewHelper = $currentViewHelperNode->getUninitializedViewHelper();
-            $viewHelper::postParseEvent($currentViewHelperNode, $argumentsObjectTree, $state->getVariableContainer());
+            $viewHelper::nodeInitializedEvent($currentViewHelperNode, $argumentsObjectTree, $state);
             $state->pushNodeToStack($currentViewHelperNode);
             return $currentViewHelperNode;
         } catch (\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error) {
