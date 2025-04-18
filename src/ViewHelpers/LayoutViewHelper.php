@@ -8,9 +8,11 @@
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
 
 /**
  * With this tag, you can select a layout to be used for the current template.
@@ -28,7 +30,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * @api
  */
-class LayoutViewHelper extends AbstractViewHelper
+class LayoutViewHelper extends AbstractViewHelper implements ViewHelperNodeInitializedEventInterface
 {
     /**
      * Initialize arguments
@@ -60,23 +62,18 @@ class LayoutViewHelper extends AbstractViewHelper
     }
 
     /**
-     * On the post parse event, add the "layoutName" variable to the variable container so it can be used by the TemplateView.
+     * On the node initialized event, add the "layoutName" variable to the variable container so it can
+     * be used by the TemplateView.
      *
-     * @param ViewHelperNode $node
-     * @param array $arguments
-     * @param VariableProviderInterface $variableContainer
+     * @param array<string, NodeInterface> $arguments Unevaluated ViewHelper arguments
      */
-    public static function postParseEvent(
-        ViewHelperNode $node,
-        array $arguments,
-        VariableProviderInterface $variableContainer,
-    ) {
+    public static function nodeInitializedEvent(ViewHelperNode $node, array $arguments, ParsingState $parsingState): void
+    {
         if (isset($arguments['name'])) {
             $layoutNameNode = $arguments['name'];
         } else {
             $layoutNameNode = 'Default';
         }
-
-        $variableContainer->add('layoutName', $layoutNameNode);
+        $parsingState->getVariableContainer()->add('layoutName', $layoutNameNode);
     }
 }

@@ -22,6 +22,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
 
 /**
  * Template parser building up an object syntax tree.
@@ -341,7 +342,15 @@ class TemplateParser
 
             $this->callInterceptor($currentViewHelperNode, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, $state);
             $viewHelper = $currentViewHelperNode->getUninitializedViewHelper();
-            $viewHelper::postParseEvent($currentViewHelperNode, $argumentsObjectTree, $state->getVariableContainer());
+            $viewHelperClassName = $currentViewHelperNode->getViewHelperClassName();
+            // @todo Remove fallback implementation with Fluid v5
+            if (method_exists($viewHelperClassName, 'postParseEvent')) {
+                trigger_error('postParseEvent() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
+                $viewHelperClassName::postParseEvent($currentViewHelperNode, $argumentsObjectTree, $state->getVariableContainer());
+            }
+            if ($viewHelper instanceof ViewHelperNodeInitializedEventInterface) {
+                $viewHelperClassName::nodeInitializedEvent($currentViewHelperNode, $argumentsObjectTree, $state);
+            }
             $state->pushNodeToStack($currentViewHelperNode);
             return $currentViewHelperNode;
         } catch (\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error) {
@@ -463,6 +472,7 @@ class TemplateParser
     /**
      * Call all interceptors registered for a given interception point.
      *
+     * @todo switch from call-by-reference to return value
      * @param NodeInterface $node The syntax tree node which can be modified by the interceptors.
      * @param int $interceptionPoint the interception point. One of the \TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants.
      * @param ParsingState $state the parsing state
