@@ -90,14 +90,6 @@ class ViewHelperNode extends AbstractNode
         return $this->arguments;
     }
 
-    /**
-     * @internal only needed for compiling templates
-     */
-    public function getArgumentDefinition($argumentName): ?ArgumentDefinition
-    {
-        return $this->argumentDefinitions[$argumentName] ?? null;
-    }
-
     public function addChildNode(NodeInterface $childNode): void
     {
         parent::addChildNode($childNode);
