@@ -325,6 +325,16 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => true, 'verdictElseIf' => true],
             'thenChild',
         ];
+        yield 'else argument, implicit then with children, if verdict true' => [
+            '<f:if condition="{verdict}" else="elseArgument">thenChild</f:if>',
+            ['verdict' => true],
+            'thenChild',
+        ];
+        yield 'else argument, implicit then with children, if verdict false' => [
+            '<f:if condition="{verdict}" else="elseArgument">thenChild</f:if>',
+            ['verdict' => false],
+            'elseArgument',
+        ];
         yield 'then child, else if child, else argument, if verdict false, elseif verdict true' => [
             '<f:if condition="{verdict}" else="elseArgument">' .
                 '<f:then>thenChild</f:then>' .
@@ -564,11 +574,6 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             '{f:if(condition: verdict)}',
             ['verdict' => true],
             true,
-        ];
-        yield 'issue #1058' => [
-            '<f:if condition="{someVar}" else="{someStringVar}">It works!</f:if>',
-            ['someVar' => true, 'someStringVar' => 'I love TYPO3!'],
-            'It works!',
         ];
 
         /*

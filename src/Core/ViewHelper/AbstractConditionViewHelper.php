@@ -255,6 +255,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
             }
         }
 
+        $elseChildEncountered = false;
         foreach ($node->getChildNodes() as $childNode) {
             if (!$childNode instanceof ViewHelperNode) {
                 continue;
@@ -265,6 +266,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                 // This is in line with the non-compiled behavior.
                 $argumentsCode['__then'] =  $templateCompiler->wrapChildNodesInClosure($childNode);
             } elseif (str_ends_with($viewHelperClassName, 'ElseViewHelper')) {
+                $elseChildEncountered = true;
                 if (isset($childNode->getArguments()['if'])) {
                     // This "f:else" has the "if" argument, indicating this is a secondary (elseif) condition.
                     // Compile a closure which will evaluate the condition.
@@ -303,18 +305,18 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
             }
         }
 
+        // If there is no then argument, and there are neither "f:then", "f:else" nor "f:else if" children,
+        // then the entire body is considered the "then" child if it is specified.
+        if (!isset($argumentsCode['__then']) && !$elseChildEncountered && $node->getChildNodes() !== []) {
+            $argumentsCode['__then'] = $templateCompiler->wrapChildNodesInClosure($node);
+        }
+
+        // If the ViewHelper has no then or else specified in any supported way, the verdict will be
+        // returned directly. This allows usage of custom condition-based ViewHelpers in f:if, like
+        // <f:if condition="{my:conditionBasedViewHelper()} || somethingElse">
         if (!isset($argumentsCode['__then']) && !isset($argumentsCode['__elseIf']) && !isset($argumentsCode['__else'])) {
-            if ($node->getChildNodes() === []) {
-                // If the ViewHelper has no then or else specified in any supported way, the verdict will be
-                // returned directly. This allows usage of custom condition-based ViewHelpers in f:if, like
-                // <f:if condition="{my:conditionBasedViewHelper()} || somethingElse">
-                $argumentsCode['__then'] = 'function () { return true;}';
-                $argumentsCode['__else'] = 'function () { return false;}';
-            } else {
-                // If there is no then argument, and there are neither "f:then", "f:else" nor "f:else if" children,
-                // then the entire body is considered the "then" child.
-                $argumentsCode['__then'] = $templateCompiler->wrapChildNodesInClosure($node);
-            }
+            $argumentsCode['__then'] = 'function () { return true;}';
+            $argumentsCode['__else'] = 'function () { return false;}';
         }
 
         $argumentsVariableName = $templateCompiler->variableName('arguments');
