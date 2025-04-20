@@ -565,6 +565,11 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => true],
             true,
         ];
+        yield 'issue #1058' => [
+            '<f:if condition="{someVar}" else="{someStringVar}">It works!</f:if>',
+            ['someVar' => true, 'someStringVar' => 'I love TYPO3!'],
+            'It works!',
+        ];
 
         /*
          * @todo This should work but doesn't at the moment. This is probably related to the boolean
