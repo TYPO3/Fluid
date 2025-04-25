@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 
 use Stringable;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -133,18 +132,17 @@ final class StripTagsViewHelper extends AbstractViewHelper
         if ($hrefsInBrackets === true) {
             $value = preg_replace_callback(
                 '/<a\s+(?:[^>]*?\s+)?href=(["\'])(.*?)\1[^>]*>(.*?)<\/a>/i',
-                function($matches) {
+                static function($matches) {
                     if (count($matches) >= 4) {
-                        $url = $matches[2];
-                        $text = $matches[3];
-                        if (strlen($url) > 0 && filter_var($url, FILTER_VALIDATE_URL)) {
+                        [$url, $text] = array_map('trim', [$matches[2], $matches[3]]);
+                        if ($url !== '' && filter_var($url, FILTER_VALIDATE_URL)) {
                             return '"' . $text . ' [' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . ']"';
-                        } else if (strlen($text) > 0) {
+                        }
+                        if ($text !== '') {
                             return $text;
-                        } else {
-                            return '';
                         }
                     }
+                    return '';
                 }, $value
             );
         }
