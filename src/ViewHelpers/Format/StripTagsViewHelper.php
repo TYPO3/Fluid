@@ -132,13 +132,12 @@ final class StripTagsViewHelper extends AbstractViewHelper
         if ($hrefsInBrackets === true) {
             $value = preg_replace_callback(
                 '/<a\s+(?:[^>]*?\s+)?href=(["\'])(.*?)\1[^>]*>(.*?)<\/a>/i',
-                static function($matches) {
+                static function($matches) use ($allowedTags) {
                     if (count($matches) >= 4) {
                         [$url, $text] = array_map('trim', [$matches[2], $matches[3]]);
-                        if ($url !== '' && filter_var($url, FILTER_VALIDATE_URL)) {
-                            return '"' . $text . ' [' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . ']"';
-                        }
-                        if ($text !== '') {
+                        if ($text !== '' && $url !== '' && filter_var($url, FILTER_VALIDATE_URL)) {
+                            return '"' . strip_tags((string)$text, $allowedTags) . ' [' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . ']"';
+                        } else if ($text !== '') {
                             return $text;
                         }
                     }
