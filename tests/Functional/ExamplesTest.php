@@ -206,6 +206,14 @@ final class ExamplesTest extends AbstractFunctionalTestCase
                     'Invalid expression: Invalid target conversion type &quot;invalidtype&quot; specified in casting expression &quot;{foobar as invalidtype}&quot;.',
                 ],
             ],
+            'example_templatearguments.php' => [
+                'example_templatearguments.php',
+                [
+                    'Title: My title',
+                    'Tags: tag1, tag2',
+                    'User: admin',
+                ],
+            ],
         ];
     }
 

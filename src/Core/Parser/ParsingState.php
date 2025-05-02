@@ -13,6 +13,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\View;
 
 /**
@@ -25,6 +26,11 @@ use TYPO3Fluid\Fluid\View;
 class ParsingState implements ParsedTemplateInterface
 {
     protected string $identifier;
+
+    /**
+     * @var array<string, ArgumentDefinition>
+     */
+    protected array $argumentDefinitions = [];
 
     /**
      * Root node reference
@@ -81,6 +87,22 @@ class ParsingState implements ParsedTemplateInterface
     }
 
     /**
+     * @return array<string, ArgumentDefinition>
+     */
+    public function getArgumentDefinitions(): array
+    {
+        return $this->argumentDefinitions;
+    }
+
+    /**
+     * @param array<string, ArgumentDefinition> $argumentDefinitions
+     */
+    public function setArgumentDefinitions(array $argumentDefinitions): void
+    {
+        $this->argumentDefinitions = $argumentDefinitions;
+    }
+
+    /**
      * Render the parsed template with rendering context
      *
      * @param RenderingContextInterface $renderingContext The rendering context to use
@@ -109,6 +131,21 @@ class ParsingState implements ParsedTemplateInterface
     public function getNodeFromStack(): NodeInterface
     {
         return $this->nodeStack[count($this->nodeStack) - 1];
+    }
+
+    /**
+     * Checks if the specified node type exists in the current stack
+     *
+     * @param class-string $nodeType
+     */
+    public function hasNodeTypeInStack(string $nodeType): bool
+    {
+        foreach ($this->nodeStack as $node) {
+            if ($node instanceof $nodeType) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
