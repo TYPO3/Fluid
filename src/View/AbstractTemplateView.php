@@ -15,6 +15,9 @@ use TYPO3Fluid\Fluid\Core\Parser\PassthroughSourceException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentProcessorInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\StrictArgumentProcessor;
 use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
@@ -144,6 +147,16 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
 
         if (!$parsedTemplate->hasLayout()) {
             $this->startRendering(self::RENDERING_TEMPLATE, $parsedTemplate, $this->baseRenderingContext);
+            try {
+                // @todo make argument processor configurable with Fluid v5
+                $this->processAndValidateTemplateVariables(
+                    $parsedTemplate,
+                    $this->baseRenderingContext->getVariableProvider(),
+                    new StrictArgumentProcessor(),
+                );
+            } catch (Exception $validationError) {
+                return $this->baseRenderingContext->getErrorHandler()->handleViewError($validationError);
+            }
             $output = $parsedTemplate->render($this->baseRenderingContext);
             $this->stopRendering();
         } else {
@@ -159,6 +172,16 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
                 return $error->getSource();
             }
             $this->startRendering(self::RENDERING_LAYOUT, $parsedTemplate, $this->baseRenderingContext);
+            try {
+                // @todo make argument processor configurable with Fluid v5
+                $this->processAndValidateTemplateVariables(
+                    $parsedLayout,
+                    $this->baseRenderingContext->getVariableProvider(),
+                    new StrictArgumentProcessor(),
+                );
+            } catch (Exception $validationError) {
+                return $this->baseRenderingContext->getErrorHandler()->handleViewError($validationError);
+            }
             $output = $parsedLayout->render($this->baseRenderingContext);
             $this->stopRendering();
         }
@@ -286,6 +309,16 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
         if ($sectionName !== null) {
             $output = $this->renderSection($sectionName, $variables, $ignoreUnknown);
         } else {
+            try {
+                // @todo make argument processor configurable with Fluid v5
+                $this->processAndValidateTemplateVariables(
+                    $parsedPartial,
+                    $renderingContext->getVariableProvider(),
+                    new StrictArgumentProcessor(),
+                );
+            } catch (Exception $validationError) {
+                return $renderingContext->getErrorHandler()->handleViewError($validationError);
+            }
             $output = $parsedPartial->render($renderingContext);
         }
         $this->stopRendering();
@@ -361,5 +394,43 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
     {
         $currentRendering = end($this->renderingStack);
         return !empty($currentRendering['renderingContext']) ? $currentRendering['renderingContext'] : $this->baseRenderingContext;
+    }
+
+    protected function processAndValidateTemplateVariables(
+        ParsedTemplateInterface $parsedTemplate,
+        VariableProviderInterface $variableProvider,
+        ArgumentProcessorInterface $argumentProcessor,
+    ): void {
+        $renderingTypeLabel = match ($this->getCurrentRenderingType()) {
+            self::RENDERING_PARTIAL => 'partial',
+            self::RENDERING_TEMPLATE => 'template',
+            self::RENDERING_LAYOUT => 'layout',
+        };
+        foreach ($parsedTemplate->getArgumentDefinitions() as $argumentDefinition) {
+            $argumentName = $argumentDefinition->getName();
+            if ($variableProvider->exists($argumentName)) {
+                $processedValue = $argumentProcessor->process($variableProvider->get($argumentName), $argumentDefinition);
+                if (!$argumentProcessor->isValid($processedValue, $argumentDefinition)) {
+                    throw new Exception(sprintf(
+                        'The argument "%s" for %s "%s" is registered with type "%s", but the provided value is of type "%s".',
+                        $argumentName,
+                        $renderingTypeLabel,
+                        $parsedTemplate->getIdentifier(),
+                        $argumentDefinition->getType(),
+                        is_object($processedValue) ? get_class($processedValue) : gettype($processedValue),
+                    ), 1746637333);
+                }
+                $variableProvider->add($argumentName, $processedValue);
+            } elseif ($argumentDefinition->isRequired()) {
+                throw new Exception(sprintf(
+                    'The argument "%s" for %s "%s" is required, but was not provided.',
+                    $argumentName,
+                    $renderingTypeLabel,
+                    $parsedTemplate->getIdentifier(),
+                ), 1746637334);
+            } else {
+                $variableProvider->add($argumentName, $argumentDefinition->getDefaultValue());
+            }
+        }
     }
 }
