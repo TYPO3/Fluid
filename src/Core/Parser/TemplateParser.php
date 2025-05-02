@@ -294,8 +294,6 @@ class TemplateParser
         }
 
         $viewHelper = $viewHelperResolver->createViewHelperInstance($namespaceIdentifier, $methodIdentifier);
-        // @todo: Is this call needed?
-        $viewHelper->prepareArguments();
         $viewHelperNode = $this->initializeViewHelperAndAddItToStack(
             $state,
             $namespaceIdentifier,
