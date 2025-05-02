@@ -299,12 +299,14 @@ abstract class AbstractViewHelper implements ViewHelperInterface
             return fn() => $this->arguments[$contentArgumentName];
         }
         if ($this->renderChildrenClosure !== null) {
+            // @todo apply processing if contentArgumentName is set? Or implement sync from closure to argument?
             return $this->renderChildrenClosure;
         }
         return function () {
             $this->renderingContextStack[] = $this->renderingContext;
             $result = $this->viewHelperNode->evaluateChildNodes($this->renderingContext);
             $this->setRenderingContext(array_pop($this->renderingContextStack));
+            // @todo apply processing if contentArgumentName is set? Or implement sync from closure to argument?
             return $result;
         };
     }
@@ -333,20 +335,20 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      */
     public function validateArguments()
     {
+        // @todo make configurable with Fluid v5
+        $argumentProcessor = new LenientArgumentProcessor();
         $argumentDefinitions = $this->prepareArguments();
         foreach ($argumentDefinitions as $argumentName => $registeredArgument) {
+            // Note: This relies on the TemplateParser to check for missing required arguments
             if ($this->hasArgument($argumentName)) {
                 $value = $this->arguments[$argumentName];
-                $type = $registeredArgument->getType();
-                if ($value !== $registeredArgument->getDefaultValue() && $type !== 'mixed') {
+                if (!$argumentProcessor->isValid($value, $registeredArgument)) {
                     $givenType = is_object($value) ? get_class($value) : gettype($value);
-                    if (!$this->isValidType($type, $value)) {
-                        throw new \InvalidArgumentException(
-                            'The argument "' . $argumentName . '" was registered with type "' . $type . '", but is of type "' .
-                            $givenType . '" in view helper "' . get_class($this) . '".',
-                            1256475113,
-                        );
-                    }
+                    throw new \InvalidArgumentException(
+                        'The argument "' . $argumentName . '" was registered with type "' . $registeredArgument->getType() . '", but is of type "' .
+                        $givenType . '" in view helper "' . get_class($this) . '".',
+                        1256475113,
+                    );
                 }
             }
         }
@@ -358,9 +360,11 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param string $type
      * @param mixed $value
      * @return bool
+     * @deprecated Will be removed in v5. Use the new argument processing API to validate ViewHelper arguments.
      */
     protected function isValidType($type, $value)
     {
+        trigger_error('AbstractViewHelper::isValidType() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
         if ($type === 'object') {
             if (!is_object($value)) {
                 return false;
@@ -396,9 +400,11 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      *
      * @param mixed $value
      * @return mixed
+     * @deprecated Will be removed in v5. Use the new argument processing API to validate ViewHelper arguments.
      */
     protected function getFirstElementOfNonEmpty($value)
     {
+        trigger_error('AbstractViewHelper::getFirstElementOfNonEmpty() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
         if (is_array($value)) {
             return reset($value);
         }
