@@ -54,8 +54,6 @@ final class ViewHelperArgumentTypesTest extends AbstractFunctionalTestCase
             ['stringArg', '', ''],
             ['stringArg', 'test', 'test'],
             ['stringArg', null, null],
-            // @todo this currently produces an error, but should be ''
-            // ['stringArg', new stdClass(), ''],
 
             ['integerArg', true, true], // @todo this should be 1
             ['integerArg', false, false], // @todo this should be 0
@@ -67,8 +65,6 @@ final class ViewHelperArgumentTypesTest extends AbstractFunctionalTestCase
             ['integerArg', '', ''], // @todo this should be 0
             ['integerArg', 'test', 'test'], // @todo this should be 0
             ['integerArg', null, null],
-            // @todo this currently produces an error, but should be 0
-            // ['integerArg', new stdClass(), ''],
 
             ['intArg', true, true], // @todo this should be 1
             ['intArg', false, false], // @todo this should be 0
@@ -80,8 +76,6 @@ final class ViewHelperArgumentTypesTest extends AbstractFunctionalTestCase
             ['intArg', '', ''], // @todo this should be 0
             ['intArg', 'test', 'test'], // @todo this should be 0
             ['intArg', null, null],
-            // @todo this currently produces an error, but should be 0
-            // ['intArg', new stdClass(), ''],
 
             ['floatArg', true, true], // @todo this should be 1.0
             ['floatArg', false, false], // @todo this should be 0.0
@@ -93,8 +87,6 @@ final class ViewHelperArgumentTypesTest extends AbstractFunctionalTestCase
             ['floatArg', '', ''], // @todo this should be 0.0
             ['floatArg', 'test', 'test'], // @todo this should be 0.0
             ['floatArg', null, null],
-            // @todo this currently produces an error, but should be 0
-            // ['floatArg', new stdClass(), ''],
 
             ['doubleArg', true, true], // @todo this should be 1.0
             ['doubleArg', false, false], // @todo this should be 0.0
@@ -106,8 +98,6 @@ final class ViewHelperArgumentTypesTest extends AbstractFunctionalTestCase
             ['doubleArg', '', ''], // @todo this should be 0.0
             ['doubleArg', 'test', 'test'], // @todo this should be 0.0
             ['doubleArg', null, null],
-            // @todo this currently produces an error, but should be 0
-            // ['doubleArg', new stdClass(), ''],
         ];
     }
 
