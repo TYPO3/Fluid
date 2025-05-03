@@ -67,6 +67,11 @@ class ViewHelperResolver
     ];
 
     /**
+     * @var array<string, string[]|null>
+     */
+    protected array $localNamespaces = [];
+
+    /**
      * Returns all currently registered namespaces. Note that this includes both
      * global namespaces and local namespaces added from within the current template.
      *
@@ -74,7 +79,16 @@ class ViewHelperResolver
      */
     public function getNamespaces(): array
     {
-        return $this->namespaces;
+        $mergedNamespaces = $this->namespaces;
+        foreach ($this->localNamespaces as $identifier => $phpNamespaces) {
+            if ($phpNamespaces === null) {
+                $mergedNamespaces[$identifier] = null;
+            } else {
+                $mergedNamespaces[$identifier] ??= [];
+                $mergedNamespaces[$identifier] = array_unique(array_merge($mergedNamespaces[$identifier], $phpNamespaces));
+            }
+        }
+        return $mergedNamespaces;
     }
 
     /**
@@ -180,10 +194,51 @@ class ViewHelperResolver
      */
     public function setNamespaces(array $namespaces): void
     {
-        $this->namespaces = [];
+        $this->namespaces = $this->localNamespaces = [];
         foreach ($namespaces as $identifier => $phpNamespace) {
             $this->namespaces[$identifier] = $phpNamespace === null ? null : (array)$phpNamespace;
         }
+    }
+
+    /**
+     * @internal
+     */
+    public function addLocalNamespace(string $identifier, ?string $phpNamespace): void
+    {
+        if ($phpNamespace === null) {
+            $this->localNamespaces[$identifier] = null;
+        } else {
+            $this->localNamespaces[$identifier] ??= [];
+            $this->localNamespaces[$identifier][] = $phpNamespace;
+        }
+    }
+
+    /**
+     * @param array<string, string[]> $namespaces
+     * @internal
+     */
+    public function setLocalNamespaces(array $namespaces): void
+    {
+        $this->localNamespaces = $namespaces;
+    }
+
+    /**
+     * @return array<string, string[]>
+     * @internal
+     */
+    public function getLocalNamespaces(): array
+    {
+        return $this->localNamespaces;
+    }
+
+    /**
+     * @internal
+     */
+    public function getScopedCopy(): ViewHelperResolver
+    {
+        $copy = clone $this;
+        $copy->setLocalNamespaces([]);
+        return $copy;
     }
 
     /**
@@ -195,11 +250,12 @@ class ViewHelperResolver
      */
     public function isNamespaceValid(string $namespaceIdentifier): bool
     {
-        if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
+        $namespaces = $this->getNamespaces();
+        if (!array_key_exists($namespaceIdentifier, $namespaces)) {
             return false;
         }
 
-        return $this->namespaces[$namespaceIdentifier] !== null;
+        return $namespaces[$namespaceIdentifier] !== null;
     }
 
     /**
@@ -215,7 +271,7 @@ class ViewHelperResolver
             return true;
         }
 
-        if (array_key_exists($namespaceIdentifier, $this->namespaces)) {
+        if (array_key_exists($namespaceIdentifier, $this->getNamespaces())) {
             return true;
         }
 
@@ -232,10 +288,11 @@ class ViewHelperResolver
      */
     public function isNamespaceIgnored(string $namespaceIdentifier): bool
     {
-        if (array_key_exists($namespaceIdentifier, $this->namespaces)) {
-            return $this->namespaces[$namespaceIdentifier] === null;
+        $namespaces = $this->getNamespaces();
+        if (array_key_exists($namespaceIdentifier, $namespaces)) {
+            return $namespaces[$namespaceIdentifier] === null;
         }
-        foreach (array_keys($this->namespaces) as $existingNamespaceIdentifier) {
+        foreach (array_keys($namespaces) as $existingNamespaceIdentifier) {
             if (strpos($existingNamespaceIdentifier, '*') === false) {
                 continue;
             }
@@ -333,7 +390,7 @@ class ViewHelperResolver
         }
         $className .= 'ViewHelper';
 
-        $namespaces = (array)$this->namespaces[$namespaceIdentifier];
+        $namespaces = (array)$this->getNamespaces()[$namespaceIdentifier];
 
         do {
             $name = rtrim((string)array_pop($namespaces), '\\') . '\\' . $className;
