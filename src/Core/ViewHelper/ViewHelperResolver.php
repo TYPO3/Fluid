@@ -28,8 +28,37 @@ class ViewHelperResolver
     protected array $resolvedViewHelperClassNames = [];
 
     /**
-     * Namespaces requested by the template being rendered,
-     * in [shortname => phpnamespace] format.
+     * Available namespaces in the current rendering context.
+     * Each namespace identifier (like "f") can refer to one or
+     * multiple PHP namespaces, specified as an array of class-strings,
+     * which will be tested in reverse order:
+     *
+     * Example:
+     *
+     *     [
+     *         'vendor' => ['Vendor\\A\\ViewHelpers', 'Vendor\\B\\ViewHelpers']
+     *     ]
+     *
+     * A namespace can also be set to "null", which removes
+     * all previously defined PHP namespaces and allows the
+     * namespace to be used within templates as-is without any Fluid
+     * parsing.
+     *
+     * Example:
+     *
+     *     [
+     *         'vendor' => null
+     *     ]
+     *
+     * A namespace identifier can also include one or multiple
+     * "*" wildcard placeholders, which disables Fluid parsing
+     * for the matching namespaces.
+     *
+     * Example:
+     *
+     *     [
+     *         'ven*' => null
+     *     ]
      *
      * @var array<string, string[]|null>
      */
@@ -37,6 +66,12 @@ class ViewHelperResolver
         'f' => ['TYPO3Fluid\\Fluid\\ViewHelpers'],
     ];
 
+    /**
+     * Returns all currently registered namespaces. Note that this includes both
+     * global namespaces and local namespaces added from within the current template.
+     *
+     * @return array<string[]|null>
+     */
     public function getNamespaces(): array
     {
         return $this->namespaces;
@@ -91,6 +126,8 @@ class ViewHelperResolver
      * clearing the already added namespaces. Utility method mainly
      * used in compiled templates, where some namespaces can be added
      * from outside and some can be added from compiled values.
+     *
+     * @internal Only to be used by compiled templates
      */
     public function addNamespaces(array $namespaces): void
     {
