@@ -23,6 +23,7 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
     {
         return [
             'does nothing with empty templates' => [
+                ['f' => ['TYPO3Fluid\Fluid\ViewHelpers']],
                 '',
                 [
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
@@ -30,6 +31,7 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
                 '',
             ],
             'supports expression node style namespaces' => [
+                ['f' => ['TYPO3Fluid\Fluid\ViewHelpers']],
                 '{namespace x=X\\Y\\ViewHelpers}',
                 [
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
@@ -38,6 +40,7 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
                 '',
             ],
             'ignores blank expression node style namespaces' => [
+                ['f' => ['TYPO3Fluid\Fluid\ViewHelpers']],
                 '{namespace z}',
                 [
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
@@ -46,6 +49,7 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
                 '',
             ],
             'ignores unknown namespaces' => [
+                ['f' => ['TYPO3Fluid\Fluid\ViewHelpers']],
                 '<html xmlns:unknown="http://not.from.here/ns/something" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
                 [
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
@@ -54,6 +58,7 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
                 PHP_EOL,
             ],
             'ignores unknown namespaces with https' => [
+                ['f' => ['TYPO3Fluid\Fluid\ViewHelpers']],
                 '<html xmlns:unknown="https://not.from.here/ns/something" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
                 [
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
@@ -61,7 +66,17 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
                 ],
                 PHP_EOL,
             ],
+            'supports xmlns detection without suffix' => [
+                ['f' => ['TYPO3Fluid\Fluid\ViewHelpers']],
+                '<html xmlns:x="http://typo3.org/ns/X/Y" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
+                [
+                    'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
+                    'x' => ['X\\Y'],
+                ],
+                PHP_EOL,
+            ],
             'supports xmlns detection, single' => [
+                ['f' => ['TYPO3Fluid\Fluid\ViewHelpers']],
                 '<html xmlns:x="http://typo3.org/ns/X/Y/ViewHelpers" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
                 [
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
@@ -70,6 +85,7 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
                 PHP_EOL,
             ],
             'supports xmlns detection, leave tag in place' => [
+                ['f' => ['TYPO3Fluid\Fluid\ViewHelpers']],
                 '<html xmlns:x="http://typo3.org/ns/X/Y/ViewHelpers">' . PHP_EOL . '</html>',
                 [
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
@@ -78,6 +94,7 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
                 '<html xmlns:x="http://typo3.org/ns/X/Y/ViewHelpers">' . PHP_EOL . '</html>',
             ],
             'supports xmlns detection, multiple' => [
+                ['f' => ['TYPO3Fluid\Fluid\ViewHelpers']],
                 '<html xmlns:x="http://typo3.org/ns/X/Y/ViewHelpers" xmlns:z="http://typo3.org/ns/X/Z/ViewHelpers" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
                 [
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
@@ -87,6 +104,7 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
                 PHP_EOL,
             ],
             'supports expression style namespace detection, camelCase' => [
+                ['f' => ['TYPO3Fluid\Fluid\ViewHelpers']],
                 '{namespace camelCase=X\\Y\\ViewHelpers}',
                 [
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
@@ -95,10 +113,84 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
                 '',
             ],
             'supports xmlns detection, camelCase' => [
+                ['f' => ['TYPO3Fluid\Fluid\ViewHelpers']],
                 '<html xmlns:camelCase="http://typo3.org/ns/X/Y/ViewHelpers" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
                 [
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
                     'camelCase' => ['X\\Y\\ViewHelpers'],
+                ],
+                PHP_EOL,
+            ],
+            'supports multiple expression style calls with same namespace' => [
+                ['f' => ['TYPO3Fluid\Fluid\ViewHelpers']],
+                '{namespace camelCase=X\\Y\\ViewHelpers}{namespace camelCase=A\\B\\ViewHelpers}',
+                [
+                    'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
+                    'camelCase' => ['X\\Y\\ViewHelpers', 'A\\B\\ViewHelpers'],
+                ],
+                '',
+            ],
+            'supports multiple xmlns calls with same namespace' => [
+                ['f' => ['TYPO3Fluid\Fluid\ViewHelpers']],
+                '<html xmlns:camelCase="http://typo3.org/ns/X/Y/ViewHelpers" xmlns:camelCase="http://typo3.org/ns/A/B/ViewHelpers" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
+                [
+                    'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
+                    'camelCase' => ['X\\Y\\ViewHelpers', 'A\\B\\ViewHelpers'],
+                ],
+                PHP_EOL,
+            ],
+            'supports merge with same global namespace' => [
+                [
+                    'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
+                    'camelCase' => ['Global\\CamelCase\\ViewHelpers'],
+                ],
+                '<html xmlns:camelCase="http://typo3.org/ns/X/Y/ViewHelpers" xmlns:camelCase="http://typo3.org/ns/A/B/ViewHelpers" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
+                [
+                    'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
+                    'camelCase' => ['Global\\CamelCase\\ViewHelpers', 'X\\Y\\ViewHelpers', 'A\\B\\ViewHelpers'],
+                ],
+                PHP_EOL,
+            ],
+            'supports merge with ignored global namespace' => [
+                ['f' => ['TYPO3Fluid\Fluid\ViewHelpers'], 'x' => null],
+                '<html xmlns:x="http://typo3.org/ns/X/Y" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
+                [
+                    'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
+                    'x' => ['X\\Y'],
+                ],
+                PHP_EOL,
+            ],
+            'ignores duplicates during merge with same global namespace' => [
+                [
+                    'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
+                    'camelCase' => ['A\\B\\ViewHelpers', 'Global\\CamelCase\\ViewHelpers'],
+                ],
+                '<html xmlns:camelCase="http://typo3.org/ns/X/Y/ViewHelpers" xmlns:camelCase="http://typo3.org/ns/A/B/ViewHelpers" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
+                [
+                    'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
+                    'camelCase' => ['A\\B\\ViewHelpers', 'Global\\CamelCase\\ViewHelpers', 'X\\Y\\ViewHelpers'],
+                ],
+                PHP_EOL,
+            ],
+            'TYPO3 template with xmlns for f namespace' => [
+                [
+                    'core' => [
+                        'TYPO3\\CMS\\Core\\ViewHelpers',
+                    ],
+                    'f' => [
+                        'TYPO3Fluid\\Fluid\\ViewHelpers',
+                        'TYPO3\\CMS\\Fluid\\ViewHelpers',
+                    ],
+                ],
+                '<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
+                [
+                    'core' => [
+                        'TYPO3\\CMS\\Core\\ViewHelpers',
+                    ],
+                    'f' => [
+                        'TYPO3Fluid\\Fluid\\ViewHelpers',
+                        'TYPO3\\CMS\\Fluid\\ViewHelpers',
+                    ],
                 ],
                 PHP_EOL,
             ],
@@ -107,9 +199,10 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
 
     #[DataProvider('preProcessSourceExtractsNamespacesDataProvider')]
     #[Test]
-    public function preProcessSourceExtractsNamespaces(string $templateSource, array $expectedNamespaces, string $expectedSource): void
+    public function preProcessSourceExtractsNamespaces(array $initialNamespaces, string $templateSource, array $expectedNamespaces, string $expectedSource): void
     {
         $viewHelperResolver = new ViewHelperResolver();
+        $viewHelperResolver->setNamespaces($initialNamespaces);
         $renderingContext = new RenderingContext();
         $renderingContext->setViewHelperResolver($viewHelperResolver);
         $subject = new NamespaceDetectionTemplateProcessor();
