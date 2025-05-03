@@ -146,9 +146,11 @@ class ViewHelperResolver
      *
      * @param string $fluidNamespace
      * @return string
+     * @deprecated Will be removed in v5. Method is not in use anymore.
      */
     public function resolvePhpNamespaceFromFluidNamespace(string $fluidNamespace): string
     {
+        trigger_error('resolvePhpNamespaceFromFluidNamespace() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
         $namespace = $fluidNamespace;
         $suffixLength = strlen(Patterns::NAMESPACESUFFIX);
         $phpNamespaceSuffix = str_replace('/', '\\', Patterns::NAMESPACESUFFIX);
@@ -208,9 +210,11 @@ class ViewHelperResolver
      *
      * @param string $namespaceIdentifier
      * @return bool true if the given namespace is valid
+     * @deprecated Will be removed in v5. Use combination of isNamespaceIgnored() and isNamespaceValid() instead.
      */
     public function isNamespaceValidOrIgnored(string $namespaceIdentifier): bool
     {
+        trigger_error('isNamespaceValidOrIgnored() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
         if ($this->isNamespaceValid($namespaceIdentifier) === true) {
             return true;
         }

@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
@@ -137,6 +138,7 @@ final class ViewHelperResolverTest extends TestCase
 
     #[DataProvider('isNamespaceValidOrIgnoredReturnsExpectedValueDataProvider')]
     #[Test]
+    #[IgnoreDeprecations]
     public function isNamespaceValidOrIgnoredReturnsExpectedValue(array $namespaces, string $namespace, bool $expected): void
     {
         $subject = new ViewHelperResolver();
@@ -191,6 +193,7 @@ final class ViewHelperResolverTest extends TestCase
 
     #[DataProvider('resolvePhpNamespaceFromFluidNamespaceDataProvider')]
     #[Test]
+    #[IgnoreDeprecations]
     public function resolvePhpNamespaceFromFluidNamespace(string $input, string $expected): void
     {
         $subject = new ViewHelperResolver();
