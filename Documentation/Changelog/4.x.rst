@@ -6,6 +6,17 @@
 Changelog 4.x
 =============
 
+4.2
+---
+
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver::resolvePhpNamespaceFromFluidNamespace()`
+  now emits a E_USER_DEPRECATED level error.
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver::isNamespaceValidOrIgnored()`
+  now emits a E_USER_DEPRECATED level error.
+* Deprecation: Constant :php:`TYPO3Fluid\Fluid\Core\Parser\Patterns::NAMESPACESUFFIX`
+  has been marked as deprecated and will be removed in Fluid v5.
+
+
 4.0
 ---
 
