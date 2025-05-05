@@ -25,14 +25,14 @@ class ThenViewHelper extends AbstractViewHelper
     protected $escapeOutput = false;
 
     /**
-     * Just render everything.
+     * Does nothing unless used in context of condition ViewHelper, such as f:if
      *
-     * @return string the rendered string
      * @api
+     * @todo consider throwing an exception here in future versions
      */
-    public function render()
+    public function render(): string
     {
-        return $this->renderChildren();
+        return '';
     }
 
     /**
@@ -43,7 +43,7 @@ class ThenViewHelper extends AbstractViewHelper
      * @param TemplateCompiler $compiler
      * @return string
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): string
     {
         return '\'\'';
     }
