@@ -187,6 +187,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
             $renderingContext->setVariableProvider($renderingContext->getVariableProvider()->getScopeCopy($variables));
             $renderingTypeOnNextLevel = $this->getCurrentRenderingType();
         }
+        $renderingContext->setViewHelperResolver($renderingContext->getViewHelperResolver()->getScopedCopy());
 
         try {
             $parsedTemplate = $this->getCurrentParsedTemplate();
@@ -259,6 +260,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
     {
         $templatePaths = $this->baseRenderingContext->getTemplatePaths();
         $renderingContext = clone $this->getCurrentRenderingContext();
+        $renderingContext->setViewHelperResolver($renderingContext->getViewHelperResolver()->getScopedCopy());
         try {
             $parsedPartial = $renderingContext->getTemplateParser()->getOrParseAndStoreTemplate(
                 $templatePaths->getPartialIdentifier($partialName),
@@ -349,7 +351,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
             },
         );
         if ($parsedTemplate->isCompiled()) {
-            $parsedTemplate->addCompiledNamespaces($this->baseRenderingContext);
+            $parsedTemplate->addCompiledNamespaces($renderingContext);
         }
         return $parsedTemplate;
     }
