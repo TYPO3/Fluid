@@ -46,6 +46,7 @@ final class AbstractViewHelperTest extends TestCase
 
     #[DataProvider('getFirstElementOfNonEmptyTestValues')]
     #[Test]
+    #[IgnoreDeprecations]
     public function getFirstElementOfNonEmptyReturnsExpectedValue(mixed $input, ?string $expected): void
     {
         $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods([])->getMock();
@@ -64,15 +65,6 @@ final class AbstractViewHelperTest extends TestCase
             'someName' => new ArgumentDefinition('someName', 'integer', 'changed desc', true),
         ];
         self::assertEquals($expected, $subject->prepareArguments());
-    }
-
-    #[Test]
-    public function validateArgumentsAcceptsAllObjectsImplementingArrayAccessAsAnArray(): void
-    {
-        $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods(['prepareArguments'])->getMock();
-        $subject->setArguments(['test' => new \ArrayObject()]);
-        $subject->expects(self::once())->method('prepareArguments')->willReturn(['test' => new ArgumentDefinition('test', 'array', 'documentation', false)]);
-        $subject->validateArguments();
     }
 
     #[Test]
@@ -100,31 +92,6 @@ final class AbstractViewHelperTest extends TestCase
         });
         $result = $subject->renderChildren();
         self::assertEquals('foobar', $result);
-    }
-
-    public static function validateArgumentsErrorsDataProvider(): array
-    {
-        return [
-            [new ArgumentDefinition('test', 'boolean', '', true), ['bad']],
-            [new ArgumentDefinition('test', 'string', '', true), new \ArrayIterator(['bar'])],
-            [new ArgumentDefinition('test', 'DateTime', '', true), new \ArrayIterator(['bar'])],
-            [new ArgumentDefinition('test', 'DateTime', '', true), 'test'],
-            [new ArgumentDefinition('test', 'integer', '', true), new \ArrayIterator(['bar'])],
-            [new ArgumentDefinition('test', 'object', '', true), 'test'],
-            [new ArgumentDefinition('test', 'string[]', '', true), [new \DateTime('now'), 'test']],
-        ];
-    }
-
-    #[DataProvider('validateArgumentsErrorsDataProvider')]
-    #[Test]
-    public function validateArgumentsErrors(ArgumentDefinition $argument, array|string|object $value): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods(['hasArgument', 'prepareArguments'])->getMock();
-        $subject->expects(self::once())->method('prepareArguments')->willReturn([$argument->getName() => $argument]);
-        $subject->expects(self::once())->method('hasArgument')->with($argument->getName())->willReturn(true);
-        $subject->setArguments([$argument->getName() => $value]);
-        $subject->validateArguments();
     }
 
     #[Test]

@@ -17,6 +17,40 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 final class ViewHelperArgumentTypesTest extends AbstractFunctionalTestCase
 {
+    #[Test]
+    public function invalidArgumentTypeUncached(): void
+    {
+        $source = '<f:count subject="test" />';
+
+        self::expectExceptionCode(1256475113);
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $view->render();
+    }
+
+    #[Test]
+    public function invalidArgumentTypeCached(): void
+    {
+        $source = '<f:count subject="test" />';
+
+        self::expectExceptionCode(1256475113);
+
+        try {
+            $view = new TemplateView();
+            $view->getRenderingContext()->setCache(self::$cache);
+            $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+            $view->render();
+        } catch (\Exception) {
+        }
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $view->render();
+    }
+
     public static function scalarArgumentsDataProvider(): array
     {
         return [
