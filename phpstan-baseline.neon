@@ -19,6 +19,12 @@ parameters:
 			path: src/Core/Parser/TemplateParser.php
 
 		-
+			message: '#^Call to an undefined method TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\NodeInterface\:\:getViewHelperClassName\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Core/Parser/TemplateParser.php
+
+		-
 			message: '#^Method TYPO3Fluid\\Fluid\\Core\\Parser\\TemplateParser\:\:initializeViewHelperAndAddItToStack\(\) should return TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\ViewHelperNode\|null but returns TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\NodeInterface\.$#'
 			identifier: return.type
 			count: 1
