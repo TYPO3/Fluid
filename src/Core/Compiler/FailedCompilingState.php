@@ -15,6 +15,8 @@ use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
  *
  * Replacement ParsingState used when a template fails to compile.
  * Includes additional reasons why compiling failed.
+ *
+ * @internal
  */
 class FailedCompilingState extends ParsingState implements ParsedTemplateInterface
 {
