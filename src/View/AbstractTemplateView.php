@@ -48,7 +48,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
      * Stack containing the current rendering type, the current rendering context, and the current parsed template
      * Do not manipulate directly, instead use the methods"getCurrent*()", "startRendering(...)" and "stopRendering()"
      *
-     * @var array
+     * @var array{type: self::RENDERING_TEMPLATE|self::RENDERING_PARTIAL|self::RENDERING_LAYOUT, parsedTemplate: ParsedTemplateInterface, renderingContext: RenderingContextInterface}[]
      */
     protected $renderingStack = [];
 
@@ -295,9 +295,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
     /**
      * Start a new nested rendering. Pushes the given information onto the $renderingStack.
      *
-     * @param int $type one of the RENDERING_* constants
-     * @param ParsedTemplateInterface $template
-     * @param RenderingContextInterface $context
+     * @param self::RENDERING_TEMPLATE|self::RENDERING_PARTIAL|self::RENDERING_LAYOUT $type
      */
     protected function startRendering($type, ParsedTemplateInterface $template, RenderingContextInterface $context)
     {
@@ -317,7 +315,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
     /**
      * Get the current rendering type.
      *
-     * @return int one of RENDERING_* constants
+     * @return self::RENDERING_TEMPLATE|self::RENDERING_PARTIAL|self::RENDERING_LAYOUT
      */
     protected function getCurrentRenderingType()
     {
