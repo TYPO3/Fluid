@@ -16,6 +16,8 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 /**
  * This interface is returned by \TYPO3Fluid\Fluid\Core\Parser\TemplateParser->parse()
  * method and is a parsed template
+ *
+ * @internal This interface should be used for type-checks only.
  */
 interface ParsedTemplateInterface
 {

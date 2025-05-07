@@ -19,6 +19,8 @@ use TYPO3Fluid\Fluid\View;
  * Stores all information relevant for one parsing pass - that is, the root node,
  * and the current stack of open nodes (nodeStack) and a variable container used
  * for PostParseFacets.
+ *
+ * @internal
  */
 class ParsingState implements ParsedTemplateInterface
 {

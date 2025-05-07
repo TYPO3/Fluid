@@ -20,5 +20,7 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
  *
  * The result is that the template parser will always parse the
  * original template.
+ *
+ * @internal This interface should be used for type-checks only.
  */
 interface UncompilableTemplateInterface {}
