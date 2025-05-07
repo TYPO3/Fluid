@@ -48,6 +48,16 @@ jobs:
 
       - name: Documentation integrity
         run: |
+          # Generate ViewHelper documentation
           FLUID_DOCUMENTATION_OUTPUT_DIR=DocumentationTemp vendor/bin/fluidDocumentation generate vendor/t3docs/fluid-documentation-generator/config/fluidStandalone/*
+          # Merge into existing documentation
           cp -r DocumentationTemp/Fluid DocumentationTemp/Fluid.json Documentation/ViewHelpers/ && rm -r DocumentationTemp
-          git add Documentation/*; git status; git status | grep -q "nothing to commit, working tree clean"
+          # Add generated JSON to git to check for changes (= PHP code of ViewHelper was changed)
+          git add Documentation/ViewHelpers/Fluid.json
+          # Ignore changes on existing documentation files (= ViewHelper documentation differs from default)
+          git checkout Documentation/ViewHelpers/
+          # ... but add new documentation files (= new ViewHelper was added without rst file)
+          git add Documentation/ViewHelpers/
+          # Use git to check for changes
+          git status
+          git status | grep -q "nothing to commit, working tree clean"
