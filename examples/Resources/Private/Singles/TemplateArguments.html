@@ -1,0 +1,9 @@
+<f:argument name="title" type="string" />
+<f:argument name="tags" type="string[]" optional="{true}" />
+<f:argument name="user" type="string" optional="{true}" default="admin" />
+
+Title: {title}<br />
+<f:if condition="{tags}">
+  Tags: {tags -> f:join(separator: ', ')}<br />
+</f:if>
+User: {user}
