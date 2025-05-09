@@ -78,6 +78,15 @@ final readonly class StrictArgumentProcessor implements ArgumentProcessorInterfa
         if ($type === 'bool' || $type === 'boolean') {
             return is_bool($value);
         }
+        if ($type === 'iterable') {
+            return is_iterable($value);
+        }
+        if ($type === 'countable') {
+            return is_countable($value);
+        }
+        if ($type === 'callable') {
+            return is_callable($value);
+        }
         if ($type === 'array' || str_ends_with($type, '[]')) {
             if (!is_array($value) && !$value instanceof ArrayAccess && !$value instanceof Traversable) {
                 return false;
