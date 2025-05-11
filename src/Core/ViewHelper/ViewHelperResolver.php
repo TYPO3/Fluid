@@ -67,10 +67,19 @@ class ViewHelperResolver
     ];
 
     /**
+     * Runtime cache for ViewHelper delegate objects. Will become
+     * obsolete with bigger overhaul of namespaces as delegates
+     * will be stored directly in $namespaces
+     *
+     * @var array<string, ViewHelperResolverDelegateInterface[]>
+     */
+    protected array $delegates = [];
+
+    /**
      * Returns all currently registered namespaces. Note that this includes both
      * global namespaces and local namespaces added from within the current template.
      *
-     * @return array<string[]|null>
+     * @return array<string, string[]|null>
      */
     public function getNamespaces(): array
     {
@@ -119,6 +128,7 @@ class ViewHelperResolver
         } elseif (isset($this->namespaces[$identifier]) && !in_array($phpNamespace, $this->namespaces[$identifier])) {
             $this->namespaces[$identifier][] = $phpNamespace;
         }
+        unset($this->delegates[$identifier]);
     }
 
     /**
@@ -127,6 +137,7 @@ class ViewHelperResolver
      * used in compiled templates, where some namespaces can be added
      * from outside and some can be added from compiled values.
      *
+     * @param array<string, string|string[]|null> $namespaces
      * @internal Only to be used by compiled templates
      */
     public function addNamespaces(array $namespaces): void
@@ -179,10 +190,12 @@ class ViewHelperResolver
      * belonged to "f" as a new alias and use that in your templates.
      *
      * Use getNamespaces() to get an array of currently added namespaces.
+     *
+     * @param array<string, string|string[]|null> $namespaces
      */
     public function setNamespaces(array $namespaces): void
     {
-        $this->namespaces = [];
+        $this->namespaces = $this->delegates = [];
         foreach ($namespaces as $identifier => $phpNamespace) {
             $this->namespaces[$identifier] = $phpNamespace === null ? null : (array)$phpNamespace;
         }
@@ -268,18 +281,17 @@ class ViewHelperResolver
     public function resolveViewHelperClassName(string $namespaceIdentifier, string $methodIdentifier): string
     {
         if (!isset($this->resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier])) {
-            $resolvedViewHelperClassName = $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier);
-            $actualViewHelperClassName = implode('\\', array_map('ucfirst', explode('.', $resolvedViewHelperClassName)));
-            if (!class_exists($actualViewHelperClassName)) {
+            try {
+                $resolvedViewHelperClassName = $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier);
+            } catch (UnresolvableViewHelperException $e) {
                 throw new ParserException(sprintf(
-                    'The ViewHelper "<%s:%s>" could not be resolved.' . chr(10) .
-                    'Based on your spelling, the system would load the class "%s", however this class does not exist.',
+                    'The ViewHelper "<%s:%s>" could not be resolved.' . chr(10) . '%s',
                     $namespaceIdentifier,
                     $methodIdentifier,
-                    $resolvedViewHelperClassName,
+                    $e->getMessage(),
                 ), 1407060572);
             }
-            $this->resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier] = $actualViewHelperClassName;
+            $this->resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier] = $resolvedViewHelperClassName;
         }
         return $this->resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier];
     }
@@ -321,6 +333,30 @@ class ViewHelperResolver
     }
 
     /**
+     * @return ViewHelperResolverDelegateInterface[]
+     * @internal This method will become obsolete with a bigger namespace
+     *           overhaul and should not be used by third parties.
+     */
+    public function getNamespaceDelegates(string $namespaceIdentifier): array
+    {
+        if (!isset($this->delegates[$namespaceIdentifier])) {
+            $this->delegates[$namespaceIdentifier] = [];
+            if (isset($this->namespaces[$namespaceIdentifier])) {
+                $this->delegates[$namespaceIdentifier] = array_map(
+                    function (string $namespace): ViewHelperResolverDelegateInterface {
+                        if (is_a($namespace, ViewHelperResolverDelegateInterface::class, true)) {
+                            return new $namespace();
+                        }
+                        return new ViewHelperCollection($namespace);
+                    },
+                    array_filter($this->namespaces[$namespaceIdentifier])
+                );
+            }
+        }
+        return $this->delegates[$namespaceIdentifier];
+    }
+
+    /**
      * Resolve a viewhelper name.
      *
      * @param string $namespaceIdentifier Namespace identifier for the view helper.
@@ -329,20 +365,18 @@ class ViewHelperResolver
      */
     protected function resolveViewHelperName(string $namespaceIdentifier, string $methodIdentifier): string
     {
-        $explodedViewHelperName = explode('.', $methodIdentifier);
-        if (count($explodedViewHelperName) > 1) {
-            $className = implode('\\', array_map('ucfirst', $explodedViewHelperName));
-        } else {
-            $className = ucfirst($explodedViewHelperName[0]);
+        $namespaces = $this->getNamespaceDelegates($namespaceIdentifier);
+        foreach (array_reverse($namespaces) as $namespace) {
+            try {
+                return $namespace->resolveViewHelperClassName($methodIdentifier);
+            } catch (UnresolvableViewHelperException $e) {
+                $lastException = $e;
+            }
         }
-        $className .= 'ViewHelper';
-
-        $namespaces = (array)$this->namespaces[$namespaceIdentifier];
-
-        do {
-            $name = rtrim((string)array_pop($namespaces), '\\') . '\\' . $className;
-        } while (!class_exists($name) && count($namespaces));
-
-        return $name;
+        if (isset($lastException)) {
+            throw $lastException;
+        } else {
+            throw new UnresolvableViewHelperException('This should not happen');
+        }
     }
 }
