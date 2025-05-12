@@ -33,6 +33,15 @@ class TemplateCompiler
      */
     public const SECTIONS_VARIABLE = '1457379500_sections';
 
+    /**
+     * Variable name to be used to transfer information about a template's layout
+     * from the ViewHelper context to the TemplateView and the TemplateCompiler
+     *
+     * @todo This data-shuffling between parser, compiler and renderer should be
+     *       avoided in the future.
+     */
+    public const LAYOUT_VARIABLE = 'layoutName';
+
     public const MODE_NORMAL = 'normal';
     public const MODE_WARMUP = 'warmup';
 
@@ -165,7 +174,7 @@ class TemplateCompiler
             'Main Render function',
         );
 
-        $storedLayoutName = $parsingState->getVariableContainer()->get('layoutName');
+        $storedLayoutName = $parsingState->getVariableContainer()->get(static::LAYOUT_VARIABLE);
         $templateCode = sprintf(
             '<?php' . chr(10) .
             '%s {' . chr(10) .

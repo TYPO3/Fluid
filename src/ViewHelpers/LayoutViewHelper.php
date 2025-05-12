@@ -74,6 +74,6 @@ class LayoutViewHelper extends AbstractViewHelper implements ViewHelperNodeIniti
         } else {
             $layoutNameNode = 'Default';
         }
-        $parsingState->getVariableContainer()->add('layoutName', $layoutNameNode);
+        $parsingState->getVariableContainer()->add(TemplateCompiler::LAYOUT_VARIABLE, $layoutNameNode);
     }
 }
