@@ -26,6 +26,11 @@ final class ParsedTemplateImplementationFixture implements ParsedTemplateInterfa
         return 'myIdentifier';
     }
 
+    public function getArgumentDefinitions(): array
+    {
+        return [];
+    }
+
     public function render(RenderingContextInterface $renderingContext): mixed
     {
         return 'rendered by fixture';

@@ -15,6 +15,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 
 /**
  * @internal Nobody should need to override this class.
@@ -178,11 +179,13 @@ class TemplateCompiler
             '        $renderingContext->getViewHelperResolver()->addNamespaces(%s);' . chr(10) .
             '    }' . chr(10) .
             '    %s' . chr(10) .
+            '    %s' . chr(10) .
             '}' . chr(10),
             'class ' . $identifier . ' extends \TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate',
             $this->generateCodeForLayoutName($storedLayoutName),
             ($parsingState->hasLayout() ? 'true' : 'false'),
             var_export($this->renderingContext->getViewHelperResolver()->getNamespaces(), true),
+            $this->generateArgumentDefinitionsCodeFromParsingState($parsingState),
             $generatedRenderFunctions,
         );
         $this->renderingContext->getCache()->set($identifier, $templateCode);
@@ -220,6 +223,31 @@ class TemplateCompiler
             }
         }
         return $generatedRenderFunctions;
+    }
+
+    protected function generateArgumentDefinitionsCodeFromParsingState(ParsingState $parsingState): string
+    {
+        $argumentDefinitions = $parsingState->getArgumentDefinitions();
+        if ($argumentDefinitions === []) {
+            return '';
+        }
+        $argumentDefinitionsCode = array_map(
+            static fn(ArgumentDefinition $argumentDefinition): string => sprintf(
+                'new \\TYPO3Fluid\\Fluid\\Core\\ViewHelper\\ArgumentDefinition(%s, %s, %s, %s, %s, %s)',
+                var_export($argumentDefinition->getName(), true),
+                var_export($argumentDefinition->getType(), true),
+                var_export($argumentDefinition->getDescription(), true),
+                var_export($argumentDefinition->isRequired(), true),
+                var_export($argumentDefinition->getDefaultValue(), true),
+                var_export($argumentDefinition->getEscape(), true),
+            ),
+            $argumentDefinitions,
+        );
+        return 'public function getArgumentDefinitions(): array {' . chr(10) .
+            '        return [' . chr(10) .
+            '            ' . implode(',' . chr(10) . '            ', $argumentDefinitionsCode) . ',' . chr(10) .
+            '        ];' . chr(10) .
+            '    }';
     }
 
     /**
