@@ -380,7 +380,24 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
             },
         );
         if ($parsedTemplate->isCompiled()) {
+            $previousNamespaces = $this->baseRenderingContext->getViewHelperResolver()->getNamespaces();
             $parsedTemplate->addCompiledNamespaces($this->baseRenderingContext);
+            $modifiedNamespaces = $this->baseRenderingContext->getViewHelperResolver()->getNamespaces();
+            $addedNamespaces = [];
+            foreach ($modifiedNamespaces as $identifier => $phpNamespaces) {
+                if ($phpNamespaces === null) {
+                    continue;
+                }
+                $addedNamespaces[$identifier] = array_diff($phpNamespaces, $previousNamespaces[$identifier] ?? []);
+            }
+            $addedNamespaces = array_filter($addedNamespaces);
+            if ($addedNamespaces !== []) {
+                trigger_error(sprintf(
+                    'Template %s inherits ViewHelper namespace(s) from a parent: %s. This feature has been deprecated and will be removed in Fluid v5.',
+                    $parsedTemplate->getIdentifier(),
+                    print_r($addedNamespaces, true),
+                ), E_USER_DEPRECATED);
+            }
         }
         return $parsedTemplate;
     }
