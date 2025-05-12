@@ -334,7 +334,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      */
     public function validateArguments()
     {
-        // @todo make configurable with Fluid v5
+        // @todo move to ViewHelperInvoker and make configurable with Fluid v5
         $argumentProcessor = new LenientArgumentProcessor();
         $argumentDefinitions = $this->prepareArguments();
         foreach ($argumentDefinitions as $argumentName => $registeredArgument) {
