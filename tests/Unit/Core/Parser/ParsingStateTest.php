@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
@@ -61,7 +62,7 @@ final class ParsingStateTest extends TestCase
     public function getLayoutNameReturnsLayoutNameFromVariableProvider(): void
     {
         $subject = new ParsingState();
-        $subject->setVariableProvider(new StandardVariableProvider(['layoutName' => 'test']));
+        $subject->setVariableProvider(new StandardVariableProvider([TemplateCompiler::LAYOUT_VARIABLE => 'test']));
         self::assertEquals('test', $subject->getLayoutName(new RenderingContext()));
     }
 

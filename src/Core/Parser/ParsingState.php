@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Core\Parser;
 
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -183,7 +184,7 @@ class ParsingState implements ParsedTemplateInterface
      */
     public function hasLayout(): bool
     {
-        return $this->variableContainer->exists('layoutName');
+        return $this->variableContainer->exists(TemplateCompiler::LAYOUT_VARIABLE);
     }
 
     /**
@@ -195,7 +196,7 @@ class ParsingState implements ParsedTemplateInterface
      */
     public function getLayoutName(RenderingContextInterface $renderingContext): string|null|NodeInterface
     {
-        $layoutName = $this->variableContainer->get('layoutName');
+        $layoutName = $this->variableContainer->get(TemplateCompiler::LAYOUT_VARIABLE);
         return $layoutName instanceof RootNode ? $layoutName->evaluate($renderingContext) : $layoutName;
     }
 
