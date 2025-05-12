@@ -153,8 +153,8 @@ final class NamespaceInheritanceTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
         $view->getRenderingContext()->getTemplatePaths()->setLayoutRootPaths([__DIR__ . '/../../Fixtures/Layouts/']);
         $view->getRenderingContext()->getTemplatePaths()->setPartialRootPaths([__DIR__ . '/../../Fixtures/Partials/']);
-        // self::assertSame($expectedNamespaces, $view->getRenderingContext()->getViewHelperResolver()->getNamespaces(), 'uncached');
         self::assertSame($expectedResult, trim($view->render()), 'uncached');
+        self::assertSame($expectedNamespaces, $view->getRenderingContext()->getViewHelperResolver()->getNamespaces(), 'uncached');
 
         // Cached
         $view = new TemplateView();
@@ -164,11 +164,11 @@ final class NamespaceInheritanceTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
         $view->getRenderingContext()->getTemplatePaths()->setLayoutRootPaths([__DIR__ . '/../../Fixtures/Layouts/']);
         $view->getRenderingContext()->getTemplatePaths()->setPartialRootPaths([__DIR__ . '/../../Fixtures/Partials/']);
-        // self::assertSame($expectedNamespaces, $view->getRenderingContext()->getViewHelperResolver()->getNamespaces(), 'cached');
         // @todo Rendering result might still be inconsistent here.
         //       With enabled caching, there is interference between the test cases because the "in-memory" cache of TemplateCompiler is re-used and thus
         //       test cases might be green even if they should actually be red. See https://github.com/TYPO3/Fluid/issues/975
         self::assertSame($expectedResult, trim($view->render()), 'cached');
+        self::assertSame($expectedNamespaces, $view->getRenderingContext()->getViewHelperResolver()->getNamespaces(), 'cached');
     }
 
     public static function namespaceDefinedInParentNotValidInChildrenDataProvider(): array
