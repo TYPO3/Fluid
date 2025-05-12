@@ -17,6 +17,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\StrictArgumentProcessor;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ArrayAccessExample;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
 
 final class StrictArgumentProcessorTest extends TestCase
@@ -26,7 +27,15 @@ final class StrictArgumentProcessorTest extends TestCase
         $dateTime = new \DateTime('now');
         $stdClass = new stdClass();
         $arrayIterator = new \ArrayIterator(['bar']);
+        $arrayAccess = new ArrayAccessExample(['foo' => 'bar']);
         $stringable = new UserWithToString('foo');
+        $countable = new class () implements \Countable {
+            public function count(): int
+            {
+                return 2;
+            }
+        };
+        $intval = intval(...);
 
         //
         // Boolean types
@@ -458,6 +467,123 @@ final class StrictArgumentProcessorTest extends TestCase
             'value' => null,
             'expectedValidity' => false,
             'expectedProcessedValue' => null,
+            'expectedProcessedValidity' => false,
+        ];
+
+        //
+        // Iterable
+        //
+        yield [
+            'type' => 'iterable',
+            'value' => [],
+            'expectedValidity' => true,
+            'expectedProcessedValue' => [],
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => 'iterable',
+            'value' => $arrayIterator,
+            'expectedValidity' => true,
+            'expectedProcessedValue' => $arrayIterator,
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => 'iterable',
+            'value' => $arrayAccess,
+            'expectedValidity' => false,
+            'expectedProcessedValue' => $arrayAccess,
+            'expectedProcessedValidity' => false,
+        ];
+        yield [
+            'type' => 'iterable',
+            'value' => 'foo',
+            'expectedValidity' => false,
+            'expectedProcessedValue' => 'foo',
+            'expectedProcessedValidity' => false,
+        ];
+
+        //
+        // Countable
+        //
+        yield [
+            'type' => 'countable',
+            'value' => [],
+            'expectedValidity' => true,
+            'expectedProcessedValue' => [],
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => 'countable',
+            'value' => $countable,
+            'expectedValidity' => true,
+            'expectedProcessedValue' => $countable,
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => 'countable',
+            'value' => $arrayIterator,
+            'expectedValidity' => true,
+            'expectedProcessedValue' => $arrayIterator,
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => 'countable',
+            'value' => $arrayAccess,
+            'expectedValidity' => false,
+            'expectedProcessedValue' => $arrayAccess,
+            'expectedProcessedValidity' => false,
+        ];
+        yield [
+            'type' => 'countable',
+            'value' => 'foo',
+            'expectedValidity' => false,
+            'expectedProcessedValue' => 'foo',
+            'expectedProcessedValidity' => false,
+        ];
+
+        //
+        // Callable
+        //
+        yield [
+            'type' => 'callable',
+            'value' => $intval,
+            'expectedValidity' => true,
+            'expectedProcessedValue' => $intval,
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => 'callable',
+            'value' => 'intval',
+            'expectedValidity' => true,
+            'expectedProcessedValue' => 'intval',
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => 'callable',
+            'value' => 'DateTime::createFromFormat',
+            'expectedValidity' => true,
+            'expectedProcessedValue' => 'DateTime::createFromFormat',
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => 'callable',
+            'value' => ['DateTime', 'createFromFormat'],
+            'expectedValidity' => true,
+            'expectedProcessedValue' => ['DateTime', 'createFromFormat'],
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => 'callable',
+            'value' => 'functionDoesNotExist',
+            'expectedValidity' => false,
+            'expectedProcessedValue' => 'functionDoesNotExist',
+            'expectedProcessedValidity' => false,
+        ];
+        yield [
+            'type' => 'callable',
+            'value' => ['DateTime', 'methodDoesNotExist'],
+            'expectedValidity' => false,
+            'expectedProcessedValue' => ['DateTime', 'methodDoesNotExist'],
             'expectedProcessedValidity' => false,
         ];
 
