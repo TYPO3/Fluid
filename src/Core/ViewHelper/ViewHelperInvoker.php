@@ -58,6 +58,7 @@ class ViewHelperInvoker
             // Determine arguments defined by the ViewHelper API
             $registeredArguments = [];
             foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
+                // @todo also perform argument validation here with Fluid v5, including check for required arguments
                 $registeredArguments[$argumentName] = isset($arguments[$argumentName])
                     ? $argumentProcessor->process($arguments[$argumentName], $argumentDefinition)
                     : $argumentDefinition->getDefaultValue();
