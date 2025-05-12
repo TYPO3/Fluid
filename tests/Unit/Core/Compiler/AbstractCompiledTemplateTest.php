@@ -74,15 +74,4 @@ final class AbstractCompiledTemplateTest extends TestCase
         $subject = new AbstractCompiledTemplateTestFixture();
         self::assertTrue($subject->isCompiled());
     }
-
-    #[Test]
-    public function addCompiledNamespacesDoesNothing(): void
-    {
-        $subject = new AbstractCompiledTemplateTestFixture();
-        $context = new RenderingContext();
-        $before = $context->getViewHelperResolver()->getNamespaces();
-        $subject->addCompiledNamespaces($context);
-        $after = $context->getViewHelperResolver()->getNamespaces();
-        self::assertEquals($before, $after);
-    }
 }

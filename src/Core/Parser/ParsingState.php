@@ -199,8 +199,6 @@ class ParsingState implements ParsedTemplateInterface
         return $layoutName instanceof RootNode ? $layoutName->evaluate($renderingContext) : $layoutName;
     }
 
-    public function addCompiledNamespaces(RenderingContextInterface $renderingContext): void {}
-
     public function isCompilable(): bool
     {
         return $this->compilable;

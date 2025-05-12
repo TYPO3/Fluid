@@ -175,16 +175,12 @@ class TemplateCompiler
             '    public function hasLayout(): bool {' . chr(10) .
             '        return %s;' . chr(10) .
             '    }' . chr(10) .
-            '    public function addCompiledNamespaces(\TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface $renderingContext): void {' . chr(10) .
-            '        $renderingContext->getViewHelperResolver()->addNamespaces(%s);' . chr(10) .
-            '    }' . chr(10) .
             '    %s' . chr(10) .
             '    %s' . chr(10) .
             '}' . chr(10),
             'class ' . $identifier . ' extends \TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate',
             $this->generateCodeForLayoutName($storedLayoutName),
             ($parsingState->hasLayout() ? 'true' : 'false'),
-            var_export($this->renderingContext->getViewHelperResolver()->getNamespaces(), true),
             $this->generateArgumentDefinitionsCodeFromParsingState($parsingState),
             $generatedRenderFunctions,
         );
