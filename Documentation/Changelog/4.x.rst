@@ -22,6 +22,11 @@ Changelog 4.x
 * Deprecation: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper::postParseEvent()`
   now emits a E_USER_DEPRECATED level error. It will be removed with Fluid v5. ViewHelpers using this event
   should switch to the new :php:`TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface`
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver::addNamespaces()`
+  now emits a E_USER_DEPRECATED level error.
+* Deprecation: Inheritance of ViewHelper namespaces is deprecated. If a ViewHelper namespace is used in a
+  template that is neither defined globally nor locally directly in the template, Fluid now emits a
+  E_USER_DEPRECATED level error.
 
 4.0
 ---
