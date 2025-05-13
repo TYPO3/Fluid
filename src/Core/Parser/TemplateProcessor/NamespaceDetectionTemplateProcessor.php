@@ -101,7 +101,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
                 } else {
                     $namespacePhp = null;
                 }
-                $viewHelperResolver->addNamespace($set[1], $namespacePhp);
+                $viewHelperResolver->addLocalNamespace($set[1], $namespacePhp);
             }
             if (strpos($matches[0], 'data-namespace-typo3-fluid="true"')) {
                 $templateSource = str_replace($matches[0], '', $templateSource);
@@ -133,7 +133,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
                 if (strlen($namespace) === 0) {
                     $namespace = null;
                 }
-                $viewHelperResolver->addNamespace($identifier, $namespace);
+                $viewHelperResolver->addLocalNamespace($identifier, $namespace);
             }
             foreach ($namespaces[0] as $removal) {
                 $templateSource = str_replace($removal, '', $templateSource);

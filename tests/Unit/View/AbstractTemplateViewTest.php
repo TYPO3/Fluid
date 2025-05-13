@@ -140,6 +140,7 @@ final class AbstractTemplateViewTest extends TestCase
         $renderingContext = $this->createMock(RenderingContextInterface::class);
         $renderingContext->expects(self::any())->method('getViewHelperVariableContainer')->willReturn($this->createMock(ViewHelperVariableContainer::class));
         $renderingContext->expects(self::any())->method('getErrorHandler')->willReturn(new StandardErrorHandler());
+        $renderingContext->expects(self::any())->method('getViewHelperResolver')->willReturn(new ViewHelperResolver());
         $parsedTemplate = $this->createMock(AbstractCompiledTemplate::class);
         $parsedTemplate->expects(self::once())->method('isCompiled')->willReturn(false);
         $parsedTemplate->expects(self::any())->method('getVariableContainer')->willReturn(new StandardVariableProvider(['sections' => []]));
@@ -158,6 +159,7 @@ final class AbstractTemplateViewTest extends TestCase
         $renderingContext = $this->createMock(RenderingContextInterface::class);
         $renderingContext->expects(self::any())->method('getViewHelperVariableContainer')->willReturn($this->createMock(ViewHelperVariableContainer::class));
         $renderingContext->expects(self::any())->method('getErrorHandler')->willReturn(new StandardErrorHandler());
+        $renderingContext->expects(self::any())->method('getViewHelperResolver')->willReturn(new ViewHelperResolver());
         $parsedTemplate = $this->createMock(AbstractCompiledTemplate::class);
         $parsedTemplate->expects(self::once())->method('isCompiled')->willReturn(true);
         $parsedTemplate->expects(self::any())->method('getVariableContainer')->willReturn(new StandardVariableProvider(['sections' => []]));
@@ -174,6 +176,7 @@ final class AbstractTemplateViewTest extends TestCase
         $renderingContext = $this->createMock(RenderingContextInterface::class);
         $renderingContext->expects(self::any())->method('getViewHelperVariableContainer')->willReturn($this->createMock(ViewHelperVariableContainer::class));
         $renderingContext->expects(self::any())->method('getErrorHandler')->willReturn(new StandardErrorHandler());
+        $renderingContext->expects(self::any())->method('getViewHelperResolver')->willReturn(new ViewHelperResolver());
         $parsedTemplate = $this->createMock(AbstractCompiledTemplate::class);
         $parsedTemplate->expects(self::once())->method('isCompiled')->willReturn(true);
         $subject = $this->getMockBuilder(AbstractTemplateView::class)->onlyMethods(['getCurrentParsedTemplate', 'getCurrentRenderingType'])->getMock();

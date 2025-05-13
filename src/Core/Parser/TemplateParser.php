@@ -21,6 +21,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InheritedNamespaceException;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
 
@@ -287,8 +288,12 @@ class TemplateParser
         if ($viewHelperResolver->isNamespaceIgnored($namespaceIdentifier)) {
             return null;
         }
-        if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
-            throw new UnknownNamespaceException('Unknown Namespace: ' . $namespaceIdentifier);
+        try {
+            if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
+                throw new UnknownNamespaceException('Unknown Namespace: ' . $namespaceIdentifier);
+            }
+        } catch (InheritedNamespaceException) {
+            // @todo remove with Fluid 5
         }
 
         $viewHelper = $viewHelperResolver->createViewHelperInstance($namespaceIdentifier, $methodIdentifier);
@@ -326,8 +331,18 @@ class TemplateParser
         if ($viewHelperResolver->isNamespaceIgnored($namespaceIdentifier)) {
             return null;
         }
-        if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
-            throw new UnknownNamespaceException('Unknown Namespace: ' . $namespaceIdentifier);
+        try {
+            if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
+                throw new UnknownNamespaceException('Unknown Namespace: ' . $namespaceIdentifier);
+            }
+        } catch (InheritedNamespaceException) {
+            // @todo remove with Fluid 5
+            trigger_error(sprintf(
+                'ViewHelper call <%1$s:%2$s> in "%3$s" only works because "%1$s" namespace was added in parent template. This will break with Fluid v5.',
+                $namespaceIdentifier,
+                $methodIdentifier,
+                $state->getIdentifier(),
+            ), E_USER_DEPRECATED);
         }
         try {
             $currentViewHelperNode = new ViewHelperNode(
@@ -379,8 +394,12 @@ class TemplateParser
         if ($viewHelperResolver->isNamespaceIgnored($namespaceIdentifier)) {
             return false;
         }
-        if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
-            throw new UnknownNamespaceException('Unknown Namespace: ' . $namespaceIdentifier);
+        try {
+            if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
+                throw new UnknownNamespaceException('Unknown Namespace: ' . $namespaceIdentifier);
+            }
+        } catch (InheritedNamespaceException) {
+            // @todo remove with Fluid 5
         }
         $lastStackElement = $state->popNodeFromStack();
         if (!($lastStackElement instanceof ViewHelperNode)) {
@@ -430,8 +449,12 @@ class TemplateParser
             // which is invalid will be reported as an error regardless of whether the namespace is marked as ignored.
             $viewHelperResolver = $this->renderingContext->getViewHelperResolver();
             foreach (array_reverse($matches) as $singleMatch) {
-                if (!$viewHelperResolver->isNamespaceValid($singleMatch['NamespaceIdentifier'])) {
-                    throw new UnknownNamespaceException('Unknown Namespace: ' . $singleMatch['NamespaceIdentifier']);
+                try {
+                    if (!$viewHelperResolver->isNamespaceValid($singleMatch['NamespaceIdentifier'])) {
+                        throw new UnknownNamespaceException('Unknown Namespace: ' . $singleMatch['NamespaceIdentifier']);
+                    }
+                } catch (InheritedNamespaceException) {
+                    // @todo remove with Fluid 5
                 }
                 $viewHelper = $viewHelperResolver->createViewHelperInstance($singleMatch['NamespaceIdentifier'], $singleMatch['MethodIdentifier']);
                 if (strlen($singleMatch['ViewHelperArguments']) > 0) {
