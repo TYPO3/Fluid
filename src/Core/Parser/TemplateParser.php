@@ -110,7 +110,7 @@ class TemplateParser
             $templateString = $this->preProcessTemplateSource($templateString);
 
             $splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
-            $parsingState = $this->buildObjectTree($splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
+            $parsingState = $this->buildObjectTree($splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS, $templateIdentifier);
         } catch (Exception $error) {
             throw $this->createParsingRelatedExceptionWithContext($error, $templateIdentifier);
         }
@@ -165,13 +165,10 @@ class TemplateParser
 
     protected function parseTemplateSource(string $templateIdentifier, \Closure $templateSourceClosure): ParsingState
     {
-        $parsedTemplate = $this->parse(
+        return $this->parse(
             $templateSourceClosure($this, $this->renderingContext->getTemplatePaths()),
             $templateIdentifier,
         );
-        $parsedTemplate->setIdentifier($templateIdentifier);
-        $this->parsedTemplates[$templateIdentifier] = $parsedTemplate;
-        return $parsedTemplate;
     }
 
     /**
@@ -214,9 +211,9 @@ class TemplateParser
      * @param int $context one of the CONTEXT_* constants, defining whether we are inside or outside of ViewHelper arguments currently.
      * @throws Exception
      */
-    protected function buildObjectTree(array $splitTemplate, int $context): ParsingState
+    protected function buildObjectTree(array $splitTemplate, int $context, ?string $templateIdentifier = null): ParsingState
     {
-        $state = $this->getParsingState();
+        $state = $this->getParsingState($templateIdentifier);
         $previousBlock = '';
 
         foreach ($splitTemplate as $templateElement) {
@@ -761,11 +758,12 @@ class TemplateParser
         $state->getNodeFromStack()->addChildNode($node);
     }
 
-    protected function getParsingState(): ParsingState
+    protected function getParsingState(?string $templateIdentifier): ParsingState
     {
         $rootNode = new RootNode();
         $variableProvider = $this->renderingContext->getVariableProvider();
         $state = new ParsingState();
+        $state->setIdentifier($templateIdentifier ?? '');
         $state->setRootNode($rootNode);
         $state->pushNodeToStack($rootNode);
         $state->setVariableProvider($variableProvider->getScopeCopy($variableProvider->getAll()));
