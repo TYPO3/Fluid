@@ -194,6 +194,29 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
                 ],
                 PHP_EOL,
             ],
+            'TYP3 template with diverging xmlns for f namespace' => [
+                [
+                    'core' => [
+                        'TYPO3\\CMS\\Core\\ViewHelpers',
+                    ],
+                    'f' => [
+                        'TYPO3Fluid\\Fluid\\ViewHelpers',
+                        'TYPO3\\CMS\\Fluid\\ViewHelpers',
+                    ],
+                ],
+                '<html xmlns:f="http://xsd.helhum.io/ns/typo3/cms-fluid/master/ViewHelpers" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
+                [
+                    'core' => [
+                        'TYPO3\\CMS\\Core\\ViewHelpers',
+                    ],
+                    'f' => [
+                        'TYPO3Fluid\\Fluid\\ViewHelpers',
+                        'TYPO3\\CMS\\Fluid\\ViewHelpers',
+                        null,
+                    ],
+                ],
+                PHP_EOL,
+            ],
         ];
     }
 
