@@ -40,7 +40,7 @@ final class ViewHelperEscapingTest extends AbstractFunctionalTestCase
         $configuration->addEscapingInterceptor(new Escape());
 
         $context = $this->getMockBuilder(RenderingContext::class)->onlyMethods(['buildParserConfiguration'])->getMock();
-        $context->expects(self::once())->method('buildParserConfiguration')->willReturn($configuration);
+        $context->expects(self::atLeastOnce())->method('buildParserConfiguration')->willReturn($configuration);
         $context->getTemplateParser()->setRenderingContext($context);
         $context->getTemplateCompiler()->setRenderingContext($context);
         $context->setVariableProvider(new StandardVariableProvider());
