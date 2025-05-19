@@ -1,0 +1,5 @@
+<f:argument name="counter" type="int" />
+
+<f:if condition="{counter} > 0">
+    {counter}<f:format.trim><my:recursive counter="{counter - 1}" /></f:format.trim>
+</f:if>
