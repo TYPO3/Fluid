@@ -46,11 +46,6 @@ final class ParsedTemplateImplementationFixture implements ParsedTemplateInterfa
         return null;
     }
 
-    public function addCompiledNamespaces(RenderingContextInterface $renderingContext): void
-    {
-        // stub
-    }
-
     public function hasLayout(): bool
     {
         return false;

@@ -379,9 +379,6 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
                 return $paths->getTemplateSource($controllerName, $actionName);
             },
         );
-        if ($parsedTemplate->isCompiled()) {
-            $parsedTemplate->addCompiledNamespaces($this->baseRenderingContext);
-        }
         return $parsedTemplate;
     }
 

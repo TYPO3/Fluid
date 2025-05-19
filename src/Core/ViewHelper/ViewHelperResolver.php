@@ -131,6 +131,7 @@ class ViewHelperResolver
      */
     public function addNamespaces(array $namespaces): void
     {
+        trigger_error('addNamespaces() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
         foreach ($namespaces as $identifier => $namespace) {
             $this->addNamespace($identifier, $namespace);
         }
