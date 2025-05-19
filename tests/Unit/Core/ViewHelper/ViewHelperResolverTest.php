@@ -255,4 +255,25 @@ final class ViewHelperResolverTest extends TestCase
         $result = $subject->createResolverDelegateInstanceFromClassName($resolverClassName);
         self::assertInstanceOf($expectedInstanceOf, $result);
     }
+
+    public static function getResponsibleDelegateDataProvider(): iterable
+    {
+        return [
+            [['test' => ['TYPO3Fluid\\Fluid\\ViewHelpers']], ViewHelperCollection::class],
+            [['test' => [TestViewHelperResolverDelegate::class]], TestViewHelperResolverDelegate::class],
+            [['test' => [null, TestViewHelperResolverDelegate::class]], TestViewHelperResolverDelegate::class],
+            [['test' => [TestViewHelperResolverDelegate::class, null]], TestViewHelperResolverDelegate::class],
+            [['test' => ['TYPO3Fluid\\Fluid\\ViewHelpers', TestViewHelperResolverDelegate::class]], TestViewHelperResolverDelegate::class],
+        ];
+    }
+
+    #[DataProvider('getResponsibleDelegateDataProvider')]
+    #[Test]
+    public function getResponsibleDelegate(array $namespaces, string $expectedInstanceOf): void
+    {
+        $subject = new ViewHelperResolver();
+        $subject->setNamespaces($namespaces);
+        $result = $subject->getResponsibleDelegate('test', 'render');
+        self::assertInstanceOf($expectedInstanceOf, $result);
+    }
 }
