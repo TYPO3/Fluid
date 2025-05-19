@@ -132,12 +132,10 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
      */
     public function render($actionName = null)
     {
-        $renderingContext = $this->getCurrentRenderingContext();
-        $templateParser = $renderingContext->getTemplateParser();
-        $templatePaths = $renderingContext->getTemplatePaths();
+        $templateRenderingContext = $this->getCurrentRenderingContext();
         if ($actionName) {
             $actionName = ucfirst($actionName);
-            $renderingContext->setControllerAction($actionName);
+            $templateRenderingContext->setControllerAction($actionName);
         }
         try {
             $parsedTemplate = $this->getCurrentParsedTemplate();
@@ -146,24 +144,28 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
         }
 
         if (!$parsedTemplate->hasLayout()) {
-            $this->startRendering(self::RENDERING_TEMPLATE, $parsedTemplate, $this->baseRenderingContext);
+            $this->startRendering(self::RENDERING_TEMPLATE, $parsedTemplate, $templateRenderingContext);
             try {
                 // @todo make argument processor configurable with Fluid v5
                 $this->processAndValidateTemplateVariables(
                     $parsedTemplate,
-                    $this->baseRenderingContext->getVariableProvider(),
+                    $templateRenderingContext->getVariableProvider(),
                     new StrictArgumentProcessor(),
                 );
             } catch (Exception $validationError) {
-                return $this->baseRenderingContext->getErrorHandler()->handleViewError($validationError);
+                return $templateRenderingContext->getErrorHandler()->handleViewError($validationError);
             }
-            $output = $parsedTemplate->render($this->baseRenderingContext);
+            $output = $parsedTemplate->render($templateRenderingContext);
             $this->stopRendering();
         } else {
-            $layoutName = (string)$parsedTemplate->getLayoutName($this->baseRenderingContext);
+            $layoutName = (string)$parsedTemplate->getLayoutName($templateRenderingContext);
+            // Layouts should not inherit ViewHelper namespaces from template, so we need a separate rendering context
+            // with its own resolver instance
+            $layoutRenderingContext = clone $templateRenderingContext;
+            $layoutRenderingContext->setViewHelperResolver($templateRenderingContext->getViewHelperResolver()->getScopedCopy());
             try {
-                $parsedLayout = $templateParser->getOrParseAndStoreTemplate(
-                    $templatePaths->getLayoutIdentifier($layoutName),
+                $parsedLayout = $layoutRenderingContext->getTemplateParser()->getOrParseAndStoreTemplate(
+                    $layoutRenderingContext->getTemplatePaths()->getLayoutIdentifier($layoutName),
                     function ($parent, TemplatePaths $paths) use ($layoutName) {
                         return $paths->getLayoutSource($layoutName);
                     },
@@ -171,18 +173,18 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
             } catch (PassthroughSourceException $error) {
                 return $error->getSource();
             }
-            $this->startRendering(self::RENDERING_LAYOUT, $parsedTemplate, $this->baseRenderingContext);
+            $this->startRendering(self::RENDERING_LAYOUT, $parsedTemplate, $layoutRenderingContext);
             try {
                 // @todo make argument processor configurable with Fluid v5
                 $this->processAndValidateTemplateVariables(
                     $parsedLayout,
-                    $this->baseRenderingContext->getVariableProvider(),
+                    $layoutRenderingContext->getVariableProvider(),
                     new StrictArgumentProcessor(),
                 );
             } catch (Exception $validationError) {
-                return $this->baseRenderingContext->getErrorHandler()->handleViewError($validationError);
+                return $layoutRenderingContext->getErrorHandler()->handleViewError($validationError);
             }
-            $output = $parsedLayout->render($this->baseRenderingContext);
+            $output = $parsedLayout->render($layoutRenderingContext);
             $this->stopRendering();
         }
 
@@ -200,13 +202,15 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
      */
     public function renderSection($sectionName, array $variables = [], $ignoreUnknown = false)
     {
-        $renderingContext = $this->getCurrentRenderingContext();
-
         if ($this->getCurrentRenderingType() === self::RENDERING_LAYOUT) {
             // in case we render a layout right now, we will render a section inside a TEMPLATE.
+            // this also means that we need to jump back to the base rendering context which contains
+            // ViewHelper namespaces of the template
             $renderingTypeOnNextLevel = self::RENDERING_TEMPLATE;
+            $renderingContext = $this->baseRenderingContext;
         } else {
-            $renderingContext = clone $renderingContext;
+            // for sections rendered within a template or partial, we need a new variable context
+            $renderingContext = clone $this->getCurrentRenderingContext();
             $renderingContext->setVariableProvider($renderingContext->getVariableProvider()->getScopeCopy($variables));
             $renderingTypeOnNextLevel = $this->getCurrentRenderingType();
         }
@@ -281,7 +285,10 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
     public function renderPartial($partialName, $sectionName = null, array $variables = [], $ignoreUnknown = false)
     {
         $templatePaths = $this->baseRenderingContext->getTemplatePaths();
+        // Partials should not inherit namespaces from parent templates, so we need a new rendering context
+        // with its own resolver
         $renderingContext = clone $this->getCurrentRenderingContext();
+        $renderingContext->setViewHelperResolver($renderingContext->getViewHelperResolver()->getScopedCopy());
         try {
             $parsedPartial = $renderingContext->getTemplateParser()->getOrParseAndStoreTemplate(
                 $templatePaths->getPartialIdentifier($partialName),

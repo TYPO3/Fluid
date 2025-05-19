@@ -420,4 +420,15 @@ class RenderingContext implements RenderingContextInterface
     {
         $this->controllerAction = $action;
     }
+
+    public function __clone(): void
+    {
+        // Clone all properties that have references to rendering context
+        $this->setTemplateCompiler(clone $this->getTemplateCompiler());
+        $this->setTemplateParser(clone $this->getTemplateParser());
+        $this->setTemplateProcessors(array_map(
+            static fn(TemplateProcessorInterface $processor): TemplateProcessorInterface => clone $processor,
+            $this->getTemplateProcessors(),
+        ));
+    }
 }
