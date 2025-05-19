@@ -60,7 +60,7 @@ class ViewHelperResolver
      *         'ven*' => null
      *     ]
      *
-     * @var array<string, string[]|null>
+     * @var array<string, (string|null)[]|null>
      */
     protected array $namespaces = [
         'f' => ['TYPO3Fluid\\Fluid\\ViewHelpers'],
@@ -75,7 +75,7 @@ class ViewHelperResolver
      * (template, layout or partial) and don't inherit to any children.
      *
      * @see $namespaces
-     * @var array<string, string[]|null>
+     * @var array<string, (string|null)[]|null>
      */
     protected array $localNamespaces = [];
 
@@ -87,7 +87,7 @@ class ViewHelperResolver
      *
      * @todo remove this with Fluid v5
      * @see $namespaces
-     * @var array<string, string[]|null>
+     * @var array<string, (string|null)[]|null>
      */
     protected array $inheritedNamespaces = [];
 
@@ -95,7 +95,7 @@ class ViewHelperResolver
      * Returns all currently registered namespaces. Note that this includes both
      * global namespaces and local namespaces added from within the current template.
      *
-     * @return array<string[]|null>
+     * @return array<string, (string|null)[]|null>
      */
     public function getNamespaces(): array
     {
@@ -241,7 +241,7 @@ class ViewHelperResolver
     }
 
     /**
-     * @param array<string, string[]|null> $namespaces
+     * @param array<string, (string|null)[]|null> $namespaces
      * @internal
      */
     public function setLocalNamespaces(array $namespaces): void
@@ -250,7 +250,7 @@ class ViewHelperResolver
     }
 
     /**
-     * @return array<string, string[]>
+     * @return array<string, (string|null)[]>
      * @internal
      */
     public function getLocalNamespaces(): array
@@ -259,7 +259,7 @@ class ViewHelperResolver
     }
 
     /**
-     * @param array<string, string[]|null> $namespaces
+     * @param array<string, (string|null)[]|null> $namespaces
      * @internal
      * @todo remove this with Fluid v5
      */
