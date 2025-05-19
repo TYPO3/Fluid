@@ -23,6 +23,7 @@ final class TagBasedTestViewHelper extends AbstractTagBasedViewHelper
     public function render(): string
     {
         $this->tag->addAttribute('registeredBooleanArgument', $this->arguments['registeredBooleanArgument']);
+        $this->tag->setContent($this->renderChildren());
         return $this->tag->render();
     }
 }
