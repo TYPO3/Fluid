@@ -127,4 +127,37 @@ final class RecursiveRenderingTest extends AbstractFunctionalTestCase
             self::assertStringContainsString($expectedValue, $output);
         }
     }
+
+    #[Test]
+    public function recursiveSectionsProvideCorrectViewHelperArguments(): void
+    {
+        $source =
+            '<f:section name="Test">' .
+                '<test:tagBasedTest data-context="{testVar}">' .
+                    '{testVar}' .
+                    '<f:if condition="{testVar} == \'outer\'">' .
+                        '<f:render section="Test" arguments="{testVar: \'inner\'}" />' .
+                    '</f:if>' .
+                '</test:tagBasedTest>' .
+            '</f:section>' .
+            '<f:render section="Test" arguments="{testVar: \'outer\'}" />';
+        // @todo this should be the correct output for uncached as well, currently arguments are overwritten by the
+        //       inner ViewHelper call
+        // $expected = '<div data-context="outer">outer<div data-context="inner">inner</div></div>';
+        $expected = '<div data-context="inner">outer<div data-context="inner">inner</div></div>';
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        self::assertSame($expected, $view->render(), 'uncached');
+
+        // @todo remove this once uncached behaves consistently
+        $expected = '<div data-context="outer">outer<div data-context="inner">inner</div></div>';
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        self::assertSame($expected, $view->render(), 'cached');
+    }
 }
