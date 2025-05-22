@@ -63,6 +63,15 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
  * .. code-block:: text
  *
  *    #ring to be trimmed#
+ *
+ *
+ * Inline usage
+ * -----------------------
+ *
+ * ::
+ *
+ *    #{f:format.trim(value: my_variable)}#
+ *    #{my_variable -> f:format.trim()}#
  */
 final class TrimViewHelper extends AbstractViewHelper
 {
