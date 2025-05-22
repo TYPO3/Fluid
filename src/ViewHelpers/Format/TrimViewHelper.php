@@ -70,7 +70,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
  *
  * ::
  *
- *    #{f:format.trim(value: '{my_variable}')}#
+ *    #{f:format.trim(value: my_variable)}#
+ *    #{my_variable -> f:format.trim()}#
  */
 final class TrimViewHelper extends AbstractViewHelper
 {
