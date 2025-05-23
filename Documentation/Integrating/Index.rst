@@ -35,10 +35,11 @@ composition: which implementations of `TemplatePaths` the View requires, if it
 needs a :ref:`custom ViewHelperResolver <viewhelperresolver>`,
 if it must have some default variables, if it should have a default cache, etc.
 
-..  note::
-
-    The special variable `layoutName` is reserved and can be assigned to a
-    template to set its Layout instead of using `<f:layout name="LayoutName" />`.
+..  deprecated:: 4.4
+    Prevously, it was possible to set the layout of a template with the special
+    variable `layoutName`. This will no longer work with Fluid 5. Please use the
+    `<f:layout> ViewHelper <https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-layout>`_
+    instead.
 
 .. _templatepaths:
 
