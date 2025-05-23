@@ -6,6 +6,14 @@
 Changelog 4.x
 =============
 
+4.4
+---
+
+* Deprecation: Setting a template's layout with the variable `layoutName` is deprecated and will no longer work in Fluid v5.
+  Use :php:`TYPO3Fluid\Fluid\Core\Parser\ParsingState->setLayoutName()` instead.
+* Deprecation: Constant :php:`TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::LAYOUT_VARIABLE`
+  has been marked as deprecated and will be removed in Fluid v5.
+
 4.3
 ---
 

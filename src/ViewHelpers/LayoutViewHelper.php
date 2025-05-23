@@ -15,7 +15,11 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
 
 /**
- * With this tag, you can select a layout to be used for the current template.
+ * With this ViewHelper, you can select a layout to be used for the current template.
+ *
+ * ..  deprecated:: 4.4
+ *     Prevously, it was possible to set the layout of a template with the special
+ *     variable `layoutName`. This will no longer work with Fluid 5.
  *
  * Examples
  * ========
@@ -62,8 +66,8 @@ class LayoutViewHelper extends AbstractViewHelper implements ViewHelperNodeIniti
     }
 
     /**
-     * On the node initialized event, add the "layoutName" variable to the variable container so it can
-     * be used by the TemplateView.
+     * Set the defined layout name (which can include variables) to the ParsingState,
+     * to be used both for compilation and uncached rendering
      *
      * @param array<string, NodeInterface> $arguments Unevaluated ViewHelper arguments
      */
@@ -74,6 +78,6 @@ class LayoutViewHelper extends AbstractViewHelper implements ViewHelperNodeIniti
         } else {
             $layoutNameNode = 'Default';
         }
-        $parsingState->getVariableContainer()->add(TemplateCompiler::LAYOUT_VARIABLE, $layoutNameNode);
+        $parsingState->setLayoutName($layoutNameNode);
     }
 }

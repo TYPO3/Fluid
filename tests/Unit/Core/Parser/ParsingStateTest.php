@@ -9,11 +9,15 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 
@@ -58,12 +62,52 @@ final class ParsingStateTest extends TestCase
         self::assertSame('T3DD09 Rock!', $renderedValue);
     }
 
+    public static function getLayoutNameDataProvider(): iterable
+    {
+        return [
+            ['MyLayout', 'MyLayout'],
+            [new TextNode('MyLayout'), 'MyLayout'],
+        ];
+    }
+
     #[Test]
-    public function getLayoutNameReturnsLayoutNameFromVariableProvider(): void
+    #[DataProvider('getLayoutNameDataProvider')]
+    public function getLayoutNameReturnsLayoutFromProperty(string|NodeInterface $layoutName, string $expected): void
     {
         $subject = new ParsingState();
-        $subject->setVariableProvider(new StandardVariableProvider([TemplateCompiler::LAYOUT_VARIABLE => 'test']));
-        self::assertEquals('test', $subject->getLayoutName(new RenderingContext()));
+        $subject->setLayoutName($layoutName);
+        self::assertTrue($subject->hasLayout());
+        self::assertEquals($expected, $subject->getLayoutName(new RenderingContext()));
+    }
+
+    #[Test]
+    #[DataProvider('getLayoutNameDataProvider')]
+    #[IgnoreDeprecations]
+    public function getLayoutNameReturnsLayoutNameFromVariableProvider(string|NodeInterface $layoutName, string $expected): void
+    {
+        $subject = new ParsingState();
+        $subject->setVariableProvider(new StandardVariableProvider([TemplateCompiler::LAYOUT_VARIABLE => $layoutName]));
+        self::assertTrue($subject->hasLayout());
+        self::assertEquals($expected, $subject->getLayoutName(new RenderingContext()));
+    }
+
+    #[Test]
+    #[IgnoreDeprecations]
+    public function getLayoutNamePrefersPropertyOverVariableProvider(): void
+    {
+        $subject = new ParsingState();
+        $subject->setLayoutName('setter');
+        $subject->setVariableProvider(new StandardVariableProvider([TemplateCompiler::LAYOUT_VARIABLE => 'variable']));
+        self::assertTrue($subject->hasLayout());
+        self::assertEquals('setter', $subject->getLayoutName(new RenderingContext()));
+    }
+
+    #[Test]
+    public function hasLayoutReturnsFalseIfNoLayoutExists(): void
+    {
+        $subject = new ParsingState();
+        $subject->setVariableProvider(new StandardVariableProvider());
+        self::assertFalse($subject->hasLayout());
     }
 
     #[Test]
