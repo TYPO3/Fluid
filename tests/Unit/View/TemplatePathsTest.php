@@ -12,6 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\View;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use TYPO3Fluid\Fluid\TemplateScanner\TemplateScanner;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 
@@ -91,31 +92,11 @@ final class TemplatePathsTest extends TestCase
         self::assertSame($value, $subject->$getter());
     }
 
-    public static function getResolveFilesMethodTestValues(): array
-    {
-        return [
-            ['resolveAvailableTemplateFiles', 'setTemplateRootPaths'],
-            ['resolveAvailablePartialFiles', 'setPartialRootPaths'],
-            ['resolveAvailableLayoutFiles', 'setLayoutRootPaths'],
-        ];
-    }
-
-    #[DataProvider('getResolveFilesMethodTestValues')]
-    #[Test]
-    public function testResolveFilesMethodCallsResolveFilesInFolders(string $method, string $pathsMethod): void
-    {
-        $subject = $this->getMockBuilder(TemplatePaths::class)->onlyMethods(['resolveFilesInFolders'])->getMock();
-        $subject->$pathsMethod(['foo']);
-        $subject->expects(self::once())->method('resolveFilesInFolders')->with(self::anything(), 'format');
-        $subject->$method('format', 'format');
-    }
-
     #[Test]
     public function testResolveFilesInFolders(): void
     {
-        $subject = new TemplatePaths();
-        $method = new \ReflectionMethod($subject, 'resolveFilesInFolders');
-        $result = $method->invoke($subject, ['examples/Resources/Private/Layouts/', 'examples/Resources/Private/Templates/Default/'], 'html');
+        $subject = new TemplateScanner();
+        $result = $subject->findTemplatesInPaths(['examples/Resources/Private/Layouts/', 'examples/Resources/Private/Templates/Default/'], ['html']);
         $expected = [
             'examples/Resources/Private/Layouts/Default.html',
             'examples/Resources/Private/Layouts/Dynamic.html',

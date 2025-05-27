@@ -10,15 +10,16 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tools;
 
 use Composer\Autoload\ClassLoader;
-use TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult;
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Core\Parser\Patterns;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\JSONVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Exception;
 use TYPO3Fluid\Fluid\Schema\SchemaGenerator;
 use TYPO3Fluid\Fluid\Schema\ViewHelperFinder;
+use TYPO3Fluid\Fluid\TemplateScanner\TemplateScanner;
 use TYPO3Fluid\Fluid\View\AbstractTemplateView;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 use TYPO3Fluid\Fluid\View\TemplateView;
@@ -31,10 +32,10 @@ final class ConsoleRunner
     private const COMMAND_HELP = 'help';
     private const COMMAND_RUN = 'run';
     private const COMMAND_SCHEMA = 'schema';
+    private const COMMAND_WARMUP = 'warmup';
 
     private const ARGUMENT_HELP = 'help';
     private const ARGUMENT_SOCKET = 'socket';
-    private const ARGUMENT_WARMUP = 'warmup';
     private const ARGUMENT_TEMPLATEFILE = 'template';
     private const ARGUMENT_CACHEDIRECTORY = 'cacheDirectory';
     private const ARGUMENT_VARIABLES = 'variables';
@@ -46,18 +47,19 @@ final class ConsoleRunner
     private const ARGUMENT_PARTIALROOTPATHS = 'partialRootPaths';
     private const ARGUMENT_RENDERINGCONTEXT = 'renderingContext';
     private const ARGUMENT_DESTINATION = 'destination';
+    private const ARGUMENT_PATHS = 'paths';
 
     private array $commandDesccriptions = [
         self::COMMAND_HELP => 'Show this help screen',
         self::COMMAND_RUN => 'Run fluid code, either interactively or file-based',
         self::COMMAND_SCHEMA => 'Generate xsd schema files based on all available ViewHelper classes',
+        self::COMMAND_WARMUP => 'Warmup template cache',
     ];
 
     private array $argumentDescriptions = [
         self::COMMAND_RUN => [
             self::ARGUMENT_HELP => 'Shows usage examples',
             self::ARGUMENT_SOCKET => 'Path to socket (ignored unless running as socket server)',
-            self::ARGUMENT_WARMUP => 'Run in Warmup Mode (requires templateRootPaths and others, see help text)',
             self::ARGUMENT_TEMPLATEFILE => 'A single template file to render',
             self::ARGUMENT_CACHEDIRECTORY => 'Path to a directory used as cache for compiled Fluid templates',
             self::ARGUMENT_VARIABLES => 'Variables (JSON string or JSON file) to use when rendering',
@@ -74,6 +76,10 @@ final class ConsoleRunner
         self::COMMAND_SCHEMA => [
             self::ARGUMENT_HELP => 'Shows usage examples',
             self::ARGUMENT_DESTINATION => 'Destination folder where the schema files should be written to',
+        ],
+        self::COMMAND_WARMUP => [
+            self::ARGUMENT_PATHS => 'Paths that should be checked for template files for warmup',
+            self::ARGUMENT_CACHEDIRECTORY => 'Path to a directory used as cache for compiled Fluid templates',
         ],
     ];
 
@@ -104,6 +110,9 @@ final class ConsoleRunner
 
             case self::COMMAND_SCHEMA:
                 return $this->handleSchemaCommand($arguments, $autoloader);
+
+            case self::COMMAND_WARMUP:
+                return $this->handleWarmupCommand($arguments);
 
             case self::COMMAND_RUN:
             default:
@@ -152,6 +161,81 @@ final class ConsoleRunner
             file_put_contents($destination . 'schema_' . $fileName . '.xsd', $schema->asXml());
         }
         return '';
+    }
+
+    private function handleWarmupCommand(array $arguments): string
+    {
+        // @todo add argument for global namespaces
+        $paths = (array)($arguments[self::ARGUMENT_PATHS] ?? []);
+        $cacheDirectory = $arguments[self::ARGUMENT_CACHEDIRECTORY] ?? '';
+        if ($paths === []) {
+            throw new \InvalidArgumentException(
+                'At least one path needs to be supplied to perform cache warmup.',
+            );
+        }
+        if ($cacheDirectory === '') {
+            throw new \InvalidArgumentException(
+                'Cache directory needs to be supplied to perform cache warmup.',
+            );
+        }
+
+        $templateScanner = new TemplateScanner();
+        $templates = $templateScanner->findTemplatesInPaths($paths);
+        $scanResults = $templateScanner->scanTemplateFilesForIssues($templates);
+
+        $cache = new SimpleFileCache($cacheDirectory);
+        $cachingRenderingContext = new RenderingContext();
+        $cachingRenderingContext->setCache($cache);
+
+        // @todo add option for cache flushing
+        $cache->flush();
+
+        $output = [];
+        foreach ($scanResults as $result) {
+            $errors = [];
+            foreach ($result->errors as $error) {
+                $errors[] = sprintf(
+                    'Parsing error triggered in %s, line %d: %s',
+                    $error->getFile(),
+                    $error->getLine(),
+                    $error->getMessage(),
+                );
+            }
+
+            foreach ($result->deprecations as $deprecation) {
+                $errors[] = sprintf(
+                    'Deprecation triggered in %s, line %d: %s',
+                    $deprecation->file,
+                    $deprecation->line,
+                    $deprecation->message,
+                );
+            }
+
+            if ($result->canBeCompiled()) {
+                try {
+                    $cachingRenderingContext->getTemplateCompiler()->store(
+                        $result->identifier,
+                        $result->parsedTemplate,
+                    );
+                } catch (\Exception $e) {
+                    $errors[] = sprintf(
+                        'Compilation error triggered in %s, line %s: %s',
+                        $e->getFile(),
+                        $e->getLine(),
+                        $e->getMessage(),
+                    );
+                }
+            } else {
+                $errors[] = 'Template cannot be compiled.';
+            }
+
+            if ($errors !== []) {
+                $title = sprintf('Template %s (%s)', $result->path, $result->identifier);
+                $output[] = implode(PHP_EOL . '  ', [$title, ...$errors]);
+            }
+        }
+
+        return implode(PHP_EOL . PHP_EOL, $output) . PHP_EOL;
     }
 
     /**
@@ -223,49 +307,12 @@ final class ConsoleRunner
             }
             $context->setVariableProvider($variableProvider);
         }
-        if (isset($arguments[self::ARGUMENT_WARMUP])) {
-            $result = $context->getCache()->getCacheWarmer()->warm($context);
-            return $this->renderWarmupResult($result);
-        }
         if (isset($arguments[self::ARGUMENT_SOCKET])) {
             $this->listenIndefinitelyOnSocket($arguments[self::ARGUMENT_SOCKET], $view);
             return '';
         }
         $action = $arguments[self::ARGUMENT_CONTROLLERACTION] ?? null;
         return $view->render($action);
-    }
-
-    private function renderWarmupResult(FluidCacheWarmupResult $result): string
-    {
-        $string = PHP_EOL . 'Template cache warmup results' . PHP_EOL . PHP_EOL;
-        foreach ($result->getResults() as $templatePathAndFilename => $aspects) {
-            $string .= sprintf(
-                "%s\n    Compiled? %s\n    Has Layout? %s\n",
-                $templatePathAndFilename,
-                $aspects[FluidCacheWarmupResult::RESULT_COMPILABLE] ? 'YES' : 'NO',
-                $aspects[FluidCacheWarmupResult::RESULT_HASLAYOUT] ? 'YES' : 'NO',
-            );
-            if (isset($aspects[FluidCacheWarmupResult::RESULT_COMPILABLE])) {
-                $string .= sprintf(
-                    "    Compiled as: %s\n",
-                    $aspects[FluidCacheWarmupResult::RESULT_COMPILEDCLASS],
-                );
-            }
-            if (isset($aspects[FluidCacheWarmupResult::RESULT_FAILURE])) {
-                $string .= sprintf(
-                    "    Compilation failure reason: %s\n",
-                    $aspects[FluidCacheWarmupResult::RESULT_FAILURE],
-                );
-            }
-            if (isset($aspects[FluidCacheWarmupResult::RESULT_MITIGATIONS])) {
-                foreach ($aspects[FluidCacheWarmupResult::RESULT_MITIGATIONS] as $index => $mitigation) {
-                    $string .= sprintf("    Suggested mitigation #%d: %s\n", $index + 1, $mitigation);
-                }
-            }
-            $string .= PHP_EOL;
-        }
-        $string .= PHP_EOL;
-        return $string;
     }
 
     private function listenIndefinitelyOnSocket(string $socketIdentifier, AbstractTemplateView $view): void
@@ -474,31 +521,6 @@ When specifying a VariableProvider class name it is possible to additionally add
 simple string value which gets passed to the VariableProvider through ->setSource()
 upon instantiation. If working with custom VariableProviders, check the documentation
 for each VariableProvider to know which source types are supported.
-
-Cache warmup can be triggered by calling:
-
-    ./bin/fluid run --warmup --cacheDirectory "/path/to/cache"
-
-And should you require it you can pass the class name of a custom RenderingContext (which can return a
-custom FluidCacheWarmer instance!):
-
-    ./bin/fluid run --warmup --renderingContext "My\\Custom\\RenderingContext"
-
-Furthermore, should you require special bootstrapping of a framework, you can specify
-an entry point containing a bootstrap (with or without output, does not matter) which
-will be required/included as part of the initialisation.
-
-    ./bin/fluid run --warmup --renderingContext "My\\Custom\\RenderingContext" --bootstrap /path/to/bootstrap.php
-
-Or using a public, static function on a class which bootstraps:
-
-    ./bin/fluid run --warmup --renderingContext "My\\Custom\\RenderingContext" --bootstrap MyBootstrapClass::bootstrapMethod
-
-When passing a class-and-method bootstrap it is important that the method has no
-required arguments and is possible to call as static method.
-
-Note: the bootstrapping can also be used for other cases, but be careful to use
-a bootstrapper which does not cause output if you intend to render templates.
 
 A WebSocket mode is available. When starting the CLI utility in WebSocket mode,
 very basic HTTP requests are rendered directly by listening on an IP:PORT combination:
