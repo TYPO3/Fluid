@@ -93,18 +93,12 @@ class ViewHelperNode extends AbstractNode
     public function addChildNode(NodeInterface $childNode): void
     {
         parent::addChildNode($childNode);
+        /** @todo remove with Fluid v5 */
         $this->uninitializedViewHelper->setChildNodes($this->childNodes);
     }
 
     /**
      * Call the view helper associated with this object.
-     *
-     * First, it evaluates the arguments of the view helper.
-     *
-     * If the view helper implements \TYPO3Fluid\Fluid\Core\ViewHelper\ChildNodeAccessInterface,
-     * it calls setChildNodes(array childNodes) on the view helper.
-     *
-     * Afterward, checks that the view helper did not leave a variable lying around.
      *
      * @param RenderingContextInterface $renderingContext
      * @return mixed evaluated node after the view helper has been called. This can be of any type,

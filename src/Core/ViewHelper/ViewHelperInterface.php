@@ -42,6 +42,7 @@ interface ViewHelperInterface
 
     /**
      * @param NodeInterface[] $nodes
+     * @deprecated will be removed with Fluid v5
      */
     public function setChildNodes(array $nodes);
 

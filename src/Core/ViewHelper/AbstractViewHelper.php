@@ -53,6 +53,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     /**
      * @var NodeInterface[] array
      * @api
+     * @deprecated will be removed with Fluid v5. Use $viewHelperNode->getChildNodes() instead
      */
     protected $childNodes = [];
 
@@ -232,6 +233,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * framework. Populates $this->viewHelperNode.
      * @param NodeInterface[] $childNodes
      * @internal
+     * @deprecated will be removed with Fluid v5. Use $viewHelperNode->getChildNodes() instead
      */
     public function setChildNodes(array $childNodes)
     {
