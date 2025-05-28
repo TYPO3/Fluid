@@ -14,7 +14,9 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperCollection;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\TestViewHelperResolverDelegate;
 use TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper;
 
 final class ViewHelperResolverTest extends TestCase
@@ -33,6 +35,15 @@ final class ViewHelperResolverTest extends TestCase
         $subject = new ViewHelperResolver();
         $subject->addNamespace('t', ['test']);
         self::assertSame(['test'], $subject->getNamespaces()['t']);
+    }
+
+    #[Test]
+    public function addNamespaceWithDelegateInstanceRecordsNamespace(): void
+    {
+        $subject = new ViewHelperResolver();
+        $subject->addNamespace('t', new TestViewHelperResolverDelegate());
+        $subject->addNamespace('t', new ViewHelperCollection('test'));
+        self::assertSame([TestViewHelperResolverDelegate::class, 'test'], $subject->getNamespaces()['t']);
     }
 
     #[Test]
@@ -85,6 +96,14 @@ final class ViewHelperResolverTest extends TestCase
         $subject = new ViewHelperResolver();
         $subject->setNamespaces(['t' => 'test']);
         self::assertSame(['t' => ['test']], $subject->getNamespaces());
+    }
+
+    #[Test]
+    public function setNamespacesConvertsDelegatesToStrings(): void
+    {
+        $subject = new ViewHelperResolver();
+        $subject->setNamespaces(['t' => new TestViewHelperResolverDelegate(), 'u' => [new ViewHelperCollection('test')]]);
+        self::assertSame(['t' => [TestViewHelperResolverDelegate::class], 'u' => ['test']], $subject->getNamespaces());
     }
 
     public static function isNamespaceValidReturnsExpectedValueDataProvider(): array
@@ -165,6 +184,17 @@ final class ViewHelperResolverTest extends TestCase
     }
 
     #[Test]
+    public function resolveViewHelperClassNameSupportsResolverDelegates(): void
+    {
+        $subject = new ViewHelperResolver();
+        $subject->addNamespace('f', 'Foo1\\Bar1');
+        $subject->addNamespace('f', 'TYPO3Fluid\\Fluid\\ViewHelpers');
+        $subject->addNamespace('f', TestViewHelperResolverDelegate::class);
+        self::assertSame('TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers\TestViewHelperResolverDelegate\Render', $subject->resolveViewHelperClassName('f', 'render'));
+        self::assertSame('TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers\TestViewHelperResolverDelegate\Render_Sub', $subject->resolveViewHelperClassName('f', 'render.sub'));
+    }
+
+    #[Test]
     public function resolveViewHelperClassNameDoesNotChokeOnNullInMultipleNamespaces(): void
     {
         $subject = new ViewHelperResolver();
@@ -206,5 +236,23 @@ final class ViewHelperResolverTest extends TestCase
         $subject = new ViewHelperResolver();
         $result = $subject->createViewHelperInstance('f', 'render');
         self::assertInstanceOf(RenderViewHelper::class, $result);
+    }
+
+    public static function createResolverDelegateInstanceFromClassNameDataProvider(): iterable
+    {
+        return [
+            [TestViewHelperResolverDelegate::class, TestViewHelperResolverDelegate::class],
+            ['Vendor\\Package\\NonExistentClass', ViewHelperCollection::class],
+            ['TYPO3Fluid\\Fluid\\ViewHelpers', ViewHelperCollection::class],
+        ];
+    }
+
+    #[DataProvider('createResolverDelegateInstanceFromClassNameDataProvider')]
+    #[Test]
+    public function createResolverDelegateInstanceFromClassName(string $resolverClassName, string $expectedInstanceOf): void
+    {
+        $subject = new ViewHelperResolver();
+        $result = $subject->createResolverDelegateInstanceFromClassName($resolverClassName);
+        self::assertInstanceOf($expectedInstanceOf, $result);
     }
 }
