@@ -21,23 +21,55 @@ final class ArgumentViewHelperTest extends AbstractFunctionalTestCase
         return [
             'all parameters provided with correct types' => [
                 ['title' => 'My title', 'tags' => ['tag1', 'tag2'], 'user' => 'me'],
-                ['title' => 'My title', 'tags' => ['tag1', 'tag2'], 'user' => 'me'],
+                ['title' => 'My title', 'tags' => ['tag1', 'tag2'], 'user' => 'me', 'flag' => null],
             ],
             'all parameters provided with type conversion' => [
                 ['title' => 123, 'tags' => ['tag1', 'tag2'], 'user' => 1.23],
-                ['title' => '123', 'tags' => ['tag1', 'tag2'], 'user' => '1.23'],
+                ['title' => '123', 'tags' => ['tag1', 'tag2'], 'user' => '1.23', 'flag' => null],
             ],
             'fallback to default value' => [
                 ['title' => 'My title', 'tags' => ['tag1', 'tag2']],
-                ['title' => 'My title', 'tags' => ['tag1', 'tag2'], 'user' => 'admin'],
+                ['title' => 'My title', 'tags' => ['tag1', 'tag2'], 'user' => 'admin', 'flag' => null],
             ],
             'optional parameter not provided' => [
                 ['title' => 'My title'],
-                ['title' => 'My title', 'tags' => null, 'user' => 'admin'],
+                ['title' => 'My title', 'tags' => null, 'user' => 'admin', 'flag' => null],
             ],
             'additional parameter provided' => [
                 ['title' => 'My title', 'additional' => 'foo'],
-                ['title' => 'My title', 'additional' => 'foo', 'tags' => null, 'user' => 'admin'],
+                ['title' => 'My title', 'additional' => 'foo', 'tags' => null, 'user' => 'admin', 'flag' => null],
+            ],
+            'boolean true' => [
+                ['title' => 'My title', 'flag' => true],
+                ['title' => 'My title', 'flag' => true, 'tags' => null, 'user' => 'admin'],
+            ],
+            'boolean false' => [
+                ['title' => 'My title', 'flag' => false],
+                ['title' => 'My title', 'flag' => false, 'tags' => null, 'user' => 'admin'],
+            ],
+            'boolean as integer true' => [
+                ['title' => 'My title', 'flag' => 1],
+                ['title' => 'My title', 'flag' => true, 'tags' => null, 'user' => 'admin'],
+            ],
+            'boolean as integer false' => [
+                ['title' => 'My title', 'flag' => 0],
+                ['title' => 'My title', 'flag' => false, 'tags' => null, 'user' => 'admin'],
+            ],
+            'boolean as expression true' => [
+                ['title' => 'My title', 'flag' => '1 == 1'],
+                ['title' => 'My title', 'flag' => true, 'tags' => null, 'user' => 'admin'],
+            ],
+            'boolean as expression false' => [
+                ['title' => 'My title', 'flag' => '1 == 0'],
+                ['title' => 'My title', 'flag' => false, 'tags' => null, 'user' => 'admin'],
+            ],
+            'boolean as expression with variable true' => [
+                ['title' => 'My title', 'flag' => '{title} === \'My title\''],
+                ['title' => 'My title', 'flag' => true, 'tags' => null, 'user' => 'admin'],
+            ],
+            'boolean as expression with variable false' => [
+                ['title' => 'My title', 'flag' => '{title} === \'Something else\''],
+                ['title' => 'My title', 'flag' => false, 'tags' => null, 'user' => 'admin'],
             ],
         ];
     }
@@ -197,7 +229,7 @@ final class ArgumentViewHelperTest extends AbstractFunctionalTestCase
     public function templateArgumentsAreIgnoredWithLayout(string $templateSource): void
     {
         $layoutRootPath = __DIR__ . '/../Fixtures/Layouts/';
-        $variables = ['title' => 'My title', 'tags' => ['tag1', 'tag2'], 'user' => 'me'];
+        $variables = ['title' => 'My title', 'tags' => ['tag1', 'tag2'], 'user' => 'me', 'flag' => null];
         $view = new TemplateView();
         $view->assignMultiple($variables);
         $view->getRenderingContext()->setCache(self::$cache);
@@ -211,5 +243,41 @@ final class ArgumentViewHelperTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setLayoutRootPaths([$layoutRootPath]);
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($templateSource);
         self::assertSame($variables, json_decode(trim($view->render()), true));
+    }
+
+    public static function booleanParserHasContextDataProvider(): iterable
+    {
+        return [
+            [
+                '<f:render partial="PartialWithArgumentDefinitions" arguments="{title: \'\', flag: \'{myVariable} == \\\'foo\\\'\'}" />',
+                ['myVariable' => 'foo'],
+                ['title' => '', 'flag' => true, 'tags' => null, 'user' => 'admin'],
+            ],
+            [
+                '<f:render partial="PartialWithArgumentDefinitions" arguments="{title: \'\', flag: \'{myVariable} == \\\'foo\\\'\'}" />',
+                ['myVariable' => 'bar'],
+                ['title' => '', 'flag' => false, 'tags' => null, 'user' => 'admin'],
+            ],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('booleanParserHasContextDataProvider')]
+    public function booleanParserHasContext(string $templateSource, array $variables, array $expected): void
+    {
+        $partialRootPath = __DIR__ . '/../Fixtures/Partials/';
+        $view = new TemplateView();
+        $view->assignMultiple($variables);
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setPartialRootPaths([$partialRootPath]);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($templateSource);
+        self::assertSame($expected, json_decode(trim($view->render()), true), 'uncached');
+
+        $view = new TemplateView();
+        $view->assignMultiple($variables);
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setPartialRootPaths([$partialRootPath]);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($templateSource);
+        self::assertSame($expected, json_decode(trim($view->render()), true), 'cached');
     }
 }

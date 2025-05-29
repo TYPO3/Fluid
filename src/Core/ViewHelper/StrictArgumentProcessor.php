@@ -32,13 +32,13 @@ final readonly class StrictArgumentProcessor implements ArgumentProcessorInterfa
         if (!$definition->isRequired() && $value === $definition->getDefaultValue()) {
             return $value;
         }
-        // bool/boolean is not handled separately here because Fluid's BooleanParser
-        // already ensures valid boolean values
+        // Boolean expressions are evaluated at the parser level, so we just make sure
+        // that the input has the correct type
         return match ($definition->getType()) {
             'string' => is_scalar($value) ? (string)$value : $value,
             'int', 'integer' => is_scalar($value) ? (int)$value : $value,
             'float', 'double' => is_scalar($value) ? (float)$value : $value,
-            default => $value,
+            default => $definition->isBooleanType() && is_scalar($value) ? (bool)$value : $value,
         };
     }
 
