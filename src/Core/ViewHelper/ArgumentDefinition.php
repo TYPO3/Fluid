@@ -129,4 +129,9 @@ class ArgumentDefinition
     {
         return $this->escape;
     }
+
+    public function isBooleanType(): bool
+    {
+        return $this->getType() === 'bool' || $this->getType() === 'boolean';
+    }
 }

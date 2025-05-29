@@ -538,9 +538,8 @@ class TemplateParser
                 if (isset($argumentDefinitions[$argument])) {
                     $argumentDefinition = $argumentDefinitions[$argument];
                     $this->escapingEnabled = $this->escapingEnabled && $this->isArgumentEscaped($viewHelper, $argumentDefinition);
-                    $isBoolean = $argumentDefinition->getType() === 'boolean' || $argumentDefinition->getType() === 'bool';
                     $argumentsObjectTree[$argument] = $this->buildArgumentObjectTree($value);
-                    if ($isBoolean) {
+                    if ($argumentDefinition->isBooleanType()) {
                         $argumentsObjectTree[$argument] = new BooleanNode($argumentsObjectTree[$argument]);
                     }
                 } else {
@@ -558,7 +557,7 @@ class TemplateParser
     protected function isArgumentEscaped(ViewHelperInterface $viewHelper, ?ArgumentDefinition $argumentDefinition = null): bool
     {
         $hasDefinition = $argumentDefinition instanceof ArgumentDefinition;
-        $isBoolean = $hasDefinition && ($argumentDefinition->getType() === 'boolean' || $argumentDefinition->getType() === 'bool');
+        $isBoolean = $hasDefinition && $argumentDefinition->isBooleanType();
         $escapingEnabled = $this->configuration->isViewHelperArgumentEscapingEnabled();
         $isArgumentEscaped = $hasDefinition && $argumentDefinition->getEscape() === true;
         $isContentArgument = $hasDefinition && $argumentDefinition->getName() === $viewHelper->getContentArgumentName();
@@ -734,7 +733,7 @@ class TemplateParser
                 $argumentDefinition = null;
                 if (isset($argumentDefinitions[$arrayKey])) {
                     $argumentDefinition = $argumentDefinitions[$arrayKey];
-                    $isBoolean = $argumentDefinitions[$arrayKey]->getType() === 'boolean' || $argumentDefinitions[$arrayKey]->getType() === 'bool';
+                    $isBoolean = $argumentDefinitions[$arrayKey]->isBooleanType();
                 } else {
                     $assignInto = &$undeclaredArguments;
                 }
