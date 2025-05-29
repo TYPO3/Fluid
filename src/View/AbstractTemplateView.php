@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\View;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\PassthroughSourceException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
@@ -416,7 +417,13 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
         foreach ($parsedTemplate->getArgumentDefinitions() as $argumentDefinition) {
             $argumentName = $argumentDefinition->getName();
             if ($variableProvider->exists($argumentName)) {
-                $processedValue = $argumentProcessor->process($variableProvider->get($argumentName), $argumentDefinition);
+                $argumentValue = $variableProvider->get($argumentName);
+                if ($argumentDefinition->isBooleanType() && !is_bool($argumentValue) && is_scalar($argumentValue)) {
+                    // Context is only relevant if the boolean expression is passed directly from PHP. If it's created in
+                    // templates (e. g. when calling a partial with an argument), variables are already substituted
+                    $argumentValue = (new BooleanParser())->evaluate((string)$argumentValue, $variableProvider->getAll());
+                }
+                $processedValue = $argumentProcessor->process($argumentValue, $argumentDefinition);
                 if (!$argumentProcessor->isValid($processedValue, $argumentDefinition)) {
                     throw new Exception(sprintf(
                         'The argument "%s" for %s "%s" is registered with type "%s", but the provided value is of type "%s".',

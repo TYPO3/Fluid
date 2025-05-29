@@ -1,6 +1,7 @@
 <f:argument name="title" type="string" />
 <f:argument name="tags" type="string[]" optional="{true}" />
 <f:argument name="user" type="string" optional="{true}" default="admin" />
+<f:argument name="flag" type="boolean" optional="{true}" />
 
 {_all -> f:format.json() -> f:format.raw()}
 <f:render section="test" />
