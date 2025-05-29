@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
@@ -29,5 +30,22 @@ final class ArgumentDefinitionTest extends TestCase
         self::assertEquals($argumentDefinition->getDescription(), $description, 'Description could not be retrieved correctly.');
         self::assertEquals($argumentDefinition->getType(), $type, 'Type could not be retrieved correctly');
         self::assertEquals($argumentDefinition->isRequired(), $isRequired, 'Required flag could not be retrieved correctly.');
+    }
+
+    public static function determinesBooleanCorrectlyDataProvider(): array
+    {
+        return [
+            [new ArgumentDefinition('test', 'bool', '', false), true],
+            [new ArgumentDefinition('test', 'boolean', '', false), true],
+            [new ArgumentDefinition('test', 'bool[]', '', false), false],
+            [new ArgumentDefinition('test', 'string', '', false), false],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('determinesBooleanCorrectlyDataProvider')]
+    public function determinesBooleanCorrectly(ArgumentDefinition $argumentDefinition, bool $expected): void
+    {
+        self::assertSame($expected, $argumentDefinition->isBooleanType());
     }
 }
