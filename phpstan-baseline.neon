@@ -1,12 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Instanceof between TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\NodeInterface and TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\NodeInterface will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: src/Core/Parser/SyntaxTree/RootNode.php
-
-		-
 			message: '#^Binary operation "\+" between non\-empty\-string and 0 results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
