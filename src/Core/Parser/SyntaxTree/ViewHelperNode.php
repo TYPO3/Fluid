@@ -54,6 +54,18 @@ class ViewHelperNode extends AbstractNode
     }
 
     /**
+     * Returns a clone of the original instance with the specified arguments
+     *
+     * @param NodeInterface[] $arguments Arguments of view helper - each value is a RootNode.
+     */
+    public function withArguments(array $arguments): self
+    {
+        $viewHelperNode = clone $this;
+        $viewHelperNode->arguments = $arguments;
+        return $viewHelperNode;
+    }
+
+    /**
      * @return ArgumentDefinition[]
      */
     public function getArgumentDefinitions(): array
