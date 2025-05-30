@@ -41,7 +41,7 @@ class ViewHelperNode extends AbstractNode
      * @param string $identifier the name of the ViewHelper to render, inside the namespace provided.
      * @param NodeInterface[] $arguments Arguments of view helper - each value is a RootNode.
      */
-    public function __construct(RenderingContextInterface $renderingContext, string $namespace, string $identifier, array $arguments)
+    public function __construct(RenderingContextInterface $renderingContext, string $namespace, string $identifier, array $arguments = [])
     {
         $resolver = $renderingContext->getViewHelperResolver();
         $this->arguments = $arguments;
@@ -78,6 +78,15 @@ class ViewHelperNode extends AbstractNode
     public function getViewHelperClassName(): string
     {
         return $this->viewHelperClassName;
+    }
+
+    /**
+     * @internal only for parser
+     * @param NodeInterface[] $arguments Arguments of view helper - each value is a RootNode.
+     */
+    public function setArguments(array $arguments): void
+    {
+        $this->arguments = $arguments;
     }
 
     /**
