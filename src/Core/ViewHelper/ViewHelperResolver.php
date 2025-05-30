@@ -485,6 +485,37 @@ class ViewHelperResolver
     }
 
     /**
+     * Returns the first responsible delegate for a ViewHelper namespace
+     *
+     * @internal will probably change with Fluid v5 when internal namespace handling is consolidated
+     */
+    public function getPrimaryDelegateForNamespace(string $identifier): ?ViewHelperResolverDelegateInterface
+    {
+        if (isset($this->getNamespaces()[$identifier])) {
+            foreach (array_reverse($this->getNamespaces()[$identifier]) as $namespace) {
+                // null values within array can safely be skipped. Only if the whole definition is null,
+                // the whole namespace is ignored by Fluid
+                if ($namespace === null) {
+                    continue;
+                }
+                return $this->resolverDelegates[$namespace] ?? $this->createResolverDelegateInstanceFromClassName($namespace);
+            }
+        }
+        // @todo remove this with Fluid v5
+        if (isset($this->inheritedNamespaces[$identifier])) {
+            foreach (array_reverse($this->inheritedNamespaces[$identifier]) as $namespace) {
+                // null values within array can safely be skipped. Only if the whole definition is null,
+                // the whole namespace is ignored by Fluid
+                if ($namespace === null) {
+                    continue;
+                }
+                return $this->resolverDelegates[$namespace] ?? $this->createResolverDelegateInstanceFromClassName($namespace);
+            }
+        }
+        return null;
+    }
+
+    /**
      * Resolve a viewhelper name.
      *
      * @param string $namespaceIdentifier Namespace identifier for the view helper.
