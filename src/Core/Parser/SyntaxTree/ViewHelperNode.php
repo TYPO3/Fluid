@@ -41,7 +41,7 @@ class ViewHelperNode extends AbstractNode
      * @param string $identifier the name of the ViewHelper to render, inside the namespace provided.
      * @param NodeInterface[] $arguments Arguments of view helper - each value is a RootNode.
      */
-    public function __construct(RenderingContextInterface $renderingContext, string $namespace, string $identifier, array $arguments)
+    public function __construct(RenderingContextInterface $renderingContext, string $namespace, string $identifier, array $arguments = [])
     {
         $resolver = $renderingContext->getViewHelperResolver();
         $this->arguments = $arguments;
@@ -51,6 +51,18 @@ class ViewHelperNode extends AbstractNode
         // Note: RenderingContext required here though replaced later. See https://github.com/TYPO3Fluid/Fluid/pull/93
         $this->uninitializedViewHelper->setRenderingContext($renderingContext);
         $this->argumentDefinitions = $resolver->getArgumentDefinitionsForViewHelper($this->uninitializedViewHelper);
+    }
+
+    /**
+     * Returns a clone of the original instance with the specified arguments
+     *
+     * @param NodeInterface[] $arguments Arguments of view helper - each value is a RootNode.
+     */
+    public function withArguments(array $arguments): self
+    {
+        $viewHelperNode = clone $this;
+        $viewHelperNode->arguments = $arguments;
+        return $viewHelperNode;
     }
 
     /**
