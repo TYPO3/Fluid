@@ -19,6 +19,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
  */
 class ViewHelperNode extends AbstractNode
 {
+    protected readonly string $namespace;
+    protected readonly string $name;
     protected string $viewHelperClassName;
 
     /**
@@ -44,6 +46,8 @@ class ViewHelperNode extends AbstractNode
     public function __construct(RenderingContextInterface $renderingContext, string $namespace, string $identifier, array $arguments)
     {
         $resolver = $renderingContext->getViewHelperResolver();
+        $this->namespace = $namespace;
+        $this->name = $identifier;
         $this->arguments = $arguments;
         $this->viewHelperClassName = $resolver->resolveViewHelperClassName($namespace, $identifier);
         $this->uninitializedViewHelper = $resolver->createViewHelperInstanceFromClassName($this->viewHelperClassName);
@@ -51,6 +55,16 @@ class ViewHelperNode extends AbstractNode
         // Note: RenderingContext required here though replaced later. See https://github.com/TYPO3Fluid/Fluid/pull/93
         $this->uninitializedViewHelper->setRenderingContext($renderingContext);
         $this->argumentDefinitions = $resolver->getArgumentDefinitionsForViewHelper($this->uninitializedViewHelper);
+    }
+
+    public function getNamespace(): string
+    {
+        return $this->namespace;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     /**
