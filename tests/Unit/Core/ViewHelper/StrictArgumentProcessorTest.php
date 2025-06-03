@@ -62,7 +62,35 @@ final class StrictArgumentProcessorTest extends TestCase
                 'expectedProcessedValue' => ['bad'],
                 'expectedProcessedValidity' => false,
             ];
-            // De-facto, all non-boolean values are converted by the parser
+            yield [
+                'type' => $type,
+                'value' => 1,
+                'expectedValidity' => false,
+                'expectedProcessedValue' => true,
+                'expectedProcessedValidity' => true,
+            ];
+            yield [
+                'type' => $type,
+                'value' => 'foo',
+                'expectedValidity' => false,
+                'expectedProcessedValue' => true,
+                'expectedProcessedValidity' => true,
+            ];
+            yield [
+                'type' => $type,
+                'value' => 0,
+                'expectedValidity' => false,
+                'expectedProcessedValue' => false,
+                'expectedProcessedValidity' => true,
+            ];
+            yield [
+                'type' => $type,
+                'value' => '',
+                'expectedValidity' => false,
+                'expectedProcessedValue' => false,
+                'expectedProcessedValidity' => true,
+            ];
+            // De-facto, in most circumstances non-boolean values are converted by the parser
             yield [
                 'type' => $type,
                 'value' => (new BooleanNode(123))->evaluate(new RenderingContext()),
