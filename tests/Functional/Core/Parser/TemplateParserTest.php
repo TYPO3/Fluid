@@ -62,6 +62,7 @@ final class TemplateParserTest extends AbstractFunctionalTestCase
             'opening tag' => ['<invalid:foo>'],
             'closing tag' => ['</invalid:foo>'],
             'self-closing tag' => ['<invalid:foo />'],
+            'inline syntax' => ['{invalid:foo()}'],
         ];
     }
 
@@ -83,6 +84,7 @@ final class TemplateParserTest extends AbstractFunctionalTestCase
             'only closing tag' => ['</f:render>', 1224485838],
             'non-matching tags' => ['<f:render></f:format.trim>', 1224485398],
             'missing required argument' => ['<test:requiredArgument optional="test" />', 1237823699],
+            'missing required argument, inline syntax' => ['{test:requiredArgument(optional: "test")} />', 1237823699],
         ];
     }
 
