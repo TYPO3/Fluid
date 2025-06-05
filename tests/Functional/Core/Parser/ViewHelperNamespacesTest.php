@@ -20,12 +20,12 @@ final class ViewHelperNamespacesTest extends AbstractFunctionalTestCase
     {
         return [
             'Ignoring namespaces without conflict with registered namespace' => [
-                '{namespace z*}{namespace bar}<zoo:bar /><bar:foo></bar:foo><zoo.bar:baz /><f:format.raw>foobar</f:format.raw>',
-                '<zoo:bar /><bar:foo></bar:foo><zoo.bar:baz />foobar',
+                '{namespace z*}{namespace bar}<zoo:bar /><bar:foo></bar:foo><zoo.bar:baz />{zoo:bar()}{bar:foo()}{zoo.bar:baz()}<f:format.raw>foobar</f:format.raw>',
+                '<zoo:bar /><bar:foo></bar:foo><zoo.bar:baz />{zoo:bar()}{bar:foo()}{zoo.bar:baz()}foobar',
             ],
             'Ignoring namespaces with conflict with registered namespace gives registered namespace priority' => [
-                '{namespace f*}{namespace bar}<foo:bar /><bar:foo></bar:foo><foo.bar:baz /><f:format.raw>foobar</f:format.raw>',
-                '<foo:bar /><bar:foo></bar:foo><foo.bar:baz />foobar',
+                '{namespace f*}{namespace bar}<foo:bar /><bar:foo></bar:foo><foo.bar:baz />{bar:foo()}{foo.bar:baz()}<f:format.raw>foobar</f:format.raw>',
+                '<foo:bar /><bar:foo></bar:foo><foo.bar:baz />{bar:foo()}{foo.bar:baz()}foobar',
             ],
         ];
     }
@@ -125,5 +125,33 @@ final class ViewHelperNamespacesTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
         $output = $view->render();
         self::assertSame($expected, $output);
+    }
+
+    #[Test]
+    #[DataProvider('inlineViewHelperSyntaxDataProvider')]
+    public function inlineViewHelperSyntaxIgnoredNamespace(string $source, string $expected): void
+    {
+        // Ugly compiler detail: Because the templates would be exactly the same, the both
+        // test methods would share the compiler's runtime cache, which is not what we want.
+        $cacheBustingPrefix = 'ignored';
+
+        $view = new TemplateView();
+        $view->assign('input', 'input');
+        $view->assign('nestedInput', ['input']);
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', null);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($cacheBustingPrefix . $source);
+        $output = $view->render();
+        self::assertSame($cacheBustingPrefix . $source, $output);
+
+        // Second run to verify cached behavior.
+        $view = new TemplateView();
+        $view->assign('input', 'input');
+        $view->assign('nestedInput', ['input']);
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', null);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($cacheBustingPrefix . $source);
+        $output = $view->render();
+        self::assertSame($cacheBustingPrefix . $source, $output);
     }
 }
