@@ -253,6 +253,8 @@ class TemplateParser
                     );
                 }
             } elseif (preg_match(Patterns::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG, $templateElement, $matchedVariables) > 0) {
+                // @todo if exceptions happen here, they should be handled by the error handler as well.
+                //       Currently, this isn't possible because the parsing state is inconsistent afterwards
                 if ($this->closingViewHelperTagHandler(
                     $state,
                     $matchedVariables['NamespaceIdentifier'],
@@ -431,8 +433,9 @@ class TemplateParser
      *
      * @param ParsingState $state The current parsing state
      * @param string $objectAccessorString String which identifies which objects to fetch
+     * @return bool  true if the object accessor has been added to the node tree
      */
-    protected function objectAccessorHandler(ParsingState $state, string $objectAccessorString, string $delimiter, string $viewHelperString, string $additionalViewHelpersString): void
+    protected function objectAccessorHandler(ParsingState $state, string $objectAccessorString, string $delimiter, string $viewHelperString, string $additionalViewHelpersString): bool
     {
         $viewHelperString .= $additionalViewHelpersString;
         $numberOfViewHelpers = 0;
@@ -447,11 +450,19 @@ class TemplateParser
         // ViewHelpers
         $matches = [];
         if (strlen($viewHelperString) > 0 && preg_match_all(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER, $viewHelperString, $matches, PREG_SET_ORDER) > 0) {
-            // The last ViewHelper has to be added first for correct chaining.
-            // Note that ignoring namespaces is NOT possible in inline syntax; any inline syntax that contains a namespace
-            // which is invalid will be reported as an error regardless of whether the namespace is marked as ignored.
+            // First validate all ViewHelper namespace in the chain.
+            // The last ViewHelper has to be processed first for correct chaining.
+            $matches = array_reverse($matches);
+            $ignoredNamespaceInChain = false;
             $viewHelperResolver = $this->renderingContext->getViewHelperResolver();
-            foreach (array_reverse($matches) as $singleMatch) {
+            foreach ($matches as $singleMatch) {
+                // Check for ignored ViewHelper namespace
+                if ($viewHelperResolver->isNamespaceIgnored($singleMatch['NamespaceIdentifier'])) {
+                    $ignoredNamespaceInChain = true;
+                    continue;
+                }
+                // There still should be an exception if a ViewHelper namespace in the chain cannot
+                // be resolved, even if the whole chain is ignored later
                 try {
                     if (!$viewHelperResolver->isNamespaceValid($singleMatch['NamespaceIdentifier'])) {
                         throw new UnknownNamespaceException('Unknown Namespace: ' . $singleMatch['NamespaceIdentifier']);
@@ -459,6 +470,15 @@ class TemplateParser
                 } catch (InheritedNamespaceException) {
                     // @todo remove with Fluid 5
                 }
+            }
+
+            // If (at least) one ViewHelper's namespace is ignored, the whole chain of ViewHelpers
+            // is skipped and left as-is in the template.
+            if ($ignoredNamespaceInChain) {
+                return false;
+            }
+
+            foreach ($matches as $singleMatch) {
                 $viewHelperNode = $this->initializeViewHelperAndAddItToStack(
                     $state,
                     $singleMatch['NamespaceIdentifier'],
@@ -484,6 +504,8 @@ class TemplateParser
             $this->callInterceptor($node, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $state);
             $state->getNodeFromStack()->addChildNode($node);
         }
+
+        return true;
     }
 
     /**
@@ -631,13 +653,28 @@ class TemplateParser
             $matchedVariables = [];
             $expressionNode = null;
             if (preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
-                $this->objectAccessorHandler(
-                    $state,
-                    $matchedVariables['Object'],
-                    $matchedVariables['Delimiter'],
-                    (isset($matchedVariables['ViewHelper']) ? $matchedVariables['ViewHelper'] : ''),
-                    (isset($matchedVariables['AdditionalViewHelpers']) ? $matchedVariables['AdditionalViewHelpers'] : ''),
-                );
+                try {
+                    if (!$this->objectAccessorHandler(
+                        $state,
+                        $matchedVariables['Object'],
+                        $matchedVariables['Delimiter'],
+                        (isset($matchedVariables['ViewHelper']) ? $matchedVariables['ViewHelper'] : ''),
+                        (isset($matchedVariables['AdditionalViewHelpers']) ? $matchedVariables['AdditionalViewHelpers'] : ''),
+                    )) {
+                        // As fallback we simply render the accessor back as template content.
+                        $this->textHandler($state, $section);
+                    }
+                } catch (\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error) {
+                    $this->textHandler(
+                        $state,
+                        $this->renderingContext->getErrorHandler()->handleViewHelperError($error),
+                    );
+                } catch (Exception $error) {
+                    $this->textHandler(
+                        $state,
+                        $this->renderingContext->getErrorHandler()->handleParserError($error),
+                    );
+                }
             } elseif ($context === self::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS
                 && preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $section, $matchedVariables) > 0
             ) {
