@@ -13,6 +13,7 @@ use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolverDelegateInterface;
 
 /**
  * Node which will call a ViewHelper associated with this node.
@@ -29,6 +30,8 @@ class ViewHelperNode extends AbstractNode
     protected array $arguments = [];
 
     protected ViewHelperInterface $uninitializedViewHelper;
+
+    protected readonly ?ViewHelperResolverDelegateInterface $resolverDelegate;
 
     /**
      * @var ArgumentDefinition[]
@@ -51,6 +54,7 @@ class ViewHelperNode extends AbstractNode
         $this->arguments = $arguments;
         $this->viewHelperClassName = $resolver->resolveViewHelperClassName($namespace, $identifier);
         $this->uninitializedViewHelper = $resolver->createViewHelperInstanceFromClassName($this->viewHelperClassName);
+        $this->resolverDelegate = $resolver->getResponsibleDelegate($namespace, $identifier);
         $this->uninitializedViewHelper->setViewHelperNode($this);
         // Note: RenderingContext required here though replaced later. See https://github.com/TYPO3Fluid/Fluid/pull/93
         $this->uninitializedViewHelper->setRenderingContext($renderingContext);
@@ -92,6 +96,11 @@ class ViewHelperNode extends AbstractNode
     public function getViewHelperClassName(): string
     {
         return $this->viewHelperClassName;
+    }
+
+    public function getResolverDelegate(): ?ViewHelperResolverDelegateInterface
+    {
+        return $this->resolverDelegate;
     }
 
     /**

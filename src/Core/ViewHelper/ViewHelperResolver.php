@@ -419,6 +419,7 @@ class ViewHelperResolver
      */
     public function resolveViewHelperClassName(string $namespaceIdentifier, string $methodIdentifier): string
     {
+        // @todo consider moving caching responsibility to delegates in Fluid v5
         if (!isset($this->resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier])) {
             try {
                 $resolvedViewHelperClassName = $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier);
@@ -433,6 +434,48 @@ class ViewHelperResolver
             $this->resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier] = $resolvedViewHelperClassName;
         }
         return $this->resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier];
+    }
+
+    /**
+     * Returns the responsible delegate for a ViewHelper
+     *
+     * @internal will probably change with Fluid v5 when internal namespace handling is consolidated. Currently, this
+     *           might lead to duplicate code execution at parse time, but this is not relevant for cached templates.
+     */
+    public function getResponsibleDelegate(string $namespaceIdentifier, string $methodIdentifier): ?ViewHelperResolverDelegateInterface
+    {
+        if (isset($this->getNamespaces()[$namespaceIdentifier])) {
+            foreach (array_reverse($this->getNamespaces()[$namespaceIdentifier]) as $namespace) {
+                // null values within array can safely be skipped. Only if the whole definition is null,
+                // the whole namespace is ignored by Fluid
+                if ($namespace === null) {
+                    continue;
+                }
+                $this->resolverDelegates[$namespace] ??= $this->createResolverDelegateInstanceFromClassName($namespace);
+                try {
+                    $this->resolverDelegates[$namespace]->resolveViewHelperClassName($methodIdentifier);
+                    return $this->resolverDelegates[$namespace];
+                } catch (UnresolvableViewHelperException $e) {
+                }
+            }
+        }
+        // @todo remove this with Fluid v5
+        if (isset($this->inheritedNamespaces[$namespaceIdentifier])) {
+            foreach (array_reverse($this->inheritedNamespaces[$namespaceIdentifier]) as $namespace) {
+                // null values within array can safely be skipped. Only if the whole definition is null,
+                // the whole namespace is ignored by Fluid
+                if ($namespace === null) {
+                    continue;
+                }
+                $this->resolverDelegates[$namespace] ??= $this->createResolverDelegateInstanceFromClassName($namespace);
+                try {
+                    $this->resolverDelegates[$namespace]->resolveViewHelperClassName($methodIdentifier);
+                    return $this->resolverDelegates[$namespace];
+                } catch (UnresolvableViewHelperException $e) {
+                }
+            }
+        }
+        return null;
     }
 
     /**
