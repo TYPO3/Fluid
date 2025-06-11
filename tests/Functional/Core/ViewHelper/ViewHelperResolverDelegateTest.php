@@ -43,7 +43,6 @@ final class ViewHelperResolverDelegateTest extends AbstractFunctionalTestCase
         self::assertSame($expected, $view->render());
     }
 
-    #[DataProvider('renderViewHelpersFromDelegateDataProvider')]
     #[Test]
     public function invalidViewHelpersFromDelegateThrowsException(): void
     {

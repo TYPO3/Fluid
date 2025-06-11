@@ -19,9 +19,9 @@
         "ext-json": "*",
         "ext-simplexml": "*",
         "friendsofphp/php-cs-fixer": "^3.59.3",
-        "phpstan/phpstan": "^2.0.2",
-        "phpstan/phpstan-phpunit": "^2.0.1",
-        "phpunit/phpunit": "^11.4.3",
+        "phpstan/phpstan": "^2.1.17",
+        "phpstan/phpstan-phpunit": "^2.0.6",
+        "phpunit/phpunit": "^11.5.22 || ^12.2.1",
         "psr/container": "^2.0",
         "t3docs/fluid-documentation-generator": "^4.3"
     },

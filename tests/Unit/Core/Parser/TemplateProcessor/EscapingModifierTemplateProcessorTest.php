@@ -59,14 +59,12 @@ final class EscapingModifierTemplateProcessorTest extends TestCase
     public static function getErrorTestValues(): array
     {
         return [
-            [
-                '{escapingEnabled off}' . PHP_EOL . '{escapingEnabled off}',
-                '{escapingEnabled on}' . PHP_EOL . '{escapingEnabled on}',
-                '{escapingEnabled on}' . PHP_EOL . '{escapingEnabled off}',
-                '{escaping off}' . PHP_EOL . '{escaping off}',
-                '{escaping off}' . PHP_EOL . '{escaping true}',
-                '{escaping off}' . PHP_EOL . '{escaping false}',
-            ],
+            ['{escapingEnabled off}' . PHP_EOL . '{escapingEnabled off}'],
+            ['{escapingEnabled on}' . PHP_EOL . '{escapingEnabled on}'],
+            ['{escapingEnabled on}' . PHP_EOL . '{escapingEnabled off}'],
+            ['{escaping off}' . PHP_EOL . '{escaping off}'],
+            ['{escaping off}' . PHP_EOL . '{escaping true}'],
+            ['{escaping off}' . PHP_EOL . '{escaping false}'],
         ];
     }
 
