@@ -133,10 +133,15 @@ final class SlotViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
+    public function initializeArguments(): void
+    {
+        $this->registerArgument('name', 'string', '', false, self::DEFAULT_SLOT);
+    }
+
     public function render(): ?string
     {
         $variableContainer = $this->renderingContext->getViewHelperVariableContainer();
-        $slot = $variableContainer->get(self::class, self::DEFAULT_SLOT);
+        $slot = $variableContainer->get(self::class, $this->arguments['name']);
         return is_callable($slot) ? (string)$slot() : null;
     }
 }

@@ -17,6 +17,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolverDelegateInterface;
+use TYPO3Fluid\Fluid\ViewHelpers\FragmentViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\SlotViewHelper;
 
 /**
@@ -125,21 +126,40 @@ final class ComponentAdapter implements ViewHelperInterface
         return $this->getComponentDefinitionProvider()->getComponentRenderer()->renderComponent(
             $this->viewHelperNode->getName(),
             $this->arguments,
-            $this->viewHelperNode->getChildNodes() !== []
-                ? [SlotViewHelper::DEFAULT_SLOT => $this->buildRenderChildrenClosure()]
-                : [],
+            $this->buildRenderChildrenClosures(),
             $this->renderingContext,
         );
     }
 
-    private function buildRenderChildrenClosure(): callable
+    /**
+     * @return callable[]
+     */
+    protected function buildRenderChildrenClosures(): array
     {
-        return function (): mixed {
-            $this->renderingContextStack[] = $this->renderingContext;
-            $result = $this->viewHelperNode->evaluateChildNodes($this->renderingContext);
-            $this->setRenderingContext(array_pop($this->renderingContextStack));
-            return $result;
-        };
+        $fragments = [];
+        foreach ($this->viewHelperNode->getChildNodes() as $childNode) {
+            if ($childNode instanceof ViewHelperNode && $childNode->getUninitializedViewHelper() instanceof FragmentViewHelper) {
+                $fragmentName = $childNode->getArguments()['name']->evaluate($this->renderingContext) ?? SlotViewHelper::DEFAULT_SLOT;
+                $fragments[$fragmentName] = function () use ($childNode): mixed {
+                    $this->renderingContextStack[] = $this->renderingContext;
+                    $result = $childNode->evaluateChildNodes($this->renderingContext);
+                    $this->setRenderingContext(array_pop($this->renderingContextStack));
+                    return $result;
+                };
+            }
+        }
+        if ($fragments !== []) {
+            return $fragments;
+        }
+
+        return [
+            SlotViewHelper::DEFAULT_SLOT => function (): mixed {
+                $this->renderingContextStack[] = $this->renderingContext;
+                $result = $this->viewHelperNode->evaluateChildNodes($this->renderingContext);
+                $this->setRenderingContext(array_pop($this->renderingContextStack));
+                return $result;
+            }
+        ];
     }
 
     /**
@@ -152,7 +172,7 @@ final class ComponentAdapter implements ViewHelperInterface
         $initializationPhpCode = '// Rendering Component ' . $this->viewHelperNode->getNamespace() . ':' . $this->viewHelperNode->getName() . chr(10);
 
         $argumentsVariableName = $templateCompiler->variableName('arguments');
-        $renderChildrenClosureVariableName = $templateCompiler->variableName('renderChildrenClosure');
+        $renderChildrenClosuresVariableName = $templateCompiler->variableName('renderChildrenClosures');
 
         // Similarly to Fluid's ViewHelper processing, the responsible ViewHelper resolver delegate
         // is resolved, validated early and "baked in" to the cache to improve rendering times for
@@ -163,9 +183,7 @@ final class ComponentAdapter implements ViewHelperInterface
             var_export($resolverDelegate->getNamespace(), true),
             var_export($this->viewHelperNode->getName(), true),
             $argumentsVariableName,
-            $this->viewHelperNode->getChildNodes() !== []
-                ? '[\'' . SlotViewHelper::DEFAULT_SLOT . '\' => ' . $renderChildrenClosureVariableName . ']'
-                : '[]',
+            $renderChildrenClosuresVariableName,
         );
 
         $accumulatedArgumentInitializationCode = '';
@@ -194,11 +212,22 @@ final class ComponentAdapter implements ViewHelperInterface
 
         $argumentInitializationCode .= '];' . chr(10);
 
+        $fragments = [];
+        foreach ($this->viewHelperNode->getChildNodes() as $childNode) {
+            if ($childNode instanceof ViewHelperNode && $childNode->getUninitializedViewHelper() instanceof FragmentViewHelper) {
+                $fragmentName = $childNode->getArguments()['name']->evaluate($this->renderingContext) ?? SlotViewHelper::DEFAULT_SLOT;
+                $fragments[] =  "'$fragmentName' => " . $templateCompiler->wrapChildNodesInClosure($childNode);
+            }
+        }
+        if ($fragments === []) {
+            $fragments[] =  "'" . SlotViewHelper::DEFAULT_SLOT . "' => " . $templateCompiler->wrapChildNodesInClosure($this->viewHelperNode);
+        }
+
         // Build up closure which renders the child nodes
         $initializationPhpCode .= sprintf(
-            '%s = %s;' . chr(10),
-            $renderChildrenClosureVariableName,
-            $templateCompiler->wrapChildNodesInClosure($this->viewHelperNode),
+            '%s = [%s];' . chr(10),
+            $renderChildrenClosuresVariableName,
+            implode(',', $fragments)
         );
 
         $initializationPhpCode .= $accumulatedArgumentInitializationCode . chr(10) . $argumentInitializationCode;
@@ -214,7 +243,8 @@ final class ComponentAdapter implements ViewHelperInterface
      */
     public function isChildrenEscapingEnabled(): bool
     {
-        return true;
+        // @todo set this back to "true" once slots are detected correctly
+        return false;
     }
 
     /**
