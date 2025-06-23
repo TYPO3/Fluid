@@ -28,9 +28,17 @@ Extending Fluid
         ..  card-footer:: :ref:`Learn about ExpressionNodes <creating-expressionnodes>`
             :button-style: btn btn-secondary stretched-link
 
+    ..  card:: Providing External Components
+
+        Learn how to integrate external component libraries into Fluid
+
+        ..  card-footer:: :ref:`Learn about Component Providers <component-providers>`
+            :button-style: btn btn-secondary stretched-link
+
 ..  toctree::
     :hidden:
     :titlesonly:
 
     ViewHelpers
     ExpressionNodes
+    ComponentProviders
