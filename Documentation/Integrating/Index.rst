@@ -158,42 +158,117 @@ You should replace the :php:`ViewHelperInvoker` if:
 ViewHelperResolver
 ==================
 
-In Fluid most of your options for extending the language - for example,
-adding new ways to format strings, to make special condition types, custom links
-and such - are implemented as ViewHelpers. These are the special classes that are
-called using for example
-:xml:`<f:format.htmlentities>{somestring}</f:format.htmlentities>`.
+Most of your options for extending the Fluid language - like adding new ways
+to format strings, to make special condition types or to render custom links -
+are implemented as ViewHelpers. ViewHelpers are the special PHP classes that can
+be called directly from a Fluid template:
 
-A ViewHelper is essentially referenced by the namespace and the path to the
-ViewHelper, in this case `f` being the namespace and `format.htmlentities` being
-the path.
+..  code-block:: xml
+    <f:format.trim>{somestring}</f:format.trim>
 
-The :php:`ViewHelperResolver` is the class responsible for turning these two pieces
-of information into an expected class name and when this class is resolved, to
-retrieve from it the arguments you can use for each ViewHelper.
+A ViewHelper is essentially referenced by the namespace alias and the name of the
+ViewHelper, in this case `f` being the namespace alias and `format.trim` being
+the name. The alias refers to a namespace definition, which is provided either directly
+in the template file or via the PHP API of the :php:`ViewHelperResolver`, see
+:ref:`Registering/importing ViewHelpers <viewhelper-namespaces>`.
 
-You should use the default :php:`ViewHelperResolver` if:
+The :php:`ViewHelperResolver` is the class responsible for turning those pieces
+of information into an expected class name. By default, ViewHelpers are resolved
+by combining a defined ViewHelper namespace with the ViewHelper name to a fully
+qualified PHP class name: The ViewHelper class.
 
-1.  You can rely on the default way of turning a namespace and path of a
-    ViewHelper into a class name.
-2.  You can rely on the default way ViewHelpers return the arguments they
-    support.
-3.  You can rely on instantiation of ViewHelpers happening through a simple
-    `new $class()`.
+..  code-block:: xml
+    {namespace my=Vendor\MyPackage\ViewHelpers}
 
-You should replace the :php:`ViewHelperResolver` if:
+    <my:foo.bar />
 
-1.  You answered no to any of the above.
-2.  You want to make ViewHelper namespaces available in templates without
-    importing.
-3.  You want to use the dependency injection of your framework to resolve
-    and instantiate ViewHelper objects.
-4.  You want to change which class is resolved from a given namespace and
-    ViewHelper path, for example allowing you to add your own ViewHelpers to the
-    default namespace or replace default ViewHelpers with your own.
-5.  You want to change the argument retrieval from ViewHelpers or you want to
-    manipulate the arguments (for example, giving them a default value, making
-    them optional, changing their data type).
+The `<my:foo.bar />` ViewHelper would be resolved to the ViewHelper class
+`Vendor\MyPackage\ViewHelpers\Foo\BarViewHelper`.
+
+ViewHelperResolver delegates
+----------------------------
+
+In most cases, it shouldn't be necessary to replace the default
+:php:`ViewHelperResolver` with a custom implementation, since the default resolving
+logic can be modified per ViewHelper namespace by defining a custom resolver delegate:
+
+..  code-block:: php
+    namespace Vendor\MyPackage;
+
+    use TYPO3Fluid\Fluid\Core\ViewHelper\UnresolvableViewHelperException;
+    use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolverDelegateInterface;
+
+    final class CustomViewHelperResolverDelegate implements ViewHelperResolverDelegateInterface
+    {
+        public function resolveViewHelperClassName(string $viewHelperName): string
+        {
+            // Generate a ViewHelper class name based on the ViewHelper name
+            $className = $this->generateViewHelperClassName($viewHelperName);
+            // If the ViewHelper name is invalid, throw UnresolvableViewHelperException
+            if (!class_exists($className)) {
+                throw new UnresolvableViewHelperException('Class ' . $className . ' does not exist.', 1750667093);
+            }
+            return $className;
+        }
+
+        public function getNamespace(): string
+        {
+            return self::class;
+        }
+    }
+
+If that namespace is used in a template, the custom resolver delegate will
+be used to resolve the ViewHelper tag to the appropriate ViewHelper implementation:
+
+..  code-block:: xml
+    {namespace my=Vendor\MyPackage\CustomViewHelperResolverDelegate}
+
+    <my:foo />
+
+Note that the fully qualified class name of the delegate is used as ViewHelper
+namespace in the template. Fluid first checks if the specified PHP namespace refers
+to an existing PHP class. As a fallback, the default ViewHelper resolving logic is
+used.
+
+ViewHelper instantiation
+------------------------
+
+The main use case for replacing the :php:`ViewHelperResolver` with a custom
+class is to influence the way Fluid instantiates ViewHelper classes or
+ViewHelperResolver delegates. The concrete implmementation heavily depends on
+your use case, but in general you would extend the built-in class and
+override the methods you want to customize:
+
+..  code-block:: php
+    namespace Vendor\MyPackage;
+
+    use Psr\Container\ContainerInterface;
+    use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperCollection;
+    use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
+    use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
+    use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolverDelegateInterface;
+
+    final class MyViewHelperResolver extends ViewHelperResolver
+    {
+        public function __construct(
+            private readonly ContainerInterface $container,
+        ) {}
+
+        public function createViewHelperInstanceFromClassName(string $viewHelperClassName): ViewHelperInterface
+        {
+            // Use dependency injection container to fetch ViewHelper instance
+            return $this->container->get($viewHelperClassName);
+        }
+
+        public function createResolverDelegateInstanceFromClassName(string $delegateClassName): ViewHelperResolverDelegateInterface
+        {
+            // Use dependency injection container to fetch ViewHelperResolver delegate instance
+            if (!$this->container->has($delegateClassName)) {
+                return new ViewHelperCollection($delegateClassName);
+            }
+            return $this->container->get($delegateClassName);
+        }
+    }
 
 The default :php:`ViewHelperResolver` can be replaced on the rendering context by calling
 :php:`$renderingContext->setViewHelperResolver($resolverInstance);`.
