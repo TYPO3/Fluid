@@ -163,6 +163,8 @@ Partials without sections can be rendered by just
 Argument Definitions
 ====================
 
+..  versionadded:: Fluid 4.2
+
 Templates, layouts and partials can define requirements for variables by
 using the `<f:argument> ViewHelper <typo3fluid-fluid-argument>`_. It is
 possible to define a variable as required or optional. Also, a specific

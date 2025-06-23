@@ -188,6 +188,8 @@ The `<my:foo.bar />` ViewHelper would be resolved to the ViewHelper class
 ViewHelperResolver delegates
 ----------------------------
 
+..  versionadded:: Fluid 4.3
+
 In most cases, it shouldn't be necessary to replace the default
 :php:`ViewHelperResolver` with a custom implementation, since the default resolving
 logic can be modified per ViewHelper namespace by defining a custom resolver delegate:
