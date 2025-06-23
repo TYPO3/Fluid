@@ -157,3 +157,18 @@ Partials without sections can be rendered by just
 
 * `An example of a partial template without sections <https://github.com/TYPO3/Fluid/blob/main/examples/Resources/Private/Partials/FirstPartial.html>`__
 * `An example of a partial template with sections <https://github.com/TYPO3/Fluid/blob/main/examples/Resources/Private/Partials/Structures.html>`__
+
+.. _template-argument-definitions:
+
+Argument Definitions
+====================
+
+Templates, layouts and partials can define requirements for variables by
+using the `<f:argument> ViewHelper <typo3fluid-fluid-argument>`_. It is
+possible to define a variable as required or optional. Also, a specific
+type can be required. If any of the constraints don't match the supplied
+data, an exception is thrown.
+
+In effect, this allows you to define an API for template files, which
+improves both documentation and reusability of template files, especially
+partials.
