@@ -166,7 +166,7 @@ Argument Definitions
 ..  versionadded:: Fluid 4.2
 
 Templates, layouts and partials can define requirements for variables by
-using the `<f:argument> ViewHelper <typo3fluid-fluid-argument>`_. It is
+using the :ref:`<f:argument> ViewHelper <typo3fluid-fluid-argument>`. It is
 possible to define a variable as required or optional. Also, a specific
 type can be required. If any of the constraints don't match the supplied
 data, an exception is thrown.

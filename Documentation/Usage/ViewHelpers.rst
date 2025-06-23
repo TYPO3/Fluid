@@ -293,7 +293,7 @@ for actual values) and follow the following naming convention:
     `xmlns:mpkg="http://typo3.org/ns/My/Package/ViewHelpers"` or an alternative namespace
     registration (see above).
 
-Note that these rules only apply to *normal* ViewHelpers. For `Components <_components-definition>`_,
+Note that these rules only apply to *normal* ViewHelpers. For :ref:`Components <_components-definition>`,
 different rules apply.
 
 The arguments a ViewHelper supports will be verbosely registered in the

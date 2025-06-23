@@ -23,7 +23,7 @@ more reusable:
     `partialRootPaths` in the template's rendering context.
 
 2.  By default, components have a strict API (using the
-    `<f:argument> ViewHelper <typo3fluid-fluid-argument>`_),
+    :ref:`<f:argument> ViewHelper <typo3fluid-fluid-argument>`),
     making them less error-prone.
 
 .. _components-setup:
@@ -80,7 +80,7 @@ The :xml:`<my:atom.button>` component thus would be defined in
         <f:slot />
     </button>
 
-The `<f:slot> ViewHelper <typo3fluid-fluid-slot>`_ can be used to access the
+The :ref:`<f:slot> ViewHelper <typo3fluid-fluid-slot>` can be used to access the
 children of the calling ViewHelper.
 
 .. _components-usage:
@@ -99,7 +99,7 @@ be used to render components:
         Button label
     </my:atom.button>
 
-Of course this also works with `alternative ways of importing namespaces <viewhelper-namespaces>`_.
+Of course this also works with :ref:`alternative ways of importing namespaces <viewhelper-namespaces>`.
 
 This example would result in the following rendered HTML:
 
@@ -195,7 +195,7 @@ Allowing Arbitrary Arguments
 ============================
 
 By default, components only accept arguments that are defined explicitly via
-the `<f:argument> ViewHelper <typo3fluid-fluid-argument>`_. However, there might
+the :ref:`<f:argument> ViewHelper <typo3fluid-fluid-argument>`. However, there might
 be use cases where you would like to accept arbitrary arguments.
 
 This is possible by defining :php:`additionalArgumentsAllowed()` in your
