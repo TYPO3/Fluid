@@ -96,3 +96,46 @@ In other words: be careful what data types your ViewHelper returns.
 Non-string-compatible values may cause problems if you use the ViewHelper in
 ways that were not intended. Like in PHP, data types must either match or be
 mutually compatible.
+
+.. _nodeinitialized:
+
+NodeInitialized Event
+=====================
+
+In addition to the API of :php:`AbstractViewHelper`, ViewHelpers can hook into
+the parsing process by implementing :php:`ViewHelperNodeInitializedEventInterface`.
+The interface requires the ViewHelper class to implement an additional static method
+`nodeInitializedEvent()`, which is called during the initial parsing of a
+template that uses the ViewHelper. In the method, you receive the current
+parsing state of the template as well as relevant information about the
+ViewHelper call, which allows for additional syntax validation and special
+low-level processing.
+
+The following example ensures that the ViewHelper can only be used on the first
+nesting level and thus cannot be nested into other ViewHelpers:
+
+.. code-block:: php
+
+    use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+    use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+    use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+    use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
+
+    final class FooViewHelper extends AbstractViewHelper implements ViewHelperNodeInitializedEventInterface
+    {
+        public static function nodeInitializedEvent(ViewHelperNode $node, array $arguments, ParsingState $parsingState): void
+        {
+            if ($parsingState->hasNodeTypeInStack(ViewHelperNode::class)) {
+                throw new \TYPO3Fluid\Fluid\Core\Parser\Exception(sprintf(
+                    'FooViewHelper needs to be defined at the root level of the template.',
+                ), 1750671904);
+            }
+        }
+    }
+
+This event is used by Fluid internally in the :php:`SectionViewHelper`,
+the :php:`LayoutViewHelper` and the :php:`ArgumentViewHelper`.
+
+..  deprecated:: 4.2
+    NodeInitialized event replaces the old `AbstractViewHelper::postParseEvent()` method,
+    which will no longer work with Fluid 5.
