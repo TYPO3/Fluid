@@ -78,6 +78,12 @@ Once you have registered/imported the ViewHelper collection, you can start using
 it in your templates via the namespace alias you used during registration (in this
 example: `foo` is the alias name).
 
+..  deprecated:: 4.2
+    It was possible to define a namespace in a template and then use it in a
+    referenced partial without redeclaring it in the partial. This behavior
+    (inheritance of ViewHelper namespaces) is deprecated and will no longer
+    work in Fluid 5.
+
 .. _tagbased-viewhelpers:
 
 Tag-based ViewHelpers
