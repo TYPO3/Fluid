@@ -102,6 +102,8 @@ mutually compatible.
 NodeInitialized Event
 =====================
 
+..  versionadded:: Fluid 4.2
+
 In addition to the API of :php:`AbstractViewHelper`, ViewHelpers can hook into
 the parsing process by implementing :php:`ViewHelperNodeInitializedEventInterface`.
 The interface requires the ViewHelper class to implement an additional static method

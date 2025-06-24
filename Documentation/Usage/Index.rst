@@ -43,9 +43,21 @@ Usage
         ..  card-footer:: :ref:`Learn about ViewHelpers <what-are-viewhelpers>`
             :button-style: btn btn-secondary stretched-link
 
+    ..  card:: Components
+
+        Learn how to configure, define and render components in your Fluid
+        templates.
+
+        ..  card-footer:: :ref:`Learn about Components <components>`
+            :button-style: btn btn-secondary stretched-link
+
 .. toctree::
     :hidden:
     :maxdepth: 2
     :titlesonly:
 
-    *
+    GettingStarted
+    Variables
+    Structure
+    ViewHelpers
+    Components
