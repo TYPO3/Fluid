@@ -52,6 +52,8 @@ This is the place where e. g. an external templating engine would be initiated
 to render a specific template:
 
 ..  code-block:: php
+    :caption: CustomComponentRenderer.php (component renderer)
+
     namespace Vendor\MyPackage;
 
     use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -80,13 +82,15 @@ Custom ComponentDefinitionProvider
 
 The :php:`ComponentDefinitionProviderInterface` provides Fluid with all necessary
 information to resolve, validate and render external components. Depending
-on the available components metadata, the Fluid parser is even able to pre-validate
+on the available component metadata, the Fluid parser is even able to pre-validate
 the supplied component parameters (defined and required arguments, booleans). However, it is
 also possible to provide a "non-strict" implementation where any argument can be supplied
 to the external components. The interface must always be used in combination with
 :php:`ViewHelperResolverDelegateInterface`.
 
 ..  code-block:: php
+    :caption: CustomComponentCollection.php (component definition provider)
+
     namespace Vendor\MyPackage;
 
     use TYPO3Fluid\Fluid\Core\Component\ComponentDefinition;

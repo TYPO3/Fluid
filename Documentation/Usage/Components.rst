@@ -8,9 +8,8 @@ Components
 
 ..  versionadded:: Fluid 4.3
 
-Fluid's component feature allows you to map ViewHelper tags to individual Fluid
-templates. This means that you can effectively create your own HTML elements, which
-can be used across the whole project. The concept is similar to popular frontend
+Fluid's components are custom HTML-like tags based on Fluid templates that you can
+reuse throughout your project. The concept is similar to popular frontend
 frameworks like React and Vue or native Web Components, but they are server-rendered
 by PHP.
 
@@ -42,6 +41,8 @@ should be available in all component templates.
 A basic implementation looks like this:
 
 ..  code-block:: php
+    :caption: ComponentCollection.php
+
     namespace Vendor\MyPackage\Components;
 
     use TYPO3Fluid\Fluid\Core\Component\AbstractComponentCollection;
@@ -70,10 +71,22 @@ decision is that related asset files (such as CSS or JS) can  be placed right
 next to the component's template, which fosters a modular frontend
 architecture and enables easier refactoring.
 
+..  directory-tree::
+
+    * :path:`path/to/Components/`
+        * :path:`Atom`
+            * :path:`Button`
+                * :file:`Button.html`
+                * :file:`Button.css`
+
+Check out :ref:`components-folder-structure` if you want to adjust this.
+
 The :xml:`<my:atom.button>` component thus would be defined in
 `path/to/Components/Atom/Button/Button.html` like this:
 
 ..  code-block:: xml
+    :caption: Button.html (component definition)
+
     <f:argument name="variant" type="string" optional="{true}" default="primary" />
 
     <button class="myButton myButton--{variant}">
@@ -81,7 +94,7 @@ The :xml:`<my:atom.button>` component thus would be defined in
     </button>
 
 The :ref:`<f:slot> ViewHelper <typo3fluid-fluid-slot>` can be used to access the
-children of the calling ViewHelper.
+children of the component tag.
 
 .. _components-usage:
 
@@ -89,21 +102,28 @@ Using Components
 ================
 
 Once the :php:`ComponentCollection` class exists and the component template has
-been created, it can be imported into any Fluid template and ViewHelper tags can
-be used to render components:
+been created, it can be imported into any Fluid template and component tags
+can be used:
 
 ..  code-block:: xml
-    {namespace my=Vendor\MyPackage\Components\ComponentCollection}
+    :caption: MyTemplate.html
+
+    <html
+        xmlns:my="http://typo3.org/ns/Vendor/MyPackage/Components/ComponentCollection"
+        data-namespace-typo3-fluid="true"
+    >
 
     <my:atom.button variant="secondary">
         Button label
     </my:atom.button>
 
-Of course this also works with :ref:`alternative ways of importing namespaces <viewhelper-namespaces>`.
+Of course this works with all :ref:`variants for importing namespaces <viewhelper-namespaces>`.
 
 This example would result in the following rendered HTML:
 
 ..  code-block:: html
+    :caption: Rendered result
+
     <button class="myButton myButton--secondary">
         Button label
     </button>
@@ -114,7 +134,12 @@ Combining Components
 Components can also be nested:
 
 ..  code-block:: xml
-    {namespace my=Vendor\MyPackage\Components\ComponentCollection}
+    :caption: MyTemplate.html
+
+    <html
+        xmlns:my="http://typo3.org/ns/Vendor/MyPackage/Components/ComponentCollection"
+        data-namespace-typo3-fluid="true"
+    >
 
     <my:atom.button variant="secondary">
         <my:atom.icon name="submit" />
@@ -125,7 +150,12 @@ An alternative approach would be to call the icon component from within the
 button component and to extend the button API accordingly:
 
 ..  code-block:: xml
-    {namespace my=Vendor\MyPackage\Components\ComponentCollection}
+    :caption: MyTemplate.html
+
+    <html
+        xmlns:my="http://typo3.org/ns/Vendor/MyPackage/Components/ComponentCollection"
+        data-namespace-typo3-fluid="true"
+    >
 
     <my:atom.button variant="secondary" icon="submit">
         Button label
@@ -134,7 +164,12 @@ button component and to extend the button API accordingly:
 The extended button component could look something like this:
 
 ..  code-block:: xml
-    {namespace my=Vendor\MyPackage\Components\ComponentCollection}
+    :caption: Button.html (component definition)
+
+    <html
+        xmlns:my="http://typo3.org/ns/Vendor/MyPackage/Components/ComponentCollection"
+        data-namespace-typo3-fluid="true"
+    >
 
     <f:argument name="variant" type="string" optional="{true}" default="primary" />
     <f:argument name="icon" type="string" optional="{true}" />
@@ -159,10 +194,12 @@ Sometimes it might be helpful to provide some global settings to all components
 within one component collection. One common use case could be to provide design
 tokens from a JSON file to your components.
 
-The :php:`AbstractComponentCollection` provides the `getAdditionalVariables()`,
+:php:`AbstractComponentCollection` provides `getAdditionalVariables()`,
 which allows you to do just that:
 
 ..  code-block:: php
+    :caption: ComponentCollection.php
+
     namespace Vendor\MyPackage\Components;
 
     use TYPO3Fluid\Fluid\Core\Component\AbstractComponentCollection;
@@ -185,6 +222,8 @@ which allows you to do just that:
 In your component templates you would then be able to access those tokens:
 
 ..  code-block:: xml
+    :caption: MyComponent.html (component definition)
+
     <f:argument name="color" type="string" optional="{true}" default="brand" />
 
     <div style="background-color: {designTokens.colors.{color}}"></div>
@@ -203,6 +242,8 @@ This is possible by defining :php:`additionalArgumentsAllowed()` in your
 in the collection):
 
 ..  code-block:: php
+    :caption: ComponentCollection.php
+
     namespace Vendor\MyPackage\Components;
 
     use TYPO3Fluid\Fluid\Core\Component\AbstractComponentCollection;
@@ -220,7 +261,12 @@ in the collection):
 The following call of the button component would then be valid:
 
 ..  code-block:: xml
-    {namespace my=Vendor\MyPackage\Components\ComponentCollection}
+    :caption: MyTemplate.html
+
+    <html
+        xmlns:my="http://typo3.org/ns/Vendor/MyPackage/Components/ComponentCollection"
+        data-namespace-typo3-fluid="true"
+    >
 
     <my:atom.button something="my text">
         Button label
@@ -239,6 +285,8 @@ implementation of :php:`resolveTemplateName()` in your :php:`ComponentCollection
 The following example skips the additional folder per component:
 
 ..  code-block:: php
+    :caption: ComponentCollection.php
+
     namespace Vendor\MyPackage\Components;
 
     use TYPO3Fluid\Fluid\Core\Component\AbstractComponentCollection;
@@ -255,3 +303,9 @@ The following example skips the additional folder per component:
     }
 
 `<my:atom.button>` would be resolved to `path/to/Components/Atom/Button.html`.
+
+..  directory-tree::
+
+    * :path:`path/to/Components/`
+        * :path:`Atom`
+            * :path:`Button.html`
