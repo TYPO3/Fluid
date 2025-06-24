@@ -21,14 +21,9 @@ more reusable:
 1.  Components can be used in any template, without manual configuration of
     `partialRootPaths` in the template's rendering context.
 
-2.  Components allow strict, typed definitions of arguments via their API (using the
-    :ref:`<f:argument> ViewHelper <typo3fluid-fluid-argument>`),
-    making them less error-prone than arbitrary partial arguments, and can
-    properly indicate default values and required/optional state.
-
-Components are best implemented by following the concept of :ref:`Atomic design <https://atomicdesign.bradfrost.com/>`,
-which is a methodology for creating design systems by breaking interfaces down into fundamental building
-blocks (atoms, molecules, organisms, ...) to promote consistency and reusability.
+2.  Components have strict, typed definitions of arguments via their API (using the
+    :ref:`<f:argument> ViewHelper <typo3fluid-fluid-argument>`), making them less
+    error-prone.
 
 .. _components-setup:
 
@@ -75,6 +70,11 @@ each component template needs to be placed in a separate folder. The purpose of 
 decision is that related asset files (such as CSS or JS) can  be placed right
 next to the component's template, which fosters a modular frontend
 architecture and enables easier refactoring.
+
+..  note::
+    In the following examples, `atomic design <https://bradfrost.com/blog/post/atomic-web-design/>`_
+    is used to demonstrate that components can be structured in subfolders.
+    You can use any structure that works best for your project.
 
 ..  directory-tree::
 
@@ -151,7 +151,7 @@ Components can also be nested:
         Button label
     </my:atom.button>
 
-An alternative approach that prevents the need for nesting at this point, would be to call the `atom.icon`
+An alternative approach that prevents the need for nesting would be to call the `atom.icon`
 component from within the `atom.button` component and to extend its argument API accordingly:
 
 ..  code-block:: xml
@@ -187,7 +187,7 @@ The extended `atom.button` component could look something like this:
     </button>
 
 ..  note::
-    IDE autocomplete for all available components (and their attributes) via XSD files, 
+    IDE autocomplete for all available components (and their attributes) via XSD files,
     similar to ViewHelpers, is not implemented yet, but is planned for a future release.
 
 .. _components-context:
@@ -211,8 +211,8 @@ which allows you to do just that:
 
     final class ComponentCollection extends AbstractComponentCollection
     {
-        // Using this member property as a runtime cache (this is not mandatory, 
-        // but saves performance when multiple Components are involved for shared access)
+        // Runtime cache to prevent reading/parsing the JSON file multiple times
+        // this is not mandatory, but increases performance with multiple components
         private ?array $designTokens = null;
 
         // ...
@@ -239,6 +239,10 @@ In your component templates you would then be able to access those tokens:
 
 Allowing Arbitrary Arguments
 ============================
+
+..  note::
+    Please use this approach with care because one of the key concepts of components
+    is their argument contract.
 
 By default, components only accept arguments that are defined explicitly via
 the :ref:`<f:argument> ViewHelper <typo3fluid-fluid-argument>`. However, there might
@@ -280,11 +284,6 @@ The following call of the button component would then be valid:
     </my:atom.button>
 
 In the component, `{something}` would be available as an additional variable.
-
-..  note::
-
-    Please use this approach with care (never as your default boilerplate), because
-    one of the key concepts of components is their argument contract.
 
 .. _components-folder-structure:
 
