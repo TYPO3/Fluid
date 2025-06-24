@@ -97,6 +97,27 @@ Non-string-compatible values may cause problems if you use the ViewHelper in
 ways that were not intended. Like in PHP, data types must either match or be
 mutually compatible.
 
+.. _invoking-viewhelpers:
+
+Invoking other ViewHelpers
+==========================
+
+..  warning::
+    In general, it is advised to keep ViewHelpers small and to extract more
+    complicated code into its own service class.
+
+In some cases, it might be helpful or necessary to call a ViewHelper from
+another ViewHelper, for example to reuse its functionality. This can be
+achieved by using the :php:`ViewHelperInvoker`:
+
+.. code-block:: php
+
+    $result = $this->renderingContext->getViewHelperInvoker()->invoke(
+        \TYPO3Fluid\Fluid\ViewHelpers\Format\CdataViewHelper::class,
+        ['value' => 'some input text < & >'],
+        $this->renderingContext,
+    );
+
 .. _nodeinitialized:
 
 NodeInitialized Event
