@@ -21,9 +21,14 @@ more reusable:
 1.  Components can be used in any template, without manual configuration of
     `partialRootPaths` in the template's rendering context.
 
-2.  By default, components have a strict API (using the
+2.  Components allow strict, typed definitions of arguments via their API (using the
     :ref:`<f:argument> ViewHelper <typo3fluid-fluid-argument>`),
-    making them less error-prone.
+    making them less error-prone than arbitrary partial arguments, and can
+    properly indicate default values and required/optional state.
+
+Components are best implemented by following the concept of :ref:`Atomic design <https://atomicdesign.bradfrost.com/>`,
+which is a methodology for creating design systems by breaking interfaces down into fundamental building
+blocks (atoms, molecules, organisms, ...) to promote consistency and reusability.
 
 .. _components-setup:
 
@@ -117,7 +122,7 @@ can be used:
         Button label
     </my:atom.button>
 
-Of course this works with all :ref:`variants for importing namespaces <viewhelper-namespaces>`.
+Of course this works with all :ref:`alternatives for importing namespaces <viewhelper-namespaces>`.
 
 This example would result in the following rendered HTML:
 
@@ -146,8 +151,8 @@ Components can also be nested:
         Button label
     </my:atom.button>
 
-An alternative approach would be to call the icon component from within the
-button component and to extend the button API accordingly:
+An alternative approach that prevents the need for nesting at this point, would be to call the `atom.icon`
+component from within the `atom.button` component and to extend its argument API accordingly:
 
 ..  code-block:: xml
     :caption: MyTemplate.html
@@ -161,7 +166,7 @@ button component and to extend the button API accordingly:
         Button label
     </my:atom.button>
 
-The extended button component could look something like this:
+The extended `atom.button` component could look something like this:
 
 ..  code-block:: xml
     :caption: Button.html (component definition)
@@ -182,8 +187,8 @@ The extended button component could look something like this:
     </button>
 
 ..  note::
-    IDE autocomplete for all available components via XSD files, similar to ViewHelpers,
-    is not implemented yet, but is planned for a future release.
+    IDE autocomplete for all available components (and their attributes) via XSD files, 
+    similar to ViewHelpers, is not implemented yet, but is planned for a future release.
 
 .. _components-context:
 
@@ -206,6 +211,8 @@ which allows you to do just that:
 
     final class ComponentCollection extends AbstractComponentCollection
     {
+        // Using this member property as a runtime cache (this is not mandatory, 
+        // but saves performance when multiple Components are involved for shared access)
         private ?array $designTokens = null;
 
         // ...
@@ -274,6 +281,11 @@ The following call of the button component would then be valid:
 
 In the component, `{something}` would be available as an additional variable.
 
+..  note::
+
+    Please use this approach with care (never as your default boilerplate), because
+    one of the key concepts of components is their argument contract.
+
 .. _components-folder-structure:
 
 Alternative Folder Structure
@@ -302,7 +314,7 @@ The following example skips the additional folder per component:
         }
     }
 
-`<my:atom.button>` would be resolved to `path/to/Components/Atom/Button.html`.
+`<my:atom.button>` will then be resolved to `path/to/Components/Atom/Button.html`.
 
 ..  directory-tree::
 
