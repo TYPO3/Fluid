@@ -21,9 +21,9 @@ more reusable:
 1.  Components can be used in any template, without manual configuration of
     `partialRootPaths` in the template's rendering context.
 
-2.  By default, components have a strict API (using the
-    :ref:`<f:argument> ViewHelper <typo3fluid-fluid-argument>`),
-    making them less error-prone.
+2.  Components have strict, typed definitions of arguments via their API (using the
+    :ref:`<f:argument> ViewHelper <typo3fluid-fluid-argument>`), making them less
+    error-prone.
 
 .. _components-setup:
 
@@ -71,6 +71,11 @@ decision is that related asset files (such as CSS or JS) can  be placed right
 next to the component's template, which fosters a modular frontend
 architecture and enables easier refactoring.
 
+..  note::
+    In the following examples, `atomic design <https://bradfrost.com/blog/post/atomic-web-design/>`_
+    is used to demonstrate that components can be structured in subfolders.
+    You can use any structure that works best for your project.
+
 ..  directory-tree::
 
     * :path:`path/to/Components/`
@@ -117,7 +122,7 @@ can be used:
         Button label
     </my:atom.button>
 
-Of course this works with all :ref:`variants for importing namespaces <viewhelper-namespaces>`.
+Of course this works with all :ref:`alternatives for importing namespaces <viewhelper-namespaces>`.
 
 This example would result in the following rendered HTML:
 
@@ -146,8 +151,8 @@ Components can also be nested:
         Button label
     </my:atom.button>
 
-An alternative approach would be to call the icon component from within the
-button component and to extend the button API accordingly:
+An alternative approach that prevents the need for nesting would be to call the `atom.icon`
+component from within the `atom.button` component and to extend its argument API accordingly:
 
 ..  code-block:: xml
     :caption: MyTemplate.html
@@ -161,7 +166,7 @@ button component and to extend the button API accordingly:
         Button label
     </my:atom.button>
 
-The extended button component could look something like this:
+The extended `atom.button` component could look something like this:
 
 ..  code-block:: xml
     :caption: Button.html (component definition)
@@ -182,8 +187,8 @@ The extended button component could look something like this:
     </button>
 
 ..  note::
-    IDE autocomplete for all available components via XSD files, similar to ViewHelpers,
-    is not implemented yet, but is planned for a future release.
+    IDE autocomplete for all available components (and their attributes) via XSD files,
+    similar to ViewHelpers, is not implemented yet, but is planned for a future release.
 
 .. _components-context:
 
@@ -206,6 +211,8 @@ which allows you to do just that:
 
     final class ComponentCollection extends AbstractComponentCollection
     {
+        // Runtime cache to prevent reading/parsing the JSON file multiple times
+        // this is not mandatory, but increases performance with multiple components
         private ?array $designTokens = null;
 
         // ...
@@ -232,6 +239,10 @@ In your component templates you would then be able to access those tokens:
 
 Allowing Arbitrary Arguments
 ============================
+
+..  note::
+    Please use this approach with care because one of the key concepts of components
+    is their argument contract.
 
 By default, components only accept arguments that are defined explicitly via
 the :ref:`<f:argument> ViewHelper <typo3fluid-fluid-argument>`. However, there might
@@ -302,7 +313,7 @@ The following example skips the additional folder per component:
         }
     }
 
-`<my:atom.button>` would be resolved to `path/to/Components/Atom/Button.html`.
+`<my:atom.button>` will then be resolved to `path/to/Components/Atom/Button.html`.
 
 ..  directory-tree::
 
