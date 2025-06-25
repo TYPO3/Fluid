@@ -111,7 +111,7 @@ class TemplateParser
             $templateString = $this->preProcessTemplateSource($templateString);
 
             $splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
-            $parsingState = $this->buildObjectTree($splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS, $templateIdentifier);
+            $parsingState = $this->buildObjectTree($this->createParsingState($templateIdentifier), $splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
         } catch (Exception $error) {
             throw $this->createParsingRelatedExceptionWithContext($error, $templateIdentifier);
         }
@@ -212,9 +212,8 @@ class TemplateParser
      * @param int $context one of the CONTEXT_* constants, defining whether we are inside or outside of ViewHelper arguments currently.
      * @throws Exception
      */
-    protected function buildObjectTree(array $splitTemplate, int $context, ?string $templateIdentifier = null): ParsingState
+    protected function buildObjectTree(ParsingState $state, array $splitTemplate, int $context): ParsingState
     {
-        $state = $this->getParsingState($templateIdentifier);
         $previousBlock = '';
 
         foreach ($splitTemplate as $templateElement) {
@@ -302,7 +301,7 @@ class TemplateParser
             $state,
             $namespaceIdentifier,
             $methodIdentifier,
-            fn(ViewHelperNode $viewHelperNode): array => $this->parseArguments($arguments, $viewHelperNode),
+            fn(ViewHelperNode $viewHelperNode): array => $this->parseArguments($state, $arguments, $viewHelperNode),
         );
 
         if ($viewHelperNode && $selfclosing === true) {
@@ -543,7 +542,7 @@ class TemplateParser
      * @param string $argumentsString All arguments as string
      * @return array An associative array of objects, where the key is the argument name.
      */
-    protected function parseArguments(string $argumentsString, ViewHelperNode $viewHelperNode): array
+    protected function parseArguments(ParsingState $state, string $argumentsString, ViewHelperNode $viewHelperNode): array
     {
         $argumentDefinitions = $viewHelperNode->getArgumentDefinitions();
         $argumentsObjectTree = [];
@@ -557,13 +556,13 @@ class TemplateParser
                 if (isset($argumentDefinitions[$argument])) {
                     $argumentDefinition = $argumentDefinitions[$argument];
                     $this->escapingEnabled = $this->escapingEnabled && $this->isArgumentEscaped($viewHelperNode->getUninitializedViewHelper(), $argumentDefinition);
-                    $argumentsObjectTree[$argument] = $this->buildArgumentObjectTree($value);
+                    $argumentsObjectTree[$argument] = $this->buildArgumentObjectTree($state, $value);
                     if ($argumentDefinition->isBooleanType()) {
                         $argumentsObjectTree[$argument] = new BooleanNode($argumentsObjectTree[$argument]);
                     }
                 } else {
                     $this->escapingEnabled = false;
-                    $undeclaredArguments[$argument] = $this->buildArgumentObjectTree($value);
+                    $undeclaredArguments[$argument] = $this->buildArgumentObjectTree($state, $value);
                 }
                 $this->escapingEnabled = $escapingEnabledBackup;
             }
@@ -593,11 +592,13 @@ class TemplateParser
      * This method also does some performance optimizations, so in case
      * no { or < is found, then we just return a TextNode.
      *
-     * @return SyntaxTree\NodeInterface the corresponding argument object tree.
-     * @todo add type hint and replace crazy unit tests with proper functional tests
+     * @return RootNode|NumericNode|TextNode the corresponding argument object tree.
      */
-    protected function buildArgumentObjectTree(string $argumentString)
+    protected function buildArgumentObjectTree(ParsingState $state, string $argumentString): RootNode|NumericNode|TextNode
     {
+        // @todo Evaluate if it's worth it to have this detail optimization if
+        //       the majority of the templates are cached anyways. This would
+        //       simplify the method signature
         if (strpos($argumentString, '{') === false && strpos($argumentString, '<') === false) {
             if (is_numeric($argumentString)) {
                 return new NumericNode($argumentString);
@@ -605,8 +606,24 @@ class TemplateParser
             return new TextNode($argumentString);
         }
         $splitArgument = $this->splitTemplateAtDynamicTags($argumentString);
-        $rootNode = $this->buildObjectTree($splitArgument, self::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS)->getRootNode();
-        return $rootNode;
+        // At this stage, Fluid creates a sub template with its own ParsingState
+        // and RootNode. While this currently works in practice, conceptually
+        // this is problematic: There is no way to influence the resulting
+        // parsed template from the sub template, e. g. from a ViewHelper
+        // event. All changes made to the inner ParsingState are not propagated
+        // to the outer ParsingState.
+        // In practice this is relevant for <f:slot /> when the slot output
+        // is used within a Fluid string:
+        // {f:if(condition: '{f:slot()}', then: '{f:slot()}', else: 'fallback')}
+        // The SlotViewHelper adds an available slot to the inner ParsingState,
+        // but this is not applied to the ParsingState of the whole template
+        // @todo there should be separate state objects for the whole template
+        //       and template parts that are parsed separately. Some changes
+        //       should be applied to the global state, while others should only
+        //       affect the local state. Maybe it's also possible to get rid
+        //       of the local state altogether.
+        $innerState = $this->buildObjectTree($this->createParsingState(null), $splitArgument, self::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS);
+        return $innerState->getRootNode();
     }
 
     /**
@@ -787,7 +804,7 @@ class TemplateParser
                     $assignInto[$arrayKey] = $singleMatch['Number'] + 0;
                 } elseif ((array_key_exists('QuotedString', $singleMatch) && !empty($singleMatch['QuotedString']))) {
                     $argumentString = $this->unquoteString($singleMatch['QuotedString']);
-                    $assignInto[$arrayKey] = $this->buildArgumentObjectTree($argumentString);
+                    $assignInto[$arrayKey] = $this->buildArgumentObjectTree($state, $argumentString);
                 }
 
                 if ($isBoolean) {
@@ -814,7 +831,7 @@ class TemplateParser
         $state->getNodeFromStack()->addChildNode($node);
     }
 
-    protected function getParsingState(?string $templateIdentifier): ParsingState
+    protected function createParsingState(?string $templateIdentifier): ParsingState
     {
         $rootNode = new RootNode();
         $variableProvider = $this->renderingContext->getVariableProvider();
