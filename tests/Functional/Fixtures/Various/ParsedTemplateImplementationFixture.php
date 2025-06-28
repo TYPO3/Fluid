@@ -31,6 +31,11 @@ final class ParsedTemplateImplementationFixture implements ParsedTemplateInterfa
         return [];
     }
 
+    public function getAvailableSlots(): array
+    {
+        return [];
+    }
+
     public function render(RenderingContextInterface $renderingContext): mixed
     {
         return 'rendered by fixture';

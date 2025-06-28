@@ -189,12 +189,14 @@ class TemplateCompiler
             '    }' . chr(10) .
             '    %s' . chr(10) .
             '    %s' . chr(10) .
+            '    %s' . chr(10) .
             '}' . chr(10),
             'class ' . $identifier . ' extends \TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate',
             $this->generateCodeForLayoutName($storedLayoutName),
             ($parsingState->hasLayout() ? 'true' : 'false'),
             var_export($this->renderingContext->getViewHelperResolver()->getLocalNamespaces(), true),
             $this->generateArgumentDefinitionsCodeFromParsingState($parsingState),
+            $this->generateAvailableSlotsCodeFromParsingState($parsingState),
             $generatedRenderFunctions,
         );
         $this->renderingContext->getCache()->set($identifier, $templateCode);
@@ -256,6 +258,17 @@ class TemplateCompiler
             '        return [' . chr(10) .
             '            ' . implode(',' . chr(10) . '            ', $argumentDefinitionsCode) . ',' . chr(10) .
             '        ];' . chr(10) .
+            '    }';
+    }
+
+    protected function generateAvailableSlotsCodeFromParsingState(ParsingState $parsingState): string
+    {
+        $availableSlots = $parsingState->getAvailableSlots();
+        if ($availableSlots === []) {
+            return '';
+        }
+        return 'public function getAvailableSlots(): array {' . chr(10) .
+            '        return ' . var_export($availableSlots, true) . ';' . chr(10) .
             '    }';
     }
 

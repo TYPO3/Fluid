@@ -39,6 +39,11 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
         return [];
     }
 
+    public function getAvailableSlots(): array
+    {
+        return [];
+    }
+
     /**
      * Render the parsed template with rendering context
      *

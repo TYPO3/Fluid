@@ -34,6 +34,11 @@ class ParsingState implements ParsedTemplateInterface
     protected array $argumentDefinitions = [];
 
     /**
+     * @var string[]
+     */
+    protected array $availableSlots = [];
+
+    /**
      * Root node reference
      */
     protected RootNode $rootNode;
@@ -101,6 +106,22 @@ class ParsingState implements ParsedTemplateInterface
     public function setArgumentDefinitions(array $argumentDefinitions): void
     {
         $this->argumentDefinitions = $argumentDefinitions;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAvailableSlots(): array
+    {
+        return $this->availableSlots;
+    }
+
+    /**
+     * @param string[] $availableSlots
+     */
+    public function setAvailableSlots(array $availableSlots): void
+    {
+        $this->availableSlots = $availableSlots;
     }
 
     /**

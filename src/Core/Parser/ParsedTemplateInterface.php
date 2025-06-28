@@ -32,6 +32,11 @@ interface ParsedTemplateInterface
     public function getArgumentDefinitions(): array;
 
     /**
+     * @return string[]
+     */
+    public function getAvailableSlots(): array;
+
+    /**
      * Render the parsed template with rendering context
      *
      * @param RenderingContextInterface $renderingContext The rendering context to use

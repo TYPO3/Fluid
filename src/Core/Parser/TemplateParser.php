@@ -623,6 +623,11 @@ class TemplateParser
         //       affect the local state. Maybe it's also possible to get rid
         //       of the local state altogether.
         $innerState = $this->buildObjectTree($this->createParsingState(null), $splitArgument, self::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS);
+        // This can be removed once the outer-inner-state issue is resolved
+        $state->setAvailableSlots(array_unique(array_merge(
+            $state->getAvailableSlots(),
+            $innerState->getAvailableSlots(),
+        )));
         return $innerState->getRootNode();
     }
 

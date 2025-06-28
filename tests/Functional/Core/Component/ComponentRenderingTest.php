@@ -44,6 +44,16 @@ final class ComponentRenderingTest extends AbstractFunctionalTestCase
             'predefined HTML variable as slot escaped correctly' => ['<my:slotComponent>{unsafeInput}</my:slotComponent>', "My test component |&lt;script&gt;alert(&#039;This JavaScript should not be executed by the browser&#039;)&lt;/script&gt;|\n"],
             'raw HTML variable as slot not escaped' => ['<f:variable name="myHtml"><b>SLOT</b></f:variable><my:slotComponent>{myHtml -> f:format.raw()}</my:slotComponent>', "My test component |<b>SLOT</b>|\n"],
             'nested components' => ['<my:slotComponent><my:nested.subComponent /></my:slotComponent>', "My test component |\n\nMy <b>sub</b> component\n|\n"],
+            'named slots' => ['<my:namedSlots><f:fragment name="test1">content1</f:fragment><f:fragment name="test2">content2</f:fragment><f:fragment>defaultContent</f:fragment></my:namedSlots>', "|content1|content2|defaultContent|\n"],
+            'undefined named slot' => ['<my:namedSlots><f:fragment name="test1"><b>content1</b></f:fragment></my:namedSlots>', "|<b>content1</b>|||\n"],
+            'multiple slots, only default given' => ['<my:namedSlots><b>defaultContent</b></my:namedSlots>', "|||<b>defaultContent</b>|\n"],
+            'multiple slots, only default given as fragment' => ['<my:namedSlots><f:fragment><b>defaultContent</b></f:fragment></my:namedSlots>', "|||<b>defaultContent</b>|\n"],
+            'HTML variable in named slot escaped correctly' => ['<f:variable name="myHtml"><b>SLOT</b></f:variable><my:namedSlots><f:fragment name="test1">{myHtml}</f:fragment></my:namedSlots>', "|&lt;b&gt;SLOT&lt;/b&gt;|||\n"],
+            'predefined HTML variable in named slot escaped correctly' => ['<my:namedSlots><f:fragment name="test1">{unsafeInput}</f:fragment></my:namedSlots>', "|&lt;script&gt;alert(&#039;This JavaScript should not be executed by the browser&#039;)&lt;/script&gt;|||\n"],
+            'raw HTML variable in named slot not escaped' => ['<f:variable name="myHtml"><b>SLOT</b></f:variable><my:namedSlots><f:fragment name="test1">{myHtml -> f:format.raw()}</f:fragment></my:namedSlots>', "|<b>SLOT</b>|||\n"],
+            'nested components in named slots' => ['<my:namedSlots><f:fragment name="test1"><my:nested.subComponent /></f:fragment><f:fragment><my:nested.subComponent /></f:fragment></my:namedSlots>', "|\n\nMy <b>sub</b> component\n||\n\nMy <b>sub</b> component\n|\n"],
+            'undefined named slot gets ignored' => ['<my:namedSlots><f:fragment name="foo">test</f:fragment></my:namedSlots>', "||||\n"],
+            'additional content gets ignored if fragment is used' => ['<my:namedSlots><f:fragment name="test1">content1</f:fragment>bar</my:namedSlots>', "|content1|||\n"],
 
             // other cases
             'component in subfolder' => ['<my:nested.subComponent />', "\n\nMy <b>sub</b> component\n"],
@@ -79,11 +89,23 @@ final class ComponentRenderingTest extends AbstractFunctionalTestCase
             'additional argument not allowed' => ['<my:testComponent title="TITLE" foo="bar" />', 1748903732],
             'invalid type' => ['<my:testComponent title="TITLE" tags="test" />', 1746637333],
             'invalid component' => ['<my:nonexistentComponent />', 1407060572],
+            'fragments nested in other viewhelpers' => ['<my:namedSlots><f:if condition="1 == 0"><f:fragment>foo</f:fragment></f:if></my:namedSlots>', 1750865702],
+        ];
+    }
+
+    public static function basicComponentCollectionValidatesArgumentsUncachedDataProvider(): iterable
+    {
+        return [
+            // Some detail validations can only be performed for uncached templates because
+            // the required information is no longer reproducible from the cache
+            'duplicate fragment' => ['<my:namedSlots><f:fragment name="test1">foo</f:fragment><f:fragment name="test1">bar</f:fragment></my:namedSlots>', 1750865701],
+            'duplicate default fragment' => ['<my:namedSlots><f:fragment>foo</f:fragment><f:fragment>bar</f:fragment></my:namedSlots>', 1750865701],
         ];
     }
 
     #[Test]
     #[DataProvider('basicComponentCollectionValidatesArgumentsDataProvider')]
+    #[DataProvider('basicComponentCollectionValidatesArgumentsUncachedDataProvider')]
     public function basicComponentCollectionValidatesArguments(string $source, int $expectedExceptionCode): void
     {
         self::expectExceptionCode($expectedExceptionCode);

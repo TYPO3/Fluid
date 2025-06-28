@@ -58,7 +58,7 @@ final class AbstractComponentCollectionTest extends AbstractFunctionalTestCase
                         'tags' => new ArgumentDefinition('tags', 'array', '', false),
                     ],
                     false,
-                    ['default'],
+                    [],
                 ),
             ],
             [
@@ -69,7 +69,7 @@ final class AbstractComponentCollectionTest extends AbstractFunctionalTestCase
                         'counter' => new ArgumentDefinition('counter', 'int', '', true),
                     ],
                     false,
-                    ['default'],
+                    [],
                 ),
             ],
             [
@@ -80,7 +80,7 @@ final class AbstractComponentCollectionTest extends AbstractFunctionalTestCase
                         'foo' => new ArgumentDefinition('foo', 'string', '', true),
                     ],
                     false,
-                    ['default'],
+                    [],
                 ),
             ],
             [
@@ -91,7 +91,7 @@ final class AbstractComponentCollectionTest extends AbstractFunctionalTestCase
                         'foo' => new ArgumentDefinition('foo', 'string', '', true),
                     ],
                     false,
-                    ['default'],
+                    [],
                 ),
             ],
             [
@@ -102,7 +102,25 @@ final class AbstractComponentCollectionTest extends AbstractFunctionalTestCase
                         'bar' => new ArgumentDefinition('bar', 'string', '', true),
                     ],
                     false,
+                    [],
+                ),
+            ],
+            [
+                'slotComponent',
+                new ComponentDefinition(
+                    'slotComponent',
+                    [],
+                    false,
                     ['default'],
+                ),
+            ],
+            [
+                'namedSlots',
+                new ComponentDefinition(
+                    'namedSlots',
+                    [],
+                    false,
+                    ['test1', 'test2', 'default'],
                 ),
             ],
         ];
