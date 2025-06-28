@@ -60,6 +60,15 @@ A basic implementation looks like this:
         }
     }
 
+..  tip::
+    In the context of TYPO3, it is recommend to put components into `Resources/Private/Components/`
+    in a central extension and to provide that path in your :php:`ComponentCollection` (see code example) via
+
+    ..  code-block:: php
+        use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
+        ExtensionManagementUtility::extPath('my_sitepackage', 'Resources/Private/Components');
+
 .. _components-definition:
 
 Defining Components
@@ -82,7 +91,6 @@ architecture and enables easier refactoring.
         * :path:`Atom`
             * :path:`Button`
                 * :file:`Button.html`
-                * :file:`Button.css`
 
 Check out :ref:`components-folder-structure` if you want to adjust this.
 
