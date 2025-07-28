@@ -27,6 +27,7 @@ use TYPO3Fluid\Fluid\View;
 class ParsingState implements ParsedTemplateInterface
 {
     protected string $identifier;
+    protected string|NodeInterface|null $layoutName = null;
 
     /**
      * @var array<string, ArgumentDefinition>
@@ -205,7 +206,8 @@ class ParsingState implements ParsedTemplateInterface
      */
     public function hasLayout(): bool
     {
-        return $this->variableContainer->exists(TemplateCompiler::LAYOUT_VARIABLE);
+        // @todo remove fallback with Fluid v5
+        return isset($this->layoutName) || $this->variableContainer->exists(TemplateCompiler::LAYOUT_VARIABLE);
     }
 
     /**
@@ -215,10 +217,29 @@ class ParsingState implements ParsedTemplateInterface
      *
      * @throws View\Exception
      */
-    public function getLayoutName(RenderingContextInterface $renderingContext): string|null|NodeInterface
+    public function getLayoutName(RenderingContextInterface $renderingContext): ?string
     {
-        $layoutName = $this->variableContainer->get(TemplateCompiler::LAYOUT_VARIABLE);
-        return $layoutName instanceof RootNode ? $layoutName->evaluate($renderingContext) : $layoutName;
+        $layoutName = $this->getUnevaluatedLayoutName();
+        return $layoutName instanceof NodeInterface ? $layoutName->evaluate($renderingContext) : $layoutName;
+    }
+
+    /**
+     * @internal only to be used by TemplateCompiler
+     */
+    public function getUnevaluatedLayoutName(): NodeInterface|string|null
+    {
+        // @todo remove fallback with Fluid v5
+        if (!isset($this->layoutName) && $this->variableContainer->exists(TemplateCompiler::LAYOUT_VARIABLE)) {
+            trigger_error('Setting a template\'s layout with the variable "layoutName" is deprecated and will no longer work in Fluid v5. Use ParsingState->setLayoutName() instead.', E_USER_DEPRECATED);
+            $layoutName = $this->variableContainer->get(TemplateCompiler::LAYOUT_VARIABLE);
+            return !$layoutName instanceof NodeInterface && !is_null($layoutName) ? (string)$layoutName : $layoutName;
+        }
+        return $this->layoutName;
+    }
+
+    public function setLayoutName(string|NodeInterface|null $layoutName): void
+    {
+        $this->layoutName = $layoutName;
     }
 
     public function addCompiledNamespaces(RenderingContextInterface $renderingContext): void {}

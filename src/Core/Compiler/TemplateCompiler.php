@@ -12,7 +12,6 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
@@ -37,8 +36,7 @@ class TemplateCompiler
      * Variable name to be used to transfer information about a template's layout
      * from the ViewHelper context to the TemplateView and the TemplateCompiler
      *
-     * @todo This data-shuffling between parser, compiler and renderer should be
-     *       avoided in the future.
+     * @deprecated variable will no longer be necessary in Fluid v5
      */
     public const LAYOUT_VARIABLE = 'layoutName';
 
@@ -174,7 +172,7 @@ class TemplateCompiler
             'Main Render function',
         );
 
-        $storedLayoutName = $parsingState->getVariableContainer()->get(static::LAYOUT_VARIABLE);
+        $storedLayoutName = $parsingState->getUnevaluatedLayoutName();
         $templateCode = sprintf(
             '<?php' . chr(10) .
             '%s {' . chr(10) .
@@ -203,12 +201,9 @@ class TemplateCompiler
         return $templateCode;
     }
 
-    /**
-     * @todo this type is crazy, this should really be something like NodeInterface|string
-     */
-    protected function generateCodeForLayoutName(NodeInterface|string|int|float|null|bool $storedLayoutNameArgument): string
+    protected function generateCodeForLayoutName(NodeInterface|string|null $storedLayoutNameArgument): string
     {
-        if ($storedLayoutNameArgument instanceof RootNode) {
+        if ($storedLayoutNameArgument instanceof NodeInterface) {
             $convertedCode = $storedLayoutNameArgument->convert($this);
             $initialization = $convertedCode['initialization'];
             $execution = $convertedCode['execution'];

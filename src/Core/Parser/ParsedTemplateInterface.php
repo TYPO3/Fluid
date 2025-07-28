@@ -52,6 +52,8 @@ interface ParsedTemplateInterface
      * Returns the name of the layout that is defined within the current template via <f:layout name="..." />
      * If no layout is defined, this returns null.
      * This requires the current rendering context in order to be able to evaluate the layout name
+     *
+     * @todo remove NodeInterface from return types in Fluid v5
      */
     public function getLayoutName(RenderingContextInterface $renderingContext): string|null|NodeInterface;
 
