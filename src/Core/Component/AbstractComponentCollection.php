@@ -13,7 +13,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateStructureViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\UnresolvableViewHelperException;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolverDelegateInterface;
-use TYPO3Fluid\Fluid\ViewHelpers\SlotViewHelper;
 
 /**
  * Base class for a collection of components: Fluid templates that can be called with Fluid's
@@ -115,8 +114,7 @@ abstract class AbstractComponentCollection implements ViewHelperResolverDelegate
                 $viewHelperName,
                 $parsedTemplate->getArgumentDefinitions(),
                 $this->additionalArgumentsAllowed($viewHelperName),
-                // For now, we just assume the default slot; This will change with the named slots feature.
-                [SlotViewHelper::DEFAULT_SLOT],
+                $parsedTemplate->getAvailableSlots(),
             );
         }
         return $this->componentDefinitionsCache[$viewHelperName];

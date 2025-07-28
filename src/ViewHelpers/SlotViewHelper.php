@@ -9,7 +9,12 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
+use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
 
 /**
  * ``f:slot`` allows a template that is called as a component to access and render
@@ -22,6 +27,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * used within the child content that contains a HTML string, that HTML is escaped
  * because it might be from an unknown source.
  *
+ * In combination with the :ref:`<f:fragment> ViewHelper <typo3fluid-fluid-fragment>`,
+ * multiple slots can be used in one component.
+ *
  * If a slot is defined, this ViewHelper will always attempt to return a string,
  * regardless of the original type of the content. If a slot is not defined, the
  * ViewHelper will return ``null``.
@@ -31,7 +39,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * If the following template ``Text.html``:
  *
- * .. code-block:: xml
+ * ..  code-block:: xml
+ *     :emphasize-lines: 6
  *
  *    <f:argument name="title" type="string" />
  *
@@ -122,9 +131,58 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *        </div>
  *    </div>
  *
+ * Multiple Named Slots
+ * ====================
+ *
+ * If the following template ``TextMedia.html``:
+ *
+ * ..  code-block:: xml
+ *     :emphasize-lines: 6,9
+ *
+ *    <f:argument name="title" type="string" />
+ *
+ *    <div class="textMediaComponent">
+ *        <h2>{title}</h2>
+ *        <div class="textMediaComponent__media">
+ *            <f:slot name="media" />
+ *        </div>
+ *        <div class="textMediaComponent__content">
+ *            <f:slot name="content" />
+ *        </div>
+ *    </div>
+ *
+ * is rendered with the following component call:
+ *
+ * .. code-block:: xml
+ *
+ *    <my:textMedia title="My title">
+ *        <f:fragment name="media">
+ *            <img src="path/to/image.jpg" alt="..." />
+ *        </f:fragment>
+ *        <f:fragment name="content">
+ *            <p>My first paragraph</p>
+ *            <p>My second paragraph</p>
+ *        </f:fragment>
+ *    </my:textMedia>
+ *
+ * it will result in the following output:
+ *
+ * .. code-block:: xml
+ *
+ *    <div class="textMediaComponent">
+ *        <h2>My title</h2>
+ *        <div class="textMediaComponent__media">
+ *            <img src="path/to/image.jpg" alt="..." />
+ *        </div>
+ *        <div class="textMediaComponent__content">
+ *            <p>My first paragraph</p>
+ *            <p>My second paragraph</p>
+ *        </div>
+ *    </div>
+ *
  * @api
  */
-final class SlotViewHelper extends AbstractViewHelper
+final class SlotViewHelper extends AbstractViewHelper implements ViewHelperNodeInitializedEventInterface
 {
     public const DEFAULT_SLOT = 'default';
 
@@ -133,10 +191,28 @@ final class SlotViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
+    public function initializeArguments(): void
+    {
+        $this->registerArgument('name', 'string', 'Name of the slot, can be omitted for default slot', false, self::DEFAULT_SLOT);
+    }
+
     public function render(): ?string
     {
         $variableContainer = $this->renderingContext->getViewHelperVariableContainer();
-        $slot = $variableContainer->get(self::class, self::DEFAULT_SLOT);
+        $slot = $variableContainer->get(self::class, $this->arguments['name']);
         return is_callable($slot) ? (string)$slot() : null;
+    }
+
+    public static function nodeInitializedEvent(ViewHelperNode $node, array $arguments, ParsingState $parsingState): void
+    {
+        // Collect available slots of current template in ParsingState
+        // This allows to extract template metadata without triggering a
+        // full rendering of the template
+        $slotName = isset($arguments['name']) && $arguments['name'] instanceof NodeInterface
+            ? (string)$arguments['name']->evaluate(new RenderingContext())
+            : self::DEFAULT_SLOT;
+        if (!in_array($slotName, $parsingState->getAvailableSlots())) {
+            $parsingState->setAvailableSlots([...$parsingState->getAvailableSlots(), $slotName]);
+        }
     }
 }
