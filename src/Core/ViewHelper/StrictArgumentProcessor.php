@@ -113,7 +113,7 @@ final readonly class StrictArgumentProcessor implements ArgumentProcessorInterfa
      */
     private function getFirstElementOfNonEmpty(mixed $value): mixed
     {
-        if (is_array($value)) {
+        if (is_array($value) && count($value)) {
             return reset($value);
         }
         if ($value instanceof Traversable) {
