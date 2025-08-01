@@ -43,12 +43,10 @@ To enable this usage we must then create a ViewHelper class:
      * This ViewHelper takes two arrays and returns
      * the `array_combine`d result.
      */
-    class CombineViewHelper extends AbstractViewHelper {
-
-        /**
-         * @return void
-         */
-        public function initializeArguments() {
+    class CombineViewHelper extends AbstractViewHelper
+    {
+        public function initializeArguments(): void
+        {
             $this->registerArgument('values', 'array', 'Values to use in array_combine');
             $this->registerArgument('keys', 'array', 'Keys to use in array_combine', true);
         }
@@ -57,10 +55,9 @@ To enable this usage we must then create a ViewHelper class:
          * Combines two arrays using one for keys and
          * the other for values. If values are not provided
          * in argument it can be provided as tag content.
-         *
-         * @return array
          */
-        public function render() {
+        public function render(): array
+        {
             $values = $this->arguments['values'];
             $keys = $this->arguments['keys'];
             if ($values === null) {
