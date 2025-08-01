@@ -139,6 +139,7 @@ final class LenientArgumentProcessorTest extends TestCase
             [[1, 2, 3], 'array', true],
             [new \ArrayObject(), 'array', true],
 
+            [[], 'string[]', true],
             [['foo', 'bar'], 'string[]', true],
             [new \IteratorIterator(new \ArrayIterator(['foo', 'bar'])), 'string[]', true],
             [['foo', 1], 'string[]', true],
