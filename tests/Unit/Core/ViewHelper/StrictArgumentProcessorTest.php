@@ -686,6 +686,13 @@ final class StrictArgumentProcessorTest extends TestCase
         ];
         yield [
             'type' => 'string[]',
+            'value' => [],
+            'expectedValidity' => true,
+            'expectedProcessedValue' => [],
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => 'string[]',
             'value' => ['foo', 'bar'],
             'expectedValidity' => true,
             'expectedProcessedValue' => ['foo', 'bar'],
