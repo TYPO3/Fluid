@@ -1,0 +1,17 @@
+.. include:: /Includes.rst.txt
+
+.. _changelog-5.x:
+
+=============
+Changelog 5.x
+=============
+
+5.0
+---
+
+* Breaking: Property :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper::$childNodes`
+  has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper::setChildNodes()`
+  has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface::setChildNodes()`
+  has been removed.
