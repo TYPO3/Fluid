@@ -12,6 +12,13 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Parser\Interceptor;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
+use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
+use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
+use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -155,5 +162,39 @@ final class EscapeInterceptorTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
         $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
         $view->render();
+    }
+
+    #[Test]
+    public function processDoesNotDisableEscapingInterceptorByDefault(): void
+    {
+        $renderingContext = new RenderingContext();
+        $renderingContext->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers');
+        $viewHelperNode = new ViewHelperNode($renderingContext, 'test', 'escapeChildrenEnabledAndEscapeOutputDisabled', []);
+        $subject = new Escape();
+        $property = new \ReflectionProperty($subject, 'childrenEscapingEnabled');
+        self::assertTrue($property->getValue($subject));
+        $subject->process($viewHelperNode, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, new ParsingState());
+        self::assertTrue($property->getValue($subject));
+    }
+
+    #[Test]
+    public function processDisablesEscapingInterceptorIfViewHelperDisablesIt(): void
+    {
+        $renderingContext = new RenderingContext();
+        $renderingContext->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers');
+        $viewHelperNode = new ViewHelperNode($renderingContext, 'test', 'escapeChildrenDisabledAndEscapeOutputDisabled', []);
+        $subject = new Escape();
+        $property = new \ReflectionProperty($subject, 'childrenEscapingEnabled');
+        self::assertTrue($property->getValue($subject));
+        $subject->process($viewHelperNode, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, new ParsingState());
+        self::assertFalse($property->getValue($subject));
+    }
+
+    #[Test]
+    public function processWrapsCurrentViewHelperInEscapeNode(): void
+    {
+        $node = new ObjectAccessorNode('foo');
+        $subject = new Escape();
+        self::assertInstanceOf(EscapingNode::class, $subject->process($node, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, new ParsingState()));
     }
 }
