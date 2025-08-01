@@ -49,7 +49,12 @@ final class AbstractViewHelperTest extends TestCase
     #[IgnoreDeprecations]
     public function getFirstElementOfNonEmptyReturnsExpectedValue(mixed $input, ?string $expected): void
     {
-        $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods([])->getMock();
+        $subject = new class () extends AbstractViewHelper {
+            public function render(): string
+            {
+                return '';
+            }
+        };
         $method = new \ReflectionMethod($subject, 'getFirstElementOfNonEmpty');
         self::assertEquals($expected, $method->invoke($subject, $input));
     }
@@ -57,7 +62,12 @@ final class AbstractViewHelperTest extends TestCase
     #[Test]
     public function registeringTheSameArgumentNameAgainOverridesArgument(): void
     {
-        $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods([])->getMock();
+        $subject = new class () extends AbstractViewHelper {
+            public function render(): string
+            {
+                return '';
+            }
+        };
         $method = new \ReflectionMethod($subject, 'registerArgument');
         $method->invoke($subject, 'someName', 'string', 'desc', true);
         $method->invoke($subject, 'someName', 'integer', 'changed desc', true);
@@ -75,7 +85,12 @@ final class AbstractViewHelperTest extends TestCase
         $renderingContext = new RenderingContext();
         $renderingContext->setVariableProvider($templateVariableContainer);
         $renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
-        $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods(['prepareArguments'])->getMock();
+        $subject = new class () extends AbstractViewHelper {
+            public function render(): string
+            {
+                return '';
+            }
+        };
         $subject->setRenderingContext($renderingContext);
         $property = new \ReflectionProperty($subject, 'templateVariableContainer');
         self::assertSame($templateVariableContainer, $property->getValue($subject));
@@ -86,7 +101,12 @@ final class AbstractViewHelperTest extends TestCase
     #[Test]
     public function renderChildrenCallsRenderChildrenClosureIfSet(): void
     {
-        $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods([])->getMock();
+        $subject = new class () extends AbstractViewHelper {
+            public function render(): string
+            {
+                return '';
+            }
+        };
         $subject->setRenderChildrenClosure(function () {
             return 'foobar';
         });
@@ -98,7 +118,12 @@ final class AbstractViewHelperTest extends TestCase
     public function validateAdditionalArgumentsThrowsExceptionIfNotEmpty(): void
     {
         $this->expectException(Exception::class);
-        $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods([])->getMock();
+        $subject = new class () extends AbstractViewHelper {
+            public function render(): string
+            {
+                return '';
+            }
+        };
         $subject->setRenderingContext(new RenderingContext());
         $subject->validateAdditionalArguments(['foo' => 'bar']);
     }
@@ -109,7 +134,12 @@ final class AbstractViewHelperTest extends TestCase
         $context = new RenderingContext();
         $node = new ViewHelperNode($context, 'f', 'comment', []);
         $init = '';
-        $subject = $this->getMockBuilder(AbstractViewHelper::class)->onlyMethods([])->getMock();
+        $subject = new class () extends AbstractViewHelper {
+            public function render(): string
+            {
+                return '';
+            }
+        };
         $result = $subject->compile('foobar', 'baz', $init, $node, new TemplateCompiler());
         self::assertEmpty($init);
         self::assertEquals('$renderingContext->getViewHelperInvoker()->invoke(' . get_class($subject) . '::class, foobar, $renderingContext, baz)', $result);
