@@ -93,7 +93,7 @@ final readonly class StrictArgumentProcessor implements ArgumentProcessorInterfa
                 return false;
             }
             if (str_ends_with($type, '[]')) {
-                $firstElement = $this->getFirstElementOfNonEmpty($value);
+                $firstElement = $this->getFirstElement($value);
                 if ($firstElement === null) {
                     return true;
                 }
@@ -109,11 +109,10 @@ final readonly class StrictArgumentProcessor implements ArgumentProcessorInterfa
 
     /**
      * Return the first element of the given array, ArrayAccess or Traversable
-     * that is not empty
      */
-    private function getFirstElementOfNonEmpty(mixed $value): mixed
+    private function getFirstElement(mixed $value): mixed
     {
-        if (is_array($value) && count($value)) {
+        if (is_array($value) && $value !== []) {
             return reset($value);
         }
         if ($value instanceof Traversable) {
