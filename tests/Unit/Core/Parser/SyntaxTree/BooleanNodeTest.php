@@ -484,20 +484,13 @@ final class BooleanNodeTest extends TestCase
     public function objectsAreComparedStrictly(): void
     {
         $renderingContext = new RenderingContext();
-        $object1 = new \stdClass();
-        $object2 = new \stdClass();
+        $renderingContext->getVariableProvider()->add('object1', new \stdClass());
+        $renderingContext->getVariableProvider()->add('object2', new \stdClass());
 
         $rootNode = new RootNode();
-
-        $object1Node = $this->createMock(ObjectAccessorNode::class);
-        $object1Node->expects(self::any())->method('evaluate')->willReturn($object1);
-
-        $object2Node = $this->createMock(ObjectAccessorNode::class);
-        $object2Node->expects(self::any())->method('evaluate')->willReturn($object2);
-
-        $rootNode->addChildNode($object1Node);
+        $rootNode->addChildNode(new ObjectAccessorNode('object1'));
         $rootNode->addChildNode(new TextNode('=='));
-        $rootNode->addChildNode($object2Node);
+        $rootNode->addChildNode(new ObjectAccessorNode('object2'));
 
         $booleanNode = new BooleanNode($rootNode);
         self::assertFalse($booleanNode->evaluate($renderingContext));
@@ -507,20 +500,14 @@ final class BooleanNodeTest extends TestCase
     public function objectsAreComparedStrictlyInUnequalComparison(): void
     {
         $renderingContext = new RenderingContext();
-        $object1 = new \stdClass();
-        $object2 = new \stdClass();
+        $renderingContext->getVariableProvider()->add('object1', new \stdClass());
+        $renderingContext->getVariableProvider()->add('object2', new \stdClass());
 
         $rootNode = new RootNode();
 
-        $object1Node = $this->createMock(ObjectAccessorNode::class);
-        $object1Node->expects(self::any())->method('evaluate')->willReturn($object1);
-
-        $object2Node = $this->createMock(ObjectAccessorNode::class);
-        $object2Node->expects(self::any())->method('evaluate')->willReturn($object2);
-
-        $rootNode->addChildNode($object1Node);
+        $rootNode->addChildNode(new ObjectAccessorNode('object1'));
         $rootNode->addChildNode(new TextNode('!='));
-        $rootNode->addChildNode($object2Node);
+        $rootNode->addChildNode(new ObjectAccessorNode('object2'));
 
         $booleanNode = new BooleanNode($rootNode);
         self::assertTrue($booleanNode->evaluate($renderingContext));

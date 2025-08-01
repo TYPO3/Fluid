@@ -16,9 +16,8 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * Allows casting variables to specific types, for example `{myVariable as boolean}`
  *
  * @internal
- * @todo Make class final.
  */
-class CastingExpressionNode extends AbstractExpressionNode
+final class CastingExpressionNode extends AbstractExpressionNode
 {
     protected static array $validTypes = [
         'integer', 'boolean', 'string', 'float', 'array', 'DateTime',

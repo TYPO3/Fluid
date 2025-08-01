@@ -16,9 +16,8 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * A node which handles object access. This means it handles structures like {object.accessor.bla}
  *
  * @internal
- * @todo Make class final.
  */
-class ObjectAccessorNode extends AbstractNode
+final class ObjectAccessorNode extends AbstractNode
 {
     /**
      * Object path which will be called. Is a list like "post.name.email"
