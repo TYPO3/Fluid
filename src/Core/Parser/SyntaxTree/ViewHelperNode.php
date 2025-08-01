@@ -122,13 +122,6 @@ class ViewHelperNode extends AbstractNode
         return $this->arguments;
     }
 
-    public function addChildNode(NodeInterface $childNode): void
-    {
-        parent::addChildNode($childNode);
-        /** @todo remove with Fluid v5 */
-        $this->uninitializedViewHelper->setChildNodes($this->childNodes);
-    }
-
     /**
      * Call the view helper associated with this object.
      *

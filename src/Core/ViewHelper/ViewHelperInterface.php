@@ -40,12 +40,6 @@ interface ViewHelperInterface
 
     public function getContentArgumentName(): ?string;
 
-    /**
-     * @param NodeInterface[] $nodes
-     * @deprecated will be removed with Fluid v5
-     */
-    public function setChildNodes(array $nodes);
-
     public function setViewHelperNode(ViewHelperNode $node);
 
     /**

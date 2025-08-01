@@ -51,13 +51,6 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     protected $arguments = [];
 
     /**
-     * @var NodeInterface[] array
-     * @api
-     * @deprecated will be removed with Fluid v5. Use $viewHelperNode->getChildNodes() instead
-     */
-    protected $childNodes = [];
-
-    /**
      * Current variable container reference.
      * @var VariableProviderInterface
      * @api
@@ -226,18 +219,6 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     public function setViewHelperNode(ViewHelperNode $node)
     {
         $this->viewHelperNode = $node;
-    }
-
-    /**
-     * Sets all needed attributes needed for the rendering. Called by the
-     * framework. Populates $this->viewHelperNode.
-     * @param NodeInterface[] $childNodes
-     * @internal
-     * @deprecated will be removed with Fluid v5. Use $viewHelperNode->getChildNodes() instead
-     */
-    public function setChildNodes(array $childNodes)
-    {
-        $this->childNodes = $childNodes;
     }
 
     /**

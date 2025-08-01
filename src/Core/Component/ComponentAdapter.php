@@ -268,14 +268,6 @@ final class ComponentAdapter implements ViewHelperInterface
 
     /**
      * Not relevant for component rendering
-     *
-     * @param NodeInterface[] $nodes
-     * @todo remove with Fluid v5
-     */
-    public function setChildNodes(array $nodes): void {}
-
-    /**
-     * Not relevant for component rendering
      */
     public function getContentArgumentName(): ?string
     {
