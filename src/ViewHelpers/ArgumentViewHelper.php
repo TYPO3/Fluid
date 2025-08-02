@@ -128,14 +128,18 @@ final class ArgumentViewHelper extends AbstractViewHelper implements ViewHelperN
             ), 1744908509);
         }
 
+        // Automatically make the argument definition optional if it has a default value
+        $hasDefaultValue = array_key_exists('default', $evaluatedArguments);
+        $required = !($evaluatedArguments['optional'] ?? false) && !$hasDefaultValue;
+
         // Create argument definition to be interpreted later during rendering
         // This will also be written to the cache by the TemplateCompiler
         $argumentDefinitions[$argumentName] = new ArgumentDefinition(
             $argumentName,
             (string)$evaluatedArguments['type'],
             array_key_exists('description', $evaluatedArguments) ? (string)$evaluatedArguments['description'] : '',
-            array_key_exists('optional', $evaluatedArguments) ? !$evaluatedArguments['optional'] : true,
-            array_key_exists('default', $evaluatedArguments) ? $evaluatedArguments['default'] : null,
+            $required,
+            $hasDefaultValue ? $evaluatedArguments['default'] : null,
         );
         $parsingState->setArgumentDefinitions($argumentDefinitions);
     }
