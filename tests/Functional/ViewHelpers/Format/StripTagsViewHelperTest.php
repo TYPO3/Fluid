@@ -48,6 +48,11 @@ final class StripTagsViewHelperTest extends AbstractFunctionalTestCase
                 '<f:format.stripTags allowedTags="<strong>">This text <i>contains</i> some <strong>allowed</strong> tags.</f:format.stripTags>',
                 'This text contains some <strong>allowed</strong> tags.',
             ],
+            'hrefs in brackets' => [
+                '<f:format.stripTags hrefsInBrackets="true">This text <a href="https://example.com">Link Text</a></f:format.stripTags>',
+                'This text "Link Text [https://example.com]"',
+            ],
+
         ];
     }
 
