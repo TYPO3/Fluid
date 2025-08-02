@@ -128,14 +128,27 @@ final class ArgumentViewHelper extends AbstractViewHelper implements ViewHelperN
             ), 1744908509);
         }
 
+        $hasDefaultValue = array_key_exists('default', $evaluatedArguments);
+
+        // Disallow default value + optional=false
+        if ($hasDefaultValue && array_key_exists('optional', $evaluatedArguments) && $evaluatedArguments['optional'] === false) {
+            throw new \TYPO3Fluid\Fluid\Core\Parser\Exception(sprintf(
+                'Template argument "%s" cannot have a default value while also being required. Either remove the default or mark it as optional.',
+                $argumentName
+            ), 1744908508);
+        }
+
+        // Automatically make the argument definition optional if it has a default value
+        $required = !($evaluatedArguments['optional'] ?? false) && !$hasDefaultValue;
+
         // Create argument definition to be interpreted later during rendering
         // This will also be written to the cache by the TemplateCompiler
         $argumentDefinitions[$argumentName] = new ArgumentDefinition(
             $argumentName,
             (string)$evaluatedArguments['type'],
             array_key_exists('description', $evaluatedArguments) ? (string)$evaluatedArguments['description'] : '',
-            array_key_exists('optional', $evaluatedArguments) ? !$evaluatedArguments['optional'] : true,
-            array_key_exists('default', $evaluatedArguments) ? $evaluatedArguments['default'] : null,
+            $required,
+            $hasDefaultValue ? $evaluatedArguments['default'] : null,
         );
         $parsingState->setArgumentDefinitions($argumentDefinitions);
     }
