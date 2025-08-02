@@ -132,6 +132,8 @@ final class LenientArgumentProcessorTest extends TestCase
             ['test', 'DateTime', false],
             [null, 'DateTime', true], // @todo this can lead to PHP warnings
 
+            [new \Datetime('now'), 'DateTimeInterface', true],
+
             ['test', 'object', false],
             [null, 'object', false],
 
