@@ -68,7 +68,7 @@ class RawViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('value', 'mixed', 'The value to output', false, null, false);
     }
@@ -76,7 +76,7 @@ class RawViewHelper extends AbstractViewHelper
     /**
      * @return mixed
      */
-    public function render()
+    public function render(): mixed
     {
         return $this->renderChildren();
     }
@@ -87,9 +87,8 @@ class RawViewHelper extends AbstractViewHelper
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return mixed
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): string
     {
         $contentArgumentName = $this->getContentArgumentName();
         return sprintf(

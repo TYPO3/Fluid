@@ -41,12 +41,12 @@ class LayoutViewHelper extends AbstractViewHelper implements ViewHelperNodeIniti
      *
      * @api
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('name', 'string', 'Name of layout to use. If none given, "Default" is used.');
     }
 
-    public function render()
+    public function render(): string
     {
         return '';
     }

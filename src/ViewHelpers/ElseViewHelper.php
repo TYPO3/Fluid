@@ -44,16 +44,15 @@ class ElseViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('if', 'boolean', 'Condition expression conforming to Fluid boolean rules');
     }
 
     /**
-     * @return string the rendered string
      * @api
      */
-    public function render()
+    public function render(): mixed
     {
         return $this->renderChildren();
     }
@@ -64,9 +63,8 @@ class ElseViewHelper extends AbstractViewHelper
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string|null
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): string
     {
         return '\'\'';
     }

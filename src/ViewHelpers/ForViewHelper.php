@@ -81,7 +81,7 @@ class ForViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('each', 'array', 'The array or \SplObjectStorage to iterated over', true);
         $this->registerArgument('as', 'string', 'The name of the iteration variable', true);
@@ -91,10 +91,9 @@ class ForViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @return string
      * @throws ViewHelper\Exception
      */
-    public function render()
+    public function render(): string
     {
         if (!isset($this->arguments['each'])) {
             return '';
