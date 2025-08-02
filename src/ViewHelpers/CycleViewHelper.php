@@ -71,16 +71,13 @@ class CycleViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('values', 'array', 'The array or object implementing \ArrayAccess (for example \SplObjectStorage) to iterated over');
         $this->registerArgument('as', 'string', 'The name of the iteration variable', true);
     }
 
-    /**
-     * @return mixed
-     */
-    public function render()
+    public function render(): mixed
     {
         $values = $this->arguments['values'];
         $as = $this->arguments['as'];
@@ -105,12 +102,7 @@ class CycleViewHelper extends AbstractViewHelper
         return $output;
     }
 
-    /**
-     * @param mixed $values
-     * @return array
-     * @throws ViewHelper\Exception
-     */
-    protected static function initializeValues($values)
+    protected static function initializeValues(mixed $values): array
     {
         if (is_array($values)) {
             return array_values($values);
@@ -123,16 +115,11 @@ class CycleViewHelper extends AbstractViewHelper
         throw new ViewHelper\Exception('CycleViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
     }
 
-    /**
-     * @param string $as
-     * @param ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer
-     * @return int
-     */
-    protected static function initializeIndex($as, ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer)
+    protected static function initializeIndex(string $as, ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer): int
     {
         $index = 0;
         if ($viewHelperVariableContainer->exists(static::class, $as)) {
-            $index = $viewHelperVariableContainer->get(static::class, $as);
+            $index = (int)$viewHelperVariableContainer->get(static::class, $as);
         }
 
         return $index;

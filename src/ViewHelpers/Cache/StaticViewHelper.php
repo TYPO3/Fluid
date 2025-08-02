@@ -78,10 +78,7 @@ class StaticViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
-    /**
-     * @return string
-     */
-    public function render()
+    public function render(): mixed
     {
         return $this->renderChildren();
     }

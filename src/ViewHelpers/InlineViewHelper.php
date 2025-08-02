@@ -36,7 +36,7 @@ class InlineViewHelper extends AbstractViewHelper
 
     protected $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument(
             'code',
@@ -45,10 +45,7 @@ class InlineViewHelper extends AbstractViewHelper
         );
     }
 
-    /**
-     * @return mixed|string
-     */
-    public function render()
+    public function render(): mixed
     {
         return $this->renderingContext->getTemplateParser()->parse((string)$this->renderChildren())->render($this->renderingContext);
     }

@@ -37,17 +37,14 @@ class OrViewHelper extends AbstractViewHelper
     /**
      * Initialize
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('content', 'mixed', 'Content to check if null');
         $this->registerArgument('alternative', 'mixed', 'Alternative if content is null');
         $this->registerArgument('arguments', 'array', 'Arguments to be replaced in the resulting string, using sprintf');
     }
 
-    /**
-     * @return mixed
-     */
-    public function render()
+    public function render(): mixed
     {
         $alternative = $this->arguments['alternative'];
         $sprintfArguments = (array)$this->arguments['arguments'];

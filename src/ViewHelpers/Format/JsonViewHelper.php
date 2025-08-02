@@ -71,7 +71,7 @@ final class JsonViewHelper extends AbstractViewHelper
      * @see https://www.php.net/manual/function.json-encode.php
      * @return string|false
      */
-    public function render()
+    public function render(): string|bool
     {
         $value = $this->renderChildren();
         $options = JSON_HEX_TAG;
