@@ -89,18 +89,6 @@ class ViewHelperResolver
     protected array $localNamespaces = [];
 
     /**
-     * Namespaces that have neither been defined globally nor locally
-     * in the current template file, but in one of its parents. This
-     * collection only exists to provide backwards-compatibility in
-     * Fluid v4 while still being able to emit deprecation notices.
-     *
-     * @todo remove this with Fluid v5
-     * @see $namespaces
-     * @var array<string, (string|null)[]|null>
-     */
-    protected array $inheritedNamespaces = [];
-
-    /**
      * Returns all currently registered namespaces. Note that this includes both
      * global namespaces and local namespaces added from within the current template.
      *
@@ -298,25 +286,6 @@ class ViewHelperResolver
     }
 
     /**
-     * @param array<string, (string|null)[]|null> $namespaces
-     * @internal
-     * @todo remove this with Fluid v5
-     */
-    protected function addInheritedNamespaces(array $namespaces): void
-    {
-        foreach ($namespaces as $identifier => $phpNamespaces) {
-            if ($phpNamespaces === null) {
-                $this->inheritedNamespaces[$identifier] = null;
-            } else {
-                $this->inheritedNamespaces[$identifier] = array_unique(array_merge(
-                    $this->inheritedNamespaces[$identifier] ?? [],
-                    $phpNamespaces,
-                ));
-            }
-        }
-    }
-
-    /**
      * Creates a copy of the ViewHelperResolver that still contains all globally
      * registered ViewHelper namespaces, but no local namespaces.
      *
@@ -325,8 +294,6 @@ class ViewHelperResolver
     public function getScopedCopy(): ViewHelperResolver
     {
         $copy = clone $this;
-        // @todo remove this with Fluid v5
-        $copy->addInheritedNamespaces($copy->getLocalNamespaces());
         $copy->setLocalNamespaces([]);
         return $copy;
     }
@@ -341,18 +308,7 @@ class ViewHelperResolver
     public function isNamespaceValid(string $namespaceIdentifier): bool
     {
         $namespaces = $this->getNamespaces();
-        if (isset($namespaces[$namespaceIdentifier])) {
-            return true;
-        }
-
-        // Check ViewHelper namespaces that were inherited from parent templates
-        // as a fallback
-        // @todo remove with Fluid v5
-        if (isset($this->inheritedNamespaces[$namespaceIdentifier])) {
-            throw new InheritedNamespaceException();
-        }
-
-        return false;
+        return isset($namespaces[$namespaceIdentifier]);
     }
 
     /**
@@ -459,22 +415,6 @@ class ViewHelperResolver
                 }
             }
         }
-        // @todo remove this with Fluid v5
-        if (isset($this->inheritedNamespaces[$namespaceIdentifier])) {
-            foreach (array_reverse($this->inheritedNamespaces[$namespaceIdentifier]) as $namespace) {
-                // null values within array can safely be skipped. Only if the whole definition is null,
-                // the whole namespace is ignored by Fluid
-                if ($namespace === null) {
-                    continue;
-                }
-                $this->resolverDelegates[$namespace] ??= $this->createResolverDelegateInstanceFromClassName($namespace);
-                try {
-                    $this->resolverDelegates[$namespace]->resolveViewHelperClassName($methodIdentifier);
-                    return $this->resolverDelegates[$namespace];
-                } catch (UnresolvableViewHelperException $e) {
-                }
-            }
-        }
         return null;
     }
 
@@ -552,27 +492,6 @@ class ViewHelperResolver
                 }
             }
         }
-
-        // Check ViewHelper namespaces that were inherited from parent templates
-        // as a fallback
-        // @todo remove this with Fluid v5
-        if (isset($this->inheritedNamespaces[$namespaceIdentifier])) {
-            foreach (array_reverse($this->inheritedNamespaces[$namespaceIdentifier]) as $namespace) {
-                // null values within array can safely be skipped. Only if the whole definition is null,
-                // the whole namespace is ignored by Fluid
-                if ($namespace === null) {
-                    continue;
-                }
-                $this->resolverDelegates[$namespace] ??= $this->createResolverDelegateInstanceFromClassName($namespace);
-                try {
-                    return $this->resolverDelegates[$namespace]->resolveViewHelperClassName($methodIdentifier);
-                } catch (UnresolvableViewHelperException $e) {
-                    // Only use exception of fallback chain if the regular chain didn't result in any exception
-                    $lastException ??= $e;
-                }
-            }
-        }
-
         if ($lastException === null) {
             $lastException = new UnresolvableViewHelperException(
                 'No suitable resolvers were registered for this namespace.',
