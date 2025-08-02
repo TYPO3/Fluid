@@ -18,7 +18,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 
 /**
- * An interceptor adding the "Htmlspecialchars" viewhelper to the suitable places.
+ * An interceptor adding EscapingNodes to the suitable places, which execute htmlspecialchars().
  */
 class Escape implements InterceptorInterface
 {
@@ -38,8 +38,7 @@ class Escape implements InterceptorInterface
     protected array $viewHelperNodesWhichDisableTheInterceptor = [];
 
     /**
-     * Adds a ViewHelper node using the Format\HtmlspecialcharsViewHelper to the given node.
-     * If "escapingInterceptorEnabled" in the ViewHelper is false, will disable itself inside the ViewHelpers body.
+     * Adds a special EscapingNode to the given node if escaping for the node is necessary.
      *
      * @param int $interceptorPosition One of the INTERCEPT_* constants for the current interception point
      * @param ParsingState $parsingState the current parsing state. Not needed in this interceptor.

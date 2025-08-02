@@ -95,7 +95,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * Specifies whether the escaping interceptors should be disabled or enabled for the result of renderChildren() calls within this ViewHelper
      * @see isChildrenEscapingEnabled()
      *
-     * Note: If this is null, the value of $this->escapingInterceptorEnabled is considered for backwards compatibility.
+     * Note: If this is null, the value will be determined based on $escapeOutput.
      *
      * @var bool
      * @api

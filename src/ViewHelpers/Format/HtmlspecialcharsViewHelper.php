@@ -71,7 +71,6 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper
      * @return mixed the altered string. If a non-string is provided, the value is returned unchanged
      * @see http://www.php.net/manual/function.htmlspecialchars.php
      * @api
-     * @todo change return type to string. This needs further investigation because the ViewHelper is used internally by Fluid
      */
     public function render()
     {
