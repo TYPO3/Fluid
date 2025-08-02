@@ -17,9 +17,8 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * A node which is used inside boolean arguments
  *
  * @internal
- * @todo Make class final.
  */
-class BooleanNode extends AbstractNode
+final class BooleanNode extends AbstractNode
 {
     /**
      * Stack of expression nodes to be evaluated

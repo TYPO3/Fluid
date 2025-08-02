@@ -17,7 +17,6 @@ use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 
 /**
  * Base class for nodes based on (shorthand) expressions.
- * @todo add return types with Fluid v5
  */
 abstract class AbstractExpressionNode extends AbstractNode implements ExpressionNodeInterface
 {
@@ -48,11 +47,8 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
 
     /**
      * Evaluates the expression stored in this node, in the context of $renderingcontext.
-     *
-     * @param RenderingContextInterface $renderingContext
-     * @return string the text stored in this node/subtree.
      */
-    public function evaluate(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext): mixed
     {
         try {
             return static::evaluateExpression($renderingContext, $this->expression, $this->matches);
@@ -72,7 +68,7 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
      * instance - and the RenderingContext and other APIs
      * can be accessed via the TemplateCompiler.
      */
-    public function compile(TemplateCompiler $templateCompiler)
+    public function compile(TemplateCompiler $templateCompiler): array
     {
         $handlerClass = get_class($this);
         $expressionVariable = $templateCompiler->variableName('string');

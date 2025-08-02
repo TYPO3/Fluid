@@ -18,9 +18,8 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * of a condition to be written as `{var ? thenvar : elsevar}`
  *
  * @internal
- * @todo Make class final.
  */
-class TernaryExpressionNode extends AbstractExpressionNode
+final class TernaryExpressionNode extends AbstractExpressionNode
 {
     /**
      * Pattern which detects ternary conditions written in shorthand

@@ -16,9 +16,8 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * Array Syntax Tree Node. Handles JSON-like arrays.
  *
  * @internal
- * @todo Make class final.
  */
-class ArrayNode extends AbstractNode
+final class ArrayNode extends AbstractNode
 {
     /**
      * Constructor.
