@@ -459,31 +459,9 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * Main render method of the ViewHelper. Every modern ViewHelper implementation
      * must implement this method.
      *
-     * @todo Remove fallback implementation for renderStatic() and declare as abstract with Fluid v5
-     *
      * @return mixed
      */
-    public function render()
-    {
-        if (!method_exists(static::class, 'renderStatic')) {
-            throw new Exception(
-                sprintf(
-                    'ViewHelper class "%s" does not declare a "render()" method. Also, no implementation of "renderStatic"' .
-                    'could be found to use as fallback. Please implement "render()" on your ViewHelper class',
-                    static::class,
-                ),
-            );
-        }
-
-        // This covers the edge case where a ViewHelper implements neither CompileWithRenderStatic nor
-        // CompileWithContentArgumentAndRenderStatic, but still uses renderStatic().
-        trigger_error('renderStatic() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
-        return static::renderStatic(
-            $this->arguments,
-            $this->buildRenderChildrenClosure(),
-            $this->renderingContext,
-        );
-    }
+    abstract public function render();
 
     /**
      * You only should override this method *when you absolutely know what you
