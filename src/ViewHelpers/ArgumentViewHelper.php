@@ -134,7 +134,7 @@ final class ArgumentViewHelper extends AbstractViewHelper implements ViewHelperN
         if ($hasDefaultValue && array_key_exists('optional', $evaluatedArguments) && $evaluatedArguments['optional'] === false) {
             throw new \TYPO3Fluid\Fluid\Core\Parser\Exception(sprintf(
                 'Template argument "%s" cannot have a default value while also being required. Either remove the default or mark it as optional.',
-                $argumentName
+                $argumentName,
             ), 1744908508);
         }
 
