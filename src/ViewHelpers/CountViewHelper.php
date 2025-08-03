@@ -52,15 +52,12 @@ class CountViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('subject', 'array', 'Countable subject, array or \Countable');
     }
 
-    /**
-     * @return int
-     */
-    public function render()
+    public function render(): int
     {
         $countable = $this->renderChildren();
         if ($countable === null) {

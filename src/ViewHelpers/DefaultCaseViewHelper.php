@@ -27,11 +27,11 @@ class DefaultCaseViewHelper extends AbstractViewHelper
     protected $escapeOutput = false;
 
     /**
-     * @return string the contents of this ViewHelper if no other "Case" ViewHelper of the surrounding switch ViewHelper matches
+     * @return mixed the contents of this ViewHelper if no other "Case" ViewHelper of the surrounding switch ViewHelper matches
      * @throws ViewHelper\Exception
      * @api
      */
-    public function render()
+    public function render(): mixed
     {
         $viewHelperVariableContainer = $this->renderingContext->getViewHelperVariableContainer();
         if (!$viewHelperVariableContainer->exists(SwitchViewHelper::class, 'switchExpression')) {
@@ -46,9 +46,8 @@ class DefaultCaseViewHelper extends AbstractViewHelper
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): string
     {
         return '\'\'';
     }

@@ -52,17 +52,14 @@ class DebugViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('typeOnly', 'boolean', 'If true, debugs only the type of variables', false, false);
         $this->registerArgument('levels', 'integer', 'Levels to render when rendering nested objects/arrays', false, 5);
         $this->registerArgument('html', 'boolean', 'Render HTML. If false, output is indented plaintext', false, false);
     }
 
-    /**
-     * @return string
-     */
-    public function render()
+    public function render(): string
     {
         $typeOnly = $this->arguments['typeOnly'];
         $expressionToExamine = $this->renderChildren();
@@ -74,14 +71,7 @@ class DebugViewHelper extends AbstractViewHelper
         return static::dumpVariable($expressionToExamine, $html, 1, $levels);
     }
 
-    /**
-     * @param mixed $variable
-     * @param bool $html
-     * @param int $level
-     * @param int $levels
-     * @return string
-     */
-    protected static function dumpVariable($variable, $html, $level, $levels)
+    protected static function dumpVariable(mixed $variable, bool $html, int $level, int $levels): string
     {
         $typeLabel = is_object($variable) ? get_class($variable) : gettype($variable);
 
@@ -134,11 +124,7 @@ class DebugViewHelper extends AbstractViewHelper
         return $string;
     }
 
-    /**
-     * @param mixed $variable
-     * @return array
-     */
-    protected static function getValuesOfNonScalarVariable($variable)
+    protected static function getValuesOfNonScalarVariable(mixed $variable): array
     {
         if ($variable instanceof \ArrayObject || is_array($variable)) {
             return (array)$variable;

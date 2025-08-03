@@ -62,16 +62,15 @@ class SwitchViewHelper extends AbstractViewHelper
      */
     protected $backupBreakState = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('expression', 'mixed', 'Expression to switch', true);
     }
 
     /**
-     * @return string the rendered string
      * @api
      */
-    public function render()
+    public function render(): mixed
     {
         $expression = $this->arguments['expression'];
         $this->backupSwitchState();
@@ -95,9 +94,8 @@ class SwitchViewHelper extends AbstractViewHelper
 
     /**
      * @param NodeInterface[] $childNodes
-     * @return mixed
      */
-    protected function retrieveContentFromChildNodes(array $childNodes)
+    protected function retrieveContentFromChildNodes(array $childNodes): mixed
     {
         $content = null;
         $defaultCaseViewHelperNode = null;
@@ -121,20 +119,12 @@ class SwitchViewHelper extends AbstractViewHelper
         return $content;
     }
 
-    /**
-     * @param NodeInterface $node
-     * @return bool
-     */
-    protected function isDefaultCaseNode(NodeInterface $node)
+    protected function isDefaultCaseNode(NodeInterface $node): bool
     {
         return $node instanceof ViewHelperNode && $node->getViewHelperClassName() === DefaultCaseViewHelper::class;
     }
 
-    /**
-     * @param NodeInterface $node
-     * @return bool
-     */
-    protected function isCaseNode(NodeInterface $node)
+    protected function isCaseNode(NodeInterface $node): bool
     {
         return $node instanceof ViewHelperNode && $node->getViewHelperClassName() === CaseViewHelper::class;
     }
@@ -142,7 +132,7 @@ class SwitchViewHelper extends AbstractViewHelper
     /**
      * Backups "switch expression" and "break" state of a possible parent switch ViewHelper to support nesting
      */
-    protected function backupSwitchState()
+    protected function backupSwitchState(): void
     {
         if ($this->renderingContext->getViewHelperVariableContainer()->exists(SwitchViewHelper::class, 'switchExpression')) {
             $this->backupSwitchExpression = $this->renderingContext->getViewHelperVariableContainer()->get(SwitchViewHelper::class, 'switchExpression');
@@ -155,7 +145,7 @@ class SwitchViewHelper extends AbstractViewHelper
     /**
      * Restores "switch expression" and "break" states that might have been backed up in backupSwitchState() before
      */
-    protected function restoreSwitchState()
+    protected function restoreSwitchState(): void
     {
         if ($this->backupSwitchExpression !== null) {
             $this->renderingContext->getViewHelperVariableContainer()->addOrUpdate(SwitchViewHelper::class, 'switchExpression', $this->backupSwitchExpression);
@@ -176,9 +166,8 @@ class SwitchViewHelper extends AbstractViewHelper
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): string
     {
         $phpCode = 'call_user_func_array(function($arguments) use ($renderingContext) {' . PHP_EOL .
             'switch ($arguments[\'expression\']) {' . PHP_EOL;

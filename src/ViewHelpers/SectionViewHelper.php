@@ -78,7 +78,7 @@ class SectionViewHelper extends AbstractViewHelper implements ViewHelperNodeInit
      *
      * @api
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('name', 'string', 'Name of the section', true);
     }
@@ -86,10 +86,9 @@ class SectionViewHelper extends AbstractViewHelper implements ViewHelperNodeInit
     /**
      * Rendering directly returns all child nodes.
      *
-     * @return string HTML String of all child nodes.
      * @api
      */
-    public function render()
+    public function render(): mixed
     {
         $content = '';
         if ($this->viewHelperVariableContainer->exists(SectionViewHelper::class, 'isCurrentlyRenderingSection')) {

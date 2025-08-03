@@ -46,10 +46,7 @@ class SpacelessViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
-    /**
-     * @return string
-     */
-    public function render()
+    public function render(): string
     {
         return trim(preg_replace('/\\>\\s+\\</', '><', (string)$this->renderChildren()));
     }

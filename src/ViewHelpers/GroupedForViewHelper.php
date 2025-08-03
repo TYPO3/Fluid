@@ -92,7 +92,7 @@ class GroupedForViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('each', 'array', 'The array or \SplObjectStorage to iterated over', true);
         $this->registerArgument('as', 'string', 'The name of the iteration variable', true);
@@ -100,10 +100,7 @@ class GroupedForViewHelper extends AbstractViewHelper
         $this->registerArgument('groupKey', 'string', 'The name of the variable to store the current group', false, 'groupKey');
     }
 
-    /**
-     * @return mixed
-     */
-    public function render()
+    public function render(): string
     {
         $each = $this->arguments['each'];
         $as = $this->arguments['as'];
@@ -143,7 +140,7 @@ class GroupedForViewHelper extends AbstractViewHelper
      * @return array The grouped array in the form array('keys' => array('key1' => [key1value], 'key2' => [key2value], ...), 'values' => array('key1' => array([key1value] => [element1]), ...), ...)
      * @throws ViewHelper\Exception
      */
-    protected static function groupElements(array $elements, $groupBy)
+    protected static function groupElements(array $elements, string $groupBy): array
     {
         $groups = ['keys' => [], 'values' => []];
         foreach ($elements as $key => $value) {

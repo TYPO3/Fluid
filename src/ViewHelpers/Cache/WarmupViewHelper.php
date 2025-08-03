@@ -73,7 +73,7 @@ class WarmupViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument(
             'variables',
@@ -93,10 +93,8 @@ class WarmupViewHelper extends AbstractViewHelper
      * operations. If ACTIVE the ViewHelper will assign/overlay
      * replacement variables, call `renderChildren`, restore the
      * original variable provider and finally return the content.
-     *
-     * @return string
      */
-    public function render()
+    public function render(): mixed
     {
         if (!$this->renderingContext->getTemplateCompiler()->isWarmupMode()) {
             return $this->renderChildren();
@@ -138,7 +136,7 @@ class WarmupViewHelper extends AbstractViewHelper
      * @param array $variables
      * @return VariableProviderInterface
      */
-    protected static function overlayVariablesIfNotSet(RenderingContextInterface $renderingContext, array $variables)
+    protected static function overlayVariablesIfNotSet(RenderingContextInterface $renderingContext, array $variables): VariableProviderInterface
     {
         $currentProvider = $renderingContext->getVariableProvider();
         $chainedVariableProvider = new ChainedVariableProvider([

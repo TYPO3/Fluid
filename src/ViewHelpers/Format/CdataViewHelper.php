@@ -65,15 +65,12 @@ class CdataViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('value', 'mixed', 'The value to output');
     }
 
-    /**
-     * @return string
-     */
-    public function render()
+    public function render(): string
     {
         return sprintf('<![CDATA[%s]]>', $this->renderChildren());
     }
