@@ -64,6 +64,13 @@ class ArgumentDefinition
      */
     public function __construct(string $name, string $type, string $description, bool $required, mixed $defaultValue = null, ?bool $escape = null)
     {
+        if ($required && $defaultValue !== null) {
+            throw new \InvalidArgumentException(
+                sprintf('ArgumentDefinition "%s" cannot have a default value while also being required. Either remove the default or mark it as optional.', $name),
+                1754235900,
+            );
+        }
+
         $this->name = $name;
         $this->type = $type;
         $this->description = $description;
