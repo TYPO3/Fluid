@@ -130,7 +130,7 @@ final class ArgumentViewHelper extends AbstractViewHelper implements ViewHelperN
 
         // Automatically make the argument definition optional if it has a default value
         $hasDefaultValue = array_key_exists('default', $evaluatedArguments);
-        $required = !($evaluatedArguments['optional'] ?? false) && !$hasDefaultValue;
+        $optional = ($evaluatedArguments['optional'] ?? false) || $hasDefaultValue;
 
         // Create argument definition to be interpreted later during rendering
         // This will also be written to the cache by the TemplateCompiler
