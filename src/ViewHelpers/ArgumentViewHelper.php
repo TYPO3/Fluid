@@ -138,7 +138,7 @@ final class ArgumentViewHelper extends AbstractViewHelper implements ViewHelperN
             $argumentName,
             (string)$evaluatedArguments['type'],
             array_key_exists('description', $evaluatedArguments) ? (string)$evaluatedArguments['description'] : '',
-            $required,
+            !$optional,
             $hasDefaultValue ? $evaluatedArguments['default'] : null,
         );
         $parsingState->setArgumentDefinitions($argumentDefinitions);
