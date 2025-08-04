@@ -101,7 +101,7 @@ final readonly class StrictArgumentProcessor implements ArgumentProcessorInterfa
             }
             return true;
         }
-        if (class_exists($type) && $value instanceof $type) {
+        if ((class_exists($type) || interface_exists($type)) && $value instanceof $type) {
             return true;
         }
         return false;
