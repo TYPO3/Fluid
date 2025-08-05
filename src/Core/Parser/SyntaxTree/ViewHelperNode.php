@@ -18,7 +18,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolverDelegateInterface;
 /**
  * Node which will call a ViewHelper associated with this node.
  */
-class ViewHelperNode extends AbstractNode
+final class ViewHelperNode extends AbstractNode
 {
     protected readonly string $namespace;
     protected readonly string $name;

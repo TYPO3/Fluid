@@ -16,9 +16,8 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * Root node of every syntax tree.
  *
  * @internal
- * @todo Make class final.
  */
-class RootNode extends AbstractNode
+final class RootNode extends AbstractNode
 {
     /**
      * Evaluate the root node, by evaluating the subtree.
