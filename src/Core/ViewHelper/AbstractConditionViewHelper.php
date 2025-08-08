@@ -118,7 +118,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         foreach ($this->viewHelperNode->getChildNodes() as $childNode) {
             if ($childNode instanceof ViewHelperNode
                 && str_ends_with($childNode->getViewHelperClassName(), 'ThenViewHelper')) {
-                $data = $childNode->evaluate($this->renderingContext);
+                $data = $childNode->evaluateChildNodes($this->renderingContext);
                 return $data;
             }
             if ($childNode instanceof ViewHelperNode
@@ -184,7 +184,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                 $arguments = $childNode->getArguments();
                 if (isset($arguments['if'])) {
                     if ($arguments['if']->evaluate($this->renderingContext)) {
-                        return $childNode->evaluate($this->renderingContext);
+                        return $childNode->evaluateChildNodes($this->renderingContext);
                     }
                 } elseif ($elseNode === null) {
                     $elseNode = $childNode;
@@ -205,7 +205,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
 
         // If a f:else node exists, evaluate its content
         if ($elseNode instanceof ViewHelperNode) {
-            return $elseNode->evaluate($this->renderingContext);
+            return $elseNode->evaluateChildNodes($this->renderingContext);
         }
 
         // If only the condition is specified, but no then/else handling, the whole ViewHelper should

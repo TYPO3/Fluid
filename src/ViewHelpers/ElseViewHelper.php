@@ -50,12 +50,14 @@ class ElseViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @return string the rendered string
+     * Does nothing unless used in context of condition ViewHelper, such as f:if
+     *
      * @api
+     * @todo consider throwing an exception here in future versions
      */
-    public function render()
+    public function render(): string
     {
-        return $this->renderChildren();
+        return '';
     }
 
     /**
@@ -64,9 +66,9 @@ class ElseViewHelper extends AbstractViewHelper
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string|null
+     * @return string
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): string
     {
         return '\'\'';
     }
