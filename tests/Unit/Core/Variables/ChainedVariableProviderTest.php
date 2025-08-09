@@ -19,7 +19,7 @@ final class ChainedVariableProviderTest extends TestCase
 {
     public static function getGetTestValues(): array
     {
-        $a = new StandardVariableProvider(['a' => 'a']);
+        $a = new StandardVariableProvider(['a' => 'a', 'c' => ['c'], 'd' => ['dk' => 'dv']]);
         $b = new StandardVariableProvider(['a' => 'b', 'b' => 'b']);
         return [
             [['a' => 'local'], [$a, $b], 'a', 'local'],
@@ -27,13 +27,22 @@ final class ChainedVariableProviderTest extends TestCase
             [[], [$a, $b], 'b', 'b'],
             [[], [$b, $a], 'a', 'b'],
             [[], [$b, $a], 'b', 'b'],
+            [[], [$a, $b], 'c', [0 => 'c']],
+            [[], [$a, $b], 'c.0', 'c'],
+            [[], [$a, $b], 'd', ['dk' => 'dv']],
+            [[], [$a, $b], 'd.dk', 'dv'],
+            [['e' => 'e'], [$a, $b], 'a', 'a'],
+            [['e' => 'e'], [$a, $b], 'e', 'e'],
+            [['f' => ['f']], [$a, $b], 'f', ['f']],
+            [['g' => ['g']], [$a, $b], 'g.0', 'g'],
+            [['h' => ['hk' => 'hv']], [$a, $b], 'h.hk', 'hv'],
             [[], [$b, $a], 'notfound', null],
         ];
     }
 
     #[DataProvider('getGetTestValues')]
     #[Test]
-    public function getReturnsPreviouslySetSourceVariables(array $local, array $chain, string $path, ?string $expected): void
+    public function getReturnsPreviouslySetSourceVariables(array $local, array $chain, string $path, null|string|array $expected): void
     {
         $subject = new ChainedVariableProvider($chain);
         $subject->setSource($local);
@@ -42,7 +51,7 @@ final class ChainedVariableProviderTest extends TestCase
 
     #[DataProvider('getGetTestValues')]
     #[Test]
-    public function getByPathReturnsPreviouslySetSourceVariables(array $local, array $chain, string $path, ?string $expected): void
+    public function getByPathReturnsPreviouslySetSourceVariables(array $local, array $chain, string $path, null|string|array $expected): void
     {
         $subject = new ChainedVariableProvider($chain);
         $subject->setSource($local);

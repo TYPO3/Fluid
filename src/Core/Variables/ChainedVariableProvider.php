@@ -41,24 +41,11 @@ class ChainedVariableProvider extends StandardVariableProvider implements Variab
         return array_merge($merged, $this->variables);
     }
 
-    public function get(string $identifier): mixed
-    {
-        if (array_key_exists($identifier, $this->variables)) {
-            return $this->variables[$identifier];
-        }
-        foreach ($this->variableProviders as $provider) {
-            $value = $provider->get($identifier);
-            if ($value !== null) {
-                return $value;
-            }
-        }
-        return null;
-    }
-
     public function getByPath(string $path): mixed
     {
-        if (array_key_exists($path, $this->variables)) {
-            return $this->variables[$path];
+        $result = parent::getByPath($path);
+        if ($result !== null) {
+            return $result;
         }
         // We did not resolve with native StandardVariableProvider. Let's try the chain.
         foreach ($this->variableProviders as $provider) {
