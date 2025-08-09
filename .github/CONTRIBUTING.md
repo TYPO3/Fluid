@@ -85,7 +85,7 @@ To generate the Fluid documentation, you can use the following commands.
 Generate RST files from ViewHelpers:
 
 ```bash
-FLUID_DOCUMENTATION_OUTPUT_DIR=Documentation/Fluid vendor/bin/fluidDocumentation generate vendor/t3docs/fluid-documentation-generator/config/fluidStandalone/*
+FLUID_DOCUMENTATION_OUTPUT_DIR=Documentation/ViewHelpers vendor/bin/fluidDocumentation generate vendor/t3docs/fluid-documentation-generator/config/fluidStandalone/*
 ```
 
 Build the documentation:
