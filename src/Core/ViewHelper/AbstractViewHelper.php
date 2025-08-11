@@ -182,35 +182,6 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     }
 
     /**
-     * Overrides a registered argument. Call this method from your ViewHelper subclass
-     * inside the initializeArguments() method if you want to override a previously registered argument.
-     * @see registerArgument()
-     *
-     * @param string $name Name of the argument
-     * @param string $type Type of the argument
-     * @param string $description Description of the argument
-     * @param bool $required If true, argument is required. Defaults to false.
-     * @param mixed $defaultValue Default value of argument
-     * @param bool|null $escape Can be toggled to true to force escaping of variables and inline syntax passed as argument value.
-     * @return \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
-     * @throws Exception
-     * @api
-     * @deprecated Will be removed in v5. No longer necessary since self::registerArgument() now allows overriding
-     */
-    protected function overrideArgument($name, $type, $description, $required = false, $defaultValue = null, $escape = null)
-    {
-        trigger_error('overrideArgument() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
-        if (!array_key_exists($name, $this->argumentDefinitions)) {
-            throw new Exception(
-                'Argument "' . $name . '" has not been defined, thus it can\'t be overridden.',
-                1279212461,
-            );
-        }
-        $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue, $escape);
-        return $this;
-    }
-
-    /**
      * Sets all needed attributes needed for the rendering. Called by the
      * framework. Populates $this->viewHelperNode.
      * @param ViewHelperNode $node View Helper node to be set.
@@ -334,68 +305,6 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                 }
             }
         }
-    }
-
-    /**
-     * Check whether the defined type matches the value type
-     *
-     * @param string $type
-     * @param mixed $value
-     * @return bool
-     * @deprecated Will be removed in v5. Use the new argument processing API to validate ViewHelper arguments.
-     */
-    protected function isValidType($type, $value)
-    {
-        trigger_error('AbstractViewHelper::isValidType() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
-        if ($type === 'object') {
-            if (!is_object($value)) {
-                return false;
-            }
-        } elseif ($type === 'array' || substr($type, -2) === '[]') {
-            if (!is_array($value) && !$value instanceof \ArrayAccess && !$value instanceof \Traversable && !empty($value)) {
-                return false;
-            }
-            if (substr($type, -2) === '[]') {
-                $firstElement = $this->getFirstElementOfNonEmpty($value);
-                if ($firstElement === null) {
-                    return true;
-                }
-                return $this->isValidType(substr($type, 0, -2), $firstElement);
-            }
-        } elseif ($type === 'string') {
-            if (is_object($value) && !method_exists($value, '__toString')) {
-                return false;
-            }
-        } elseif ($type === 'boolean' && !is_bool($value)) {
-            return false;
-        } elseif (class_exists($type) && $value !== null && !$value instanceof $type) {
-            return false;
-        } elseif (is_object($value) && !is_a($value, $type, true)) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Return the first element of the given array, ArrayAccess or Traversable
-     * that is not empty
-     *
-     * @param mixed $value
-     * @return mixed
-     * @deprecated Will be removed in v5. Use the new argument processing API to validate ViewHelper arguments.
-     */
-    protected function getFirstElementOfNonEmpty($value)
-    {
-        trigger_error('AbstractViewHelper::getFirstElementOfNonEmpty() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
-        if (is_array($value)) {
-            return reset($value);
-        }
-        if ($value instanceof \Traversable) {
-            foreach ($value as $element) {
-                return $element;
-            }
-        }
-        return null;
     }
 
     /**
