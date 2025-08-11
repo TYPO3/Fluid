@@ -21,7 +21,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
-use TYPO3Fluid\Fluid\Core\ViewHelper\InheritedNamespaceException;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
 
@@ -289,12 +288,8 @@ class TemplateParser
         if ($viewHelperResolver->isNamespaceIgnored($namespaceIdentifier)) {
             return null;
         }
-        try {
-            if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
-                throw new UnknownNamespaceException('Unknown Namespace: ' . $namespaceIdentifier);
-            }
-        } catch (InheritedNamespaceException) {
-            // @todo remove with Fluid 5
+        if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
+            throw new UnknownNamespaceException('Unknown Namespace: ' . $namespaceIdentifier);
         }
 
         $viewHelperNode = $this->initializeViewHelperAndAddItToStack(
@@ -331,18 +326,8 @@ class TemplateParser
         if ($viewHelperResolver->isNamespaceIgnored($namespaceIdentifier)) {
             return null;
         }
-        try {
-            if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
-                throw new UnknownNamespaceException('Unknown Namespace: ' . $namespaceIdentifier);
-            }
-        } catch (InheritedNamespaceException) {
-            // @todo remove with Fluid 5
-            trigger_error(sprintf(
-                'ViewHelper call <%1$s:%2$s> in "%3$s" only works because "%1$s" namespace was added in parent template. This will break with Fluid v5.',
-                $namespaceIdentifier,
-                $methodIdentifier,
-                $state->getIdentifier(),
-            ), E_USER_DEPRECATED);
+        if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
+            throw new UnknownNamespaceException('Unknown Namespace: ' . $namespaceIdentifier);
         }
         try {
             $currentViewHelperNode = new ViewHelperNode(
@@ -398,12 +383,8 @@ class TemplateParser
         if ($viewHelperResolver->isNamespaceIgnored($namespaceIdentifier)) {
             return false;
         }
-        try {
-            if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
-                throw new UnknownNamespaceException('Unknown Namespace: ' . $namespaceIdentifier);
-            }
-        } catch (InheritedNamespaceException) {
-            // @todo remove with Fluid 5
+        if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
+            throw new UnknownNamespaceException('Unknown Namespace: ' . $namespaceIdentifier);
         }
         $lastStackElement = $state->popNodeFromStack();
         if (!($lastStackElement instanceof ViewHelperNode)) {
@@ -462,12 +443,8 @@ class TemplateParser
                 }
                 // There still should be an exception if a ViewHelper namespace in the chain cannot
                 // be resolved, even if the whole chain is ignored later
-                try {
-                    if (!$viewHelperResolver->isNamespaceValid($singleMatch['NamespaceIdentifier'])) {
-                        throw new UnknownNamespaceException('Unknown Namespace: ' . $singleMatch['NamespaceIdentifier']);
-                    }
-                } catch (InheritedNamespaceException) {
-                    // @todo remove with Fluid 5
+                if (!$viewHelperResolver->isNamespaceValid($singleMatch['NamespaceIdentifier'])) {
+                    throw new UnknownNamespaceException('Unknown Namespace: ' . $singleMatch['NamespaceIdentifier']);
                 }
             }
 

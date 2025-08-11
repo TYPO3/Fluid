@@ -26,17 +26,17 @@ class CaseViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('value', 'mixed', 'Value to match in this case', true);
     }
 
     /**
-     * @return string the contents of this ViewHelper if $value equals the expression of the surrounding switch ViewHelper, otherwise an empty string
+     * @return mixed the contents of this ViewHelper if $value equals the expression of the surrounding switch ViewHelper, otherwise an empty string
      * @throws ViewHelper\Exception
      * @api
      */
-    public function render()
+    public function render(): mixed
     {
         $value = $this->arguments['value'];
         $viewHelperVariableContainer = $this->renderingContext->getViewHelperVariableContainer();
@@ -59,9 +59,8 @@ class CaseViewHelper extends AbstractViewHelper
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): string
     {
         return '\'\'';
     }

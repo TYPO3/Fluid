@@ -18,9 +18,8 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 final class NamespaceInheritanceTest extends AbstractFunctionalTestCase
 {
-    public static function namespacesAreInheritedToLayoutAndPartialsDataProvider(): iterable
+    public static function namespacesDefinedInTemplateCannotBeUsedInLayoutAndPartialsDataProvider(): iterable
     {
-        // @todo the following cases are deprecated and will be removed with Fluid v5
         foreach ([false, true] as $inlineSyntax) {
             $casePrefix = $inlineSyntax ? 'Inline Syntax' : 'Tag Syntax';
             $templateNameSuffix = $inlineSyntax ? 'InlineSyntax' : '';
@@ -107,14 +106,11 @@ final class NamespaceInheritanceTest extends AbstractFunctionalTestCase
     }
 
     #[Test]
-    #[DataProvider('namespacesAreInheritedToLayoutAndPartialsDataProvider')]
+    #[DataProvider('namespacesDefinedInTemplateCannotBeUsedInLayoutAndPartialsDataProvider')]
     #[IgnoreDeprecations]
-    public function namespacesAreInheritedToLayoutAndPartialsUncached(string $source, array $initialNamespaces, array $variables, array $expectedNamespaces, string $expectedResult): void
+    public function namespacesDefinedInTemplateCannotBeUsedInLayoutAndPartialsUncached(string $source, array $initialNamespaces, array $variables, array $expectedNamespaces, string $expectedResult): void
     {
-        // We need to make sure that all test cases actually trigger the deprecation for uncached templates
-        // @todo switch to exception check with Fluid v5
-        // self::expectException(UnknownNamespaceException::class);
-        self::expectUserDeprecationMessageMatches('#^ViewHelper call <test:tagBasedTest> in ".+" only works because "test" namespace was added in parent template. This will break with Fluid v5.$#');
+        self::expectException(UnknownNamespaceException::class);
 
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);
@@ -128,23 +124,24 @@ final class NamespaceInheritanceTest extends AbstractFunctionalTestCase
     }
 
     #[Test]
-    #[DataProvider('namespacesAreInheritedToLayoutAndPartialsDataProvider')]
+    #[DataProvider('namespacesDefinedInTemplateCannotBeUsedInLayoutAndPartialsDataProvider')]
     #[IgnoreDeprecations]
-    public function namespacesAreInheritedToLayoutAndPartialsCached(string $source, array $initialNamespaces, array $variables, array $expectedNamespaces, string $expectedResult): void
+    public function namespacesDefinedInTemplateCannotBeUsedInLayoutAndPartialsCached(string $source, array $initialNamespaces, array $variables, array $expectedNamespaces, string $expectedResult): void
     {
-        // Cached templates don't need to trigger deprecations
-        // @todo activate exception check with Fluid v5
-        // self::expectException(UnknownNamespaceException::class);
+        self::expectException(UnknownNamespaceException::class);
 
         // Uncached
-        $view = new TemplateView();
-        $view->getRenderingContext()->setCache(self::$cache);
-        $view->getRenderingContext()->getViewHelperResolver()->setNamespaces($initialNamespaces);
-        $view->assignMultiple($variables);
-        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
-        $view->getRenderingContext()->getTemplatePaths()->setLayoutRootPaths([__DIR__ . '/../../Fixtures/Layouts/']);
-        $view->getRenderingContext()->getTemplatePaths()->setPartialRootPaths([__DIR__ . '/../../Fixtures/Partials/']);
-        $view->render();
+        try {
+            $view = new TemplateView();
+            $view->getRenderingContext()->setCache(self::$cache);
+            $view->getRenderingContext()->getViewHelperResolver()->setNamespaces($initialNamespaces);
+            $view->assignMultiple($variables);
+            $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+            $view->getRenderingContext()->getTemplatePaths()->setLayoutRootPaths([__DIR__ . '/../../Fixtures/Layouts/']);
+            $view->getRenderingContext()->getTemplatePaths()->setPartialRootPaths([__DIR__ . '/../../Fixtures/Partials/']);
+            $view->render();
+        } catch (UnknownNamespaceException) {
+        }
 
         // Cached
         $view = new TemplateView();
