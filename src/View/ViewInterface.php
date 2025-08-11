@@ -51,7 +51,7 @@ interface ViewInterface
      * @param string $sectionName Name of section to render
      * @param array $variables The variables to use
      * @param bool $ignoreUnknown Ignore an unknown section and just return an empty string
-     * @return string rendered template for the section
+     * @return mixed rendered template for the section
      * @throws Exception\InvalidSectionException
      */
     public function renderSection($sectionName, array $variables = [], $ignoreUnknown = false);
@@ -63,7 +63,7 @@ interface ViewInterface
      * @param string $sectionName
      * @param array $variables
      * @param bool $ignoreUnknown Ignore an unknown section and just return an empty string
-     * @return string
+     * @return mixed
      */
     public function renderPartial($partialName, $sectionName, array $variables, $ignoreUnknown = false);
 }
