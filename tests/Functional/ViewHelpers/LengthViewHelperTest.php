@@ -58,7 +58,7 @@ final class LengthViewHelperTest extends AbstractFunctionalTestCase
 
     #[DataProvider('renderValidDataProvider')]
     #[Test]
-    public function renderValid(array $arguments, string $src, mixed $expectation): void
+    public function renderValid(array $arguments, string $src, int $expectation): void
     {
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);

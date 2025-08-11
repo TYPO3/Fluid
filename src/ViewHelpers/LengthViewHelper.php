@@ -69,10 +69,9 @@ final class LengthViewHelper extends AbstractViewHelper
     public function render(): int
     {
         $value = $this->arguments['value'] ?? $this->renderChildren();
-        $value = is_scalar($value) ? (string)$value : $value;
         $encoding = $this->arguments['encoding'];
 
-        if (!is_string($value)) {
+        if (!is_scalar($value)) {
             $givenType = get_debug_type($value);
             throw new \InvalidArgumentException(
                 'The argument "value" was registered with type "string", but is of type "' .
@@ -81,6 +80,6 @@ final class LengthViewHelper extends AbstractViewHelper
             );
         }
 
-        return mb_strlen($value, $encoding);
+        return mb_strlen((string)$value, $encoding);
     }
 }
