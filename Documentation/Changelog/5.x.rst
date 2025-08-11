@@ -15,6 +15,7 @@ Changelog 5.x
   has been removed.
 * Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface::setChildNodes()`
   has been removed.
+* Breaking: ViewHelper namespaces are no longer inherited from templates to layouts and partials.
 * Breaking: Trait :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic`
   has been removed.
 * Breaking: Trait :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic`
