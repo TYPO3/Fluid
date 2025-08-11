@@ -44,6 +44,7 @@ class TemplateParser
      */
     public const CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS = 1;
     public const CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS = 2;
+    public const CONTEXT_INSIDE_CDATA = 3;
 
     /**
      * Whether or not the escaping interceptors are active
@@ -260,6 +261,9 @@ class TemplateParser
                 )) {
                     continue;
                 }
+            } elseif (preg_match(Patterns::$SCAN_PATTERN_CDATA, $templateElement, $matchedVariables) > 0) {
+                $this->textAndShorthandSyntaxHandler($state, $matchedVariables['CDataContent'], self::CONTEXT_INSIDE_CDATA);
+                continue;
             }
             $this->textAndShorthandSyntaxHandler($state, $templateElement, $context);
         }
@@ -637,16 +641,31 @@ class TemplateParser
      */
     protected function textAndShorthandSyntaxHandler(ParsingState $state, string $text, int $context): void
     {
-        $sections = preg_split(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX, $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $sectionSplitPattern = $context === self::CONTEXT_INSIDE_CDATA
+            ? Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_IN_CDATA
+            : Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX;
+        $sections = preg_split($sectionSplitPattern, $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         if ($sections === false) {
             // String $text was not possible to split; we must return a text node with the full text instead.
             $this->textHandler($state, $text);
             return;
         }
         foreach ($sections as $section) {
+            if ($context === self::CONTEXT_INSIDE_CDATA) {
+                // Removes {{ }} from section to be able to re-use normal shorthand syntax workflow
+                // for CDATA sections
+                if (preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_IN_CDATA, $section, $matchedVariables)) {
+                    $normalizedSection = $matchedVariables['ExpressionVariable'];
+                } else {
+                    $this->textHandler($state, $section);
+                    continue;
+                }
+            } else {
+                $normalizedSection = $section;
+            }
+
             $matchedVariables = [];
-            $expressionNode = null;
-            if (preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
+            if (preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $normalizedSection, $matchedVariables) > 0) {
                 try {
                     if (!$this->objectAccessorHandler(
                         $state,
@@ -669,48 +688,53 @@ class TemplateParser
                         $this->renderingContext->getErrorHandler()->handleParserError($error),
                     );
                 }
-            } elseif ($context === self::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS
-                && preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $section, $matchedVariables) > 0
+                continue;
+            }
+
+            if ($context === self::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS
+                && preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $normalizedSection, $matchedVariables) > 0
             ) {
                 // We only match arrays if we are INSIDE viewhelper arguments
                 $this->arrayHandler($state, $this->recursiveArrayHandler($state, $matchedVariables['Array']));
-            } else {
-                // We ask custom ExpressionNode instances from ViewHelperResolver
-                // if any match our expression:
-                foreach ($this->renderingContext->getExpressionNodeTypes() as $expressionNodeTypeClassName) {
-                    $detectionExpression = $expressionNodeTypeClassName::$detectionExpression;
-                    $matchedVariables = [];
-                    preg_match_all($detectionExpression, $section, $matchedVariables, PREG_SET_ORDER);
-                    foreach ($matchedVariables as $matchedVariableSet) {
-                        $expressionStartPosition = strpos($section, $matchedVariableSet[0]);
-                        /** @var ExpressionNodeInterface $expressionNode */
-                        $expressionNode = new $expressionNodeTypeClassName($matchedVariableSet[0], $matchedVariableSet, $state);
-                        try {
-                            if ($expressionStartPosition > 0) {
-                                $state->getNodeFromStack()->addChildNode(new TextNode(substr($section, 0, $expressionStartPosition)));
-                            }
+                continue;
+            }
 
-                            $this->callInterceptor($expressionNode, InterceptorInterface::INTERCEPT_EXPRESSION, $state);
-                            $state->getNodeFromStack()->addChildNode($expressionNode);
-
-                            $expressionEndPosition = $expressionStartPosition + strlen($matchedVariableSet[0]);
-                            if ($expressionEndPosition < strlen($section)) {
-                                $this->textAndShorthandSyntaxHandler($state, substr($section, $expressionEndPosition), $context);
-                                break;
-                            }
-                        } catch (ExpressionException $error) {
-                            $this->textHandler(
-                                $state,
-                                $this->renderingContext->getErrorHandler()->handleExpressionError($error),
-                            );
+            // We ask custom ExpressionNode instances from ViewHelperResolver
+            // if any match our expression:
+            $expressionNode = null;
+            foreach ($this->renderingContext->getExpressionNodeTypes() as $expressionNodeTypeClassName) {
+                $detectionExpression = $expressionNodeTypeClassName::$detectionExpression;
+                $matchedVariables = [];
+                preg_match_all($detectionExpression, $normalizedSection, $matchedVariables, PREG_SET_ORDER);
+                foreach ($matchedVariables as $matchedVariableSet) {
+                    $expressionStartPosition = strpos($normalizedSection, $matchedVariableSet[0]);
+                    /** @var ExpressionNodeInterface $expressionNode */
+                    $expressionNode = new $expressionNodeTypeClassName($matchedVariableSet[0], $matchedVariableSet, $state);
+                    try {
+                        if ($expressionStartPosition > 0) {
+                            $state->getNodeFromStack()->addChildNode(new TextNode(substr($normalizedSection, 0, $expressionStartPosition)));
                         }
+
+                        $this->callInterceptor($expressionNode, InterceptorInterface::INTERCEPT_EXPRESSION, $state);
+                        $state->getNodeFromStack()->addChildNode($expressionNode);
+
+                        $expressionEndPosition = $expressionStartPosition + strlen($matchedVariableSet[0]);
+                        if ($expressionEndPosition < strlen($normalizedSection)) {
+                            $this->textAndShorthandSyntaxHandler($state, substr($normalizedSection, $expressionEndPosition), $context);
+                            break;
+                        }
+                    } catch (ExpressionException $error) {
+                        $this->textHandler(
+                            $state,
+                            $this->renderingContext->getErrorHandler()->handleExpressionError($error),
+                        );
                     }
                 }
+            }
 
-                if (!$expressionNode) {
-                    // As fallback we simply render the expression back as template content.
-                    $this->textHandler($state, $section);
-                }
+            if (!$expressionNode) {
+                // As fallback we simply render the expression back as template content.
+                $this->textHandler($state, $section);
             }
         }
     }
