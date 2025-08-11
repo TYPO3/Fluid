@@ -86,7 +86,7 @@ final class RangeViewHelper extends AbstractViewHelper
     {
         $this->registerArgument('start', 'integer', 'First value of the sequence.', true);
         $this->registerArgument('end', 'integer', 'Last possible value of the sequence.', true);
-        $this->registerArgument('step', 'integer', 'indicates by how much is the produced sequence progressed between values of the sequence.', false, 1);
+        $this->registerArgument('step', 'integer', 'indicates by how much the produced sequence is progressed between values of the sequence.', false, 1);
     }
 
     public function render(): mixed
