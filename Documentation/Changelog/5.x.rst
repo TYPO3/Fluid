@@ -23,3 +23,6 @@ Changelog 5.x
 * Breaking: Static method :php:`renderStatic()` on ViewHelpers that don't use :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic`
   or :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic`
   is no longer called.
+* Breaking: Setting a template's layout with the variable `layoutName` is no longer possible.
+* Breaking: Constant :php:`TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::LAYOUT_VARIABLE`
+  has been removed.
