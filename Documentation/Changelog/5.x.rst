@@ -23,3 +23,11 @@ Changelog 5.x
 * Breaking: Static method :php:`renderStatic()` on ViewHelpers that don't use :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic`
   or :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic`
   is no longer called.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver::resolvePhpNamespaceFromFluidNamespace()`
+  has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver::isNamespaceValidOrIgnored()`
+  has been removed.
+* Breaking: Constant :php:`TYPO3Fluid\Fluid\Core\Parser\Patterns::NAMESPACESUFFIX`
+  has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver::addNamespaces()`
+  has been removed.

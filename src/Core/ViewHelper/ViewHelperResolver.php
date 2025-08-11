@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 use TYPO3Fluid\Fluid\Core\Parser\Exception as ParserException;
-use TYPO3Fluid\Fluid\Core\Parser\Patterns;
 
 /**
  * Class ViewHelperResolver
@@ -165,53 +164,6 @@ class ViewHelperResolver
     }
 
     /**
-     * Wrapper to allow adding namespaces in bulk *without* first
-     * clearing the already added namespaces. Utility method mainly
-     * used in compiled templates, where some namespaces can be added
-     * from outside and some can be added from compiled values.
-     *
-     * @internal Only to be used by compiled templates
-     * @deprecated Will be removed in v5. Method is not in use anymore.
-     */
-    public function addNamespaces(array $namespaces): void
-    {
-        trigger_error('addNamespaces() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
-        foreach ($namespaces as $identifier => $namespace) {
-            $this->addNamespace($identifier, $namespace);
-        }
-    }
-
-    /**
-     * Resolves the PHP namespace based on the Fluid xmlns namespace,
-     * which can be either a URL matching the Patterns::NAMESPACEPREFIX
-     * and Patterns::NAMESPACESUFFIX rules, or a PHP namespace. When
-     * namespace is a PHP namespace it is optional to suffix it with
-     * the "\ViewHelpers" segment, e.g. "My\Package" is as valid to
-     * use as "My\Package\ViewHelpers" is.
-     *
-     * @param string $fluidNamespace
-     * @return string
-     * @deprecated Will be removed in v5. Method is not in use anymore.
-     */
-    public function resolvePhpNamespaceFromFluidNamespace(string $fluidNamespace): string
-    {
-        trigger_error('resolvePhpNamespaceFromFluidNamespace() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
-        $namespace = $fluidNamespace;
-        $suffixLength = strlen(Patterns::NAMESPACESUFFIX);
-        $phpNamespaceSuffix = str_replace('/', '\\', Patterns::NAMESPACESUFFIX);
-        $extractedSuffix = substr($fluidNamespace, 0 - $suffixLength);
-        if (strpos($fluidNamespace, Patterns::NAMESPACEPREFIX) === 0 && $extractedSuffix === Patterns::NAMESPACESUFFIX) {
-            // convention assumed: URL starts with prefix and ends with suffix
-            $namespace = substr($fluidNamespace, strlen(Patterns::NAMESPACEPREFIX));
-        }
-        $namespace = str_replace('/', '\\', $namespace);
-        if (substr($namespace, 0 - strlen($phpNamespaceSuffix)) !== $phpNamespaceSuffix) {
-            $namespace .= $phpNamespaceSuffix;
-        }
-        return $namespace;
-    }
-
-    /**
      * Set all global namespaces as an array of ['identifier' => ['Php\Namespace1', 'Php\Namespace2']]
      * namespace definitions. For convenience and legacy support, a
      * format of ['identifier' => 'Only\Php\Namespace'] is allowed,
@@ -309,32 +261,6 @@ class ViewHelperResolver
     {
         $namespaces = $this->getNamespaces();
         return isset($namespaces[$namespaceIdentifier]);
-    }
-
-    /**
-     * Validates the given namespaceIdentifier and returns false
-     * if the namespace is unknown and not ignored
-     *
-     * @param string $namespaceIdentifier
-     * @return bool true if the given namespace is valid
-     * @deprecated Will be removed in v5. Use combination of isNamespaceIgnored() and isNamespaceValid() instead.
-     */
-    public function isNamespaceValidOrIgnored(string $namespaceIdentifier): bool
-    {
-        trigger_error('isNamespaceValidOrIgnored() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
-        if ($this->isNamespaceValid($namespaceIdentifier) === true) {
-            return true;
-        }
-
-        if (array_key_exists($namespaceIdentifier, $this->getNamespaces())) {
-            return true;
-        }
-
-        if ($this->isNamespaceIgnored($namespaceIdentifier)) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
