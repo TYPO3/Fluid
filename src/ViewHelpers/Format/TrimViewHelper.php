@@ -98,7 +98,7 @@ final class TrimViewHelper extends AbstractViewHelper
     /**
      * @return string the trimmed value
      */
-    public function render()
+    public function render(): string
     {
         $value = $this->arguments['value'];
         $characters = $this->arguments['characters'];

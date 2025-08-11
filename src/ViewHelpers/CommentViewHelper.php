@@ -57,7 +57,7 @@ class CommentViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
-    public function render()
+    public function render(): string
     {
         return '';
     }

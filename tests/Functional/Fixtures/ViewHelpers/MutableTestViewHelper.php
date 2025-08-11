@@ -72,7 +72,7 @@ final class MutableTestViewHelper extends AbstractViewHelper
         return 'content';
     }
 
-    public function render()
+    public function render(): mixed
     {
         $argumentDefinitions = $this->prepareArguments();
         if (isset($argumentDefinitions['output'])) {

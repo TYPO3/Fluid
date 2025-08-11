@@ -68,7 +68,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class PrintfViewHelper extends AbstractViewHelper
 {
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('value', 'string', 'String to format');
         $this->registerArgument('arguments', 'array', 'The arguments for vsprintf', false, []);
@@ -76,9 +76,8 @@ class PrintfViewHelper extends AbstractViewHelper
 
     /**
      * Applies vsprintf() on the specified value.
-     * @return string
      */
-    public function render()
+    public function render(): string
     {
         return vsprintf($this->renderChildren(), $this->arguments['arguments']);
     }
