@@ -8,7 +8,6 @@
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 
@@ -111,7 +110,7 @@ class RenderViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('section', 'string', 'Section to render - combine with partial to render section in partial');
         $this->registerArgument('partial', 'string', 'Partial to render, with or without section');
@@ -122,10 +121,7 @@ class RenderViewHelper extends AbstractViewHelper
         $this->registerArgument('contentAs', 'string', 'If used, renders the child content and adds it as a template variable with this name for use in the partial/section');
     }
 
-    /**
-     * @return mixed
-     */
-    public function render()
+    public function render(): mixed
     {
         $section = $this->arguments['section'];
         $partial = $this->arguments['partial'];

@@ -57,7 +57,7 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('value', 'string', 'Value to format');
         $this->registerArgument('keepQuotes', 'boolean', 'If true quotes will not be replaced (ENT_NOQUOTES)', false, false);
@@ -72,7 +72,7 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper
      * @see http://www.php.net/manual/function.htmlspecialchars.php
      * @api
      */
-    public function render()
+    public function render(): mixed
     {
         $value = $this->arguments['value'];
         $keepQuotes = $this->arguments['keepQuotes'];
@@ -99,9 +99,8 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): string
     {
         $valueVariableName = $compiler->variableName('value');
         $initializationPhpCode .= sprintf('%1$s = (%2$s[\'value\'] !== null ? %2$s[\'value\'] : %3$s());', $valueVariableName, $argumentsName, $closureName) . chr(10);

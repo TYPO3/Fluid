@@ -9,15 +9,10 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers\StaticCacheable\Fixtures\ViewHelpers;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 final class CompilableViewHelper extends AbstractViewHelper
 {
-    // We leave this here as a test case for the deprecated feature
-    use CompileWithRenderStatic;
-
     /**
      * @inheritdoc
      */
@@ -26,12 +21,9 @@ final class CompilableViewHelper extends AbstractViewHelper
         $this->registerArgument('page', 'int', 'The page');
     }
 
-    public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext,
-    ) {
-        $page = $arguments['page'] ?? null;
+    public function render(): string
+    {
+        $page = $this->arguments['page'] ?? null;
         return (string)$page;
     }
 }

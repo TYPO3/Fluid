@@ -27,10 +27,9 @@ class ThenViewHelper extends AbstractViewHelper
     /**
      * Just render everything.
      *
-     * @return string the rendered string
      * @api
      */
-    public function render()
+    public function render(): mixed
     {
         return $this->renderChildren();
     }
@@ -41,9 +40,8 @@ class ThenViewHelper extends AbstractViewHelper
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): string
     {
         return '\'\'';
     }

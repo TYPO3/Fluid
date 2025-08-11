@@ -20,24 +20,24 @@ final class ArgumentViewHelperTest extends AbstractFunctionalTestCase
     {
         return [
             'all parameters provided with correct types' => [
-                ['title' => 'My title', 'tags' => ['tag1', 'tag2'], 'user' => 'me'],
-                ['title' => 'My title', 'tags' => ['tag1', 'tag2'], 'user' => 'me'],
+                ['title' => 'My title', 'tags' => ['tag1', 'tag2'], 'user' => 'me', 'autoOptional' => 'custom-value'],
+                ['title' => 'My title', 'tags' => ['tag1', 'tag2'], 'user' => 'me', 'autoOptional' => 'custom-value'],
             ],
             'all parameters provided with type conversion' => [
-                ['title' => 123, 'tags' => ['tag1', 'tag2'], 'user' => 1.23],
-                ['title' => '123', 'tags' => ['tag1', 'tag2'], 'user' => '1.23'],
+                ['title' => 123, 'tags' => ['tag1', 'tag2'], 'user' => 1.23, 'autoOptional' => 456],
+                ['title' => '123', 'tags' => ['tag1', 'tag2'], 'user' => '1.23', 'autoOptional' => '456'],
             ],
             'fallback to default value' => [
                 ['title' => 'My title', 'tags' => ['tag1', 'tag2']],
-                ['title' => 'My title', 'tags' => ['tag1', 'tag2'], 'user' => 'admin'],
+                ['title' => 'My title', 'tags' => ['tag1', 'tag2'], 'user' => 'admin', 'autoOptional' => 'default-value'],
             ],
             'optional parameter not provided' => [
                 ['title' => 'My title'],
-                ['title' => 'My title', 'tags' => null, 'user' => 'admin'],
+                ['title' => 'My title', 'tags' => null, 'user' => 'admin', 'autoOptional' => 'default-value'],
             ],
             'additional parameter provided' => [
                 ['title' => 'My title', 'additional' => 'foo'],
-                ['title' => 'My title', 'additional' => 'foo', 'tags' => null, 'user' => 'admin'],
+                ['title' => 'My title', 'additional' => 'foo', 'tags' => null, 'user' => 'admin', 'autoOptional' => 'default-value'],
             ],
         ];
     }
@@ -197,7 +197,7 @@ final class ArgumentViewHelperTest extends AbstractFunctionalTestCase
     public function templateArgumentsAreIgnoredWithLayout(string $templateSource): void
     {
         $layoutRootPath = __DIR__ . '/../Fixtures/Layouts/';
-        $variables = ['title' => 'My title', 'tags' => ['tag1', 'tag2'], 'user' => 'me'];
+        $variables = ['title' => 'My title', 'tags' => ['tag1', 'tag2'], 'user' => 'me', 'autoOptional' => 'custom-value'];
         $view = new TemplateView();
         $view->assignMultiple($variables);
         $view->getRenderingContext()->setCache(self::$cache);

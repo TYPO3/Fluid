@@ -48,4 +48,14 @@ final class ArgumentDefinitionTest extends TestCase
     {
         self::assertSame($expected, $argumentDefinition->isBooleanType());
     }
+
+    #[Test]
+    public function constructorThrowsExceptionWhenRequiredWithDefaultValue(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionCode(1754235900);
+        $this->expectExceptionMessage('ArgumentDefinition "test" cannot have a default value while also being required. Either remove the default or mark it as optional.');
+
+        new ArgumentDefinition('test', 'string', 'Test argument', true, 'defaultValue');
+    }
 }

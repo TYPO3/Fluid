@@ -33,16 +33,17 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class VariableViewHelper extends AbstractViewHelper
 {
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('value', 'mixed', 'Value to assign. If not in arguments then taken from tag content');
         $this->registerArgument('name', 'string', 'Name of variable to create', true);
     }
 
-    public function render()
+    public function render(): string
     {
         $value = $this->renderChildren();
         $this->renderingContext->getVariableProvider()->add($this->arguments['name'], $value);
+        return '';
     }
 
     /**

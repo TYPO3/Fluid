@@ -61,15 +61,12 @@ class AliasViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('map', 'array', 'Array that specifies which variables should be mapped to which alias', true);
     }
 
-    /**
-     * @return mixed
-     */
-    public function render()
+    public function render(): mixed
     {
         $globalVariableProvider = $this->renderingContext->getVariableProvider();
         $localVariableProvider = new StandardVariableProvider($this->arguments['map']);

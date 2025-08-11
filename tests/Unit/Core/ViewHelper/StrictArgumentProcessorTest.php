@@ -18,6 +18,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\StrictArgumentProcessor;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ArrayAccessExample;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\BackedEnumExample;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
 
 final class StrictArgumentProcessorTest extends TestCase
@@ -495,6 +496,36 @@ final class StrictArgumentProcessorTest extends TestCase
             'value' => null,
             'expectedValidity' => false,
             'expectedProcessedValue' => null,
+            'expectedProcessedValidity' => false,
+        ];
+        // Interfaces
+        yield [
+            'type' => 'DateTimeInterface',
+            'value' => $dateTime,
+            'expectedValidity' => true,
+            'expectedProcessedValue' => $dateTime,
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => 'DateTimeInterface',
+            'value' => $stdClass,
+            'expectedValidity' => false,
+            'expectedProcessedValue' => $stdClass,
+            'expectedProcessedValidity' => false,
+        ];
+        // Enums
+        yield [
+            'type' => BackedEnumExample::class,
+            'value' => BackedEnumExample::BAR,
+            'expectedValidity' => true,
+            'expectedProcessedValue' => BackedEnumExample::BAR,
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => BackedEnumExample::class,
+            'value' => $stdClass,
+            'expectedValidity' => false,
+            'expectedProcessedValue' => $stdClass,
             'expectedProcessedValidity' => false,
         ];
 
