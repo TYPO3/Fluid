@@ -23,3 +23,5 @@ Changelog 5.x
 * Breaking: Static method :php:`renderStatic()` on ViewHelpers that don't use :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic`
   or :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic`
   is no longer called.
+* Breaking: CDATA sections are no longer removed from Fluid templates. Use `<f:comment>` instead
+  if you want to comment out code in Fluid templates.
