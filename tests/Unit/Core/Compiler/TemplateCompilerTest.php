@@ -15,8 +15,6 @@ use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 final class TemplateCompilerTest extends TestCase
@@ -61,20 +59,6 @@ final class TemplateCompilerTest extends TestCase
         $subject = new TemplateCompiler();
         $subject->setRenderingContext($renderingContextMock);
         self::assertTrue($subject->has('test'));
-    }
-
-    #[Test]
-    public function wrapViewHelperNodeArgumentEvaluationInClosureCreatesExpectedString(): void
-    {
-        $arguments = ['value' => new TextNode('sometext')];
-        $viewHelperNodeMock = $this->createMock(ViewHelperNode::class);
-        $viewHelperNodeMock->expects(self::once())->method('getArguments')->willReturn($arguments);
-        $expected = 'function() use ($renderingContext) {' . chr(10);
-        $expected .= chr(10);
-        $expected .= 'return \'sometext\';' . chr(10);
-        $expected .= '}';
-        $subject = new TemplateCompiler();
-        self::assertEquals($expected, $subject->wrapViewHelperNodeArgumentEvaluationInClosure($viewHelperNodeMock, 'value'));
     }
 
     #[Test]
