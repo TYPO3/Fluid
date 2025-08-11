@@ -88,4 +88,5 @@ Changelog 5.x
 * Breaking: Custom implementations of the `validateArguments()` methods in ViewHelpers are no longer called.
 * Deprecation: Class :php:`TYPO3Fluid\Fluid\Core\ViewHelper\LenientArgumentProcessor`
   is no longer being used by Fluid v5 and will be removed with Fluid v6.
-
+* Breaking: CDATA sections are no longer removed from Fluid templates. Use `<f:comment>` instead
+  if you want to comment out code in Fluid templates.
