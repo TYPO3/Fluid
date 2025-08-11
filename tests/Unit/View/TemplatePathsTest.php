@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\View;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
@@ -92,27 +91,6 @@ final class TemplatePathsTest extends TestCase
         self::assertSame($value, $subject->$getter());
     }
 
-    #[Test]
-    #[IgnoreDeprecations]
-    public function testFillByPackageName(): void
-    {
-        $instance = new TemplatePaths('TYPO3Fluid.Fluid');
-        self::assertNotEmpty($instance->getTemplateRootPaths());
-    }
-
-    #[Test]
-    #[IgnoreDeprecations]
-    public function testFillByConfigurationArray(): void
-    {
-        $instance = new TemplatePaths([
-            TemplatePaths::CONFIG_TEMPLATEROOTPATHS => ['Resources/Private/Templates/'],
-            TemplatePaths::CONFIG_LAYOUTROOTPATHS => ['Resources/Private/Layouts/'],
-            TemplatePaths::CONFIG_PARTIALROOTPATHS => ['Resources/Private/Partials/'],
-            TemplatePaths::CONFIG_FORMAT => 'xml',
-        ]);
-        self::assertNotEmpty($instance->getTemplateRootPaths());
-    }
-
     public static function getResolveFilesMethodTestValues(): array
     {
         return [
@@ -130,24 +108,6 @@ final class TemplatePathsTest extends TestCase
         $subject->$pathsMethod(['foo']);
         $subject->expects(self::once())->method('resolveFilesInFolders')->with(self::anything(), 'format');
         $subject->$method('format', 'format');
-    }
-
-    #[Test]
-    #[IgnoreDeprecations]
-    public function testToArray(): void
-    {
-        $subject = $this->getMockBuilder(TemplatePaths::class)->onlyMethods(['sanitizePath'])->getMock();
-        $subject->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
-        $subject->setTemplateRootPaths(['1']);
-        $subject->setLayoutRootPaths(['2']);
-        $subject->setPartialRootPaths(['3']);
-        $result = $subject->toArray();
-        $expected = [
-            TemplatePaths::CONFIG_TEMPLATEROOTPATHS => [1],
-            TemplatePaths::CONFIG_LAYOUTROOTPATHS => [2],
-            TemplatePaths::CONFIG_PARTIALROOTPATHS => [3],
-        ];
-        self::assertEquals($expected, $result);
     }
 
     #[Test]
