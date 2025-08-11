@@ -42,9 +42,8 @@ interface NodeInterface
      *
      * @param RenderingContextInterface $renderingContext
      * @return mixed Evaluated node
-     * @todo add missing return type with Fluid v5 together with ExpressionNodeInterface
      */
-    public function evaluate(RenderingContextInterface $renderingContext);
+    public function evaluate(RenderingContextInterface $renderingContext): mixed;
 
     /**
      * Compile the Node to a PHP representation, returning an array with

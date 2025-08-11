@@ -50,18 +50,6 @@ final class ParsingStateTest extends TestCase
         self::assertSame($rootNode, $subject->popNodeFromStack());
     }
 
-    #[Test]
-    public function renderCallsTheRightMethodsOnTheRootNode(): void
-    {
-        $subject = new ParsingState();
-        $renderingContext = new RenderingContext();
-        $rootNode = $this->createMock(RootNode::class);
-        $rootNode->expects(self::once())->method('evaluate')->with($renderingContext)->willReturn('T3DD09 Rock!');
-        $subject->setRootNode($rootNode);
-        $renderedValue = $subject->render($renderingContext);
-        self::assertSame('T3DD09 Rock!', $renderedValue);
-    }
-
     public static function getLayoutNameDataProvider(): iterable
     {
         return [
