@@ -25,6 +25,13 @@ final class LengthViewHelperTest extends AbstractFunctionalTestCase
             'src' => '<f:length value="{value}" />',
             'expectation' => 13,
         ];
+        yield 'single element, scalar type' => [
+            'arguments' => [
+                'value' => 13,
+            ],
+            'src' => '<f:length value="{value}" />',
+            'expectation' => 2,
+        ];
         yield 'single element, with encoding' => [
             'arguments' => [
                 'value' => 'Hello, World!',
@@ -68,21 +75,23 @@ final class LengthViewHelperTest extends AbstractFunctionalTestCase
 
     public static function renderInvalidDataProvider(): iterable
     {
+        $noneScalarType = new \stdClass();
+
         yield 'invalid value' => [
             'arguments' => [
-                'value' => 13,
+                'value' => $noneScalarType,
             ],
             'src' => '<f:length value="{value}" />',
         ];
         yield 'invalid value inline' => [
             'arguments' => [
-                'value' => 13,
+                'value' => $noneScalarType,
             ],
             'src' => '{f:length(value: value)}',
         ];
         yield 'invalid value inline, pipe variable' => [
             'arguments' => [
-                'value' => 13,
+                'value' => $noneScalarType,
             ],
             'src' => '{value -> f:length()}',
         ];

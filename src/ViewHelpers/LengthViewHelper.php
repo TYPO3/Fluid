@@ -30,6 +30,20 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  *      13
  *
+ * Example with encoding
+ * ---------------------
+ *
+ * ::
+ *
+ *      <f:length value="Hello, World!" encoding="UTF-8" />
+ *
+ * Output::
+ *
+ *      13
+ *
+ * For supported character encodings see https://www.php.net/manual/en/mbstring.supported-encodings.php
+ *
+ *
  * Inline notation
  * ---------------
  *
@@ -45,7 +59,7 @@ final class LengthViewHelper extends AbstractViewHelper
 {
     public function initializeArguments(): void
     {
-        $this->registerArgument('value', 'string', 'An string');
+        $this->registerArgument('value', 'mixed', 'An string');
         $this->registerArgument('encoding', 'string', 'Character encoding', false, null);
     }
 
@@ -55,7 +69,9 @@ final class LengthViewHelper extends AbstractViewHelper
     public function render(): int
     {
         $value = $this->arguments['value'] ?? $this->renderChildren();
+        $value = is_scalar($value) ? (string)$value : $value;
         $encoding = $this->arguments['encoding'];
+
         if (!is_string($value)) {
             $givenType = get_debug_type($value);
             throw new \InvalidArgumentException(
