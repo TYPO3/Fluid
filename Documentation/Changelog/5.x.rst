@@ -81,6 +81,8 @@ Changelog 5.x
 * Breaking: `TYPO3Fluid\Fluid\Core\Parser\TemplateParser::parse()` and
   `TYPO3Fluid\Fluid\Core\Parser\TemplateParser::createParsingRelatedExceptionWithContext()` no longer
   allow `null` as template identifier.
+* Breaking: CDATA sections are no longer removed from Fluid templates. Use `<f:comment>` instead
+  if you want to comment out code in Fluid templates.
 * Deprecation: Class :php:`TYPO3Fluid\Fluid\Core\ViewHelper\LenientArgumentProcessor`
   is no longer being used by Fluid v5 and will be removed with Fluid v6.
 
