@@ -30,4 +30,16 @@ Changelog 5.x
 * Breaking: Constant :php:`TYPO3Fluid\Fluid\Core\Parser\Patterns::NAMESPACESUFFIX`
   has been removed.
 * Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver::addNamespaces()`
+* Breaking: Setting a template's layout with the variable `layoutName` is no longer possible.
+* Breaking: Constant :php:`TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::LAYOUT_VARIABLE`
+* Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper->overrideArgument()`
+  has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper::isValidType()`
+  has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper::getFirstElementOfNonEmpty()`
+  has been removed.
+* Breaking: Method :php:`postParseEvent()` on ViewHelpers is no longer called.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper->registerUniversalTagAttributes()`
+  has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper->registerTagAttribute()`
   has been removed.
