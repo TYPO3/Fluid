@@ -31,17 +31,21 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *
  *      This will be rendered if variable "myString" ends with "World!"
  *
- * Inline notation
- * --------------
+ * A more complex example with inline notation
+ * -----------------------------------------
  *
  * ::
  *
- *      {f:variable(name: 'mystring', value: 'Hello, World!')}
- *      {mystring -> f:endsWith(search: "World!")}
+ *      <f:variable name="condition" value="false" />
+ *      <f:variable name="myString" value="Hello, World!" />
+ *
+ *      <f:if condition="{condition || {f:endsWith(search: 'World!', subject: myString)}}">
+ *      It Works!
+ *      </f:if>
  *
  * Output::
  *
- *      Hello, World!
+ *      It Works!
  */
 class EndsWithViewHelper extends AbstractConditionViewHelper
 {
@@ -50,15 +54,6 @@ class EndsWithViewHelper extends AbstractConditionViewHelper
         parent::initializeArguments();
         $this->registerArgument('subject', 'string', 'String to search in');
         $this->registerArgument('search', 'string', 'String to search in subject at the beginning', true);
-    }
-
-    public function render()
-    {
-        $arguments = $this->arguments;
-        $arguments['subject'] = $this->arguments['subject'] ?? $this->renderThenChild();
-        $this->setArguments($arguments);
-
-        return parent::render();
     }
 
     /**
