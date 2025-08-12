@@ -32,14 +32,6 @@ class TemplateCompiler
      */
     public const SECTIONS_VARIABLE = '1457379500_sections';
 
-    /**
-     * Variable name to be used to transfer information about a template's layout
-     * from the ViewHelper context to the TemplateView and the TemplateCompiler
-     *
-     * @deprecated variable will no longer be necessary in Fluid v5
-     */
-    public const LAYOUT_VARIABLE = 'layoutName';
-
     public const MODE_NORMAL = 'normal';
     public const MODE_WARMUP = 'warmup';
 

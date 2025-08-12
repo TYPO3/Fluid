@@ -17,9 +17,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
 /**
  * With this ViewHelper, you can select a layout to be used for the current template.
  *
- * ..  deprecated:: 4.4
+ * ..  attention::
  *     Prevously, it was possible to set the layout of a template with the special
- *     variable `layoutName`. This will no longer work with Fluid 5.
+ *     variable `layoutName`. This is no longer possible with Fluid 5.
  *
  * Examples
  * ========
