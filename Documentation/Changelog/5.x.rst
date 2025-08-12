@@ -62,3 +62,4 @@ Changelog 5.x
   has been removed.
 * Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper->registerTagAttribute()`
   has been removed.
+* Breaking: Using the `xmlns` namespace syntax with a PHP namespace instead of an url is no longer possible.

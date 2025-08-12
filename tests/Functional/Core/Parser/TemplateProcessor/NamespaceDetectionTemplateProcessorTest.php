@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Parser\TemplateProcessor;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\NamespaceDetectionTemplateProcessor;
@@ -195,7 +194,7 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
                 ],
                 PHP_EOL,
             ],
-            'TYP3 template with diverging xmlns for f namespace' => [
+            'TYPO3 template with diverging xmlns for f namespace' => [
                 [
                     'core' => [
                         'TYPO3\\CMS\\Core\\ViewHelpers',
@@ -218,6 +217,36 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
                 ],
                 PHP_EOL,
             ],
+            'TYPO3 template with namespace url irrelevant for fluid' => [
+                [],
+                '<html xmlns:helhum="http://xsd.helhum.io/ns/typo3/cms-fluid/master/ViewHelpers" data-namespace-typo3-fluid="true">inner content</html>',
+                [
+                    'helhum' => null,
+                ],
+                'inner content',
+            ],
+            'TYPO3 template with namespace url irrelevant for fluid keeps html tag due to missing data attribute' => [
+                [],
+                '<html xmlns:helhum="http://xsd.helhum.io/ns/typo3/cms-fluid/master/ViewHelpers">inner content</html>',
+                [
+                    'helhum' => null,
+                ],
+                '<html xmlns:helhum="http://xsd.helhum.io/ns/typo3/cms-fluid/master/ViewHelpers">inner content</html>',
+            ],
+            // @todo: Broken case, the valid fluid namespace should be removed.
+            'TYPO3 template with namespace url irrelevant for fluid keeps html tag due to missing data attribute but removes valid fluid namespace' => [
+                [],
+                '<html xmlns:helhum="http://xsd.helhum.io/ns/typo3/cms-fluid/master/ViewHelpers" xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers">inner content</html>',
+                [
+                    'helhum' => null,
+                    'f' => [
+                        0 => 'TYPO3\\CMS\\Fluid\\ViewHelpers',
+                    ],
+                ],
+                '<html xmlns:helhum="http://xsd.helhum.io/ns/typo3/cms-fluid/master/ViewHelpers" xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers">inner content</html>',
+                // Next line is the correct behavior
+                // '<html xmlns:helhum="http://xsd.helhum.io/ns/typo3/cms-fluid/master/ViewHelpers">inner content</html>',
+            ],
         ];
     }
 
@@ -232,8 +261,8 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
         $subject = new NamespaceDetectionTemplateProcessor();
         $subject->setRenderingContext($renderingContext);
         $result = $subject->preProcessSource($templateSource);
-        self::assertSame($expectedSource, $result);
         self::assertSame($expectedNamespaces, $viewHelperResolver->getNamespaces());
+        self::assertSame($expectedSource, $result);
     }
 
     #[Test]
@@ -247,13 +276,12 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
     }
 
     #[Test]
-    #[IgnoreDeprecations]
-    public function phpNamespaceInXmlns(): void
+    public function throwExceptionForInvalidFluidNamespaceWithBackslash(): void
     {
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(1754999599);
         $subject = new NamespaceDetectionTemplateProcessor();
-        $renderingContext = new RenderingContext();
-        $subject->setRenderingContext($renderingContext);
+        $subject->setRenderingContext(new RenderingContext());
         $subject->preProcessSource('<html xmlns:x="TYPO3Fluid\\Fluid\\ViewHelpers" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>');
-        self::assertSame(['TYPO3Fluid\\Fluid\\ViewHelpers'], $renderingContext->getViewHelperResolver()->getNamespaces()['x']);
     }
 }

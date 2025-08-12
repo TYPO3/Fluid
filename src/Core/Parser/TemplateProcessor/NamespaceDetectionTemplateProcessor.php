@@ -87,20 +87,23 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
             preg_match_all('/' . $namespacePattern . '/', $matches[0], $namespaces, PREG_SET_ORDER);
             foreach ($namespaces as $set) {
                 $namespaceUrl = trim($set[2], '"\'');
-                if (str_starts_with($namespaceUrl, Patterns::NAMESPACEPREFIX)) {
-                    $namespaceUri = substr($namespaceUrl, 20);
-                    $namespacePhp = str_replace('/', '\\', $namespaceUri);
-                } elseif (str_starts_with($namespaceUrl, Patterns::NAMESPACEPREFIX_INVALID)) {
+                if (str_starts_with($namespaceUrl, Patterns::NAMESPACEPREFIX_INVALID)) {
                     throw new Exception(
                         'Invalid Fluid namespace definition detected: ' . $namespaceUrl . '. Namespaces must always start with ' . Patterns::NAMESPACEPREFIX . '.',
                         1721467847,
                     );
-                } elseif (!preg_match('/([^a-z0-9_\\\\]+)/i', $namespaceUrl)) {
-                    trigger_error('Using the xmlns namespace syntax with a PHP namespace instead of an url is deprecated and will no longer work in Fluid v5.', E_USER_DEPRECATED);
-                    $namespacePhp = $namespaceUrl;
-                    $namespacePhp = preg_replace('/\\\\{2,}/', '\\', $namespacePhp);
-                } else {
-                    $namespacePhp = null;
+                }
+                if (str_contains($namespaceUrl, '\\')) {
+                    throw new Exception(
+                        'Invalid Fluid namespace definition detected: ' . $namespaceUrl . '. Fluid namespaces cannot be defined as PHP namespaces in xmlns syntax.'
+                        . ' Use ' . Patterns::NAMESPACEPREFIX . ' instead.',
+                        1754999599,
+                    );
+                }
+                $namespacePhp = null;
+                if (str_starts_with($namespaceUrl, Patterns::NAMESPACEPREFIX)) {
+                    $namespaceUri = substr($namespaceUrl, 20);
+                    $namespacePhp = str_replace('/', '\\', $namespaceUri);
                 }
                 $viewHelperResolver->addLocalNamespace($set[1], $namespacePhp);
             }
@@ -120,6 +123,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
                     }
                 }
                 if (count($namespaceAttributesToRemove)) {
+                    // @todo: Broken preg_replace, see tests
                     $matchWithRemovedNamespaceAttributes = preg_replace('/(?:\\s*+xmlns:(?:' . implode('|', $namespaceAttributesToRemove) . ')\\s*+)++/', ' ', $matches[0]);
                     $templateSource = str_replace($matches[0], $matchWithRemovedNamespaceAttributes, $templateSource);
                 }
