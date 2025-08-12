@@ -133,45 +133,6 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         }
     }
 
-    /**
-     * Register a new tag attribute. Tag attributes are all arguments which will be directly appended to a tag if you call $this->initializeTag()
-     *
-     * @param string $name Name of tag attribute
-     * @param string $type Type of the tag attribute
-     * @param string $description Description of tag attribute
-     * @param bool $required set to true if tag attribute is required. Defaults to false.
-     * @param mixed $defaultValue Optional, default value of attribute if one applies
-     * @api
-     * @deprecated Will be removed in v5. No longer necessary since arbitrary arguments are allowed.
-     */
-    protected function registerTagAttribute($name, $type, $description, $required = false, $defaultValue = null)
-    {
-        trigger_error('registerTagAttribute() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
-        $this->registerArgument($name, $type, $description, $required, $defaultValue);
-        self::$tagAttributes[get_class($this)][$name] = $name;
-    }
-
-    /**
-     * Registers all standard HTML universal attributes.
-     * Should be used inside registerArguments();
-     *
-     * @api
-     * @deprecated Will be removed in v5. No longer necessary since arbitrary arguments are allowed.
-     */
-    protected function registerUniversalTagAttributes()
-    {
-        trigger_error('registerUniversalTagAttributes() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
-        $this->registerTagAttribute('class', 'string', 'CSS class(es) for this element');
-        $this->registerTagAttribute('dir', 'string', 'Text direction for this HTML element. Allowed strings: "ltr" (left to right), "rtl" (right to left)');
-        $this->registerTagAttribute('id', 'string', 'Unique (in this file) identifier for this HTML element.');
-        $this->registerTagAttribute('lang', 'string', 'Language for this element. Use short names specified in RFC 1766');
-        $this->registerTagAttribute('style', 'string', 'Individual CSS styles for this element');
-        $this->registerTagAttribute('title', 'string', 'Tooltip text of element');
-        $this->registerTagAttribute('accesskey', 'string', 'Keyboard shortcut to access this element');
-        $this->registerTagAttribute('tabindex', 'integer', 'Specifies the tab order of this element');
-        $this->registerTagAttribute('onclick', 'string', 'JavaScript evaluated for the onclick event');
-    }
-
     public function handleAdditionalArguments(array $arguments)
     {
         $this->additionalArguments = $arguments;

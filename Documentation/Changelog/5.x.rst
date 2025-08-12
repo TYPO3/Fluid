@@ -23,3 +23,7 @@ Changelog 5.x
 * Breaking: Static method :php:`renderStatic()` on ViewHelpers that don't use :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic`
   or :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic`
   is no longer called.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper->registerUniversalTagAttributes()`
+  has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper->registerTagAttribute()`
+  has been removed.
