@@ -41,18 +41,6 @@ use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
  */
 class TemplatePaths
 {
-    /**
-     * @deprecated will be removed with Fluid v5
-     */
-    public const DEFAULT_TEMPLATES_DIRECTORY = 'Resources/Private/Templates/';
-    /**
-     * @deprecated will be removed with Fluid v5
-     */
-    public const DEFAULT_LAYOUTS_DIRECTORY = 'Resources/Private/Layouts/';
-    /**
-     * @deprecated will be removed with Fluid v5
-     */
-    public const DEFAULT_PARTIALS_DIRECTORY = 'Resources/Private/Partials/';
     public const DEFAULT_FORMAT = 'html';
     public const CONFIG_TEMPLATEROOTPATHS = 'templateRootPaths';
     public const CONFIG_LAYOUTROOTPATHS = 'layoutRootPaths';
@@ -111,34 +99,6 @@ class TemplatePaths
     protected mixed $templateSource = null;
 
     protected string $format = self::DEFAULT_FORMAT;
-
-    /**
-     * This constructor will be removed with Fluid v5 as the underlying methods are
-     * deprecated and will be removed with Fluid v5 as well. The appropriate setters
-     * (like setTemplateRootPaths()) should be called instead.
-     */
-    public function __construct(array|string|null $packageNameOrArray = null)
-    {
-        if (is_array($packageNameOrArray)) {
-            $this->fillFromConfigurationArray($packageNameOrArray);
-        } elseif (!empty($packageNameOrArray)) {
-            $this->fillDefaultsByPackageName($packageNameOrArray);
-        }
-    }
-
-    /**
-     * @deprecated will be removed in Fluid v5; use the individual getters instead. Sanitation is not necessary
-     *             because setters already sanitize input values
-     */
-    public function toArray(): array
-    {
-        trigger_error('toArray() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
-        return [
-            self::CONFIG_TEMPLATEROOTPATHS => $this->sanitizePaths($this->getTemplateRootPaths()),
-            self::CONFIG_LAYOUTROOTPATHS => $this->sanitizePaths($this->getLayoutRootPaths()),
-            self::CONFIG_PARTIALROOTPATHS => $this->sanitizePaths($this->getPartialRootPaths()),
-        ];
-    }
 
     public function setTemplatePathAndFilename(string $templatePathAndFilename): void
     {
@@ -315,71 +275,6 @@ class TemplatePaths
     }
 
     /**
-     * Fills path arrays based on a traditional
-     * TypoScript array which may contain one or
-     * more of the supported structures, in order
-     * of priority:
-     *
-     * - `plugin.tx_yourext.view.templateRootPath` and siblings.
-     * - `plugin.tx_yourext.view.templateRootPaths` and siblings.
-     * - `plugin.tx_yourext.view.overlays.otherextension.templateRootPath` and siblings.
-     *
-     * The paths are treated as follows, using the
-     * `template`-type paths as an example:
-     *
-     * - If `templateRootPath` is defined, it gets
-     *   used as the _first_ path in the internal
-     *   paths array.
-     * - If `templateRootPaths` is defined, all
-     *   values from it are _appended_ to the
-     *   internal paths array.
-     * - If `overlays.*` exists in the array it is
-     *   iterated, each `templateRootPath` entry
-     *   from it _appended_ to the internal array.
-     *
-     * The result is that after filling, the path
-     * arrays will contain one or more entries in
-     * the order described above, depending on how
-     * many of the possible configurations were
-     * present in the input array.
-     *
-     * Will replace any currently configured paths.
-     *
-     * @api
-     * @deprecated will be removed with Fluid v5; appropriate setters (like setTemplateRootPaths())
-     *             should be called instead
-     */
-    public function fillFromConfigurationArray(array $paths): void
-    {
-        trigger_error('fillFromConfigurationArray() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
-        list($templateRootPaths, $layoutRootPaths, $partialRootPaths, $format) = $this->extractPathArrays($paths);
-        $this->setTemplateRootPaths($templateRootPaths);
-        $this->setLayoutRootPaths($layoutRootPaths);
-        $this->setPartialRootPaths($partialRootPaths);
-        $this->setFormat($format);
-    }
-
-    /**
-     * Fills path arrays with default expected paths
-     * based on package name (converted to extension
-     * key automatically).
-     *
-     * Will replace any currently configured paths.
-     *
-     * @api
-     * @deprecated will be removed with Fluid v5; appropriate setters (like setTemplateRootPaths())
-     *             should be called instead
-     */
-    public function fillDefaultsByPackageName(string $packageName): void
-    {
-        trigger_error('fillDefaultsByPackageName() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
-        $path = $this->getPackagePath($packageName);
-        $this->setTemplateRootPaths([$path . self::DEFAULT_TEMPLATES_DIRECTORY]);
-        $this->setLayoutRootPaths([$path . self::DEFAULT_LAYOUTS_DIRECTORY]);
-        $this->setPartialRootPaths([$path . self::DEFAULT_PARTIALS_DIRECTORY]);
-    }
-
-    /**
      * Sanitize a path, ensuring it is absolute and
      * if a directory, suffixed by a trailing slash.
      *
@@ -428,71 +323,9 @@ class TemplatePaths
         return (!empty($path) && $path[0] !== '/' && $path[1] !== ':') ? $this->sanitizePath(realpath($path)) : $path;
     }
 
-    /**
-     * Guarantees that array $reference with paths
-     * are turned into correct, absolute paths
-     *
-     * @param string[] $reference
-     * @return string[]
-     * @deprecated will be removed with Fluid v5
-     */
-    protected function ensureAbsolutePaths(array $reference): array
-    {
-        trigger_error('ensureAbsolutePaths() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
-        return array_map([$this, 'ensureAbsolutePath'], $reference);
-    }
-
     protected function ensureSuffixedPath(string $path): string
     {
         return $path !== '' ? rtrim($path, '/') . '/' : '';
-    }
-
-    /**
-     * Extract an array of three arrays of paths, one
-     * for each of the types of Fluid file resources.
-     * Accepts one or both of the singular and plural
-     * path definitions in the input - returns the
-     * combined collections of paths based on both
-     * the singular and plural entries with the singular
-     * entries being recorded first and plurals second.
-     *
-     * Adds legacy singular name as last option, if set.
-     *
-     * @deprecated will be removed with Fluid v5
-     */
-    protected function extractPathArrays(array $paths): array
-    {
-        trigger_error('extractPathArrays() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
-        $format = $this->getFormat();
-        // pre-processing: if special parameters exist, extract them:
-        if (isset($paths[self::CONFIG_FORMAT])) {
-            $format = $paths[self::CONFIG_FORMAT];
-        }
-        $pathParts = [
-            self::CONFIG_TEMPLATEROOTPATHS,
-            self::CONFIG_LAYOUTROOTPATHS,
-            self::CONFIG_PARTIALROOTPATHS,
-        ];
-        $pathCollections = [];
-        foreach ($pathParts as $pathPart) {
-            $partPaths = [];
-            if (isset($paths[$pathPart]) && is_array($paths[$pathPart])) {
-                $partPaths = array_merge($partPaths, $paths[$pathPart]);
-            }
-            $pathCollections[] = array_unique(array_map([$this, 'ensureSuffixedPath'], $partPaths));
-        }
-        $pathCollections = array_map([$this, 'ensureAbsolutePaths'], $pathCollections);
-        $pathCollections[] = $format;
-        return $pathCollections;
-    }
-
-    /**
-     * @deprecated will be removed with Fluid v5
-     */
-    protected function getPackagePath(string $packageName): string
-    {
-        trigger_error('getPackagePath() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
-        return '';
     }
 
     /**

@@ -23,6 +23,25 @@ Changelog 5.x
 * Breaking: Static method :php:`renderStatic()` on ViewHelpers that don't use :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic`
   or :php:`TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic`
   is no longer called.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->__construct()`
+  has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->fillFromConfigurationArray()`
+  has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->fillDefaultsByPackageName()`
+  has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->ensureAbsolutePaths()`
+  has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->extractPathArrays()`
+  has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->getPackagePath()`
+  has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\View\TemplatePaths->toArray()`
+  has been removed.
+* Breaking: Constant :php:`TYPO3Fluid\Fluid\View\TemplatePaths::DEFAULT_TEMPLATES_DIRECTORY`
+  has been removed.
+* Breaking: Constant :php:`TYPO3Fluid\Fluid\View\TemplatePaths::DEFAULT_LAYOUTS_DIRECTORY`
+  has been removed.
+* Breaking: Constant :php:`TYPO3Fluid\Fluid\View\TemplatePaths::DEFAULT_PARTIALS_DIRECTORY`
 * Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver::resolvePhpNamespaceFromFluidNamespace()`
   has been removed.
 * Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver::isNamespaceValidOrIgnored()`
