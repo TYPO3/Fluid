@@ -9,8 +9,6 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
@@ -24,39 +22,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 
 final class AbstractViewHelperTest extends TestCase
 {
-    public static function getFirstElementOfNonEmptyTestValues(): array
-    {
-        return [
-            'plain array' => [
-                ['foo', 'bar'],
-                'foo',
-            ],
-            'iterator w/o arrayaccess' => [
-                new \IteratorIterator(new \ArrayIterator(['foo', 'bar'])),
-                'foo',
-            ],
-            'unsupported value' => [
-                'unsupported value',
-                null,
-            ],
-        ];
-    }
-
-    #[DataProvider('getFirstElementOfNonEmptyTestValues')]
-    #[Test]
-    #[IgnoreDeprecations]
-    public function getFirstElementOfNonEmptyReturnsExpectedValue(mixed $input, ?string $expected): void
-    {
-        $subject = new class () extends AbstractViewHelper {
-            public function render(): string
-            {
-                return '';
-            }
-        };
-        $method = new \ReflectionMethod($subject, 'getFirstElementOfNonEmpty');
-        self::assertEquals($expected, $method->invoke($subject, $input));
-    }
-
     #[Test]
     public function registeringTheSameArgumentNameAgainOverridesArgument(): void
     {

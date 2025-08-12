@@ -9,7 +9,7 @@ parameters:
 		-
 			message: '#^Call to an undefined method TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\NodeInterface\:\:getArguments\(\)\.$#'
 			identifier: method.notFound
-			count: 2
+			count: 1
 			path: src/Core/Parser/TemplateParser.php
 
 		-

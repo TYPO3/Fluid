@@ -344,11 +344,6 @@ class TemplateParser
             //       it works.
             $viewHelper = $currentViewHelperNode->getUninitializedViewHelper();
             $viewHelperClassName = $currentViewHelperNode->getViewHelperClassName();
-            // @todo Remove fallback implementation with Fluid v5
-            if (method_exists($viewHelperClassName, 'postParseEvent')) {
-                trigger_error('postParseEvent() has been deprecated and will be removed in Fluid v5.', E_USER_DEPRECATED);
-                $viewHelperClassName::postParseEvent($currentViewHelperNode, $currentViewHelperNode->getArguments(), $state->getVariableContainer());
-            }
             if ($viewHelper instanceof ViewHelperNodeInitializedEventInterface) {
                 $viewHelperClassName::nodeInitializedEvent($currentViewHelperNode, $currentViewHelperNode->getArguments(), $state);
             }
