@@ -96,6 +96,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
                         1721467847,
                     );
                 } elseif (!preg_match('/([^a-z0-9_\\\\]+)/i', $namespaceUrl)) {
+                    trigger_error('Using the xmlns namespace syntax with a PHP namespace instead of an url is deprecated and will no longer work in Fluid v5.', E_USER_DEPRECATED);
                     $namespacePhp = $namespaceUrl;
                     $namespacePhp = preg_replace('/\\\\{2,}/', '\\', $namespacePhp);
                 } else {

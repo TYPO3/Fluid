@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers\StaticCacheable;
 
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
@@ -23,7 +22,6 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 final class SharedStaticCompilableViewHelperTest extends AbstractFunctionalTestCase
 {
     #[Test]
-    #[IgnoreDeprecations]
     public function renderWithSharedCompilableViewHelper(): void
     {
         // TYPO3 implements a custom ViewHelperResolver to provide DI-able ViewHelper instances. This allows

@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Core\Parser;
 
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -206,8 +205,7 @@ class ParsingState implements ParsedTemplateInterface
      */
     public function hasLayout(): bool
     {
-        // @todo remove fallback with Fluid v5
-        return isset($this->layoutName) || $this->variableContainer->exists(TemplateCompiler::LAYOUT_VARIABLE);
+        return isset($this->layoutName);
     }
 
     /**
@@ -219,8 +217,7 @@ class ParsingState implements ParsedTemplateInterface
      */
     public function getLayoutName(RenderingContextInterface $renderingContext): ?string
     {
-        $layoutName = $this->getUnevaluatedLayoutName();
-        return $layoutName instanceof NodeInterface ? $layoutName->evaluate($renderingContext) : $layoutName;
+        return $this->layoutName instanceof NodeInterface ? $this->layoutName->evaluate($renderingContext) : $this->layoutName;
     }
 
     /**
@@ -228,12 +225,6 @@ class ParsingState implements ParsedTemplateInterface
      */
     public function getUnevaluatedLayoutName(): NodeInterface|string|null
     {
-        // @todo remove fallback with Fluid v5
-        if (!isset($this->layoutName) && $this->variableContainer->exists(TemplateCompiler::LAYOUT_VARIABLE)) {
-            trigger_error('Setting a template\'s layout with the variable "layoutName" is deprecated and will no longer work in Fluid v5. Use ParsingState->setLayoutName() instead.', E_USER_DEPRECATED);
-            $layoutName = $this->variableContainer->get(TemplateCompiler::LAYOUT_VARIABLE);
-            return !$layoutName instanceof NodeInterface && !is_null($layoutName) ? (string)$layoutName : $layoutName;
-        }
         return $this->layoutName;
     }
 

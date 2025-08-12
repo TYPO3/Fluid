@@ -21,11 +21,6 @@ interface ViewHelperNodeInitializedEventInterface
      * affect cached templates, which is why the utility for third-party ViewHelpers
      * is currently limited.
      *
-     * This event aims to replace the previous postParseEvent(), which was never part
-     * of this interface. The previous event received the parsing state's variable
-     * container as its third argument instead of the whole parsing state, which was
-     * limiting its utility. This has been corrected with the new implementation.
-     *
      * @param array<string, NodeInterface> $arguments Unevaluated ViewHelper arguments
      */
     public static function nodeInitializedEvent(ViewHelperNode $node, array $arguments, ParsingState $parsingState): void;
