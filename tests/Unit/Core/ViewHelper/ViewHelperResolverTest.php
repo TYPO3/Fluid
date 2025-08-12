@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
@@ -145,26 +144,6 @@ final class ViewHelperResolverTest extends TestCase
         self::assertSame($expected, $subject->isNamespaceIgnored($namespace));
     }
 
-    public static function isNamespaceValidOrIgnoredReturnsExpectedValueDataProvider(): array
-    {
-        return [
-            [['foo' => null], 'foo', true],
-            [['foo' => ['test']], 'foo', true],
-            [['foo' => ['test']], 'foobar', false],
-            [['foo*' => null], 'foobar', true],
-        ];
-    }
-
-    #[DataProvider('isNamespaceValidOrIgnoredReturnsExpectedValueDataProvider')]
-    #[Test]
-    #[IgnoreDeprecations]
-    public function isNamespaceValidOrIgnoredReturnsExpectedValue(array $namespaces, string $namespace, bool $expected): void
-    {
-        $subject = new ViewHelperResolver();
-        $subject->setNamespaces($namespaces);
-        self::assertSame($expected, $subject->isNamespaceValidOrIgnored($namespace));
-    }
-
     #[Test]
     public function resolveViewHelperClassNameThrowsExceptionIfClassNotResolved(): void
     {
@@ -210,24 +189,6 @@ final class ViewHelperResolverTest extends TestCase
         $subject = new ViewHelperResolver();
         $subject->addNamespace('f', 'TYPO3Fluid\\Fluid\\ViewHelpers\\');
         self::assertSame('TYPO3Fluid\\Fluid\\ViewHelpers\\RenderViewHelper', $subject->resolveViewHelperClassName('f', 'render'));
-    }
-
-    public static function resolvePhpNamespaceFromFluidNamespaceDataProvider(): array
-    {
-        return [
-            ['Foo\\Bar', 'Foo\\Bar\\ViewHelpers'],
-            ['Foo\\Bar\\ViewHelpers', 'Foo\\Bar\\ViewHelpers'],
-            ['http://typo3.org/ns/Foo/Bar/ViewHelpers', 'Foo\\Bar\\ViewHelpers'],
-        ];
-    }
-
-    #[DataProvider('resolvePhpNamespaceFromFluidNamespaceDataProvider')]
-    #[Test]
-    #[IgnoreDeprecations]
-    public function resolvePhpNamespaceFromFluidNamespace(string $input, string $expected): void
-    {
-        $subject = new ViewHelperResolver();
-        self::assertSame($expected, $subject->resolvePhpNamespaceFromFluidNamespace($input));
     }
 
     #[Test]
