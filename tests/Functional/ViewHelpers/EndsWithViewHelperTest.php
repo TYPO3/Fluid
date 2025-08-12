@@ -75,50 +75,27 @@ final class EndsWithViewHelperTest extends AbstractFunctionalTestCase
             'elseChild',
         ];
         yield 'inline syntax, search true' => [
-            '{f:endsWith(search:\'{search}\', subject: \'{subject}\')}',
+            '{f:endsWith(search: search, subject: subject)}',
             ['search' => 'search', 'subject' => 'search'],
             true,
         ];
         yield 'inline syntax, search false' => [
-            '{f:endsWith(search:\'{search}\', subject: \'{subject}\')}',
+            '{f:endsWith(search: search, subject:  subject)}',
             ['search' => 'search', 'subject' => 'subject'],
             false,
         ];
         yield 'inline syntax, then argument, search true' => [
-            '{f:endsWith(search:\'{search}\', subject: \'{subject}\' ,then:\'thenArgument\')}',
+            '{f:endsWith(search: search, subject:  subject ,then:\'thenArgument\')}',
             ['search' => 'search', 'subject' => 'search'],
             'thenArgument',
         ];
-        yield 'inline syntax, with pipe, search true' => [
-            '{my_variable -> f:endsWith(search:\'{search}\')}',
-            ['search' => 'ing', 'my_variable' => 'testing'],
-            'testing',
-        ];
-        yield 'inline syntax, with pip, search false' => [
-            '{my_variable -> f:endsWith(search:\'{search}\')}',
-            ['search' => 'foo', 'my_variable' => 'testing'],
-            null,
-        ];
-        yield 'inline syntax, with pipe, with subject, search true' => [
-            '{my_variable -> f:endsWith(search:\'{search}\', subject: \'{subject}\')}',
-            ['search' => 'foo', 'subject' => 'foo', 'my_variable' => 'testing'],
-            'testing',
-        ];
-        yield 'inline syntax, with pip, with variable and subject, search true' => [
-            '{f:variable(name: \'my_variable\', value: \'testing\')}' .
-            '{my_variable -> f:endsWith(search:\'{search}\', subject: \'{subject}\')}',
-            ['search' => 'foo', 'subject' => 'foo'],
-            'testing',
-        ];
-        yield 'inline syntax, with pipe, with subject, search false' => [
-            '{my_variable -> f:endsWith(search:\'{search}\')}',
-            ['search' => 'search', 'my_variable' => 'testing'],
-            null,
-        ];
-        yield 'inline syntax, with pipe, without subject, search true' => [
-            '{my_variable -> f:endsWith(search:\'{search}\')}',
-            ['search' => 'search', 'my_variable' => 'search'],
-            'search',
+        yield 'nested example, inside if with condition, search true' => [
+            '<f:variable name="condition" value="false" />' .
+            '<f:if condition="{condition} || {f:endsWith(search: search, subject: subject)}">' .
+            'It Works!' .
+            '</f:if>',
+            ['search' => 'search', 'subject' => 'search'],
+            'It Works!',
         ];
     }
 
