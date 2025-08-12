@@ -30,3 +30,7 @@ Changelog 5.x
 * Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper::getFirstElementOfNonEmpty()`
   has been removed.
 * Breaking: Method :php:`postParseEvent()` on ViewHelpers is no longer called.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper->registerUniversalTagAttributes()`
+  has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper->registerTagAttribute()`
+  has been removed.

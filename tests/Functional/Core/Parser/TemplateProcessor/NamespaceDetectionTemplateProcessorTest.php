@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Parser\TemplateProcessor;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\NamespaceDetectionTemplateProcessor;
@@ -243,5 +244,16 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
         $subject = new NamespaceDetectionTemplateProcessor();
         $subject->setRenderingContext(new RenderingContext());
         $subject->preProcessSource('<html xmlns:x="http://typo3.org/ns/X/Y/ViewHelpers" xmlns:z="https://typo3.org/ns/X/Z/ViewHelpers" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>');
+    }
+
+    #[Test]
+    #[IgnoreDeprecations]
+    public function phpNamespaceInXmlns(): void
+    {
+        $subject = new NamespaceDetectionTemplateProcessor();
+        $renderingContext = new RenderingContext();
+        $subject->setRenderingContext($renderingContext);
+        $subject->preProcessSource('<html xmlns:x="TYPO3Fluid\\Fluid\\ViewHelpers" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>');
+        self::assertSame(['TYPO3Fluid\\Fluid\\ViewHelpers'], $renderingContext->getViewHelperResolver()->getNamespaces()['x']);
     }
 }
