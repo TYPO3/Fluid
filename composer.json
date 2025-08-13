@@ -13,11 +13,15 @@
         "ext-mbstring": "*"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "cweagans/composer-patches": true
+        }
     },
     "require-dev": {
         "ext-json": "*",
         "ext-simplexml": "*",
+        "cweagans/composer-patches": "^1.7",
         "friendsofphp/php-cs-fixer": "^3.59.3",
         "phpstan/phpstan": "^2.1.17",
         "phpstan/phpstan-phpunit": "^2.0.6",
@@ -46,6 +50,8 @@
     "extra": {
         "branch-alias": {
             "dev-main": "4.x-dev"
-        }
+        },
+        "composer-exit-on-patch-failure": "true",
+        "patches-file": "patches/patches.json"
     }
 }
