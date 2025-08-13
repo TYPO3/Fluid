@@ -61,13 +61,19 @@ A basic implementation looks like this:
     }
 
 ..  tip::
-    In the context of TYPO3, it is recommend to put components into `Resources/Private/Components/`
-    in a central extension and to provide that path in your :php:`ComponentCollection` (see code example) via
+    In the context of TYPO3, it is recommend to place your :php:`ComponentCollection` into
+    `EXT:my_sitepackage/Classes/Components/ComponentCollection.php`. Components are usually
+    created in `Resources/Private/Components/` in your sitepackage extension. The path
+    can be specified in your :php:`ComponentCollection` (see code example above) via
 
     ..  code-block:: php
+        :caption: EXT:my_sitepackage/Classes/Components/ComponentCollection.php
+
         use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
-        ExtensionManagementUtility::extPath('my_sitepackage', 'Resources/Private/Components');
+        $templatePaths->setTemplateRootPaths([
+            ExtensionManagementUtility::extPath('my_sitepackage', 'Resources/Private/Components'),
+        ]);
 
 .. _components-definition:
 
@@ -140,6 +146,18 @@ This example would result in the following rendered HTML:
     <button class="myButton myButton--secondary">
         Button label
     </button>
+
+..  tip::
+    In the context of TYPO3, you can also define a global Fluid namespace, which allows
+    to use your components across the whole project without importing them into
+    each template file manually:
+
+    ..  code-block:: php
+        :caption: EXT:my_sitepackage/ext_localconf.php
+
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['fluid']['namespaces']['my'] = [
+            \Vendor\MySitepackage\Components\ComponentCollection::class,
+        ];
 
 Combining Components
 --------------------
