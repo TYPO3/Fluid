@@ -1,0 +1,7 @@
+{
+    "patches": {
+        "react/promise": {
+            "Fix inconsistent switch case syntax": "patches/react-promise-switch-case-semicolon-syntax.diff"
+        }
+    }
+}
