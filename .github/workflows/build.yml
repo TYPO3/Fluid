@@ -44,7 +44,7 @@ jobs:
         run: vendor/bin/phpstan analyze --no-progress
 
       - name: Phpunit
-        run: vendor/bin/phpunit
+        run: php -d error_reporting=E_ALL vendor/bin/phpunit
 
       - name: Documentation integrity
         run: |
