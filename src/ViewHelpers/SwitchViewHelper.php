@@ -169,8 +169,8 @@ class SwitchViewHelper extends AbstractViewHelper
      */
     public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): string
     {
-        $phpCode = 'call_user_func_array(function($arguments) use ($renderingContext) {' . PHP_EOL .
-            'switch ($arguments[\'expression\']) {' . PHP_EOL;
+        $phpCode = 'call_user_func_array(function($arguments) use ($renderingContext) {' . PHP_EOL
+            . 'switch ($arguments[\'expression\']) {' . PHP_EOL;
         $hasDefaultCase = false;
         foreach ($node->getChildNodes() as $childNode) {
             if ($this->isDefaultCaseNode($childNode)) {

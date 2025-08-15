@@ -146,7 +146,7 @@ class ViewHelperResolver
      * @todo reduce input variants with Fluid v5, ideally only resolver delegates
      * @param string|string[]|ViewHelperResolverDelegateInterface|null $phpNamespace
      */
-    public function addNamespace(string $identifier, string|array|null|ViewHelperResolverDelegateInterface $phpNamespace): void
+    public function addNamespace(string $identifier, string|array|ViewHelperResolverDelegateInterface|null $phpNamespace): void
     {
         // For now we just convert delegate instances back to string to stay consistent
         if ($phpNamespace instanceof ViewHelperResolverDelegateInterface) {
