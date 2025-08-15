@@ -389,8 +389,8 @@ class TemplateParser
         $expectedViewHelperClassName = $lastStackElement->getViewHelperClassName();
         if ($actualViewHelperClassName !== $expectedViewHelperClassName) {
             throw new Exception(
-                'Templating tags not properly nested. Expected: ' . $expectedViewHelperClassName . '; Actual: ' .
-                $actualViewHelperClassName,
+                'Templating tags not properly nested. Expected: ' . $expectedViewHelperClassName . '; Actual: '
+                . $actualViewHelperClassName,
                 1224485398,
             );
         }

@@ -161,10 +161,10 @@ final class BooleanNode extends AbstractNode
         return [
             'initialization' => $initializationPhpCode,
             'execution' => sprintf(
-                '%s::convertToBoolean(' . chr(10) .
-                '    %s(%s::gatherContext($renderingContext, %s)),' . chr(10) .
-                '    $renderingContext' . chr(10) .
-                ')',
+                '%s::convertToBoolean(' . chr(10)
+                . '    %s(%s::gatherContext($renderingContext, %s)),' . chr(10)
+                . '    $renderingContext' . chr(10)
+                . ')',
                 BooleanNode::class,
                 $functionName,
                 BooleanNode::class,

@@ -51,9 +51,9 @@ final class ShuffleViewHelperTest extends AbstractFunctionalTestCase
             ],
             'src' => '<f:shuffle value="{value}" />',
             'expectation' => function (array $result, array $arguments) {
-                return count($result) === count($arguments['value']) &&
-                       empty(array_diff($result, $arguments['value'])) &&
-                       empty(array_diff($arguments['value'], $result));
+                return count($result) === count($arguments['value'])
+                       && empty(array_diff($result, $arguments['value']))
+                       && empty(array_diff($arguments['value'], $result));
             },
         ];
         yield 'value attribute inline array' => [
@@ -63,9 +63,9 @@ final class ShuffleViewHelperTest extends AbstractFunctionalTestCase
             'src' => '<f:shuffle value="{0: \'1\', 1: \'2\', 2: \'3\'}" />',
             'expectation' => function (array $result) {
                 $expected = ['1', '2', '3'];
-                return count($result) === count($expected) &&
-                       empty(array_diff($result, $expected)) &&
-                       empty(array_diff($expected, $result));
+                return count($result) === count($expected)
+                       && empty(array_diff($result, $expected))
+                       && empty(array_diff($expected, $result));
             },
         ];
         yield 'value inline' => [
@@ -74,9 +74,9 @@ final class ShuffleViewHelperTest extends AbstractFunctionalTestCase
             ],
             'src' => '{value -> f:shuffle()}',
             'expectation' => function (array $result, array $arguments) {
-                return count($result) === count($arguments['value']) &&
-                       empty(array_diff($result, $arguments['value'])) &&
-                       empty(array_diff($arguments['value'], $result));
+                return count($result) === count($arguments['value'])
+                       && empty(array_diff($result, $arguments['value']))
+                       && empty(array_diff($arguments['value'], $result));
             },
         ];
         yield 'value inline as iterable' => [
@@ -86,9 +86,9 @@ final class ShuffleViewHelperTest extends AbstractFunctionalTestCase
             'src' => '{value -> f:shuffle()}',
             'expectation' => function (array $result) {
                 $expected = [1, 2, 3];
-                return count($result) === count($expected) &&
-                       empty(array_diff($result, $expected)) &&
-                       empty(array_diff($expected, $result));
+                return count($result) === count($expected)
+                       && empty(array_diff($result, $expected))
+                       && empty(array_diff($expected, $result));
             },
         ];
         yield 'value inline and argument' => [
@@ -98,9 +98,9 @@ final class ShuffleViewHelperTest extends AbstractFunctionalTestCase
             ],
             'src' => '{valueInline -> f:shuffle(value: valueArgument)}',
             'expectation' => function (array $result, array $arguments) {
-                return count($result) === count($arguments['valueArgument']) &&
-                       empty(array_diff($result, $arguments['valueArgument'])) &&
-                       empty(array_diff($arguments['valueArgument'], $result));
+                return count($result) === count($arguments['valueArgument'])
+                       && empty(array_diff($result, $arguments['valueArgument']))
+                       && empty(array_diff($arguments['valueArgument'], $result));
             },
         ];
     }

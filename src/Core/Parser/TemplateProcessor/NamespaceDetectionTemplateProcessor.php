@@ -112,8 +112,8 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
                 $closingTagName = $matches[1];
                 $closingTag = '</' . $closingTagName . '>';
                 if (strpos($templateSource, $closingTag)) {
-                    $templateSource = substr($templateSource, 0, strrpos($templateSource, $closingTag)) .
-                        substr($templateSource, strrpos($templateSource, $closingTag) + strlen($closingTag));
+                    $templateSource = substr($templateSource, 0, strrpos($templateSource, $closingTag))
+                        . substr($templateSource, strrpos($templateSource, $closingTag) + strlen($closingTag));
                 }
             } else {
                 $namespaceAttributesToRemove = [];

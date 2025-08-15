@@ -418,8 +418,8 @@ class TemplatePaths
             $format = $this->getFormat();
             throw new InvalidTemplateResourceException(
                 sprintf(
-                    'Tried resolving a template file for controller action "%s->%s" in format ".%s", but none of the paths ' .
-                    'contained the expected template file (%s). %s',
+                    'Tried resolving a template file for controller action "%s->%s" in format ".%s", but none of the paths '
+                    . 'contained the expected template file (%s). %s',
                     $controller,
                     $action,
                     $format,

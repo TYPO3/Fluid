@@ -18,11 +18,11 @@ final class WarmupViewHelperTest extends AbstractFunctionalTestCase
     #[Test]
     public function templateUsingViewHelperCanBeRendered(): void
     {
-        $template = '<f:cache.warmup variables="{name: \'bar\'}">' .
-            '<f:render section="{name}"/>' .
-            '</f:cache.warmup>' .
-            '<f:section name="foo">foo section content</f:section>' .
-            '<f:section name="bar">bar section content</f:section>';
+        $template = '<f:cache.warmup variables="{name: \'bar\'}">'
+            . '<f:render section="{name}"/>'
+            . '</f:cache.warmup>'
+            . '<f:section name="foo">foo section content</f:section>'
+            . '<f:section name="bar">bar section content</f:section>';
         $expected = 'foo section content';
 
         $view = new TemplateView();

@@ -143,10 +143,10 @@ class TemplateCompiler
         $identifier = $this->sanitizeIdentifier($identifier);
         $cache = $this->renderingContext->getCache();
         if (!$parsingState->isCompilable()) {
-            $templateCode = '<?php' . PHP_EOL . 'class ' . $identifier .
-                ' extends \TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate' . PHP_EOL .
-                ' implements \TYPO3Fluid\Fluid\Core\Compiler\UncompilableTemplateInterface' . PHP_EOL .
-                '{' . PHP_EOL . '}';
+            $templateCode = '<?php' . PHP_EOL . 'class ' . $identifier
+                . ' extends \TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate' . PHP_EOL
+                . ' implements \TYPO3Fluid\Fluid\Core\Compiler\UncompilableTemplateInterface' . PHP_EOL
+                . '{' . PHP_EOL . '}';
             $cache->set($identifier, $templateCode);
             return $templateCode;
         }
@@ -166,21 +166,21 @@ class TemplateCompiler
 
         $storedLayoutName = $parsingState->getUnevaluatedLayoutName();
         $templateCode = sprintf(
-            '<?php' . chr(10) .
-            '%s {' . chr(10) .
-            '    public function getLayoutName(\\TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface $renderingContext): ?string {' . chr(10) .
-            '        %s;' . chr(10) .
-            '    }' . chr(10) .
-            '    public function hasLayout(): bool {' . chr(10) .
-            '        return %s;' . chr(10) .
-            '    }' . chr(10) .
-            '    public function addCompiledNamespaces(\TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface $renderingContext): void {' . chr(10) .
-            '        $renderingContext->getViewHelperResolver()->setLocalNamespaces(%s);' . chr(10) .
-            '    }' . chr(10) .
-            '    %s' . chr(10) .
-            '    %s' . chr(10) .
-            '    %s' . chr(10) .
-            '}' . chr(10),
+            '<?php' . chr(10)
+            . '%s {' . chr(10)
+            . '    public function getLayoutName(\\TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface $renderingContext): ?string {' . chr(10)
+            . '        %s;' . chr(10)
+            . '    }' . chr(10)
+            . '    public function hasLayout(): bool {' . chr(10)
+            . '        return %s;' . chr(10)
+            . '    }' . chr(10)
+            . '    public function addCompiledNamespaces(\TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface $renderingContext): void {' . chr(10)
+            . '        $renderingContext->getViewHelperResolver()->setLocalNamespaces(%s);' . chr(10)
+            . '    }' . chr(10)
+            . '    %s' . chr(10)
+            . '    %s' . chr(10)
+            . '    %s' . chr(10)
+            . '}' . chr(10),
             'class ' . $identifier . ' extends \TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate',
             $this->generateCodeForLayoutName($storedLayoutName),
             ($parsingState->hasLayout() ? 'true' : 'false'),
@@ -241,11 +241,11 @@ class TemplateCompiler
             ),
             $argumentDefinitions,
         );
-        return 'public function getArgumentDefinitions(): array {' . chr(10) .
-            '        return [' . chr(10) .
-            '            ' . implode(',' . chr(10) . '            ', $argumentDefinitionsCode) . ',' . chr(10) .
-            '        ];' . chr(10) .
-            '    }';
+        return 'public function getArgumentDefinitions(): array {' . chr(10)
+            . '        return [' . chr(10)
+            . '            ' . implode(',' . chr(10) . '            ', $argumentDefinitionsCode) . ',' . chr(10)
+            . '        ];' . chr(10)
+            . '    }';
     }
 
     protected function generateAvailableSlotsCodeFromParsingState(ParsingState $parsingState): string
@@ -254,9 +254,9 @@ class TemplateCompiler
         if ($availableSlots === []) {
             return '';
         }
-        return 'public function getAvailableSlots(): array {' . chr(10) .
-            '        return ' . var_export($availableSlots, true) . ';' . chr(10) .
-            '    }';
+        return 'public function getAvailableSlots(): array {' . chr(10)
+            . '        return ' . var_export($availableSlots, true) . ';' . chr(10)
+            . '    }';
     }
 
     /**
@@ -278,25 +278,25 @@ class TemplateCompiler
             // Very minor code optimization when $converted['initialization'] is empty.
             // No real benefit, just removes a couple of empty lines.
             return sprintf(
-                '/**' . chr(10) .
-                ' * %s' . chr(10) .
-                ' */' . chr(10) .
-                'public function %s(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext): mixed {' . chr(10) .
-                '    return %s;' . chr(10) .
-                '}' . chr(10),
+                '/**' . chr(10)
+                . ' * %s' . chr(10)
+                . ' */' . chr(10)
+                . 'public function %s(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext): mixed {' . chr(10)
+                . '    return %s;' . chr(10)
+                . '}' . chr(10),
                 $comment,
                 $methodName,
                 $execution,
             );
         }
         return sprintf(
-            '/**' . chr(10) .
-            ' * %s' . chr(10) .
-            ' */' . chr(10) .
-            'public function %s(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext): mixed {' . chr(10) .
-            '    %s' . chr(10) .
-            '    return %s;' . chr(10) .
-            '}' . chr(10),
+            '/**' . chr(10)
+            . ' * %s' . chr(10)
+            . ' */' . chr(10)
+            . 'public function %s(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext): mixed {' . chr(10)
+            . '    %s' . chr(10)
+            . '    return %s;' . chr(10)
+            . '}' . chr(10),
             $comment,
             $methodName,
             $initialization,

@@ -298,8 +298,8 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                 if (!$argumentProcessor->isValid($value, $registeredArgument)) {
                     $givenType = is_object($value) ? get_class($value) : gettype($value);
                     throw new \InvalidArgumentException(
-                        'The argument "' . $argumentName . '" was registered with type "' . $registeredArgument->getType() . '", but is of type "' .
-                        $givenType . '" in view helper "' . get_class($this) . '".',
+                        'The argument "' . $argumentName . '" was registered with type "' . $registeredArgument->getType() . '", but is of type "'
+                        . $givenType . '" in view helper "' . get_class($this) . '".',
                         1256475113,
                     );
                 }

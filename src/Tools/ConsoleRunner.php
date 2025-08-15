@@ -113,8 +113,8 @@ final class ConsoleRunner
 
     private function handleHelpCommand(): string
     {
-        return $this->dumpHelpHeader() .
-            $this->dumpSupportedCommands($this->commandDesccriptions);
+        return $this->dumpHelpHeader()
+            . $this->dumpSupportedCommands($this->commandDesccriptions);
     }
 
     /**
@@ -123,8 +123,8 @@ final class ConsoleRunner
     private function handleSchemaCommand(array $arguments, ClassLoader $autoloader): string
     {
         if (isset($arguments[self::ARGUMENT_HELP])) {
-            return $this->dumpHelpHeader() .
-                $this->dumpSupportedParameters($this->argumentDescriptions[self::COMMAND_SCHEMA]);
+            return $this->dumpHelpHeader()
+                . $this->dumpSupportedParameters($this->argumentDescriptions[self::COMMAND_SCHEMA]);
         }
 
         $allViewHelpers = (new ViewHelperFinder())->findViewHelpersInComposerProject($autoloader);
@@ -160,9 +160,9 @@ final class ConsoleRunner
     private function handleRunCommand(array $arguments): string
     {
         if (isset($arguments[self::ARGUMENT_HELP])) {
-            return $this->dumpHelpHeader() .
-                $this->dumpSupportedParameters($this->argumentDescriptions[self::COMMAND_RUN]) .
-                $this->dumpRunExamples();
+            return $this->dumpHelpHeader()
+                . $this->dumpSupportedParameters($this->argumentDescriptions[self::COMMAND_RUN])
+                . $this->dumpRunExamples();
         }
         if (isset($arguments[self::ARGUMENT_BOOTSTRAP])) {
             if (is_file($arguments[self::ARGUMENT_BOOTSTRAP])) {
@@ -402,11 +402,11 @@ final class ConsoleRunner
 
     private function dumpHelpHeader(): string
     {
-        return PHP_EOL .
-            '----------------------------------------------------------------------------------------------' . PHP_EOL .
-            '				TYPO3 Fluid CLI: Help text' . PHP_EOL .
-            '----------------------------------------------------------------------------------------------' .
-            PHP_EOL . PHP_EOL;
+        return PHP_EOL
+            . '----------------------------------------------------------------------------------------------' . PHP_EOL
+            . '				TYPO3 Fluid CLI: Help text' . PHP_EOL
+            . '----------------------------------------------------------------------------------------------'
+            . PHP_EOL . PHP_EOL;
     }
 
     /**
