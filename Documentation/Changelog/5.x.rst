@@ -63,3 +63,7 @@ Changelog 5.x
 * Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper->registerTagAttribute()`
   has been removed.
 * Breaking: Using the `xmlns` namespace syntax with a PHP namespace instead of an url is no longer possible.
+* Breaking: ViewHelper argument validation now uses the `StrictArgumentProcessor`, which might lead to
+  slightly different behavior within ViewHelpers or exceptions if ViewHelpers didn't validate arguments properly before.
+* Deprecation: Class :php:`TYPO3Fluid\Fluid\Core\ViewHelper\LenientArgumentProcessor`
+  is no longer being used by Fluid v5 and will be removed with Fluid v6.
