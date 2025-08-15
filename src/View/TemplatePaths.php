@@ -338,9 +338,7 @@ class TemplatePaths
     public function getLayoutIdentifier(string $layoutName = 'Default'): string
     {
         $filePathAndFilename = $this->getLayoutPathAndFilename($layoutName);
-        $layoutName = str_replace('.', '_', $layoutName);
-        $prefix = 'layout_' . $layoutName . '_' . $this->getFormat();
-        return $this->createIdentifierForFile($filePathAndFilename, $prefix);
+        return $this->createIdentifierForFile($filePathAndFilename);
     }
 
     /**
@@ -379,8 +377,7 @@ class TemplatePaths
             return 'source_' . hash('xxh3', (string)$this->templateSource) . '_' . $controller . '_' . $action . '_' . $this->getFormat();
         }
         $templatePathAndFilename = $this->resolveTemplateFileForControllerAndActionAndFormat($controller, $action);
-        $prefix = ltrim($controller . '_action_' . $action, '_');
-        return $this->createIdentifierForFile($templatePathAndFilename, $prefix);
+        return $this->createIdentifierForFile($templatePathAndFilename);
     }
 
     /**
@@ -434,12 +431,17 @@ class TemplatePaths
 
     /**
      * Returns a unique identifier for the given file in the format
-     * <PackageKey>_<SubPackageKey>_<ControllerName>_<prefix>_<hash>
+     * <FileName>_<hash>
      * The SH1 hash is a checksum that is based on the file path and last modification date
      */
-    protected function createIdentifierForFile(?string $pathAndFilename, string $prefix): string
+    protected function createIdentifierForFile(?string $pathAndFilename): string
     {
-        $templateModifiedTimestamp = $pathAndFilename !== null && $pathAndFilename !== 'php://stdin' && file_exists($pathAndFilename) ? filemtime($pathAndFilename) : 0;
+        $templateModifiedTimestamp = 0;
+        $prefix = '';
+        if ($pathAndFilename !== null && $pathAndFilename !== 'php://stdin' && file_exists($pathAndFilename)) {
+            $templateModifiedTimestamp = filemtime($pathAndFilename);
+            $prefix = str_replace('.', '_', basename($pathAndFilename));
+        }
         return sprintf('%s_%s', $prefix, hash('xxh3', $pathAndFilename . '|' . $templateModifiedTimestamp));
     }
 
@@ -481,8 +483,7 @@ class TemplatePaths
         $partialKey = $partialName . '.' . $this->getFormat();
         if (!array_key_exists($partialKey, $this->resolvedIdentifiers[self::NAME_PARTIALS])) {
             $partialPathAndFilename = $this->getPartialPathAndFilename($partialName);
-            $prefix = 'partial_' . $partialName;
-            $this->resolvedIdentifiers[self::NAME_PARTIALS][$partialKey] = $this->createIdentifierForFile($partialPathAndFilename, $prefix);
+            $this->resolvedIdentifiers[self::NAME_PARTIALS][$partialKey] = $this->createIdentifierForFile($partialPathAndFilename);
         }
         return $this->resolvedIdentifiers[self::NAME_PARTIALS][$partialKey];
     }
