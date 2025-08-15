@@ -42,7 +42,7 @@ final class ChainedVariableProviderTest extends TestCase
 
     #[DataProvider('getGetTestValues')]
     #[Test]
-    public function getReturnsPreviouslySetSourceVariables(array $local, array $chain, string $path, null|string|array $expected): void
+    public function getReturnsPreviouslySetSourceVariables(array $local, array $chain, string $path, string|array|null $expected): void
     {
         $subject = new ChainedVariableProvider($chain);
         $subject->setSource($local);
@@ -51,7 +51,7 @@ final class ChainedVariableProviderTest extends TestCase
 
     #[DataProvider('getGetTestValues')]
     #[Test]
-    public function getByPathReturnsPreviouslySetSourceVariables(array $local, array $chain, string $path, null|string|array $expected): void
+    public function getByPathReturnsPreviouslySetSourceVariables(array $local, array $chain, string $path, string|array|null $expected): void
     {
         $subject = new ChainedVariableProvider($chain);
         $subject->setSource($local);

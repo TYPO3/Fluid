@@ -35,9 +35,9 @@ final class SectionViewHelperTest extends AbstractFunctionalTestCase
             'bar',
         ];
         yield 'render section with arguments multiple times' => [
-            '<f:section name="foo">{var}</f:section>' .
-            '<f:render section="foo" arguments="{var: \'value1\'}" /> ' .
-            '<f:render section="foo" arguments="{var: \'value2\'}" />',
+            '<f:section name="foo">{var}</f:section>'
+            . '<f:render section="foo" arguments="{var: \'value1\'}" /> '
+            . '<f:render section="foo" arguments="{var: \'value2\'}" />',
             'value1 value2',
         ];
     }
