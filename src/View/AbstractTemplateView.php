@@ -17,7 +17,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentProcessorInterface;
-use TYPO3Fluid\Fluid\Core\ViewHelper\StrictArgumentProcessor;
 use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
@@ -146,11 +145,10 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
         if (!$parsedTemplate->hasLayout()) {
             $this->startRendering(self::RENDERING_TEMPLATE, $parsedTemplate, $templateRenderingContext);
             try {
-                // @todo make argument processor configurable with Fluid v5
                 $this->processAndValidateTemplateVariables(
                     $parsedTemplate,
                     $templateRenderingContext->getVariableProvider(),
-                    new StrictArgumentProcessor(),
+                    $templateRenderingContext->getArgumentProcessor(),
                 );
             } catch (Exception $validationError) {
                 return $templateRenderingContext->getErrorHandler()->handleViewError($validationError);
@@ -175,11 +173,10 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
             }
             $this->startRendering(self::RENDERING_LAYOUT, $parsedTemplate, $layoutRenderingContext);
             try {
-                // @todo make argument processor configurable with Fluid v5
                 $this->processAndValidateTemplateVariables(
                     $parsedLayout,
                     $layoutRenderingContext->getVariableProvider(),
-                    new StrictArgumentProcessor(),
+                    $layoutRenderingContext->getArgumentProcessor(),
                 );
             } catch (Exception $validationError) {
                 return $layoutRenderingContext->getErrorHandler()->handleViewError($validationError);
@@ -317,11 +314,10 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
             $output = $this->renderSection($sectionName, $variables, $ignoreUnknown);
         } else {
             try {
-                // @todo make argument processor configurable with Fluid v5
                 $this->processAndValidateTemplateVariables(
                     $parsedPartial,
                     $renderingContext->getVariableProvider(),
-                    new StrictArgumentProcessor(),
+                    $renderingContext->getArgumentProcessor(),
                 );
             } catch (Exception $validationError) {
                 return $renderingContext->getErrorHandler()->handleViewError($validationError);

@@ -24,6 +24,8 @@ use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\RemoveCommentsTemplateProcess
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentProcessorInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\StrictArgumentProcessor;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
@@ -63,6 +65,8 @@ class RenderingContext implements RenderingContextInterface
      * @var ViewHelperInvoker
      */
     protected $viewHelperInvoker;
+
+    protected ArgumentProcessorInterface $argumentProcessor;
 
     /**
      * @var TemplatePaths
@@ -146,6 +150,7 @@ class RenderingContext implements RenderingContextInterface
         );
         $this->setViewHelperResolver(new ViewHelperResolver());
         $this->setViewHelperInvoker(new ViewHelperInvoker());
+        $this->setArgumentProcessor(new StrictArgumentProcessor());
         $this->setViewHelperVariableContainer(new ViewHelperVariableContainer());
         $this->setVariableProvider(new StandardVariableProvider());
     }
@@ -217,6 +222,16 @@ class RenderingContext implements RenderingContextInterface
     public function setViewHelperInvoker(ViewHelperInvoker $viewHelperInvoker)
     {
         $this->viewHelperInvoker = $viewHelperInvoker;
+    }
+
+    public function getArgumentProcessor(): ArgumentProcessorInterface
+    {
+        return $this->argumentProcessor;
+    }
+
+    public function setArgumentProcessor(ArgumentProcessorInterface $argumentProcessor): void
+    {
+        $this->argumentProcessor = $argumentProcessor;
     }
 
     /**

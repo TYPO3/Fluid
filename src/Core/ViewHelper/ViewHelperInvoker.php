@@ -46,8 +46,6 @@ class ViewHelperInvoker
         }
         $argumentDefinitions = $viewHelperResolver->getArgumentDefinitionsForViewHelper($viewHelper);
 
-        // @todo make configurable with Fluid v5
-        $argumentProcessor = new LenientArgumentProcessor();
         try {
             // Convert nodes to actual values (in uncached context)
             $arguments = array_map(
@@ -58,10 +56,26 @@ class ViewHelperInvoker
             // Determine arguments defined by the ViewHelper API
             $registeredArguments = [];
             foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
-                // @todo also perform argument validation here with Fluid v5, including check for required arguments
-                $registeredArguments[$argumentName] = isset($arguments[$argumentName])
-                    ? $argumentProcessor->process($arguments[$argumentName], $argumentDefinition)
-                    : $argumentDefinition->getDefaultValue();
+                if (isset($arguments[$argumentName])) {
+                    // Perform argument processing and validation
+                    $value = $renderingContext->getArgumentProcessor()->process($arguments[$argumentName], $argumentDefinition);
+                    if (!$renderingContext->getArgumentProcessor()->isValid($value, $argumentDefinition)) {
+                        $givenType = is_object($value) ? get_class($value) : gettype($value);
+                        throw new \InvalidArgumentException(
+                            'The argument "' . $argumentName . '" was registered with type "' . $argumentDefinition->getType() . '", but is of type "'
+                            . $givenType . '" in view helper "' . get_class($viewHelper) . '".',
+                            1256475113,
+                        );
+                    }
+                    $registeredArguments[$argumentName] = $value;
+
+                } else {
+                    // @todo we might add a check for isRequired() here. Currently, this relies on the check
+                    //       being performed by the TemplateParser
+                    $registeredArguments[$argumentName] = $argumentDefinition->getDefaultValue();
+                }
+
+                // Argument has definition, so it is no additionalArgument
                 unset($arguments[$argumentName]);
             }
 
@@ -71,6 +85,13 @@ class ViewHelperInvoker
             $viewHelper->setRenderingContext($renderingContext);
             $viewHelper->setArguments($registeredArguments);
             $viewHelper->handleAdditionalArguments($arguments);
+            if ($viewHelper instanceof ViewHelperArgumentsValidatedEventInterface) {
+                $viewHelper::argumentsValidatedEvent(
+                    $registeredArguments,
+                    $argumentDefinitions,
+                    $viewHelper,
+                );
+            }
             return $viewHelper->initializeArgumentsAndRender();
         } catch (Exception $error) {
             return $renderingContext->getErrorHandler()->handleViewHelperError($error);
