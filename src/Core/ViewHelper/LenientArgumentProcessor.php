@@ -29,6 +29,7 @@ use Traversable;
  *    of a collection is validated.
  *
  * @internal
+ * @deprecated no longer used in Fluid v5, will be removed with Fluid v6
  */
 final readonly class LenientArgumentProcessor implements ArgumentProcessorInterface
 {

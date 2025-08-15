@@ -47,7 +47,7 @@ class ViewHelperInvoker
         $argumentDefinitions = $viewHelperResolver->getArgumentDefinitionsForViewHelper($viewHelper);
 
         // @todo make configurable with Fluid v5
-        $argumentProcessor = new LenientArgumentProcessor();
+        $argumentProcessor = new StrictArgumentProcessor();
         try {
             // Convert nodes to actual values (in uncached context)
             $arguments = array_map(
