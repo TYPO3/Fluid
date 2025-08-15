@@ -15,7 +15,7 @@ final class TestViewHelper extends AbstractViewHelper
 {
     public function initializeArguments(): void
     {
-        $this->registerArgument('param1', 'integer', 'P1 Stuff', true);
+        $this->registerArgument('param1', 'string', 'P1 Stuff', true);
         $this->registerArgument('param2', 'array', 'P2 Stuff', true);
         $this->registerArgument('param3', 'string', 'P3 Stuff', false, 'default');
     }
