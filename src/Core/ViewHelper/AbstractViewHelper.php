@@ -209,9 +209,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      */
     public function initializeArgumentsAndRender()
     {
-        $this->validateArguments();
         $this->initialize();
-
         return $this->render();
     }
 
@@ -279,32 +277,6 @@ abstract class AbstractViewHelper implements ViewHelperInterface
             self::$argumentDefinitionCache[$thisClassName] = $this->argumentDefinitions;
         }
         return $this->argumentDefinitions;
-    }
-
-    /**
-     * Validate arguments, and throw exception if arguments do not validate.
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function validateArguments()
-    {
-        // @todo move to ViewHelperInvoker and make configurable with Fluid v5
-        $argumentProcessor = new StrictArgumentProcessor();
-        $argumentDefinitions = $this->renderingContext->getViewHelperResolver()->getArgumentDefinitionsForViewHelper($this);
-        foreach ($argumentDefinitions as $argumentName => $registeredArgument) {
-            // Note: This relies on the TemplateParser to check for missing required arguments
-            if ($this->hasArgument($argumentName)) {
-                $value = $this->arguments[$argumentName];
-                if (!$argumentProcessor->isValid($value, $registeredArgument)) {
-                    $givenType = is_object($value) ? get_class($value) : gettype($value);
-                    throw new \InvalidArgumentException(
-                        'The argument "' . $argumentName . '" was registered with type "' . $registeredArgument->getType() . '", but is of type "'
-                        . $givenType . '" in view helper "' . get_class($this) . '".',
-                        1256475113,
-                    );
-                }
-            }
-        }
     }
 
     /**

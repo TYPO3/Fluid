@@ -82,31 +82,20 @@ final class ComponentRenderingTest extends AbstractFunctionalTestCase
         self::assertSame($expected, $view->render(), 'cached');
     }
 
-    public static function basicComponentCollectionValidatesArgumentsDataProvider(): iterable
+    public static function basicComponentCollectionValidatesArgumentsCachedDataProvider(): iterable
     {
         return [
             'missing required argument' => ['<my:testComponent />', 1237823699],
             'additional argument not allowed' => ['<my:testComponent title="TITLE" foo="bar" />', 1748903732],
-            'invalid type' => ['<my:testComponent title="TITLE" tags="test" />', 1746637333],
+            'invalid type' => ['<my:testComponent title="TITLE" tags="test" />', 1746637333], // different exception code between uncached and cached
             'invalid component' => ['<my:nonexistentComponent />', 1407060572],
             'fragments nested in other viewhelpers' => ['<my:namedSlots><f:if condition="1 == 0"><f:fragment>foo</f:fragment></f:if></my:namedSlots>', 1750865702],
         ];
     }
 
-    public static function basicComponentCollectionValidatesArgumentsUncachedDataProvider(): iterable
-    {
-        return [
-            // Some detail validations can only be performed for uncached templates because
-            // the required information is no longer reproducible from the cache
-            'duplicate fragment' => ['<my:namedSlots><f:fragment name="test1">foo</f:fragment><f:fragment name="test1">bar</f:fragment></my:namedSlots>', 1750865701],
-            'duplicate default fragment' => ['<my:namedSlots><f:fragment>foo</f:fragment><f:fragment>bar</f:fragment></my:namedSlots>', 1750865701],
-        ];
-    }
-
     #[Test]
-    #[DataProvider('basicComponentCollectionValidatesArgumentsDataProvider')]
     #[DataProvider('basicComponentCollectionValidatesArgumentsUncachedDataProvider')]
-    public function basicComponentCollectionValidatesArguments(string $source, int $expectedExceptionCode): void
+    public function basicComponentCollectionValidatesArgumentsUncached(string $source, int $expectedExceptionCode): void
     {
         self::expectExceptionCode($expectedExceptionCode);
 
@@ -117,8 +106,23 @@ final class ComponentRenderingTest extends AbstractFunctionalTestCase
         $view->render();
     }
 
+    public static function basicComponentCollectionValidatesArgumentsUncachedDataProvider(): iterable
+    {
+        return [
+            'missing required argument' => ['<my:testComponent />', 1237823699],
+            'additional argument not allowed' => ['<my:testComponent title="TITLE" foo="bar" />', 1748903732],
+            'invalid type' => ['<my:testComponent title="TITLE" tags="test" />', 1256475113], // different exception code between uncached and cached
+            'invalid component' => ['<my:nonexistentComponent />', 1407060572],
+            'fragments nested in other viewhelpers' => ['<my:namedSlots><f:if condition="1 == 0"><f:fragment>foo</f:fragment></f:if></my:namedSlots>', 1750865702],
+            // Some detail validations can only be performed for uncached templates because
+            // the required information is no longer reproducible from the cache
+            'duplicate fragment' => ['<my:namedSlots><f:fragment name="test1">foo</f:fragment><f:fragment name="test1">bar</f:fragment></my:namedSlots>', 1750865701],
+            'duplicate default fragment' => ['<my:namedSlots><f:fragment>foo</f:fragment><f:fragment>bar</f:fragment></my:namedSlots>', 1750865701],
+        ];
+    }
+
     #[Test]
-    #[DataProvider('basicComponentCollectionValidatesArgumentsDataProvider')]
+    #[DataProvider('basicComponentCollectionValidatesArgumentsCachedDataProvider')]
     public function basicComponentCollectionValidatesArgumentsCached(string $source, int $expectedExceptionCode): void
     {
         self::expectExceptionCode($expectedExceptionCode);
