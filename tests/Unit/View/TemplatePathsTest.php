@@ -175,7 +175,7 @@ final class TemplatePathsTest extends TestCase
         $foundFixture = $subject->resolveTemplateFileForControllerAndActionAndFormat('ARandomController', 'TestTemplate');
         self::assertSame($baseTemplatePath . '/ARandomController/TestTemplate.html', $foundFixture);
         $identifier = $subject->getTemplateIdentifier('ARandomController', 'TestTemplate');
-        self::assertStringStartsWith('ARandomController_action_TestTemplate_', $identifier);
+        self::assertStringStartsWith('TestTemplate_html_', $identifier);
     }
 
     #[Test]
@@ -187,6 +187,6 @@ final class TemplatePathsTest extends TestCase
         $foundFixture = $subject->resolveTemplateFileForControllerAndActionAndFormat('', 'UnparsedTemplateFixture');
         self::assertSame($baseTemplatePath . '/UnparsedTemplateFixture.html', $foundFixture);
         $identifier = $subject->getTemplateIdentifier('', 'UnparsedTemplateFixture');
-        self::assertStringStartsWith('action_UnparsedTemplateFixture_', $identifier);
+        self::assertStringStartsWith('UnparsedTemplateFixture_html_', $identifier);
     }
 }
