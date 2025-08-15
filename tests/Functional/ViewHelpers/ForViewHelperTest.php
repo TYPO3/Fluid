@@ -92,18 +92,18 @@ final class ForViewHelperTest extends AbstractFunctionalTestCase
         ];
 
         yield 'iterator contains information' => [
-            '<ul>' .
-                '<f:for each="{0:1, 1:2, 2:3, 3:4}" as="item" iteration="iterator">' .
-                    '<li>Index: {iterator.index} Cycle: {iterator.cycle} Total: {iterator.total}{f:if(condition: iterator.isEven, then: \' Even\')}{f:if(condition: iterator.isOdd, then: \' Odd\')}{f:if(condition: iterator.isFirst, then: \' First\')}{f:if(condition: iterator.isLast, then: \' Last\')}</li>' .
-                '</f:for>' .
-            '</ul>',
+            '<ul>'
+                . '<f:for each="{0:1, 1:2, 2:3, 3:4}" as="item" iteration="iterator">'
+                    . '<li>Index: {iterator.index} Cycle: {iterator.cycle} Total: {iterator.total}{f:if(condition: iterator.isEven, then: \' Even\')}{f:if(condition: iterator.isOdd, then: \' Odd\')}{f:if(condition: iterator.isFirst, then: \' First\')}{f:if(condition: iterator.isLast, then: \' Last\')}</li>'
+                . '</f:for>'
+            . '</ul>',
             [],
-            '<ul>' .
-                '<li>Index: 0 Cycle: 1 Total: 4 Odd First</li>' .
-                '<li>Index: 1 Cycle: 2 Total: 4 Even</li>' .
-                '<li>Index: 2 Cycle: 3 Total: 4 Odd</li>' .
-                '<li>Index: 3 Cycle: 4 Total: 4 Even Last</li>' .
-            '</ul>',
+            '<ul>'
+                . '<li>Index: 0 Cycle: 1 Total: 4 Odd First</li>'
+                . '<li>Index: 1 Cycle: 2 Total: 4 Even</li>'
+                . '<li>Index: 2 Cycle: 3 Total: 4 Odd</li>'
+                . '<li>Index: 3 Cycle: 4 Total: 4 Even Last</li>'
+            . '</ul>',
         ];
 
         $value = ['item'];
@@ -149,16 +149,16 @@ final class ForViewHelperTest extends AbstractFunctionalTestCase
 
         $value = ['foo' => 'fooValue', 'Fluid' => 'FluidStandalone', 'TYPO3' => 'rocks'];
         yield 'iterator works' => [
-            '<f:for each="{value}" key="key" as="item" iteration="myIterator">' .
-                'key: {key}, item: {item}, ' .
-                'index: {myIterator.index}, cycle: {myIterator.cycle}, total: {myIterator.total}, ' .
-                'isFirst: {myIterator.isFirst}, isLast: {myIterator.isLast}, ' .
-                'isEven: {myIterator.isEven}, isOdd: {myIterator.isOdd}' . chr(10) .
-            '</f:for>',
+            '<f:for each="{value}" key="key" as="item" iteration="myIterator">'
+                . 'key: {key}, item: {item}, '
+                . 'index: {myIterator.index}, cycle: {myIterator.cycle}, total: {myIterator.total}, '
+                . 'isFirst: {myIterator.isFirst}, isLast: {myIterator.isLast}, '
+                . 'isEven: {myIterator.isEven}, isOdd: {myIterator.isOdd}' . chr(10)
+            . '</f:for>',
             ['value' => $value],
-            'key: foo, item: fooValue, index: 0, cycle: 1, total: 3, isFirst: 1, isLast: , isEven: , isOdd: 1' . chr(10) .
-            'key: Fluid, item: FluidStandalone, index: 1, cycle: 2, total: 3, isFirst: , isLast: , isEven: 1, isOdd: ' . chr(10) .
-            'key: TYPO3, item: rocks, index: 2, cycle: 3, total: 3, isFirst: , isLast: 1, isEven: , isOdd: 1' . chr(10),
+            'key: foo, item: fooValue, index: 0, cycle: 1, total: 3, isFirst: 1, isLast: , isEven: , isOdd: 1' . chr(10)
+            . 'key: Fluid, item: FluidStandalone, index: 1, cycle: 2, total: 3, isFirst: , isLast: , isEven: 1, isOdd: ' . chr(10)
+            . 'key: TYPO3, item: rocks, index: 2, cycle: 3, total: 3, isFirst: , isLast: 1, isEven: , isOdd: 1' . chr(10),
         ];
 
         $value = ['bar', 2];

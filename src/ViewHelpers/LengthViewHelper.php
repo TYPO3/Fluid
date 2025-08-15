@@ -74,8 +74,8 @@ final class LengthViewHelper extends AbstractViewHelper
         if (!is_scalar($value)) {
             $givenType = get_debug_type($value);
             throw new \InvalidArgumentException(
-                'The argument "value" was registered with type "string", but is of type "' .
-                $givenType . '" in view helper "' . static::class . '".',
+                'The argument "value" was registered with type "string", but is of type "'
+                . $givenType . '" in view helper "' . static::class . '".',
                 1754637887,
             );
         }

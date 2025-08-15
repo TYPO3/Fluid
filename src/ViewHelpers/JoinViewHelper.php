@@ -74,8 +74,8 @@ final class JoinViewHelper extends AbstractViewHelper
         if ($value === null || !is_iterable($value)) {
             $givenType = get_debug_type($value);
             throw new \InvalidArgumentException(
-                'The argument "value" was registered with type "array", but is of type "' .
-                $givenType . '" in view helper "' . static::class . '".',
+                'The argument "value" was registered with type "array", but is of type "'
+                . $givenType . '" in view helper "' . static::class . '".',
                 1256475113,
             );
         }

@@ -346,8 +346,8 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                 if (!$argumentProcessor->isValid($value, $registeredArgument)) {
                     $givenType = is_object($value) ? get_class($value) : gettype($value);
                     throw new \InvalidArgumentException(
-                        'The argument "' . $argumentName . '" was registered with type "' . $registeredArgument->getType() . '", but is of type "' .
-                        $givenType . '" in view helper "' . get_class($this) . '".',
+                        'The argument "' . $argumentName . '" was registered with type "' . $registeredArgument->getType() . '", but is of type "'
+                        . $givenType . '" in view helper "' . get_class($this) . '".',
                         1256475113,
                     );
                 }
@@ -487,8 +487,8 @@ abstract class AbstractViewHelper implements ViewHelperInterface
         if (!method_exists(static::class, 'renderStatic')) {
             throw new Exception(
                 sprintf(
-                    'ViewHelper class "%s" does not declare a "render()" method. Also, no implementation of "renderStatic"' .
-                    'could be found to use as fallback. Please implement "render()" on your ViewHelper class',
+                    'ViewHelper class "%s" does not declare a "render()" method. Also, no implementation of "renderStatic"'
+                    . 'could be found to use as fallback. Please implement "render()" on your ViewHelper class',
                     static::class,
                 ),
             );

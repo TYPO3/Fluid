@@ -131,16 +131,16 @@ final class RecursiveRenderingTest extends AbstractFunctionalTestCase
     #[Test]
     public function recursiveSectionsProvideCorrectViewHelperArguments(): void
     {
-        $source =
-            '<f:section name="Test">' .
-                '<test:tagBasedTest data-context="{testVar}">' .
-                    '{testVar}' .
-                    '<f:if condition="{testVar} == \'outer\'">' .
-                        '<f:render section="Test" arguments="{testVar: \'inner\'}" />' .
-                    '</f:if>' .
-                '</test:tagBasedTest>' .
-            '</f:section>' .
-            '<f:render section="Test" arguments="{testVar: \'outer\'}" />';
+        $source
+            = '<f:section name="Test">'
+                . '<test:tagBasedTest data-context="{testVar}">'
+                    . '{testVar}'
+                    . '<f:if condition="{testVar} == \'outer\'">'
+                        . '<f:render section="Test" arguments="{testVar: \'inner\'}" />'
+                    . '</f:if>'
+                . '</test:tagBasedTest>'
+            . '</f:section>'
+            . '<f:render section="Test" arguments="{testVar: \'outer\'}" />';
         // @todo this should be the correct output for uncached as well, currently arguments are overwritten by the
         //       inner ViewHelper call
         // $expected = '<div data-context="outer">outer<div data-context="inner">inner</div></div>';

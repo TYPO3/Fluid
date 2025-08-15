@@ -120,15 +120,15 @@ class TernaryExpressionNode extends AbstractExpressionNode
 
         $functionName = $templateCompiler->variableName('ternaryExpression');
         $initializationPhpCode .= sprintf(
-            '%s = function($context, $renderingContext) {' . chr(10) .
-            '    $check = %s;' . chr(10) .
-            '    $parser = new \TYPO3Fluid\Fluid\Core\Parser\BooleanParser();' . chr(10) .
-            '    $checkResult = $parser->evaluate($check, $context);' . chr(10) .
-            '    if ($checkResult) {' . chr(10) .
-            '        return %s::getTemplateVariableOrValueItself(%s, $renderingContext);' . chr(10) .
-            '    }' . chr(10) .
-            '    return %s::getTemplateVariableOrValueItself(%s, $renderingContext);' . chr(10) .
-            '};' . chr(10),
+            '%s = function($context, $renderingContext) {' . chr(10)
+            . '    $check = %s;' . chr(10)
+            . '    $parser = new \TYPO3Fluid\Fluid\Core\Parser\BooleanParser();' . chr(10)
+            . '    $checkResult = $parser->evaluate($check, $context);' . chr(10)
+            . '    if ($checkResult) {' . chr(10)
+            . '        return %s::getTemplateVariableOrValueItself(%s, $renderingContext);' . chr(10)
+            . '    }' . chr(10)
+            . '    return %s::getTemplateVariableOrValueItself(%s, $renderingContext);' . chr(10)
+            . '};' . chr(10),
             $functionName,
             var_export($check, true),
             static::class,
