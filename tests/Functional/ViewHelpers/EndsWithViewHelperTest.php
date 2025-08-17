@@ -59,18 +59,18 @@ final class EndsWithViewHelperTest extends AbstractFunctionalTestCase
             'Foo',
         ];
         yield 'then child, else child, search true' => [
-            '<f:endsWith search="{search}" subject="{subject}">' .
-            '<f:then>thenChild</f:then>' .
-            '<f:else>elseChild</f:else>' .
-            '</f:endsWith>',
+            '<f:endsWith search="{search}" subject="{subject}">'
+            . '<f:then>thenChild</f:then>'
+            . '<f:else>elseChild</f:else>'
+            . '</f:endsWith>',
             ['search' => 'search', 'subject' => 'search'],
             'thenChild',
         ];
         yield 'then child, else child, search false' => [
-            '<f:endsWith search="{search}" subject="{subject}">' .
-            '<f:then>thenChild</f:then>' .
-            '<f:else>elseChild</f:else>' .
-            '</f:endsWith>',
+            '<f:endsWith search="{search}" subject="{subject}">'
+            . '<f:then>thenChild</f:then>'
+            . '<f:else>elseChild</f:else>'
+            . '</f:endsWith>',
             ['search' => 'search', 'subject' => 'subject'],
             'elseChild',
         ];
@@ -90,10 +90,10 @@ final class EndsWithViewHelperTest extends AbstractFunctionalTestCase
             'thenArgument',
         ];
         yield 'nested example, inside if with condition, search true' => [
-            '<f:variable name="condition" value="{false}" />' .
-            '<f:if condition="{condition} || {f:endsWith(search: search, subject: subject)}">' .
-            'It Works!' .
-            '</f:if>',
+            '<f:variable name="condition" value="{false}" />'
+            . '<f:if condition="{condition} || {f:endsWith(search: search, subject: subject)}">'
+            . 'It Works!'
+            . '</f:if>',
             ['search' => 'search', 'subject' => 'search'],
             'It Works!',
         ];
