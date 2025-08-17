@@ -36,19 +36,6 @@ class SimpleFileCache implements FluidCacheInterface
     }
 
     /**
-     * Get an instance of FluidCacheWarmerInterface which
-     * can warm up template files that would normally be
-     * cached on-the-fly to this FluidCacheInterface
-     * implementaion.
-     *
-     * @deprecated Will be removed in Fluid v5
-     */
-    public function getCacheWarmer(): FluidCacheWarmerInterface
-    {
-        return new StandardCacheWarmer();
-    }
-
-    /**
      * Gets an entry from the cache or null if the
      * entry does not exist. Returns true if the cached
      * class file was included, false if it does not

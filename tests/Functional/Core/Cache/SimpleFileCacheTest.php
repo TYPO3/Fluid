@@ -11,18 +11,10 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Cache;
 
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
-use TYPO3Fluid\Fluid\Core\Cache\StandardCacheWarmer;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 
 final class SimpleFileCacheTest extends AbstractFunctionalTestCase
 {
-    #[Test]
-    public function getCacheWarmerReturnsStandardCacheWarmer(): void
-    {
-        $cache = new SimpleFileCache(self::$cachePath);
-        self::assertInstanceOf(StandardCacheWarmer::class, $cache->getCacheWarmer());
-    }
-
     #[Test]
     public function getReturnsFalseWhenNotFound(): void
     {

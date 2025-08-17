@@ -15,7 +15,6 @@ Supported parameters:
 
 	--help                 # Shows usage examples
 	--socket               # Path to socket (ignored unless running as socket server)
-	--warmup               # Run in Warmup Mode (requires templateRootPaths and others, see help text)
 	--template             # A single template file to render
 	--cacheDirectory       # Path to a directory used as cache for compiled Fluid templates
 	--variables            # Variables (JSON string or JSON file) to use when rendering
@@ -66,30 +65,24 @@ simple string value which gets passed to the VariableProvider through ->setSourc
 upon instantiation. If working with custom VariableProviders, check the documentation
 for each VariableProvider to know which source types are supported.
 
-Cache warmup can be triggered by calling:
+Should you require it you can pass the class name of a custom RenderingContext:
 
-    ./bin/fluid run --warmup --cacheDirectory "/path/to/cache"
-
-And should you require it you can pass the class name of a custom RenderingContext (which can return a
-custom FluidCacheWarmer instance!):
-
-    ./bin/fluid run --warmup --renderingContext "My\Custom\RenderingContext"
+    ./bin/fluid run --renderingContext "My\Custom\RenderingContext"
 
 Furthermore, should you require special bootstrapping of a framework, you can specify
 an entry point containing a bootstrap (with or without output, does not matter) which
 will be required/included as part of the initialisation.
 
-    ./bin/fluid run --warmup --renderingContext "My\Custom\RenderingContext" --bootstrap /path/to/bootstrap.php
+    ./bin/fluid run --renderingContext "My\Custom\RenderingContext" --bootstrap /path/to/bootstrap.php
 
 Or using a public, static function on a class which bootstraps:
 
-    ./bin/fluid run --warmup --renderingContext "My\Custom\RenderingContext" --bootstrap MyBootstrapClass::bootstrapMethod
+    ./bin/fluid run --renderingContext "My\Custom\RenderingContext" --bootstrap MyBootstrapClass::bootstrapMethod
 
 When passing a class-and-method bootstrap it is important that the method has no
 required arguments and is possible to call as static method.
 
-Note: the bootstrapping can also be used for other cases, but be careful to use
-a bootstrapper which does not cause output if you intend to render templates.
+Be careful to use a bootstrapper which does not cause output if you intend to render templates.
 
 A WebSocket mode is available. When starting the CLI utility in WebSocket mode,
 very basic HTTP requests are rendered directly by listening on an IP:PORT combination:

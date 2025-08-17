@@ -20,15 +20,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 final class TemplateCompilerTest extends TestCase
 {
     #[Test]
-    public function isWarmupModeReturnsTrueAfterEnterWarmupModeHasBeenCalled(): void
-    {
-        $subject = new TemplateCompiler();
-        self::assertFalse($subject->isWarmupMode());
-        $subject->enterWarmupMode();
-        self::assertTrue($subject->isWarmupMode());
-    }
-
-    #[Test]
     public function getRenderingContextReturnsPreviouslySetRenderingContext(): void
     {
         $subject = new TemplateCompiler();
