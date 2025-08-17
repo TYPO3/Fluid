@@ -28,7 +28,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  *    <f:merge array="{0: 'a', 1: 'b'}" with="{1: 'x', 2: 'c'}" />
  *
- * Output::
+ * Result::
  *
  *    {0: 'a', 1: 'x', 2: 'c'}
  *
@@ -39,7 +39,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  *    <f:merge array="{foo: {bar: 'baz'}}" with="{foo: {qux: 'value'}}" recursive="true" />
  *
- * Output::
+ * Result::
  *
  *    {foo: {bar: 'baz', qux: 'value'}}
  *
@@ -51,7 +51,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *      {f:variable(name: 'myArray', value: {foo: 1})}
  *      {myArray -> f:merge(with: {bar: 2})}
  *
- * Output::
+ * Result::
  *
  *    {foo: 1, bar: 2}
  */
@@ -60,7 +60,7 @@ final class MergeViewHelper extends AbstractViewHelper
     public function initializeArguments(): void
     {
         $this->registerArgument('array', 'array', 'The array to merge into');
-        $this->registerArgument('with', 'array', 'Array to be merged into');
+        $this->registerArgument('with', 'array', 'Array to be merged');
         $this->registerArgument('recursive', 'boolean', 'Whether to merge arrays recursively', false, false);
     }
 
