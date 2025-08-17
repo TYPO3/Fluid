@@ -18,6 +18,8 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * for Fluid templates. Please see the provided
  * StandardCacheWarmer implementation of this interface
  * for more detailed explanations about warmup.
+ *
+ * @deprecated Will be removed in Fluid v5
  */
 interface FluidCacheWarmerInterface
 {

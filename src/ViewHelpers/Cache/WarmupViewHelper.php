@@ -60,6 +60,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *     </f:cache.warmup>
  *
  * @api
+ * @deprecated Will be removed in Fluid v5
  */
 class WarmupViewHelper extends AbstractViewHelper
 {
@@ -82,6 +83,10 @@ class WarmupViewHelper extends AbstractViewHelper
             false,
             [],
         );
+
+        // Triggering deprecation here so it can be picked up early during parsing,
+        // which means that the TemplateScanner can report it as an issue
+        trigger_error('The <f:cache.warmup> ViewHelper has been deprecated and will be removed with Fluid v5.', E_USER_DEPRECATED);
     }
 
     /**
