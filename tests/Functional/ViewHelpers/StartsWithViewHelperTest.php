@@ -90,7 +90,7 @@ final class StartsWithViewHelperTest extends AbstractFunctionalTestCase
             'thenArgument',
         ];
         yield 'nested example, inside if with condition, search true' => [
-            '<f:variable name="condition" value="false" />' .
+            '<f:variable name="condition" value="{false}" />' .
             '<f:if condition="{condition} || {f:startsWith(search: search, subject: subject)}">' .
             'It Works!' .
             '</f:if>',
