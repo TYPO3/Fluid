@@ -136,9 +136,9 @@ final class ForViewHelperTest extends AbstractFunctionalTestCase
 
         $value = new \SplObjectStorage();
         $object1 = new \stdClass();
-        $value->attach($object1);
+        $value->offsetSet($object1);
         $object2 = new \stdClass();
-        $value->attach($object2, 'foo');
+        $value->offsetSet($object2, 'foo');
         $object3 = new \stdClass();
         $value->offsetSet($object3, 'bar');
         yield 'keys are a numerical index with objects of type SplObjectStorage' => [
