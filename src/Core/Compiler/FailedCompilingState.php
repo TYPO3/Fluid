@@ -17,6 +17,7 @@ use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
  * Includes additional reasons why compiling failed.
  *
  * @internal
+ * @deprecated Will be removed in Fluid v5
  */
 class FailedCompilingState extends ParsingState implements ParsedTemplateInterface
 {

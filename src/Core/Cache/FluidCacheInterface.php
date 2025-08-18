@@ -35,5 +35,8 @@ interface FluidCacheInterface
      */
     public function flush(?string $name = null): void;
 
+    /**
+     * * @deprecated Will be removed in Fluid v5
+     */
     public function getCacheWarmer(): FluidCacheWarmerInterface;
 }

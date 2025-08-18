@@ -47,6 +47,8 @@ use TYPO3Fluid\Fluid\View\TemplatePaths;
  * them to be specific to the framework in which Fluid is used.
  * The default set of mitigation suggestions are based on the
  * standard errors which can be thrown by the Fluid engine.
+ *
+ * @deprecated Will be removed in Fluid v5
  */
 class StandardCacheWarmer implements FluidCacheWarmerInterface
 {

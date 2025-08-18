@@ -14,6 +14,7 @@ use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 
 /**
  * Class FluidCacheWarmupResult
+ * @deprecated Will be removed in Fluid v5
  */
 class FluidCacheWarmupResult
 {
