@@ -40,6 +40,8 @@ class SimpleFileCache implements FluidCacheInterface
      * can warm up template files that would normally be
      * cached on-the-fly to this FluidCacheInterface
      * implementaion.
+     *
+     * @deprecated Will be removed in Fluid v5
      */
     public function getCacheWarmer(): FluidCacheWarmerInterface
     {
