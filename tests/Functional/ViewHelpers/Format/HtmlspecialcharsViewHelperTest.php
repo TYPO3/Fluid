@@ -82,12 +82,12 @@ final class HtmlspecialcharsViewHelperTest extends AbstractFunctionalTestCase
         yield '[argument] render returns unmodified source if it is a float' => [
             '<f:format.htmlspecialchars value="123.45" />',
             [],
-            123.45,
+            '123.45',
         ];
         yield '[argument] render returns unmodified source if it is an integer' => [
             '<f:format.htmlspecialchars value="12345" />',
             [],
-            12345,
+            '12345',
         ];
         yield '[argument] render returns unmodified source if it is a boolean' => [
             '<f:format.htmlspecialchars value="true" />',
@@ -158,12 +158,12 @@ final class HtmlspecialcharsViewHelperTest extends AbstractFunctionalTestCase
         $view->assignMultiple($variables);
         $view->getRenderingContext()->setCache(self::$cache);
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($template);
-        self::assertSame($expected, $view->render());
+        self::assertSame($expected, $view->render(), 'uncached');
 
         $view = new TemplateView();
         $view->assignMultiple($variables);
         $view->getRenderingContext()->setCache(self::$cache);
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($template);
-        self::assertSame($expected, $view->render());
+        self::assertSame($expected, $view->render(), 'cached');
     }
 }
