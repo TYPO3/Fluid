@@ -210,6 +210,13 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     public function initializeArgumentsAndRender()
     {
         $this->validateArguments();
+        if ($this instanceof ViewHelperArgumentsValidatedEventInterface) {
+            $this::argumentsValidatedEvent(
+                $this->arguments,
+                $this->renderingContext->getViewHelperResolver()->getArgumentDefinitionsForViewHelper($this),
+                $this,
+            );
+        }
         $this->initialize();
 
         return $this->render();
@@ -285,6 +292,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * Validate arguments, and throw exception if arguments do not validate.
      *
      * @throws \InvalidArgumentException
+     * @deprecated Will be removed in v5. Use the new ViewHelperArgumentsValidatedEventInterface to add custom validation logic
      */
     public function validateArguments()
     {
