@@ -11,6 +11,11 @@ Changelog 4.x
 
 * Deprecation: Using the `xmlns` namespace syntax with a PHP namespace instead of an url is deprecated
   and will no longer work in Fluid v5.
+* Deprecation: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper::validateArguments()`
+  has been marked as deprecated and will be removed in Fluid v5.
+* Deprecation: Custom implementations of the `validateArguments()` methods in ViewHelpers will no longer
+  be called in Fluid v5. Use :php:`TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperArgumentsValidatedEventInterface`
+  instead.
 * Deprecation: Classes, interfaces, methods and constants related to cache warmup are deprecated and will be removed in Fluid v5:
     * :php:`TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface::getCacheWarmer()`
     * :php: `TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache::getCacheWarmer()`
