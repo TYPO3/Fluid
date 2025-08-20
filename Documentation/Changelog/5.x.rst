@@ -65,5 +65,18 @@ Changelog 5.x
 * Breaking: Using the `xmlns` namespace syntax with a PHP namespace instead of an url is no longer possible.
 * Breaking: ViewHelper argument validation now uses the `StrictArgumentProcessor`, which might lead to
   slightly different behavior within ViewHelpers or exceptions if ViewHelpers didn't validate arguments properly before.
+* Breaking: Classes, interfaces, methods and constants related to cache warmup have been removed:
+    * :php:`TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface::getCacheWarmer()`
+    * :php: `TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache::getCacheWarmer()`
+    * :php:`TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmerInterface`
+    * :php:`TYPO3Fluid\Fluid\Core\Cache\StandardCacheWarmer`
+    * :php:`TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult`
+    * :php:`TYPO3Fluid\Fluid\Core\Compiler\FailedCompilingState`
+    * :php:`TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::MODE_NORMAL`
+    * :php:`TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::MODE_WARMUP`
+    * :php:`TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::$mode`
+    * :php:`TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::enterWarmupMode()`
+    * :php:`TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::isWarmupMode()`
+* Breaking: The `<f:cache.warmup>` ViewHelper has been removed.
 * Deprecation: Class :php:`TYPO3Fluid\Fluid\Core\ViewHelper\LenientArgumentProcessor`
   is no longer being used by Fluid v5 and will be removed with Fluid v6.

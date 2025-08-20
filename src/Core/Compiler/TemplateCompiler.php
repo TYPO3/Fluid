@@ -32,51 +32,13 @@ class TemplateCompiler
      */
     public const SECTIONS_VARIABLE = '1457379500_sections';
 
-    /**
-     * @deprecated Will be removed in Fluid v5
-     */
-    public const MODE_NORMAL = 'normal';
-    /**
-     * @deprecated Will be removed in Fluid v5
-     */
-    public const MODE_WARMUP = 'warmup';
-
     protected array $syntaxTreeInstanceCache = [];
 
     protected RenderingContextInterface $renderingContext;
 
-    /**
-     * @deprecated Will be removed in Fluid v5
-     */
-    protected string $mode = self::MODE_NORMAL;
-
     protected ?ParsedTemplateInterface $currentlyProcessingState = null;
 
     private int $variableCounter = 0;
-
-    /**
-     * Instruct the TemplateCompiler to enter warmup mode, assigning
-     * additional context allowing cache-related implementations to
-     * subsequently check the mode.
-     *
-     * Cannot be reversed once done - should only be used from within
-     * FluidCacheWarmerInterface implementations!
-     *
-     * @deprecated Will be removed in Fluid v5
-     */
-    public function enterWarmupMode(): void
-    {
-        $this->mode = static::MODE_WARMUP;
-    }
-
-    /**
-     * Returns true only if the TemplateCompiler is in warmup mode.
-     * @deprecated Will be removed in Fluid v5
-     */
-    public function isWarmupMode(): bool
-    {
-        return $this->mode === static::MODE_WARMUP;
-    }
 
     public function getCurrentlyProcessingState(): ?ParsedTemplateInterface
     {
