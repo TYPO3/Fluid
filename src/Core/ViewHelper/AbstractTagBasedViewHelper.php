@@ -25,13 +25,6 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
     protected $escapeOutput = false;
 
     /**
-     * Names of all registered tag attributes
-     *
-     * @var array
-     */
-    private static $tagAttributes = [];
-
-    /**
      * Tag builder instance
      *
      * @var TagBuilder
@@ -87,7 +80,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
     /**
      * Sets the tag name to $this->tagName.
      * Additionally, sets all tag attributes which were registered in
-     * $this->tagAttributes and additionalArguments.
+     * additionalArguments.
      *
      * Will be invoked just before the render method.
      *
@@ -121,14 +114,6 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
             // this condition in the future to have a clean solution.
             if ($argumentValue !== null && $argumentValue !== '') {
                 $this->tag->addAttribute($argumentName, $argumentValue);
-            }
-        }
-
-        if (isset(self::$tagAttributes[get_class($this)])) {
-            foreach (self::$tagAttributes[get_class($this)] as $attributeName) {
-                if ($this->hasArgument($attributeName) && $this->arguments[$attributeName] !== '') {
-                    $this->tag->addAttribute($attributeName, $this->arguments[$attributeName]);
-                }
             }
         }
     }
