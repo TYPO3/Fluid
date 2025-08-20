@@ -246,7 +246,8 @@ class TemplatePaths
         foreach ($paths as $index => $path) {
             $paths[$index] = rtrim($path . ($controllerName ?? ''), '/') . '/';
         }
-        return $this->resolveFilesInFolders($paths, $format ?: $this->getFormat());
+        $scanner = new TemplateFinder();
+        return $scanner->findTemplatesByFileExtension($paths, $format ?: $this->getFormat());
     }
 
     /**
@@ -254,7 +255,8 @@ class TemplatePaths
      */
     public function resolveAvailablePartialFiles(?string $format = null): array
     {
-        return $this->resolveFilesInFolders($this->getPartialRootPaths(), $format ?: $this->getFormat());
+        $scanner = new TemplateFinder();
+        return $scanner->findTemplatesByFileExtension($this->getPartialRootPaths(), $format ?: $this->getFormat());
     }
 
     /**
@@ -262,38 +264,8 @@ class TemplatePaths
      */
     public function resolveAvailableLayoutFiles(?string $format = null): array
     {
-        return $this->resolveFilesInFolders($this->getLayoutRootPaths(), $format ?: $this->getFormat());
-    }
-
-    /**
-     * @param string[] $folders
-     * @return string[]
-     */
-    protected function resolveFilesInFolders(array $folders, string $format): array
-    {
-        $files = [];
-        foreach ($folders as $folder) {
-            $files = array_merge($files, $this->resolveFilesInFolder($folder, $format));
-        }
-        return array_values($files);
-    }
-
-    /**
-     * @return string[]
-     */
-    protected function resolveFilesInFolder(string $folder, string $format): array
-    {
-        if (!is_dir($folder)) {
-            return [];
-        }
-
-        $directoryIterator = new \RecursiveDirectoryIterator($folder, \FilesystemIterator::FOLLOW_SYMLINKS | \FilesystemIterator::SKIP_DOTS);
-        $recursiveIterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::SELF_FIRST);
-        $filterIterator = new \CallbackFilterIterator($recursiveIterator, function ($current, $key, $iterator) use ($format) {
-            return $current->getExtension() === $format;
-        });
-
-        return array_keys(iterator_to_array($filterIterator));
+        $scanner = new TemplateFinder();
+        return $scanner->findTemplatesByFileExtension($this->getLayoutRootPaths(), $format ?: $this->getFormat());
     }
 
     /**
