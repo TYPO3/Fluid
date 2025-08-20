@@ -14,6 +14,7 @@ use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentProcessorInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
@@ -81,6 +82,10 @@ interface RenderingContextInterface
      * @param ViewHelperInvoker $viewHelperInvoker
      */
     public function setViewHelperInvoker(ViewHelperInvoker $viewHelperInvoker);
+
+    public function getArgumentProcessor(): ArgumentProcessorInterface;
+
+    public function setArgumentProcessor(ArgumentProcessorInterface $argumentProcessor): void;
 
     /**
      * Inject the Template Parser
