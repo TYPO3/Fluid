@@ -17,15 +17,14 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
  * The abstract base class for all view helpers.
  *
  * @api
- * @todo add missing types with Fluid v5
  */
 abstract class AbstractViewHelper implements ViewHelperInterface
 {
     /**
-     * Stores all \TYPO3Fluid\Fluid\ArgumentDefinition instances
-     * @var ArgumentDefinition[]
+     * Argument definition of this ViewHelper
+     * @var array<string, ArgumentDefinition>
      */
-    protected $argumentDefinitions = [];
+    protected array $argumentDefinitions = [];
 
     /**
      * Cache of argument definitions; the key is the ViewHelper class name, and the
@@ -33,34 +32,28 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      *
      * In our benchmarks, this cache leads to a 40% improvement when using a certain
      * ViewHelper class many times throughout the rendering process.
-     * @var array
+     * @var array<string, array<string, ArgumentDefinition>>
      */
     private static array $argumentDefinitionCache = [];
 
     /**
      * Current view helper node; null if template is cached
-     *
-     * @var ViewHelperNode|null
      */
-    protected $viewHelperNode;
+    protected ?ViewHelperNode $viewHelperNode = null;
 
     /**
      * @var array<string, mixed>
      * @api
      */
-    protected $arguments = [];
+    protected array $arguments = [];
 
     /**
      * Current variable container reference.
-     * @var VariableProviderInterface
      * @api
      */
-    protected $templateVariableContainer;
+    protected ?VariableProviderInterface $templateVariableContainer = null;
 
-    /**
-     * @var RenderingContextInterface
-     */
-    protected $renderingContext;
+    protected ?RenderingContextInterface $renderingContext = null;
 
     /**
      * Stores rendering contexts in a situation where ViewHelpers are called recursively from inside
@@ -72,17 +65,13 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      */
     protected array $renderingContextStack = [];
 
-    /**
-     * @var \Closure
-     */
-    protected $renderChildrenClosure;
+    protected ?\Closure $renderChildrenClosure = null;
 
     /**
      * ViewHelper Variable Container
-     * @var ViewHelperVariableContainer
      * @api
      */
-    protected $viewHelperVariableContainer;
+    protected ?ViewHelperVariableContainer $viewHelperVariableContainer = null;
 
     /**
      * Specifies whether the escaping interceptors should be disabled or enabled for the result of renderChildren() calls within this ViewHelper
@@ -90,7 +79,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      *
      * Note: If this is null, the value will be determined based on $escapeOutput.
      *
-     * @var bool
+     * @var bool|null
      * @api
      */
     protected $escapeChildren;
@@ -102,12 +91,12 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @var bool
      * @api
      */
-    protected $escapeOutput;
+    protected $escapeOutput = true;
 
     /**
      * @param array<string, mixed> $arguments
      */
-    public function setArguments(array $arguments)
+    public function setArguments(array $arguments): void
     {
         $this->arguments = $arguments;
     }
@@ -115,7 +104,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     /**
      * @param RenderingContextInterface $renderingContext
      */
-    public function setRenderingContext(RenderingContextInterface $renderingContext)
+    public function setRenderingContext(RenderingContextInterface $renderingContext): void
     {
         $this->renderingContext = $renderingContext;
         $this->templateVariableContainer = $renderingContext->getVariableProvider();
@@ -126,10 +115,8 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * Returns whether the escaping interceptors should be disabled or enabled for the result of renderChildren() calls within this ViewHelper
      *
      * Note: This method is no public API, use $this->escapeChildren instead!
-     *
-     * @return bool
      */
-    public function isChildrenEscapingEnabled()
+    public function isChildrenEscapingEnabled(): bool
     {
         if ($this->escapeChildren === null) {
             // Disable children escaping automatically, if output escaping is on anyway.
@@ -142,10 +129,8 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * Returns whether the escaping interceptors should be disabled or enabled for the render-result of this ViewHelper
      *
      * Note: This method is no public API, use $this->escapeOutput instead!
-     *
-     * @return bool
      */
-    public function isOutputEscapingEnabled()
+    public function isOutputEscapingEnabled(): bool
     {
         return $this->escapeOutput !== false;
     }
@@ -172,10 +157,10 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param bool $required If true, argument is required. Defaults to false.
      * @param mixed $defaultValue Default value of argument. Will be used if the argument is not set.
      * @param bool|null $escape Can be toggled to true to force escaping of variables and inline syntax passed as argument value.
-     * @return \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
+     * @return static $this, to allow chaining.
      * @api
      */
-    protected function registerArgument($name, $type, $description, $required = false, $defaultValue = null, $escape = null)
+    protected function registerArgument($name, $type, $description, $required = false, $defaultValue = null, $escape = null): static
     {
         $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue, $escape);
         return $this;
@@ -187,17 +172,15 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param ViewHelperNode $node View Helper node to be set.
      * @internal
      */
-    public function setViewHelperNode(ViewHelperNode $node)
+    public function setViewHelperNode(ViewHelperNode $node): void
     {
         $this->viewHelperNode = $node;
     }
 
     /**
      * Called when being inside a cached template.
-     *
-     * @param \Closure $renderChildrenClosure
      */
-    public function setRenderChildrenClosure(\Closure $renderChildrenClosure)
+    public function setRenderChildrenClosure(\Closure $renderChildrenClosure): void
     {
         $this->renderChildrenClosure = $renderChildrenClosure;
     }
@@ -205,9 +188,9 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     /**
      * Initialize the arguments of the ViewHelper, and call the render() method of the ViewHelper.
      *
-     * @return string the rendered ViewHelper.
+     * @return mixed the result of the ViewHelper.
      */
-    public function initializeArgumentsAndRender()
+    public function initializeArgumentsAndRender(): mixed
     {
         $this->validateArguments();
         if ($this instanceof ViewHelperArgumentsValidatedEventInterface) {
@@ -229,7 +212,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      *
      * @api
      */
-    public function initialize() {}
+    public function initialize(): void {}
 
     /**
      * Helper method which triggers the rendering of everything between the
@@ -238,7 +221,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @return mixed The finally rendered child nodes.
      * @api
      */
-    public function renderChildren()
+    public function renderChildren(): mixed
     {
         return $this->buildRenderChildrenClosure()();
     }
@@ -249,10 +232,8 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * being rendered instead.
      *
      * No public API yet.
-     *
-     * @return \Closure
      */
-    protected function buildRenderChildrenClosure()
+    protected function buildRenderChildrenClosure(): \Closure
     {
         $contentArgumentName = $this->getContentArgumentName();
         if ($contentArgumentName !== null && isset($this->arguments[$contentArgumentName])) {
@@ -276,7 +257,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      *
      * @return ArgumentDefinition[]
      */
-    public function prepareArguments()
+    public function prepareArguments(): array
     {
         $thisClassName = get_class($this);
         if (isset(self::$argumentDefinitionCache[$thisClassName])) {
@@ -321,17 +302,16 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      *
      * @api
      */
-    public function initializeArguments() {}
+    public function initializeArguments(): void {}
 
     /**
      * Tests if the given $argumentName is set, and not null.
      * The isset() test used fills both those requirements.
      *
-     * @param string $argumentName
      * @return bool true if $argumentName is found
      * @api
      */
-    protected function hasArgument($argumentName)
+    protected function hasArgument(string $argumentName): bool
     {
         return isset($this->arguments[$argumentName]);
     }
@@ -339,14 +319,11 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     /**
      * Default implementation of "handling" additional, undeclared arguments.
      * In this implementation the behavior is to consistently throw an error
-     * about NOT supporting any additional arguments. This method MUST be
-     * overridden by any ViewHelper that desires this support and this inherited
-     * method must not be called, obviously.
+     * about NOT supporting any additional arguments.
      *
-     * @throws Exception
      * @param array<string, mixed> $arguments
      */
-    public function handleAdditionalArguments(array $arguments) {}
+    public function handleAdditionalArguments(array $arguments): void {}
 
     /**
      * Default implementation of validating additional, undeclared arguments.
@@ -358,7 +335,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @throws Exception
      * @param array<string, mixed> $arguments
      */
-    public function validateAdditionalArguments(array $arguments)
+    public function validateAdditionalArguments(array $arguments): void
     {
         if (!empty($arguments)) {
             throw new Exception(
@@ -375,10 +352,8 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     /**
      * Main render method of the ViewHelper. Every modern ViewHelper implementation
      * must implement this method.
-     *
-     * @return mixed
      */
-    abstract public function render();
+    abstract public function render(): mixed;
 
     /**
      * You only should override this method *when you absolutely know what you
@@ -409,12 +384,8 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      *
      * @param string $argumentsName Name of the variable in which the ViewHelper arguments are stored
      * @param string $closureName Name of the closure which can be executed to render the child nodes
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     * @return string
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile(string $argumentsName, string $closureName, string &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): string
     {
         $execution = sprintf(
             '$renderingContext->getViewHelperInvoker()->invoke(%s::class, %s, $renderingContext, %s)',
@@ -508,9 +479,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
         $initializationPhpCode .= $accumulatedArgumentInitializationCode . chr(10) . $argumentInitializationCode . $viewHelperInitializationPhpCode;
         return [
             'initialization' => $initializationPhpCode,
-            // @todo: compile() *should* return strings, but it's not enforced in the interface.
-            //        The string cast is here to stay compatible in case something still returns for instance null.
-            'execution' => (string)$convertedViewHelperExecutionCode === '' ? "''" : $convertedViewHelperExecutionCode,
+            'execution' => $convertedViewHelperExecutionCode === '' ? "''" : $convertedViewHelperExecutionCode,
         ];
     }
 }
