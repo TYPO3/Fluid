@@ -78,5 +78,8 @@ Changelog 5.x
     * :php:`TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::enterWarmupMode()`
     * :php:`TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::isWarmupMode()`
 * Breaking: The `<f:cache.warmup>` ViewHelper has been removed.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper::validateArguments()`
+  has been removed.
+* Breaking: Custom implementations of the `validateArguments()` methods in ViewHelpers are no longer called.
 * Deprecation: Class :php:`TYPO3Fluid\Fluid\Core\ViewHelper\LenientArgumentProcessor`
   is no longer being used by Fluid v5 and will be removed with Fluid v6.
