@@ -51,7 +51,7 @@ final readonly class StrictArgumentProcessor implements ArgumentProcessorInterfa
         }
 
         // Always allow default value if argument is not required
-        if (!$definition->isRequired() && $value === $definition->getDefaultValue()) {
+        if (!$definition->isRequired() && ($value === null || $value === $definition->getDefaultValue())) {
             return true;
         }
 
