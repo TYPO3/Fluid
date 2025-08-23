@@ -91,7 +91,7 @@ final class RoundViewHelper extends AbstractViewHelper
     {
         $value = $this->arguments['value'] ?? $this->renderChildren();
 
-        if (enum_exists(\RoundingMode::class)) {
+        if (class_exists(\RoundingMode::class)) {
             $roundingMode = match ($this->arguments['roundingMode']) {
                 'HalfAwayFromZero'  => \RoundingMode::HalfAwayFromZero,
                 'HalfTowardsZero'   => \RoundingMode::HalfTowardsZero,
