@@ -441,13 +441,6 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     }
 
     /**
-     * Resets the ViewHelper state.
-     *
-     * Overwrite this method if you need to get a clean state of your ViewHelper.
-     */
-    public function resetState() {}
-
-    /**
      * @internal See interface description.
      */
     public function convert(TemplateCompiler $templateCompiler): array
