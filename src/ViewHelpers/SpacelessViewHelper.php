@@ -44,7 +44,7 @@ class SpacelessViewHelper extends AbstractViewHelper
     /**
      * @var bool
      */
-    protected $escapeOutput = false;
+    protected bool $escapeOutput = false;
 
     public function render(): string
     {

@@ -32,9 +32,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class InlineViewHelper extends AbstractViewHelper
 {
-    protected $escapeChildren = false;
+    protected ?bool $escapeChildren = false;
 
-    protected $escapeOutput = false;
+    protected bool $escapeOutput = false;
 
     public function initializeArguments(): void
     {

@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 final class ContentArgumentNameWithoutEscapeChildrenViewHelper extends AbstractViewHelper
 {
-    protected $escapeChildren = false;
+    protected ?bool $escapeChildren = false;
 
     public function initializeArguments(): void
     {

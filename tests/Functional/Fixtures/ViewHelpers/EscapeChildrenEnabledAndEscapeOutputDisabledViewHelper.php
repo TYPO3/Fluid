@@ -11,6 +11,6 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers;
 
 final class EscapeChildrenEnabledAndEscapeOutputDisabledViewHelper extends AbstractEscapingViewHelper
 {
-    protected $escapeChildren = true;
-    protected $escapeOutput = false;
+    protected ?bool $escapeChildren = true;
+    protected bool $escapeOutput = false;
 }

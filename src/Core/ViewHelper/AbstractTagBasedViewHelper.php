@@ -13,24 +13,20 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * convenience methods to register default attributes, ...
  *
  * @api
- * @todo add missing types with Fluid v5
  */
 abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
 {
     /**
      * Disable escaping of tag based ViewHelpers so that the rendered tag is not htmlspecialchar'd
-     *
-     * @var bool
      */
-    protected $escapeOutput = false;
+    protected bool $escapeOutput = false;
 
     /**
      * Tag builder instance
      *
-     * @var TagBuilder
      * @api
      */
-    protected $tag;
+    protected TagBuilder $tag;
 
     /**
      * Name of the tag to be created by this view helper
@@ -38,15 +34,15 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * @var string
      * @api
      */
-    protected $tagName = 'div';
+    protected string $tagName = 'div';
 
     /**
      * Arguments which are valid but do not have an ArgumentDefinition, e.g.
      * data- prefixed arguments.
      *
-     * @var array
+     * @var array<string, mixed>
      */
-    protected $additionalArguments = [];
+    protected array $additionalArguments = [];
 
     /**
      * Constructor
@@ -59,7 +55,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
     /**
      * @param TagBuilder $tag
      */
-    public function setTagBuilder(TagBuilder $tag)
+    public function setTagBuilder(TagBuilder $tag): void
     {
         $this->tag = $tag;
         $this->tag->setTagName($this->tagName);
@@ -70,7 +66,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      *
      * @api
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('additionalAttributes', 'array', 'Additional tag attributes. They will be added directly to the resulting HTML tag.');
         $this->registerArgument('data', 'array', 'Additional data-* attributes. They will each be added with a "data-" prefix.');
@@ -86,7 +82,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      *
      * @api
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $this->tag->reset();
@@ -118,7 +114,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         }
     }
 
-    public function handleAdditionalArguments(array $arguments)
+    public function handleAdditionalArguments(array $arguments): void
     {
         $this->additionalArguments = $arguments;
         parent::handleAdditionalArguments($arguments);
@@ -129,10 +125,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         // Skip validation of additional arguments since we want to pass all arguments to the tag
     }
 
-    /**
-     * @return string
-     */
-    public function render()
+    public function render(): string
     {
         return $this->tag->render();
     }

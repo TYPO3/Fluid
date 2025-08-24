@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 
 final class AdditionalArgumentsViewHelper extends AbstractViewHelper
 {
-    protected $escapeOutput = false;
+    protected bool $escapeOutput = false;
 
     public function initializeArguments(): void
     {

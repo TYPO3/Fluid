@@ -50,7 +50,7 @@ class SwitchViewHelper extends AbstractViewHelper
     /**
      * @var bool
      */
-    protected $escapeOutput = false;
+    protected bool $escapeOutput = false;
 
     /**
      * @var mixed

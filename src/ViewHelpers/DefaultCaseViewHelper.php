@@ -24,7 +24,7 @@ class DefaultCaseViewHelper extends AbstractViewHelper
     /**
      * @var bool
      */
-    protected $escapeOutput = false;
+    protected bool $escapeOutput = false;
 
     /**
      * @return mixed the contents of this ViewHelper if no other "Case" ViewHelper of the surrounding switch ViewHelper matches

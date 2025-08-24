@@ -24,25 +24,16 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class CustomViewHelper extends AbstractViewHelper
 {
-    /**
-     * @var bool
-     */
-    protected $escapeChildren = false;
+    protected ?bool $escapeChildren = false;
 
-    /**
-     * @var bool
-     */
-    protected $escapeOutput = false;
+    protected bool $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('page', 'string', 'An arbitrary page identifier', true);
     }
 
-    /**
-     * @return string
-     */
-    public function render()
+    public function render(): string
     {
         return 'The following is a dump of the "page"' . PHP_EOL
             . 'Argument passed to CustomViewHelper:' . PHP_EOL

@@ -46,14 +46,14 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper
     /**
      * @var bool
      */
-    protected $escapeChildren = false;
+    protected ?bool $escapeChildren = false;
 
     /**
      * Disable the output escaping interceptor so that the value is not htmlspecialchar'd twice
      *
      * @var bool
      */
-    protected $escapeOutput = false;
+    protected bool $escapeOutput = false;
 
     public function initializeArguments(): void
     {

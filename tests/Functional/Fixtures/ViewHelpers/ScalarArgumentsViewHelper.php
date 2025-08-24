@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 final class ScalarArgumentsViewHelper extends AbstractViewHelper
 {
-    protected $escapeOutput = false;
+    protected bool $escapeOutput = false;
 
     public function initializeArguments(): void
     {

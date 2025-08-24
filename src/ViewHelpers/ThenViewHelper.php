@@ -22,7 +22,7 @@ class ThenViewHelper extends AbstractViewHelper
     /**
      * @var bool
      */
-    protected $escapeOutput = false;
+    protected bool $escapeOutput = false;
 
     /**
      * Just render everything.

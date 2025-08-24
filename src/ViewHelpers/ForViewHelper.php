@@ -79,7 +79,7 @@ class ForViewHelper extends AbstractViewHelper
     /**
      * @var bool
      */
-    protected $escapeOutput = false;
+    protected bool $escapeOutput = false;
 
     public function initializeArguments(): void
     {

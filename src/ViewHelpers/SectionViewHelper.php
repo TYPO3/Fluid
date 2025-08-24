@@ -71,7 +71,7 @@ class SectionViewHelper extends AbstractViewHelper implements ViewHelperNodeInit
     /**
      * @var bool
      */
-    protected $escapeOutput = false;
+    protected bool $escapeOutput = false;
 
     /**
      * Initialize the arguments.

@@ -32,7 +32,7 @@ final class MutableTestViewHelper extends AbstractViewHelper
         $this->escapeOutput = $escapeOutput;
     }
 
-    public function registerArgument($name, $type, $description, $required = false, $defaultValue = null, $escaped = null): AbstractViewHelper
+    public function registerArgument($name, $type, $description, $required = false, $defaultValue = null, $escaped = null): static
     {
         return parent::registerArgument($name, $type, $description, $required, $defaultValue, $escaped);
     }

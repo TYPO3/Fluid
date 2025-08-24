@@ -29,11 +29,10 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * @see \TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper for a more detailed explanation and a simple usage example.
  *
  * @api
- * @todo add missing types with Fluid v5
  */
 abstract class AbstractConditionViewHelper extends AbstractViewHelper
 {
-    protected $escapeOutput = false;
+    protected bool $escapeOutput = false;
 
     private ?\Closure $thenClosure = null;
     private ?\Closure $elseClosure = null;
@@ -46,7 +45,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
     /**
      * Initializes the "then" and "else" arguments
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('then', 'mixed', 'Value to be returned if the condition if met.', false, null, true);
         $this->registerArgument('else', 'mixed', 'Value to be returned if the condition if not met.', false, null, true);
@@ -55,10 +54,9 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
     /**
      * Renders <f:then> child if $condition is true, otherwise renders <f:else> child.
      *
-     * @return mixed
      * @api
      */
-    public function render()
+    public function render(): mixed
     {
         if (static::verdict($this->arguments, $this->renderingContext)) {
             return $this->renderThenChild();
@@ -72,10 +70,8 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * to override and implement.
      *
      * @param array<string, mixed> $arguments
-     * @param RenderingContextInterface $renderingContext
-     * @return bool
      */
-    public static function verdict(array $arguments, RenderingContextInterface $renderingContext)
+    public static function verdict(array $arguments, RenderingContextInterface $renderingContext): bool
     {
         return isset($arguments['condition']) && (bool)($arguments['condition']);
     }
@@ -88,7 +84,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * @return mixed rendered ThenViewHelper or contents of <f:if> if no ThenViewHelper was found
      * @api
      */
-    protected function renderThenChild()
+    protected function renderThenChild(): mixed
     {
         // In cached templates, a closure is defined if any variant of "then" has been specified
         if ($this->thenClosure !== null) {
@@ -151,7 +147,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * @return mixed rendered ElseViewHelper or null if no ThenViewHelper was found
      * @api
      */
-    protected function renderElseChild()
+    protected function renderElseChild(): mixed
     {
         // Closures are present if ViewHelper is called from a cached template
         if ($this->elseIfClosures !== []) {

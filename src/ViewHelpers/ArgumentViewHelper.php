@@ -78,7 +78,7 @@ final class ArgumentViewHelper extends AbstractViewHelper implements ViewHelperN
     /**
      * No need to add escaping nodes since the ViewHelper doesn't output anything
      */
-    protected $escapeOutput = false;
+    protected bool $escapeOutput = false;
 
     public function initializeArguments(): void
     {

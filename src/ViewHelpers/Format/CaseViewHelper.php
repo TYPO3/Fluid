@@ -100,7 +100,7 @@ final class CaseViewHelper extends AbstractViewHelper
      *
      * @var bool
      */
-    protected $escapeChildren = false;
+    protected ?bool $escapeChildren = false;
 
     public function initializeArguments(): void
     {

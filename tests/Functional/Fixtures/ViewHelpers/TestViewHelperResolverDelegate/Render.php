@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 final class Render extends AbstractViewHelper
 {
-    protected $escapeOutput = false;
+    protected bool $escapeOutput = false;
 
     public function render(): string
     {

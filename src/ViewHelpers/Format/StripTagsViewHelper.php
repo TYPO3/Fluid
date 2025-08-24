@@ -69,7 +69,7 @@ final class StripTagsViewHelper extends AbstractViewHelper
      *
      * @var bool
      */
-    protected $escapeOutput = false;
+    protected bool $escapeOutput = false;
 
     public function initializeArguments(): void
     {
@@ -82,7 +82,7 @@ final class StripTagsViewHelper extends AbstractViewHelper
      *
      * @var bool
      */
-    protected $escapeChildren = false;
+    protected ?bool $escapeChildren = false;
 
     /**
      * Applies strip_tags() on the specified value if it's string-able.

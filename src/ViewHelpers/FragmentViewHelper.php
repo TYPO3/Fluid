@@ -116,7 +116,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
  */
 final class FragmentViewHelper extends AbstractViewHelper implements ViewHelperNodeInitializedEventInterface
 {
-    protected $escapeOutput = false;
+    protected bool $escapeOutput = false;
 
     public function initializeArguments(): void
     {

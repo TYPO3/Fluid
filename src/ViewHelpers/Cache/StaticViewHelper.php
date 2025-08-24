@@ -71,12 +71,12 @@ class StaticViewHelper extends AbstractViewHelper
     /**
      * @var bool
      */
-    protected $escapeChildren = false;
+    protected ?bool $escapeChildren = false;
 
     /**
      * @var bool
      */
-    protected $escapeOutput = false;
+    protected bool $escapeOutput = false;
 
     public function render(): mixed
     {
