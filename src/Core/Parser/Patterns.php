@@ -76,8 +76,8 @@ abstract class Patterns
      * This regular expression scans if the input string is a closing ViewHelper
      * tag.
      */
-    public static string $SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG =
-        '/^<\/(?P<NamespaceIdentifier>[a-zA-Z0-9\\.]*):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
+    public static string $SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG
+        = '/^<\/(?P<NamespaceIdentifier>[a-zA-Z0-9\\.]*):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
 
     /**
      * This regular expression splits the tag arguments into its parts

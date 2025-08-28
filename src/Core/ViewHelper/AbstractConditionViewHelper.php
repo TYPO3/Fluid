@@ -248,10 +248,10 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         // This also allows to differentiate between undefined and null states for cached templates
         foreach (['then', 'else'] as $argumentName) {
             if (array_key_exists($argumentName, $nodeArguments)) {
-                $argumentsCode['__' . $argumentName] =
-                    $nodeArguments[$argumentName] instanceof NodeInterface ?
-                    $templateCompiler->wrapViewHelperNodeArgumentEvaluationInClosure($node, $argumentName) :
-                    'function () { return ' . $nodeArguments[$argumentName] . ';}';
+                $argumentsCode['__' . $argumentName]
+                    = $nodeArguments[$argumentName] instanceof NodeInterface
+                    ? $templateCompiler->wrapViewHelperNodeArgumentEvaluationInClosure($node, $argumentName)
+                    : 'function () { return ' . $nodeArguments[$argumentName] . ';}';
             }
         }
 
@@ -327,9 +327,9 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         );
 
         return [
-            'initialization' => '// Rendering ViewHelper ' . $node->getViewHelperClassName() . chr(10) .
-                $accumulatedArgumentInitializationCode . chr(10) .
-                $argumentInitializationCode . chr(10),
+            'initialization' => '// Rendering ViewHelper ' . $node->getViewHelperClassName() . chr(10)
+                . $accumulatedArgumentInitializationCode . chr(10)
+                . $argumentInitializationCode . chr(10),
             'execution' => sprintf(
                 '$renderingContext->getViewHelperInvoker()->invoke(%s::class, %s, $renderingContext)' . chr(10),
                 get_class($this),

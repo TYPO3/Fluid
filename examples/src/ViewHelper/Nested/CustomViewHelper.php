@@ -44,10 +44,10 @@ class CustomViewHelper extends AbstractViewHelper
      */
     public function render()
     {
-        return 'The following is a dump of the "page"' . PHP_EOL .
-            'Argument passed to CustomViewHelper:' . PHP_EOL .
-            '---------------------------' . PHP_EOL .
-            var_export($this->arguments['page'], true) . PHP_EOL .
-            '---------------------------';
+        return 'The following is a dump of the "page"' . PHP_EOL
+            . 'Argument passed to CustomViewHelper:' . PHP_EOL
+            . '---------------------------' . PHP_EOL
+            . var_export($this->arguments['page'], true) . PHP_EOL
+            . '---------------------------';
     }
 }

@@ -47,34 +47,34 @@ final class SwitchCaseDefaultCaseViewHelperTest extends AbstractFunctionalTestCa
             '',
         ];
         yield 'with matching case' => [
-            '<f:switch expression="{value}">' .
-                '<f:case value="option1">bar</f:case>' .
-                '<f:case value="option2">baz</f:case>' .
-                '<f:defaultCase>default</f:defaultCase>' .
-            '</f:switch>',
+            '<f:switch expression="{value}">'
+                . '<f:case value="option1">bar</f:case>'
+                . '<f:case value="option2">baz</f:case>'
+                . '<f:defaultCase>default</f:defaultCase>'
+            . '</f:switch>',
             ['value' => 'option1'],
             'bar',
         ];
         yield 'without matching case' => [
-            '<f:switch expression="{value}">' .
-                '<f:case value="option1">bar</f:case>' .
-                '<f:case value="option2">baz</f:case>' .
-            '</f:switch>',
+            '<f:switch expression="{value}">'
+                . '<f:case value="option1">bar</f:case>'
+                . '<f:case value="option2">baz</f:case>'
+            . '</f:switch>',
             ['value' => 'anotherValue'],
             '',
         ];
         yield 'with matching default case' => [
-            '<f:switch expression="{value}">' .
-                '<f:case value="option1">bar</f:case>' .
-                '<f:defaultCase>default</f:defaultCase>' .
-            '</f:switch>',
+            '<f:switch expression="{value}">'
+                . '<f:case value="option1">bar</f:case>'
+                . '<f:defaultCase>default</f:defaultCase>'
+            . '</f:switch>',
             ['value' => 'anotherValue'],
             'default',
         ];
         yield 'comparing different types' => [
-            '<f:switch expression="{value}">' .
-                '<f:case value="1">bar</f:case>' .
-            '</f:switch>',
+            '<f:switch expression="{value}">'
+                . '<f:case value="1">bar</f:case>'
+            . '</f:switch>',
             ['value' => '1'],
             'bar',
         ];

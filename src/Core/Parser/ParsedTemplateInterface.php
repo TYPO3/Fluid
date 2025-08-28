@@ -55,7 +55,7 @@ interface ParsedTemplateInterface
      *
      * @todo remove NodeInterface from return types in Fluid v5
      */
-    public function getLayoutName(RenderingContextInterface $renderingContext): string|null|NodeInterface;
+    public function getLayoutName(RenderingContextInterface $renderingContext): string|NodeInterface|null;
 
     /**
      * Method generated on compiled templates to add ViewHelper namespaces which were defined in-template
