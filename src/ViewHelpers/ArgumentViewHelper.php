@@ -34,8 +34,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
  * in any of its arguments is not possible (e. g. you can't define an argument name
  * by using a variable).
  *
- * Example
- * ========
+ * General Example
+ * ===============
  *
  * For the following partial:
  *
@@ -70,6 +70,21 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
  *    <f:render partial="MyPartial" />
  *    <!-- "user" has been supplied as array, not as string -->
  *    <f:render partial="MyPartial" arguments="{title: 'My title', user: {firstName: 'Jane', lastName: 'Doe'}}" />
+ *
+ * Union Types
+ * ===========
+ *
+ * ..  versionchanged:: Fluid 5.0
+ *     Union types are supported for component arguments.
+ *
+ * An argument can allow multiple multiple types. In that case, the component's implementation
+ * needs to make sure that all possible variants are considered. This should be used sparingly
+ * since it can complicate the component's implementation code considerably.
+ *
+ * .. code-block:: xml
+ *
+ *    <f:argument name="number" type="int|float" />
+ *    <f:argument name="object" type="Vendor\Package\MyObjectA|Vendor\Package\MyObjectB" />
  *
  * @api
  */

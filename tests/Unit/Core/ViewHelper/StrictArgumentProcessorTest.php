@@ -734,6 +734,39 @@ final class StrictArgumentProcessorTest extends TestCase
             'expectedProcessedValue' => ['foo', 1, 2, 3],
             'expectedProcessedValidity' => true,
         ];
+
+        //
+        // Union types
+        //
+        yield [
+            'type' => 'array|string',
+            'value' => ['foo', 1, 2, 3],
+            'expectedValidity' => true,
+            'expectedProcessedValue' => ['foo', 1, 2, 3],
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => 'array|string',
+            'value' => 'foo',
+            'expectedValidity' => true,
+            'expectedProcessedValue' => 'foo',
+            'expectedProcessedValidity' => true,
+        ];
+        // No support for automatic type casting
+        yield [
+            'type' => 'array|string',
+            'value' => 123,
+            'expectedValidity' => false,
+            'expectedProcessedValue' => 123,
+            'expectedProcessedValidity' => false,
+        ];
+        yield [
+            'type' => 'array|string',
+            'value' => $dateTime,
+            'expectedValidity' => false,
+            'expectedProcessedValue' => $dateTime,
+            'expectedProcessedValidity' => false,
+        ];
     }
 
     #[Test]
