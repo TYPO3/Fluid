@@ -509,6 +509,7 @@ final class StandardVariableProviderTest extends TestCase
             ['false', 1723131119],
             ['null', 1723131119],
             ['_all', 1723131119],
+            ['_somethingElse', 1756622558],
         ];
     }
 

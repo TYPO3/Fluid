@@ -86,6 +86,8 @@ Changelog 5.x
 * Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper::validateArguments()`
   has been removed.
 * Breaking: Custom implementations of the `validateArguments()` methods in ViewHelpers are no longer called.
+* Breaking: Fluid variable names can no longer start with an underscore character (`_`). Adding such a variable to a template
+  results in an exception. Note that this doesn't affect array keys or object property names, only the name of the variable itself.
 * Deprecation: Class :php:`TYPO3Fluid\Fluid\Core\ViewHelper\LenientArgumentProcessor`
   is no longer being used by Fluid v5 and will be removed with Fluid v6.
 
