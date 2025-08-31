@@ -83,8 +83,7 @@ class StandardVariableProvider implements VariableProviderInterface
             throw new InvalidVariableIdentifierException('Invalid variable identifier: ' . $identifier, 1723131119);
         }
         if (str_starts_with($identifier, '_')) {
-            // @todo replace with exception in Fluid 5
-            trigger_error('Variable identifiers cannot start with a "_": ' . $identifier . '. This will break with Fluid v5.', E_USER_DEPRECATED);
+            throw new InvalidVariableIdentifierException('Variable identifiers cannot start with a "_": ' . $identifier, 1756622558);
         }
         $this->variables[$identifier] = $value;
     }
