@@ -158,4 +158,60 @@ final class ViewHelperArgumentTypesTest extends AbstractFunctionalTestCase
         $result = unserialize($view->render());
         self::assertSame($expectedValue, $result[$argumentName], 'cached');
     }
+
+    public static function unionTypesDataProvider(): array
+    {
+        return [
+            ['foo', 'string'],
+            [['foo'], 'array'],
+        ];
+    }
+
+    #[DataProvider('unionTypesDataProvider')]
+    #[Test]
+    public function unionTypes(mixed $argumentValue, string $expectedResult): void
+    {
+        $variables = ['argumentValue' => $argumentValue];
+        $source = '<test:unionType arg="{argumentValue}" />';
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
+        $view->assignMultiple($variables);
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        self::assertSame($expectedResult, $view->render(), 'uncached');
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
+        $view->assignMultiple($variables);
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        self::assertSame($expectedResult, $view->render(), 'cached');
+    }
+
+    public static function invalidUnionTypeThrowsExceptionDataProvider(): array
+    {
+        return [
+            [123, 1256475113],
+            [new \DateTime(), 1256475113],
+        ];
+    }
+
+    #[DataProvider('invalidUnionTypeThrowsExceptionDataProvider')]
+    #[Test]
+    public function invalidUnionTypeThrowsException(mixed $argumentValue, int $expectedExceptionCode): void
+    {
+        self::expectException(\InvalidArgumentException::class);
+        self::expectExceptionCode($expectedExceptionCode);
+
+        $variables = ['argumentValue' => $argumentValue];
+        $source = '<test:unionType arg="{argumentValue}" />';
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
+        $view->assignMultiple($variables);
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $view->render();
+    }
 }

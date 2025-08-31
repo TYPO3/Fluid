@@ -60,6 +60,8 @@ final class ComponentRenderingTest extends AbstractFunctionalTestCase
             'recursive call of one component' => ['<f:format.trim><my:recursive counter="5" /></f:format.trim>', '54321'],
             'access to variables provided by delegate' => ['<my:additionalVariable />', "my additional value\nadditionalVariable\n"],
             'additional arguments can be provided if delegate allows' => ['<my:additionalArgumentsJson foo="bar" />', '{"foo":"bar","myAdditionalVariable":"my additional value","viewHelperName":"additionalArgumentsJson"}' . "\n"],
+            'union type, array provided' => ['<my:unionTypeArgument item="{property: \'foo\'}" />', "\nfoo\n"],
+            'union type, string provided' => ['<my:unionTypeArgument item="bar" />', "\nbar\n"],
         ];
     }
 
@@ -88,6 +90,7 @@ final class ComponentRenderingTest extends AbstractFunctionalTestCase
             'missing required argument' => ['<my:testComponent />', 1237823699],
             'additional argument not allowed' => ['<my:testComponent title="TITLE" foo="bar" />', 1748903732],
             'invalid type' => ['<my:testComponent title="TITLE" tags="test" />', 1746637333],
+            'invalid union type' => ['<my:unionTypeArgument item="{true}" />', 1746637333],
             'invalid component' => ['<my:nonexistentComponent />', 1407060572],
             'fragments nested in other viewhelpers' => ['<my:namedSlots><f:if condition="1 == 0"><f:fragment>foo</f:fragment></f:if></my:namedSlots>', 1750865702],
         ];
