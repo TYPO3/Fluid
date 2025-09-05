@@ -42,6 +42,11 @@ class TagBuilder
     protected bool $forceClosingTag = false;
 
     protected bool $ignoreEmptyAttributes = false;
+    /**
+     * I'd prefer to set the default value to FALSE.
+     * Maybe we can leave it to AbstractTagBasedViewHelper in TYPO3
+     */
+    protected bool $isXHtml = true;
 
     /**
      * Constructor
@@ -168,6 +173,11 @@ class TagBuilder
         }
     }
 
+    public function isXHtml(bool $isXHtml): void
+    {
+        $this->isXHtml = $isXHtml;
+    }
+
     /**
      * Adds an attribute to the $attributes-collection
      *
@@ -213,14 +223,10 @@ class TagBuilder
                 $this->addAttribute($attributeName . '-' . $name, $value, $escapeSpecialCharacters);
             }
         } else {
-            // This should probably also check for null, but we can't do that for now because of backwards compatibility
-            if ($attributeValue === false) {
+            // Remove the attribute when it's NULL instead of FALSE, and keep the boolean values as they are
+            if ($attributeValue === null) {
                 $this->removeAttribute($attributeName);
                 return;
-            }
-
-            if ($attributeValue === true) {
-                $attributeValue = $attributeName;
             }
 
             if ($attributeValue instanceof \BackedEnum) {
@@ -232,7 +238,8 @@ class TagBuilder
             if (trim((string)$attributeValue) === '' && $this->ignoreEmptyAttributes) {
                 return;
             }
-            if ($escapeSpecialCharacters) {
+            // Escape non-boolean values
+            if (!is_bool($attributeValue) && $escapeSpecialCharacters) {
                 $attributeValue = htmlspecialchars((string)$attributeValue);
             }
             $this->attributes[$attributeName] = $attributeValue;
@@ -289,7 +296,15 @@ class TagBuilder
         }
         $output = '<' . $this->tagName;
         foreach ($this->attributes as $attributeName => $attributeValue) {
-            $output .= ' ' . $attributeName . '="' . $attributeValue . '"';
+            if ($attributeValue === true) {
+                if ($this->isXHtml) {
+                    $output .= ' ' . $attributeName . '="' . $attributeName . '"';
+                } else {
+                    $output .= ' ' . $attributeName;
+                }
+            } elseif ($attributeValue !== false) {
+                $output .= ' ' . $attributeName . '="' . $attributeValue . '"';
+            }
         }
         if ($this->hasContent() || $this->forceClosingTag) {
             $output .= '>' . $this->content . '</' . $this->tagName . '>';
