@@ -29,6 +29,8 @@ Changelog 4.x
     * :php:`TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::enterWarmupMode()`
     * :php:`TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::isWarmupMode()`
 * Deprecation: The `<f:cache.warmup>` ViewHelper is deprecated and will be removed in Fluid v5.
+* Deprecation: Replacing `<![CDATA[]]>` sections by empty lines is deprecated and will be removed in Fluid v5.
+  Method :php:`TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\NamespaceDetectionTemplateProcessor.php::replaceCdataSectionsByEmptyLines()` now emits a E_USER_DEPRECATED level error.
 
 4.4
 ---
