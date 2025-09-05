@@ -46,7 +46,7 @@ class TagBuilder
      * I'd prefer to set the default value to FALSE.
      * Maybe we can leave it to AbstractTagBasedViewHelper in TYPO3
      */
-    protected bool $isXHtml = true;
+    protected bool $requireAttributeValues = true;
 
     /**
      * Constructor
@@ -173,9 +173,9 @@ class TagBuilder
         }
     }
 
-    public function isXHtml(bool $isXHtml): void
+    public function requireAttributeValues(bool $requireAttributeValues): void
     {
-        $this->isXHtml = $isXHtml;
+        $this->requireAttributeValues = $requireAttributeValues;
     }
 
     /**
@@ -297,7 +297,7 @@ class TagBuilder
         $output = '<' . $this->tagName;
         foreach ($this->attributes as $attributeName => $attributeValue) {
             if ($attributeValue === true) {
-                if ($this->isXHtml) {
+                if ($this->requireAttributeValues) {
                     $output .= ' ' . $attributeName . '="' . $attributeName . '"';
                 } else {
                     $output .= ' ' . $attributeName;
