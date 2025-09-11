@@ -42,11 +42,6 @@ class TagBuilder
     protected bool $forceClosingTag = false;
 
     protected bool $ignoreEmptyAttributes = false;
-    /**
-     * I'd prefer to set the default value to FALSE.
-     * Maybe we can leave it to AbstractTagBasedViewHelper in TYPO3
-     */
-    protected bool $requireAttributeValues = true;
 
     /**
      * Constructor
@@ -173,11 +168,6 @@ class TagBuilder
         }
     }
 
-    public function requireAttributeValues(bool $requireAttributeValues): void
-    {
-        $this->requireAttributeValues = $requireAttributeValues;
-    }
-
     /**
      * Adds an attribute to the $attributes-collection
      *
@@ -223,10 +213,14 @@ class TagBuilder
                 $this->addAttribute($attributeName . '-' . $name, $value, $escapeSpecialCharacters);
             }
         } else {
-            // Remove the attribute when it's NULL instead of FALSE, and keep the boolean values as they are
-            if ($attributeValue === null) {
+            // Remove the attribute when it's NULL or FALSE
+            if ($attributeValue === null || $attributeValue === false) {
                 $this->removeAttribute($attributeName);
                 return;
+            }
+
+            if ($attributeValue === true) {
+                $attributeValue = $attributeName;
             }
 
             if ($attributeValue instanceof \BackedEnum) {
@@ -238,8 +232,7 @@ class TagBuilder
             if (trim((string)$attributeValue) === '' && $this->ignoreEmptyAttributes) {
                 return;
             }
-            // Escape non-boolean values
-            if (!is_bool($attributeValue) && $escapeSpecialCharacters) {
+            if ($escapeSpecialCharacters) {
                 $attributeValue = htmlspecialchars((string)$attributeValue);
             }
             $this->attributes[$attributeName] = $attributeValue;
@@ -296,15 +289,7 @@ class TagBuilder
         }
         $output = '<' . $this->tagName;
         foreach ($this->attributes as $attributeName => $attributeValue) {
-            if ($attributeValue === true) {
-                if ($this->requireAttributeValues) {
-                    $output .= ' ' . $attributeName . '="' . $attributeName . '"';
-                } else {
-                    $output .= ' ' . $attributeName;
-                }
-            } elseif ($attributeValue !== false) {
-                $output .= ' ' . $attributeName . '="' . $attributeValue . '"';
-            }
+            $output .= ' ' . $attributeName . '="' . $attributeValue . '"';
         }
         if ($this->hasContent() || $this->forceClosingTag) {
             $output .= '>' . $this->content . '</' . $this->tagName . '>';
