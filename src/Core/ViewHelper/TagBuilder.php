@@ -43,8 +43,7 @@ class TagBuilder
 
     protected bool $ignoreEmptyAttributes = false;
     /**
-     * I'd prefer to set the default value to FALSE.
-     * Maybe we can leave it to AbstractTagBasedViewHelper in TYPO3
+     * Specifies whether a value is required for boolean attributes
      */
     protected bool $requireAttributeValues = true;
 
@@ -223,12 +222,6 @@ class TagBuilder
                 $this->addAttribute($attributeName . '-' . $name, $value, $escapeSpecialCharacters);
             }
         } else {
-            // Remove the attribute when it's NULL instead of FALSE, and keep the boolean values as they are
-            if ($attributeValue === null) {
-                $this->removeAttribute($attributeName);
-                return;
-            }
-
             if ($attributeValue instanceof \BackedEnum) {
                 $attributeValue = (string)$attributeValue->value;
             } elseif ($attributeValue instanceof \UnitEnum) {
