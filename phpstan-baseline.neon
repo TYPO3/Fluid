@@ -61,6 +61,12 @@ parameters:
 			path: src/View/TemplatePaths.php
 
 		-
+			message: '#^Call to an undefined static method UnitEnum\:\:tryFrom\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/ViewHelpers/Enum/TryFromViewHelper.php
+
+		-
 			message: '#^Variable \$iterationData might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1
