@@ -99,13 +99,11 @@ class TemplateParser
      * TemplateParser directly.
      *
      * @param string $templateString The template to parse as a string
-     * @param string|null $templateIdentifier If the template has an identifying string it can be passed here to improve error reporting.
+     * @param string $templateIdentifier If the template has an identifying string it can be passed here to improve error reporting.
      * @throws Exception
      */
-    public function parse(string $templateString, ?string $templateIdentifier = null): ParsingState
+    public function parse(string $templateString, string $templateIdentifier = ''): ParsingState
     {
-        // @todo change method signature in Fluid v5 to only allow strings with empty string as default
-        $templateIdentifier ??= '';
         try {
             $this->reset();
 
@@ -120,17 +118,14 @@ class TemplateParser
         return $parsingState;
     }
 
-    /**
-     * @todo change method signature in Fluid v5 to only allow strings for templateIdentifier with empty string as default
-     */
-    public function createParsingRelatedExceptionWithContext(\Exception $error, ?string $templateIdentifier): \Exception
+    public function createParsingRelatedExceptionWithContext(\Exception $error, string $templateIdentifier): \Exception
     {
         list($line, $character, $templateCode) = $this->getCurrentParsingPointers();
         $exceptionClass = get_class($error);
         return new $exceptionClass(
             sprintf(
                 'Fluid parse error in template %s, line %d at character %d. Error: %s (error code %d). Template source chunk: %s',
-                (string)$templateIdentifier,
+                $templateIdentifier,
                 $line,
                 $character,
                 $error->getMessage(),
