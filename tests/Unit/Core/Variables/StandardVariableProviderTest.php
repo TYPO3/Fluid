@@ -149,11 +149,12 @@ final class StandardVariableProviderTest extends TestCase
     }
 
     #[Test]
-    public function sleepReturnsArrayWithVariableKey(): void
+    public function serializeContainsVariables(): void
     {
-        $subject = new StandardVariableProvider();
-        $properties = $subject->__sleep();
-        self::assertContains('variables', $properties);
+        $subject = new StandardVariableProvider(['foo' => 'bar']);
+        $serialized = serialize($subject);
+        $unserialized = unserialize($serialized);
+        self::assertSame(['foo' => 'bar'], $unserialized->getAll());
     }
 
     #[Test]

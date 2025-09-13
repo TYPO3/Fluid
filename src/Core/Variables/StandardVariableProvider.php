@@ -186,11 +186,11 @@ class StandardVariableProvider implements VariableProviderInterface
     /**
      * Clean up for serializing.
      *
-     * @return string[]
+     * @return array
      */
-    public function __sleep(): array
+    public function __serialize(): array
     {
-        return ['variables'];
+        return ['variables' => $this->variables];
     }
 
     /**
