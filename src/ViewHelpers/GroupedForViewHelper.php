@@ -156,6 +156,8 @@ class GroupedForViewHelper extends AbstractViewHelper
                 $currentGroupIndex = $currentGroupIndex->format(\DateTime::RFC850);
             } elseif (is_object($currentGroupIndex)) {
                 $currentGroupIndex = spl_object_hash($currentGroupIndex);
+            } elseif ($currentGroupIndex === null) {
+                $currentGroupIndex = '';
             }
             $groups['keys'][$currentGroupIndex] = $currentGroupKeyValue;
             $groups['values'][$currentGroupIndex][$key] = $value;

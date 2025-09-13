@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper;
 use TYPO3Fluid\Fluid\View\ViewInterface;
+use TYPO3Fluid\Fluid\ViewHelpers\Format\TrimViewHelper;
 
 final class ViewHelperVariableContainerTest extends TestCase
 {
@@ -103,11 +104,13 @@ final class ViewHelperVariableContainerTest extends TestCase
     }
 
     #[Test]
-    public function sleepReturnsExpectedPropertyNames(): void
+    public function serializeContainsObjects(): void
     {
         $subject = new ViewHelperVariableContainer();
-        $properties = $subject->__sleep();
-        self::assertContains('objects', $properties);
+        $subject->add(TrimViewHelper::class, 'foo', 'bar');
+        $serialized = serialize($subject);
+        $unserialized = unserialize($serialized);
+        self::assertSame(['foo' => 'bar'], $unserialized->getAll(TrimViewHelper::class));
     }
 
     #[Test]
