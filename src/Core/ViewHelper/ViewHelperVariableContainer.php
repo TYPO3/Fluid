@@ -154,8 +154,8 @@ class ViewHelperVariableContainer
      *
      * @return array
      */
-    public function __sleep(): array
+    public function __serialize(): array
     {
-        return ['objects'];
+        return ['objects' => $this->objects];
     }
 }
