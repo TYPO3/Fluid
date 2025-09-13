@@ -378,7 +378,6 @@ final class GroupedForViewHelperTest extends AbstractFunctionalTestCase
 
     #[DataProvider('renderDataProvider')]
     #[Test]
-    #[IgnoreDeprecations]
     public function render(string $template, array $variables, string $expected): void
     {
         $view = new TemplateView();
