@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
@@ -377,6 +378,7 @@ final class GroupedForViewHelperTest extends AbstractFunctionalTestCase
 
     #[DataProvider('renderDataProvider')]
     #[Test]
+    #[IgnoreDeprecations]
     public function render(string $template, array $variables, string $expected): void
     {
         $view = new TemplateView();

@@ -157,6 +157,11 @@ class GroupedForViewHelper extends AbstractViewHelper
             } elseif (is_object($currentGroupIndex)) {
                 $currentGroupIndex = spl_object_hash($currentGroupIndex);
             }
+            // @todo avoid null as array key with Fluid v5. IgnoreDeprecations can then be removed from
+            //       GroupedForViewHelperTest::render()
+            // elseif ($currentGroupIndex === null) {
+            //     $currentGroupIndex = '';
+            // }
             $groups['keys'][$currentGroupIndex] = $currentGroupKeyValue;
             $groups['values'][$currentGroupIndex][$key] = $value;
         }
