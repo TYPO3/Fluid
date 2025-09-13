@@ -104,6 +104,8 @@ class TemplateParser
      */
     public function parse(string $templateString, ?string $templateIdentifier = null): ParsingState
     {
+        // @todo change method signature in Fluid v5 to only allow strings with empty string as default
+        $templateIdentifier ??= '';
         try {
             $this->reset();
 
@@ -118,6 +120,9 @@ class TemplateParser
         return $parsingState;
     }
 
+    /**
+     * @todo change method signature in Fluid v5 to only allow strings for templateIdentifier with empty string as default
+     */
     public function createParsingRelatedExceptionWithContext(\Exception $error, ?string $templateIdentifier): \Exception
     {
         list($line, $character, $templateCode) = $this->getCurrentParsingPointers();
@@ -594,7 +599,7 @@ class TemplateParser
         //       should be applied to the global state, while others should only
         //       affect the local state. Maybe it's also possible to get rid
         //       of the local state altogether.
-        $innerState = $this->buildObjectTree($this->createParsingState(null), $splitArgument, self::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS);
+        $innerState = $this->buildObjectTree($this->createParsingState(''), $splitArgument, self::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS);
         // This can be removed once the outer-inner-state issue is resolved
         $state->setAvailableSlots(array_unique(array_merge(
             $state->getAvailableSlots(),
@@ -808,12 +813,12 @@ class TemplateParser
         $state->getNodeFromStack()->addChildNode($node);
     }
 
-    protected function createParsingState(?string $templateIdentifier): ParsingState
+    protected function createParsingState(string $templateIdentifier): ParsingState
     {
         $rootNode = new RootNode();
         $variableProvider = $this->renderingContext->getVariableProvider();
         $state = new ParsingState();
-        $state->setIdentifier($templateIdentifier ?? '');
+        $state->setIdentifier($templateIdentifier);
         $state->setRootNode($rootNode);
         $state->pushNodeToStack($rootNode);
         $state->setVariableProvider($variableProvider->getScopeCopy($variableProvider->getAll()));
