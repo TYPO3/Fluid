@@ -128,6 +128,25 @@ final class LenientArgumentProcessorTest extends TestCase
             [new \ArrayIterator(['bar']), 'double', false],
             [new UserWithToString('foo'), 'double', false],
 
+            // Union types just get silently ignored, unless an object is supplied
+            [true, 'array|string', true],
+            [false, 'array|string', true],
+            [2, 'array|string', true],
+            [1, 'array|string', true],
+            [0, 'array|string', true],
+            [-1, 'array|string', true],
+            [1.5, 'array|string', true],
+            ['', 'array|string', true],
+            ['test', 'array|string', true],
+            [null, 'array|string', true],
+            [new stdClass(), 'array|string', false],
+            [new stdClass(), 'array|string', false],
+            [new \DateTime('now'), 'array|string', false],
+            [[], 'array|string', true],
+            [['test'], 'array|string', true],
+            [new \ArrayIterator(['bar']), 'array|string', false],
+            [new UserWithToString('foo'), 'array|string', false],
+
             [new \ArrayIterator(['bar']), 'DateTime', false],
             ['test', 'DateTime', false],
             [null, 'DateTime', true], // @todo this can lead to PHP warnings

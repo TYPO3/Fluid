@@ -56,7 +56,12 @@ final readonly class StrictArgumentProcessor implements ArgumentProcessorInterfa
         }
 
         // Perform type validation
-        return $this->isValidType($definition->getType(), $value);
+        foreach ($definition->getUnionTypes() as $type) {
+            if ($this->isValidType($type, $value)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

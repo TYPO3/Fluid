@@ -13,6 +13,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use stdClass;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\Objects\WithCamelCaseGetter;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\Objects\WithProperties;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
 final class ViewHelperArgumentTypesTest extends AbstractFunctionalTestCase
@@ -157,5 +159,59 @@ final class ViewHelperArgumentTypesTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
         $result = unserialize($view->render());
         self::assertSame($expectedValue, $result[$argumentName], 'cached');
+    }
+
+    public static function unionTypesDataProvider(): array
+    {
+        return [
+            ['<test:unionType arg="{argumentValue}" />', ['argumentValue' => 'foo'], 'string'],
+            ['<test:unionType arg="{argumentValue}" />', ['argumentValue' => ['foo']], 'array'],
+            ['<test:objectUnionType arg="{argumentValue}" />', ['argumentValue' => new WithCamelCaseGetter()], WithCamelCaseGetter::class],
+            ['<test:objectUnionType arg="{argumentValue}" />', ['argumentValue' => new WithProperties()], WithProperties::class],
+        ];
+    }
+
+    #[DataProvider('unionTypesDataProvider')]
+    #[Test]
+    public function unionTypes(string $source, array $variables, string $expectedResult): void
+    {
+        $view = new TemplateView();
+        $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
+        $view->assignMultiple($variables);
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        self::assertSame($expectedResult, $view->render(), 'uncached');
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
+        $view->assignMultiple($variables);
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        self::assertSame($expectedResult, $view->render(), 'cached');
+    }
+
+    public static function invalidUnionTypeThrowsExceptionDataProvider(): array
+    {
+        return [
+            ['<test:unionType arg="{argumentValue}" />', ['argumentValue' => 123], 1256475113],
+            ['<test:unionType arg="{argumentValue}" />', ['argumentValue' => new \DateTime()], 1256475113],
+            ['<test:objectUnionType arg="{argumentValue}" />', ['argumentValue' => 123], 1256475113],
+            ['<test:objectUnionType arg="{argumentValue}" />', ['argumentValue' => new \DateTime()], 1256475113],
+        ];
+    }
+
+    #[DataProvider('invalidUnionTypeThrowsExceptionDataProvider')]
+    #[Test]
+    public function invalidUnionTypeThrowsException(string $source, array $variables, int $expectedExceptionCode): void
+    {
+        self::expectException(\InvalidArgumentException::class);
+        self::expectExceptionCode($expectedExceptionCode);
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
+        $view->assignMultiple($variables);
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $view->render();
     }
 }
