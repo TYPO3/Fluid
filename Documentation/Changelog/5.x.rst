@@ -83,6 +83,9 @@ Changelog 5.x
   allow `null` as template identifier.
 * Breaking: Tag attributes that are set to `null` are now removed from the tag instead of being
   interpreted as empty string in :php:`TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder`.
+* Breaking: Method :php:`TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper::validateArguments()`
+  has been removed.
+* Breaking: Custom implementations of the `validateArguments()` methods in ViewHelpers are no longer called.
 * Deprecation: Class :php:`TYPO3Fluid\Fluid\Core\ViewHelper\LenientArgumentProcessor`
   is no longer being used by Fluid v5 and will be removed with Fluid v6.
 
