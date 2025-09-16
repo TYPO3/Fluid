@@ -82,6 +82,9 @@ class StandardVariableProvider implements VariableProviderInterface
         if (in_array(strtolower($identifier), $this->disallowedIdentifiers)) {
             throw new InvalidVariableIdentifierException('Invalid variable identifier: ' . $identifier, 1723131119);
         }
+        if (str_starts_with($identifier, '_')) {
+            throw new InvalidVariableIdentifierException('Variable identifiers cannot start with a "_": ' . $identifier, 1756622558);
+        }
         $this->variables[$identifier] = $value;
     }
 
