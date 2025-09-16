@@ -8,7 +8,6 @@
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -24,35 +23,34 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  *           in the AbstractViewHelper and maintained.
  *           We'll try to resolve this restriction midterm, but you should
  *           not fully implement ViewHelperInterface yourself for now.
- * @todo add missing types with Fluid v5
  */
 interface ViewHelperInterface
 {
     /**
      * @return ArgumentDefinition[]
      */
-    public function prepareArguments();
+    public function prepareArguments(): array;
 
     /**
      * @param array<string, mixed> $arguments
      */
-    public function setArguments(array $arguments);
+    public function setArguments(array $arguments): void;
 
     public function getContentArgumentName(): ?string;
 
-    public function setViewHelperNode(ViewHelperNode $node);
+    public function setViewHelperNode(ViewHelperNode $node): void;
 
     /**
      * @param RenderingContextInterface $renderingContext
      */
-    public function setRenderingContext(RenderingContextInterface $renderingContext);
+    public function setRenderingContext(RenderingContextInterface $renderingContext): void;
 
     /**
      * Initialize the arguments of the ViewHelper, and call the render() method of the ViewHelper.
      *
      * @return mixed the rendered ViewHelper.
      */
-    public function initializeArgumentsAndRender();
+    public function initializeArgumentsAndRender(): mixed;
 
     /**
      * Method which can be implemented in any ViewHelper if that ViewHelper desires
@@ -61,7 +59,7 @@ interface ViewHelperInterface
      *
      * @param array<string, mixed> $arguments
      */
-    public function handleAdditionalArguments(array $arguments);
+    public function handleAdditionalArguments(array $arguments): void;
 
     /**
      * Method which can be implemented in any ViewHelper if that ViewHelper desires
@@ -70,14 +68,12 @@ interface ViewHelperInterface
      *
      * @param array<string, mixed> $arguments
      */
-    public function validateAdditionalArguments(array $arguments);
+    public function validateAdditionalArguments(array $arguments): void;
 
     /**
      * Called when being inside a cached template.
-     *
-     * @param \Closure $renderChildrenClosure
      */
-    public function setRenderChildrenClosure(\Closure $renderChildrenClosure);
+    public function setRenderChildrenClosure(\Closure $renderChildrenClosure): void;
 
     /**
      * Main method called at compile time to turn this ViewHelper
@@ -104,13 +100,7 @@ interface ViewHelperInterface
      */
     public function convert(TemplateCompiler $templateCompiler): array;
 
-    /**
-     * @return bool
-     */
-    public function isChildrenEscapingEnabled();
+    public function isChildrenEscapingEnabled(): bool;
 
-    /**
-     * @return bool
-     */
-    public function isOutputEscapingEnabled();
+    public function isOutputEscapingEnabled(): bool;
 }

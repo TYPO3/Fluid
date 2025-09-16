@@ -37,24 +37,6 @@ parameters:
 			path: src/Core/Variables/JSONVariableProvider.php
 
 		-
-			message: '#^Call to TYPO3Fluid\\Fluid\\Core\\ViewHelper\\AbstractViewHelper\:\:handleAdditionalArguments\(\) on a separate line has no effect\.$#'
-			identifier: staticMethod.resultUnused
-			count: 1
-			path: src/Core/ViewHelper/AbstractTagBasedViewHelper.php
-
-		-
-			message: '#^Call to TYPO3Fluid\\Fluid\\Core\\ViewHelper\\AbstractViewHelper\:\:initialize\(\) on a separate line has no effect\.$#'
-			identifier: staticMethod.resultUnused
-			count: 1
-			path: src/Core/ViewHelper/AbstractTagBasedViewHelper.php
-
-		-
-			message: '#^Method TYPO3Fluid\\Fluid\\Core\\ViewHelper\\AbstractViewHelper\:\:handleAdditionalArguments\(\) has TYPO3Fluid\\Fluid\\Core\\ViewHelper\\Exception in PHPDoc @throws tag but it''s not thrown\.$#'
-			identifier: throws.unusedType
-			count: 1
-			path: src/Core/ViewHelper/AbstractViewHelper.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_unique expects an array of values castable to string, array\<array\<string\>\|string\> given\.$#'
 			identifier: argument.type
 			count: 2
@@ -71,9 +53,3 @@ parameters:
 			identifier: deadCode.unreachable
 			count: 1
 			path: tests/Functional/ViewHelpers/StaticCacheable/NotSharedStaticCompilableViewHelperTest.php
-
-		-
-			message: '#^Call to TYPO3Fluid\\Fluid\\Core\\ViewHelper\\AbstractViewHelper\:\:handleAdditionalArguments\(\) on a separate line has no effect\.$#'
-			identifier: staticMethod.resultUnused
-			count: 1
-			path: tests/Unit/Core/Fixtures/TestViewHelper.php
