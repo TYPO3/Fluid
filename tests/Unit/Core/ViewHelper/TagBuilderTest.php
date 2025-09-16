@@ -284,7 +284,7 @@ final class TagBuilderTest extends TestCase
         return [
             'value false' => [false, '<foo />'],
             'value true' => [true, '<foo async="async" />'],
-            'value null' => [null, '<foo async="" />'],
+            'value null' => [null, '<foo />'],
             'string false' => ['false', '<foo async="false" />'],
             'string true' => ['true', '<foo async="true" />'],
             'string null' => ['null', '<foo async="null" />'],

@@ -213,8 +213,8 @@ class TagBuilder
                 $this->addAttribute($attributeName . '-' . $name, $value, $escapeSpecialCharacters);
             }
         } else {
-            // This should probably also check for null, but we can't do that for now because of backwards compatibility
-            if ($attributeValue === false) {
+            // Remove the attribute when it's NULL or FALSE
+            if ($attributeValue === null || $attributeValue === false) {
                 $this->removeAttribute($attributeName);
                 return;
             }

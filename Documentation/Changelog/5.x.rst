@@ -81,6 +81,8 @@ Changelog 5.x
 * Breaking: `TYPO3Fluid\Fluid\Core\Parser\TemplateParser::parse()` and
   `TYPO3Fluid\Fluid\Core\Parser\TemplateParser::createParsingRelatedExceptionWithContext()` no longer
   allow `null` as template identifier.
+* Breaking: Tag attributes that are set to `null` are now removed from the tag instead of being
+  interpreted as empty string in :php:`TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder`.
 * Deprecation: Class :php:`TYPO3Fluid\Fluid\Core\ViewHelper\LenientArgumentProcessor`
   is no longer being used by Fluid v5 and will be removed with Fluid v6.
 
