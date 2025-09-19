@@ -12,12 +12,14 @@ namespace TYPO3Fluid\Fluid\Tools;
 use Composer\Autoload\ClassLoader;
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Core\Parser\Patterns;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\JSONVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Exception;
 use TYPO3Fluid\Fluid\Schema\SchemaGenerator;
 use TYPO3Fluid\Fluid\Schema\ViewHelperFinder;
+use TYPO3Fluid\Fluid\TemplateScanner\TemplateScanner;
 use TYPO3Fluid\Fluid\View\AbstractTemplateView;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 use TYPO3Fluid\Fluid\View\TemplateView;
@@ -30,6 +32,7 @@ final class ConsoleRunner
     private const COMMAND_HELP = 'help';
     private const COMMAND_RUN = 'run';
     private const COMMAND_SCHEMA = 'schema';
+    private const COMMAND_WARMUP = 'warmup';
 
     private const ARGUMENT_HELP = 'help';
     private const ARGUMENT_SOCKET = 'socket';
@@ -44,11 +47,14 @@ final class ConsoleRunner
     private const ARGUMENT_PARTIALROOTPATHS = 'partialRootPaths';
     private const ARGUMENT_RENDERINGCONTEXT = 'renderingContext';
     private const ARGUMENT_DESTINATION = 'destination';
+    private const ARGUMENT_PATHS = 'paths';
+    private const ARGUMENT_EXTENSIONS = 'extensions';
 
     private array $commandDesccriptions = [
         self::COMMAND_HELP => 'Show this help screen',
         self::COMMAND_RUN => 'Run fluid code, either interactively or file-based',
         self::COMMAND_SCHEMA => 'Generate xsd schema files based on all available ViewHelper classes',
+        self::COMMAND_WARMUP => 'Warmup template cache',
     ];
 
     private array $argumentDescriptions = [
@@ -71,6 +77,11 @@ final class ConsoleRunner
         self::COMMAND_SCHEMA => [
             self::ARGUMENT_HELP => 'Shows usage examples',
             self::ARGUMENT_DESTINATION => 'Destination folder where the schema files should be written to',
+        ],
+        self::COMMAND_WARMUP => [
+            self::ARGUMENT_PATHS => 'Paths that should be checked for template files for warmup',
+            self::ARGUMENT_CACHEDIRECTORY => 'Path to a directory used as cache for compiled Fluid templates',
+            self::ARGUMENT_EXTENSIONS => 'Comma-separated list of file extensions that should be treated as Fluid templates (default: html,txt,xml)',
         ],
     ];
 
@@ -101,6 +112,9 @@ final class ConsoleRunner
 
             case self::COMMAND_SCHEMA:
                 return $this->handleSchemaCommand($arguments, $autoloader);
+
+            case self::COMMAND_WARMUP:
+                return $this->handleWarmupCommand($arguments);
 
             case self::COMMAND_RUN:
             default:
@@ -149,6 +163,81 @@ final class ConsoleRunner
             file_put_contents($destination . 'schema_' . $fileName . '.xsd', $schema->asXml());
         }
         return '';
+    }
+
+    private function handleWarmupCommand(array $arguments): string
+    {
+        // @todo add argument for global namespaces
+        $paths = $arguments[self::ARGUMENT_PATHS] ?? [];
+        $cacheDirectory = $arguments[self::ARGUMENT_CACHEDIRECTORY] ?? '';
+        $extensions = explode(',', $arguments[self::ARGUMENT_EXTENSIONS] ?? '');
+        if ($paths === []) {
+            throw new \InvalidArgumentException(
+                'At least one path needs to be supplied to perform cache warmup.',
+            );
+        }
+        if ($cacheDirectory === '') {
+            throw new \InvalidArgumentException(
+                'Cache directory needs to be supplied to perform cache warmup.',
+            );
+        }
+
+        $templateScanner = new TemplateScanner();
+        $templates = $extensions !== []
+            ? $templateScanner->findTemplatesInPaths($paths)
+            : $templateScanner->findTemplatesInPaths($paths, $extensions);
+        $scanResults = $templateScanner->scanTemplateFilesForIssues($templates);
+
+        $cache = new SimpleFileCache($cacheDirectory);
+
+        $output = [];
+        foreach ($scanResults as $result) {
+            $errors = [];
+            foreach ($result->errors as $error) {
+                $errors[] = sprintf(
+                    'Parsing error triggered in %s, line %d: %s',
+                    $error->getFile(),
+                    $error->getLine(),
+                    $error->getMessage(),
+                );
+            }
+
+            foreach ($result->deprecations as $deprecation) {
+                $errors[] = sprintf(
+                    'Deprecation triggered in %s, line %d: %s',
+                    $deprecation->file,
+                    $deprecation->line,
+                    $deprecation->message,
+                );
+            }
+
+            if ($result->canBeCompiled()) {
+                try {
+                    $cachingRenderingContext = new RenderingContext();
+                    $cachingRenderingContext->setCache($cache);
+                    $cachingRenderingContext->getTemplateCompiler()->store(
+                        $result->identifier,
+                        $result->parsedTemplate,
+                    );
+                } catch (\Exception $e) {
+                    $errors[] = sprintf(
+                        'Compilation error triggered in %s, line %s: %s',
+                        $e->getFile(),
+                        $e->getLine(),
+                        $e->getMessage(),
+                    );
+                }
+            } else {
+                $errors[] = 'Template cannot be compiled.';
+            }
+
+            if ($errors !== []) {
+                $title = sprintf('Template %s (%s)', $result->path, $result->identifier);
+                $output[] = implode(PHP_EOL . '  ', [$title, ...$errors]);
+            }
+        }
+
+        return implode(PHP_EOL . PHP_EOL, $output) . PHP_EOL;
     }
 
     /**
@@ -356,6 +445,9 @@ final class ConsoleRunner
         }
         if (isset($parsed[self::ARGUMENT_PARTIALROOTPATHS])) {
             $parsed[self::ARGUMENT_PARTIALROOTPATHS] = (array)$parsed[self::ARGUMENT_PARTIALROOTPATHS];
+        }
+        if (isset($parsed[self::ARGUMENT_PATHS])) {
+            $parsed[self::ARGUMENT_PATHS] = (array)$parsed[self::ARGUMENT_PATHS];
         }
         return $parsed;
     }
