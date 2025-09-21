@@ -166,27 +166,125 @@ final class TemplatePathsTest extends TestCase
         self::assertSame('source_d78fda63144c5c84_DummyController_dummyAction_html', $instance->getTemplateIdentifier('DummyController', 'dummyAction'));
     }
 
-    #[Test]
-    public function testActionTemplateWithControllerAndAction(): void
+    public static function getTemplateIdentifierDataProvider(): array
     {
-        $subject = new TemplatePaths();
-        $baseTemplatePath = __DIR__ . '/Fixtures';
-        $subject->setTemplateRootPaths([$baseTemplatePath]);
-        $foundFixture = $subject->resolveTemplateFileForControllerAndActionAndFormat('ARandomController', 'TestTemplate');
-        self::assertSame($baseTemplatePath . '/ARandomController/TestTemplate.html', $foundFixture);
-        $identifier = $subject->getTemplateIdentifier('ARandomController', 'TestTemplate');
-        self::assertStringStartsWith('TestTemplate_html_', $identifier);
+        return [
+            [
+                __DIR__ . '/Fixtures',
+                'ARandomController',
+                'TestTemplate',
+                'TestTemplate_html_',
+            ],
+            [
+                __DIR__ . '/Fixtures',
+                '',
+                'UnparsedTemplateFixture',
+                'UnparsedTemplateFixture_html_',
+            ],
+        ];
     }
 
     #[Test]
-    public function testActionTemplateWithEmptyController(): void
-    {
+    #[DataProvider('getTemplateIdentifierDataProvider')]
+    public function getTemplateIdentifier(
+        string $templatePath,
+        string $controllerName,
+        string $actionName,
+        string $expectedPrefix,
+    ): void {
         $subject = new TemplatePaths();
-        $baseTemplatePath = __DIR__ . '/Fixtures';
-        $subject->setTemplateRootPaths([$baseTemplatePath]);
-        $foundFixture = $subject->resolveTemplateFileForControllerAndActionAndFormat('', 'UnparsedTemplateFixture');
-        self::assertSame($baseTemplatePath . '/UnparsedTemplateFixture.html', $foundFixture);
-        $identifier = $subject->getTemplateIdentifier('', 'UnparsedTemplateFixture');
-        self::assertStringStartsWith('UnparsedTemplateFixture_html_', $identifier);
+        $subject->setTemplateRootPaths([$templatePath]);
+        $identifier = $subject->getTemplateIdentifier($controllerName, $actionName);
+        self::assertStringStartsWith($expectedPrefix, $identifier);
+    }
+
+    public static function resolveTemplateFileForControllerAndActionAndFormatDataProvider(): array
+    {
+        return [
+            'with controller and action' => [
+                [__DIR__ . '/Fixtures'],
+                'ARandomController',
+                'TestTemplate',
+                __DIR__ . '/Fixtures/ARandomController/TestTemplate.html',
+            ],
+            'only with action' => [
+                [__DIR__ . '/Fixtures'],
+                '',
+                'UnparsedTemplateFixture',
+                __DIR__ . '/Fixtures/UnparsedTemplateFixture.html',
+            ],
+            'lowercase action' => [
+                [__DIR__ . '/Fixtures'],
+                '',
+                'unparsedTemplateFixture',
+                __DIR__ . '/Fixtures/UnparsedTemplateFixture.html',
+            ],
+            'action includes format' => [
+                [__DIR__ . '/Fixtures'],
+                '',
+                'UnparsedTemplateFixture.html',
+                __DIR__ . '/Fixtures/UnparsedTemplateFixture.html',
+            ],
+            'action includes path' => [
+                [__DIR__ . '/Fixtures'],
+                '',
+                'ARandomController/Sub/SubTemplate',
+                __DIR__ . '/Fixtures/ARandomController/Sub/SubTemplate.html',
+            ],
+            'controller includes path' => [
+                [__DIR__ . '/Fixtures'],
+                'ARandomController/Sub',
+                'SubTemplate',
+                __DIR__ . '/Fixtures/ARandomController/Sub/SubTemplate.html',
+            ],
+            'controller includes backslash' => [
+                [__DIR__ . '/Fixtures'],
+                'ARandomController\Sub',
+                'SubTemplate',
+                __DIR__ . '/Fixtures/ARandomController/Sub/SubTemplate.html',
+            ],
+            'template exists only in first path' => [
+                [__DIR__ . '/Fixtures/TemplateResolving/Templates1', __DIR__ . '/Fixtures/TemplateResolving/Templates2'],
+                '',
+                'OnlyInFirst',
+                __DIR__ . '/Fixtures/TemplateResolving/Templates1/OnlyInFirst.html',
+            ],
+            'template exists only in second path' => [
+                [__DIR__ . '/Fixtures/TemplateResolving/Templates1', __DIR__ . '/Fixtures/TemplateResolving/Templates2'],
+                '',
+                'OnlyInSecond',
+                __DIR__ . '/Fixtures/TemplateResolving/Templates2/OnlyInSecond.html',
+            ],
+            'template exists in both paths' => [
+                [__DIR__ . '/Fixtures/TemplateResolving/Templates1', __DIR__ . '/Fixtures/TemplateResolving/Templates2'],
+                '',
+                'InBoth',
+                __DIR__ . '/Fixtures/TemplateResolving/Templates2/InBoth.html',
+            ],
+            'non-existent path is skipped' => [
+                [__DIR__ . '/Fixtures/TemplateResolving/Templates1', __DIR__ . '/Fixtures/TemplateResolving/TemplatesFoo'],
+                '',
+                'OnlyInFirst',
+                __DIR__ . '/Fixtures/TemplateResolving/Templates1/OnlyInFirst.html',
+            ],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('resolveTemplateFileForControllerAndActionAndFormatDataProvider')]
+    public function resolveTemplateFileForControllerAndActionAndFormat(
+        array $templatePaths,
+        string $controllerName,
+        string $actionName,
+        string $expectedPath,
+    ): void {
+        $subject = new TemplatePaths();
+        $subject->setTemplateRootPaths($templatePaths);
+        // Without runtime cache
+        $foundFixture = $subject->resolveTemplateFileForControllerAndActionAndFormat($controllerName, $actionName);
+        self::assertSame($expectedPath, $foundFixture);
+        // With runtime cache
+        $foundFixture = $subject->resolveTemplateFileForControllerAndActionAndFormat($controllerName, $actionName);
+        self::assertSame($expectedPath, $foundFixture);
     }
 }
