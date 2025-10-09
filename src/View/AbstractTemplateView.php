@@ -133,7 +133,6 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
     {
         $templateRenderingContext = $this->getCurrentRenderingContext();
         if ($actionName) {
-            $actionName = ucfirst($actionName);
             $templateRenderingContext->setControllerAction($actionName);
         }
         try {
