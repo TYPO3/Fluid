@@ -41,6 +41,7 @@ use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
  */
 class TemplatePaths
 {
+    public const FLUID_EXTENSION = 'fluid';
     public const DEFAULT_FORMAT = 'html';
     public const CONFIG_TEMPLATEROOTPATHS = 'templateRootPaths';
     public const CONFIG_LAYOUTROOTPATHS = 'layoutRootPaths';
@@ -544,13 +545,16 @@ class TemplatePaths
     {
         // Create array of possible template paths. This includes:
         // * with and without format as file extension
+        // * with and without *.fluid.* file extension
         // * fallback to uppercase file name
         $possibleTemplates = [];
         foreach (array_reverse($paths) as $path) {
+            $possibleTemplates[] = $path . $fileName . '.' . static::FLUID_EXTENSION . '.' . $format;
             $possibleTemplates[] = $path . $fileName . '.' . $format;
             $possibleTemplates[] = $path . $fileName;
             $uppercaseName = ucfirst($fileName);
             if ($uppercaseName !== $fileName) {
+                $possibleTemplates[] = $path . $uppercaseName . '.' . static::FLUID_EXTENSION . '.' . $format;
                 $possibleTemplates[] = $path . $uppercaseName . '.' . $format;
                 $possibleTemplates[] = $path . $uppercaseName;
             }
