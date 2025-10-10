@@ -155,7 +155,7 @@ final class TemplatePathsTest extends TestCase
         $this->expectException(InvalidTemplateResourceException::class);
         $instance = new TemplatePaths();
         $method = new \ReflectionMethod($instance, 'resolveFileInPaths');
-        $method->invoke($instance, ['/not/', '/found/'], 'notfound.html');
+        $method->invoke($instance, ['/not/', '/found/'], 'notfound.html', 'html');
     }
 
     #[Test]
@@ -216,8 +216,8 @@ final class TemplatePathsTest extends TestCase
             'lowercase action' => [
                 [__DIR__ . '/Fixtures'],
                 '',
-                'unparsedTemplateFixture',
-                __DIR__ . '/Fixtures/UnparsedTemplateFixture.html',
+                'lowercaseTemplateFixture',
+                __DIR__ . '/Fixtures/lowercaseTemplateFixture.html',
             ],
             'action includes format' => [
                 [__DIR__ . '/Fixtures'],
