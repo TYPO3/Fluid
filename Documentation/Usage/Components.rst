@@ -25,6 +25,12 @@ more reusable:
     :ref:`<f:argument> ViewHelper <typo3fluid-fluid-argument>`), making them less
     error-prone.
 
+..  warning::
+    ViewHelpers that depend on the RenderingContext to find parent ViewHelpers, 
+    expecially ViewHelpers like the TYPO3 specific 
+    `Form.textfield ViewHelper <f:form.textfield> <https://docs.typo3.org/permalink/t3viewhelper:typo3-fluid-form-textfield>`_
+    will not work.
+
 .. _components-setup:
 
 Basic Setup
