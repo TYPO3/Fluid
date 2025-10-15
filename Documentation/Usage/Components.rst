@@ -8,7 +8,7 @@ Components
 
 ..  versionadded:: Fluid 4.3
 
-    You can used command `composer show typo3fluid/fluid` to determine the 
+    You can run `composer show typo3fluid/fluid` to determine the  Fluid
     version you are using. Fluid 4.3 is automatically shipped with 
     TYPO3 v13.4.
 
