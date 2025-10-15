@@ -31,6 +31,9 @@ more reusable:
     `Form.textfield ViewHelper <f:form.textfield> <https://docs.typo3.org/permalink/t3viewhelper:typo3-fluid-form-textfield>`_
     will not work.
 
+    The purpose of components is to be as reusable as possible. They should avoid 
+    side-effects and all communication should ideally be one-way through their arguments.
+
 .. _components-setup:
 
 Basic Setup
