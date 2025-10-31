@@ -501,12 +501,24 @@ final class StandardVariableProviderTest extends TestCase
         self::assertEquals($expected, $result);
     }
 
+    public static function exceptionIsThrownForInvalidVariableIdentifierDataProvider(): array
+    {
+        return [
+            ['true', 1723131119],
+            ['TrUe', 1723131119],
+            ['false', 1723131119],
+            ['null', 1723131119],
+            ['_all', 1723131119],
+        ];
+    }
+
     #[Test]
-    public function exceptionIsThrownForInvalidVariableIdentifier(): void
+    #[DataProvider('exceptionIsThrownForInvalidVariableIdentifierDataProvider')]
+    public function exceptionIsThrownForInvalidVariableIdentifier(string $identifier, int $exceptionCode): void
     {
         self::expectException(InvalidVariableIdentifierException::class);
-        self::expectExceptionCode(1723131119);
+        self::expectExceptionCode($exceptionCode);
         $subject = new StandardVariableProvider();
-        $subject->add('TrUe', false);
+        $subject->add($identifier, false);
     }
 }
