@@ -29,6 +29,9 @@ Changelog 4.x
     * :php:`TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::enterWarmupMode()`
     * :php:`TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::isWarmupMode()`
 * Deprecation: The `<f:cache.warmup>` ViewHelper is deprecated and will be removed in Fluid v5.
+* Deprecation: Fluid variable names can no longer start with an underscore character (`_`). Adding such a variable to a template
+  now emits a E_USER_DEPRECATED level error and will result in an exception in Fluid v5. Note that this doesn't affect array
+  keys or object property names, only the name of the variable itself.
 
 4.4
 ---
