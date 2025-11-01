@@ -33,7 +33,7 @@ final class MaxViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @return mixed The lowest value
+     * @return mixed The highest value
      */
     public function render(): mixed
     {
