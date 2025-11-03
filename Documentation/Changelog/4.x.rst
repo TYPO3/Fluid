@@ -32,6 +32,8 @@ Changelog 4.x
 * Deprecation: Fluid variable names can no longer start with an underscore character (`_`). Adding such a variable to a template
   now emits a E_USER_DEPRECATED level error and will result in an exception in Fluid v5. Note that this doesn't affect array
   keys or object property names, only the name of the variable itself.
+* Deprecation: Replacing `<![CDATA[]]>` sections by empty lines is deprecated and will be removed in Fluid v5.
+  Method :php:`TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\NamespaceDetectionTemplateProcessor.php::replaceCdataSectionsByEmptyLines()` now emits a E_USER_DEPRECATED level error.
 
 4.4
 ---

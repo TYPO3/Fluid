@@ -51,9 +51,18 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
      *
      * @todo It should be evaluated if this is really necessary. If it is, it should
      *       be moved to a separate TemplateProcessor (which would be a breaking change)
+     *
+     * @deprecated since Fluid v4.5, will be removed in Fluid v5.0.
      */
     public function replaceCdataSectionsByEmptyLines(string $templateSource): string
     {
+        if (str_contains($templateSource, '<![CDATA[')) {
+            trigger_error(
+                'Replacing cdata sections by empty lines is deprecated and will be removed in Fluid v5.0.',
+                E_USER_DEPRECATED,
+            );
+        }
+
         $parts = preg_split('/(\<\!\[CDATA\[|\]\]\>)/', $templateSource, -1, PREG_SPLIT_DELIM_CAPTURE);
 
         $balance = 0;
