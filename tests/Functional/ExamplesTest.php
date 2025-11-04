@@ -199,7 +199,7 @@ final class ExamplesTest extends AbstractFunctionalTestCase
             'example_errorhandling.php' => [
                 'example_errorhandling.php',
                 [
-                    'View error: The Fluid template files',
+                    'View error: The Fluid template file',
                     'Section rendering error: Section "DoesNotExist" does not exist. Section rendering is mandatory; "optional" is false.',
                     'ViewHelper error: Undeclared arguments passed to ViewHelper TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper: notregistered. Valid arguments are: then, else, condition - Offending code: <f:if notregistered="1" />',
                     'Parser error: The ViewHelper "<f:invalid>" could not be resolved.',
