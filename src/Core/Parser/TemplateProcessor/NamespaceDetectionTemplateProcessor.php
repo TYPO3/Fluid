@@ -17,7 +17,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 /**
  * This template processor takes care of the following things:
  *
- *   - replace cdata sections with empty lines (including nested cdata)
  *   - register/ignore namespaces through xmlns and shorthand syntax
  *   - report any unregistered/unignored namespaces through exception
  */
@@ -39,46 +38,8 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
      */
     public function preProcessSource(string $templateSource): string
     {
-        $templateSource = $this->replaceCdataSectionsByEmptyLines($templateSource);
         $templateSource = $this->registerNamespacesFromTemplateSource($templateSource);
         return $templateSource;
-    }
-
-    /**
-     * Replaces all cdata sections with empty lines to exclude it from further
-     * processing in the templateParser while maintaining the line-count
-     * of the template string for the exception handler to reference to.
-     *
-     * @todo It should be evaluated if this is really necessary. If it is, it should
-     *       be moved to a separate TemplateProcessor (which would be a breaking change)
-     *
-     * @deprecated since Fluid v4.5, will be removed in Fluid v5.0.
-     */
-    public function replaceCdataSectionsByEmptyLines(string $templateSource): string
-    {
-        if (str_contains($templateSource, '<![CDATA[')) {
-            trigger_error(
-                'Replacing cdata sections by empty lines is deprecated and will be removed in Fluid v5.0.',
-                E_USER_DEPRECATED,
-            );
-        }
-
-        $parts = preg_split('/(\<\!\[CDATA\[|\]\]\>)/', $templateSource, -1, PREG_SPLIT_DELIM_CAPTURE);
-
-        $balance = 0;
-        foreach ($parts as $index => $part) {
-            if ($part === '<![CDATA[') {
-                $balance++;
-            }
-            if ($balance > 0) {
-                $parts[$index] = str_repeat(PHP_EOL, substr_count($part, PHP_EOL));
-            }
-            if ($part === ']]>') {
-                $balance--;
-            }
-        }
-
-        return implode('', $parts);
     }
 
     /**

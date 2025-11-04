@@ -100,7 +100,7 @@ abstract class Patterns
      * This pattern detects CDATA sections and outputs the text between opening
      * and closing CDATA.
      */
-    public static string $SCAN_PATTERN_CDATA = '/^<!\[CDATA\[(.*?)\]\]>$/s';
+    public static string $SCAN_PATTERN_CDATA = '/^<!\[CDATA\[(?P<CDataContent>.*?)\]\]>$/s';
 
     /**
      * Pattern which splits the shorthand syntax into different tokens. The
@@ -118,6 +118,23 @@ abstract class Patterns
 				)+
 			}                                 # End of shorthand syntax
 		)/x';
+
+    /**
+     * Pattern which splits the shorthand syntax in CDATA sections into different tokens. The
+     * "shorthand syntax" is everything like {{{...}}}
+     */
+    public static string $SPLIT_PATTERN_SHORTHANDSYNTAX_IN_CDATA = '/
+    (
+        {{{                               # Start of shorthand syntax
+            (?:                           # Shorthand syntax is either composed of...
+                [a-zA-Z0-9\|\->_:=,.()*+\^\/\%] # Various characters including math operations
+                |"(?:\\\"|[^"])*"         # Double-quoted strings
+                |\'(?:\\\\\'|[^\'])*\'    # Single-quoted strings
+                |(?R)                     # Other shorthand syntaxes inside, albeit not in a quoted string
+                |\s+                      # Spaces
+            )+
+        }}}                               # End of shorthand syntax
+    )/x';
 
     /**
      * Pattern which detects the object accessor syntax:
@@ -215,6 +232,12 @@ abstract class Patterns
 				)                                                  # End array sub-match
 			}                                                      # Each array ends with }
 		)$/x';
+
+    /**
+     * Pattern to remove additional curly braces for variables, inline viewhelpers and expressions in
+     * CDATA sections. After removal, the normal SCAN patterns can be used to interpret the syntax.
+     */
+    public static string $SCAN_PATTERN_SHORTHANDSYNTAX_IN_CDATA = '/^{{(?P<ExpressionVariable>.*?)}}$/';
 
     /**
      * This pattern splits an array into its parts, each part consists of a key and a value.
