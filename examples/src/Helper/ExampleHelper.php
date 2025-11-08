@@ -41,13 +41,18 @@ class ExampleHelper
         ]);
 
         // Configure View's caching to use system temp dir (typically /tmp und unix) as caching directory.
-        $cachePath = sys_get_temp_dir() . '/' . 'fluid-examples';
+        $cachePath = $this->getCachePath();
         if (!is_dir($cachePath)) {
             mkdir($cachePath);
         }
         $view->getRenderingContext()->setCache(new SimpleFileCache($cachePath));
 
         return $view;
+    }
+
+    private function getCachePath(): string
+    {
+        return __DIR__ . '/../../cache';
     }
 
     /**
@@ -63,7 +68,7 @@ class ExampleHelper
 
     public function cleanup(): void
     {
-        $cachePath = sys_get_temp_dir() . '/' . 'fluid-examples';
+        $cachePath = $this->getCachePath();
         if (!is_dir($cachePath)) {
             return;
         }
