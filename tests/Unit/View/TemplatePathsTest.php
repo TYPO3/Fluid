@@ -91,42 +91,40 @@ final class TemplatePathsTest extends TestCase
         self::assertSame($value, $subject->$getter());
     }
 
-    public static function getResolveFilesMethodTestValues(): array
-    {
-        return [
-            ['resolveAvailableTemplateFiles', 'setTemplateRootPaths'],
-            ['resolveAvailablePartialFiles', 'setPartialRootPaths'],
-            ['resolveAvailableLayoutFiles', 'setLayoutRootPaths'],
-        ];
-    }
-
-    #[DataProvider('getResolveFilesMethodTestValues')]
     #[Test]
-    public function testResolveFilesMethodCallsResolveFilesInFolders(string $method, string $pathsMethod): void
+    public function testResolveAvailableTemplateFiles(): void
     {
-        $subject = $this->getMockBuilder(TemplatePaths::class)->onlyMethods(['resolveFilesInFolders'])->getMock();
-        $subject->$pathsMethod(['foo']);
-        $subject->expects(self::once())->method('resolveFilesInFolders')->with(self::anything(), 'format');
-        $subject->$method('format', 'format');
-    }
+        $examplesPath = __DIR__ . '/../../../examples/';
+        $instance = new TemplatePaths();
+        $instance->setLayoutRootPaths([$examplesPath . 'Resources/Private/Layouts/']);
+        $instance->setPartialRootPaths([$examplesPath . 'Resources/Private/Partials/']);
+        $instance->setTemplateRootPaths([$examplesPath . 'Resources/Private/Templates/']);
+        $instance->setFormat('html');
 
-    #[Test]
-    public function testResolveFilesInFolders(): void
-    {
-        $subject = new TemplatePaths();
-        $method = new \ReflectionMethod($subject, 'resolveFilesInFolders');
-        $result = $method->invoke($subject, ['examples/Resources/Private/Layouts/', 'examples/Resources/Private/Templates/Default/'], 'html');
-        $expected = [
-            'examples/Resources/Private/Layouts/Default.html',
-            'examples/Resources/Private/Layouts/Dynamic.html',
-            'examples/Resources/Private/Templates/Default/Default.html',
-            'examples/Resources/Private/Templates/Default/Nested/Default.html',
-        ];
-        sort($result);
-        sort($expected);
         self::assertSame(
-            $expected,
-            $result,
+            [
+                $examplesPath . 'Resources/Private/Layouts/Default.html',
+                $examplesPath . 'Resources/Private/Layouts/Dynamic.html',
+            ],
+            $this->sortTemplatePaths($instance->resolveAvailableLayoutFiles()),
+        );
+        self::assertSame(
+            [
+                $examplesPath . 'Resources/Private/Templates/Default/Default.html',
+                $examplesPath . 'Resources/Private/Templates/Default/Nested/Default.html',
+                $examplesPath . 'Resources/Private/Templates/Other/Default.html',
+                $examplesPath . 'Resources/Private/Templates/Other/List.html',
+            ],
+            $this->sortTemplatePaths($instance->resolveAvailableTemplateFiles(null)),
+        );
+        self::assertSame(
+            [
+                $examplesPath . 'Resources/Private/Partials/EscapingModifierPartial.html',
+                $examplesPath . 'Resources/Private/Partials/FirstPartial.html',
+                $examplesPath . 'Resources/Private/Partials/SecondPartial.html',
+                $examplesPath . 'Resources/Private/Partials/Structures.html',
+            ],
+            $this->sortTemplatePaths($instance->resolveAvailablePartialFiles(null)),
         );
     }
 
@@ -286,5 +284,16 @@ final class TemplatePathsTest extends TestCase
         // With runtime cache
         $foundFixture = $subject->resolveTemplateFileForControllerAndActionAndFormat($controllerName, $actionName);
         self::assertSame($expectedPath, $foundFixture);
+    }
+
+    /**
+     * Helper to return paths instead of sorting them in-place
+     * @param string[] $paths
+     * @return string[]
+     */
+    private function sortTemplatePaths(array $paths): array
+    {
+        sort($paths);
+        return $paths;
     }
 }
