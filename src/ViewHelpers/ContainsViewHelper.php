@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -7,13 +9,14 @@
 
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
+use Stringable;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 
 /**
- * The ContainsViewHelper checks if a given value exists in the provided array
- * or is contained within the provided string. You cannot use both the `array`
- * and `string` arguments at the same time.
+ * The ContainsViewHelper checks if a provided string or array contains
+ * the specified value. Depending on the input, this mimicks PHP's
+ * :php:`in_array()` or :php:`str_contains()`.
  *
  *
  * Examples
@@ -26,8 +29,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *
  *      <f:variable name="myArray" value="{0: 'Hello', 1: 'World'}" />
  *
- *      <f:contains value="Hello" array="{myArray}" />
- *      It Works!
+ *      <f:contains value="Hello" subject="{myArray}">
+ *          It Works!
  *      </f:contains>
  *
  * Output::
@@ -41,8 +44,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *
  *      <f:variable name="myString" value="Hello, World!" />
  *
- *      <f:contains value="Wo" string="{myString}" />
- *      It Works!
+ *      <f:contains value="Wo" subject="{myString}">
+ *          It Works!
  *      </f:contains>
  *
  * Output::
@@ -50,96 +53,60 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *      It Works!
  *
  * A more complex example with inline notation
- * -----------------------------------------
+ * -------------------------------------------
  *
  * ::
  *
- *      <f:variable name="condition" value="false" />
  *      <f:variable name="myString" value="Hello, World!" />
  *
- *      <f:if condition="{condition || {f:contains(search: 'Wo', subject: myString)}}">
- *      It Works!
+ *      <f:if condition="{someCondition} || {f:contains(value: 'Wo', subject: myString)}">
+ *          It Works!
  *      </f:if>
  *
  * Output::
  *
  *       It Works!
  */
-class ContainsViewHelper extends AbstractConditionViewHelper
+final class ContainsViewHelper extends AbstractConditionViewHelper
 {
     public function initializeArguments(): void
     {
         parent::initializeArguments();
-        $this->registerArgument('value', 'mixed', 'The value to check for in either the given string or array', true);
-        $this->registerArgument('string', 'string', 'The string to check for');
-        $this->registerArgument('array', 'array', 'The array to check for');
+        $this->registerArgument('value', 'mixed', 'The value to check for (needle)', true);
+        $this->registerArgument('subject', 'mixed', 'The string or array that might contain the value (haystack)', true);
     }
 
-    /**
-     * @param array $arguments
-     * @param RenderingContextInterface $renderingContext
-     * @return bool
-     */
     public static function verdict(array $arguments, RenderingContextInterface $renderingContext): bool
     {
-        $hasString = !empty($arguments['string']);
-        $hasArray  = !empty($arguments['array']);
-
-        if ($hasString === $hasArray) {
-            throw new \InvalidArgumentException(
-                'Exactly one of the arguments "string" and "array" must be provided.',
-                1754978400,
-            );
+        if (is_scalar($arguments['subject'])) {
+            return static::stringContains((string)$arguments['subject'], $arguments['value']);
         }
-
-        if ($arguments['string']) {
-            return static::handleString($arguments);
-        }
-
-        if ($arguments['array']) {
-            return static::handleArray($arguments);
-        }
-
-        return false;
+        return static::arrayContains($arguments['subject'], $arguments['value']);
     }
 
-    /**
-     * @param array $arguments
-     * @return bool
-     */
-    protected static function handleString(array $arguments): bool
+    private static function stringContains(string $subject, mixed $value): bool
     {
-        if (!is_string($arguments['string'])) {
-            throw new \InvalidArgumentException('The argument "string" must be a string: ' . $arguments['string'], 1754978404);
-        }
-        if (!is_scalar($arguments['value'])) {
-            $givenType = get_debug_type($arguments['value']);
+        if (!is_scalar($value) && !$value instanceof Stringable) {
+            $givenType = get_debug_type($value);
             throw new \InvalidArgumentException(
-                'The argument "value" was registered with type "string", but is of type "' .
-                $givenType . '" in view helper "' . static::class . '".',
+                'If the argument "subject" is a string, then "value" must be scalar, but it is of type "'
+                . $givenType . '" in view helper "' . static::class . '".',
                 1754978401,
             );
         }
-        return str_contains($arguments['string'], (string)$arguments['value']);
+        return str_contains($subject, (string)$value);
     }
 
-    /**
-     * @param array $arguments
-     * @return bool
-     */
-    protected static function handleArray(array $arguments): bool
+    private static function arrayContains(mixed $subject, mixed $value): bool
     {
-        $haystack = $arguments['array'];
-        if (!is_iterable($haystack)) {
-            $givenType = get_debug_type($haystack);
+        if (!is_iterable($subject)) {
+            $givenType = get_debug_type($subject);
             throw new \InvalidArgumentException(
-                'The argument "array" was registered with type "array", but is of type "' .
-                $givenType . '" in view helper "' . static::class . '".',
+                'The argument "subject" must be either a scalar value or an array/iterator, but is of type "'
+                . $givenType . '" in view helper "' . static::class . '".',
                 1754978402,
             );
         }
-        $haystack = iterator_to_array($haystack);
-
-        return in_array($arguments['value'], $haystack);
+        return in_array($value, iterator_to_array($subject));
     }
 }
