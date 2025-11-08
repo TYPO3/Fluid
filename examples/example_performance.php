@@ -31,7 +31,7 @@ for ($i = 0; $i < $runs; $i++) {
     $view = $exampleHelper->init();
 
     $paths = $view->getRenderingContext()->getTemplatePaths();
-    $view->getRenderingContext()->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/Performance.html');
+    $view->getRenderingContext()->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/Performance.fluid.html');
 
     $view->assign('testArray', $testArray);
     $view->assign('testString', 'lorem ipsum');

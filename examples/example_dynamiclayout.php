@@ -28,7 +28,7 @@ $view = $exampleHelper->init();
 $view->assign('layout', 'Dynamic');
 
 // Set the template path and filename we will render
-$view->getRenderingContext()->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/DynamicLayout.html');
+$view->getRenderingContext()->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/DynamicLayout.fluid.html');
 
 $output = $view->render();
 

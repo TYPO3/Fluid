@@ -103,26 +103,26 @@ final class TemplatePathsTest extends TestCase
 
         self::assertSame(
             [
-                $examplesPath . 'Resources/Private/Layouts/Default.html',
-                $examplesPath . 'Resources/Private/Layouts/Dynamic.html',
+                $examplesPath . 'Resources/Private/Layouts/Default.fluid.html',
+                $examplesPath . 'Resources/Private/Layouts/Dynamic.fluid.html',
             ],
             $this->sortTemplatePaths($instance->resolveAvailableLayoutFiles()),
         );
         self::assertSame(
             [
-                $examplesPath . 'Resources/Private/Templates/Default/Default.html',
-                $examplesPath . 'Resources/Private/Templates/Default/Nested/Default.html',
-                $examplesPath . 'Resources/Private/Templates/Other/Default.html',
-                $examplesPath . 'Resources/Private/Templates/Other/List.html',
+                $examplesPath . 'Resources/Private/Templates/Default/Default.fluid.html',
+                $examplesPath . 'Resources/Private/Templates/Default/Nested/Default.fluid.html',
+                $examplesPath . 'Resources/Private/Templates/Other/Default.fluid.html',
+                $examplesPath . 'Resources/Private/Templates/Other/List.fluid.html',
             ],
             $this->sortTemplatePaths($instance->resolveAvailableTemplateFiles(null)),
         );
         self::assertSame(
             [
-                $examplesPath . 'Resources/Private/Partials/EscapingModifierPartial.html',
-                $examplesPath . 'Resources/Private/Partials/FirstPartial.html',
-                $examplesPath . 'Resources/Private/Partials/SecondPartial.html',
-                $examplesPath . 'Resources/Private/Partials/Structures.html',
+                $examplesPath . 'Resources/Private/Partials/EscapingModifierPartial.fluid.html',
+                $examplesPath . 'Resources/Private/Partials/FirstPartial.fluid.html',
+                $examplesPath . 'Resources/Private/Partials/SecondPartial.fluid.html',
+                $examplesPath . 'Resources/Private/Partials/Structures.fluid.html',
             ],
             $this->sortTemplatePaths($instance->resolveAvailablePartialFiles(null)),
         );

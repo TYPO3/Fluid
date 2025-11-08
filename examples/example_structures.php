@@ -23,7 +23,7 @@ $view = $exampleHelper->init();
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.
 $paths = $view->getRenderingContext()->getTemplatePaths();
-$view->getRenderingContext()->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/Structures.html');
+$view->getRenderingContext()->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/Structures.fluid.html');
 
 $view->assign('dynamicSection', 'Dynamic');
 $view->assign('notTrue', false);

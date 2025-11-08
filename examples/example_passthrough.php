@@ -26,7 +26,7 @@ $view = $exampleHelper->init();
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.
 $paths = $view->getRenderingContext()->getTemplatePaths();
-$paths->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/Passthrough.html');
+$paths->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/Passthrough.fluid.html');
 
 // Rendering the View: plain old rendering of single file, no bells and whistles.
 $output = $view->render();
