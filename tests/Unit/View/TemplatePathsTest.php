@@ -265,6 +265,38 @@ final class TemplatePathsTest extends TestCase
                 'OnlyInFirst',
                 __DIR__ . '/Fixtures/TemplateResolving/Templates1/OnlyInFirst.html',
             ],
+            'fluid extension is used' => [
+                [__DIR__ . '/Fixtures/TemplateResolving/Templates1'],
+                '',
+                'FluidExtensionTest',
+                __DIR__ . '/Fixtures/TemplateResolving/Templates1/FluidExtensionTest.fluid.html',
+            ],
+            'non-fluid extension can be used with full name' => [
+                [__DIR__ . '/Fixtures/TemplateResolving/Templates1'],
+                '',
+                'FluidExtensionOverrideTest.html',
+                __DIR__ . '/Fixtures/TemplateResolving/Templates1/FluidExtensionOverrideTest.html',
+            ],
+            'fluid extension is preferred if both exist within one path' => [
+                [__DIR__ . '/Fixtures/TemplateResolving/Templates1'],
+                '',
+                'FluidExtensionOverrideTest',
+                __DIR__ . '/Fixtures/TemplateResolving/Templates1/FluidExtensionOverrideTest.fluid.html',
+            ],
+            // Use case: TYPO3 extension ships .html files, TYPO3 sitepackage overrides with .fluid.html
+            'fluid extension overrides non-fluid extension from previous paths' => [
+                [__DIR__ . '/Fixtures/TemplateResolving/Templates1', __DIR__ . '/Fixtures/TemplateResolving/Templates2'],
+                '',
+                'OriginalWithoutFluidExtension',
+                __DIR__ . '/Fixtures/TemplateResolving/Templates2/OriginalWithoutFluidExtension.fluid.html',
+            ],
+            // Use case: TYPO3 core ships .fluid.html, TYPO3 extension overrides with .html
+            'non-fluid extension overrides fluid extension from previous paths' => [
+                [__DIR__ . '/Fixtures/TemplateResolving/Templates1', __DIR__ . '/Fixtures/TemplateResolving/Templates2'],
+                '',
+                'OriginalWithFluidExtension',
+                __DIR__ . '/Fixtures/TemplateResolving/Templates2/OriginalWithFluidExtension.html',
+            ],
         ];
     }
 
