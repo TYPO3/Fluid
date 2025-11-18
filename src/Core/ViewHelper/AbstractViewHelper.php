@@ -316,8 +316,10 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     /**
      * Main render method of the ViewHelper. Every modern ViewHelper implementation
      * must implement this method.
+     *
+     * @return mixed
      */
-    abstract public function render(): mixed;
+    abstract public function render();
 
     /**
      * You only should override this method *when you absolutely know what you
