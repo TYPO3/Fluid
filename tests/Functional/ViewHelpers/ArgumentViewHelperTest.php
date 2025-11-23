@@ -212,4 +212,19 @@ final class ArgumentViewHelperTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($templateSource);
         self::assertSame($variables, json_decode(trim($view->render()), true));
     }
+
+    #[Test]
+    public function argumentMetadataIsStored(): void
+    {
+        $templateSource = '<f:argument name="withMeta" type="string" metadata="{foo: \'bar\'}" />';
+        $view = new TemplateView();
+        $renderingContext = $view->getRenderingContext();
+        $parser = $renderingContext->getTemplateParser();
+
+        $parsingState = $parser->parse($templateSource, 'test_identifier');
+        $argumentDefinitions = $parsingState->getArgumentDefinitions();
+
+        self::assertArrayHasKey('withMeta', $argumentDefinitions);
+        self::assertSame(['foo' => 'bar'], $argumentDefinitions['withMeta']->getMetadata());
+    }
 }

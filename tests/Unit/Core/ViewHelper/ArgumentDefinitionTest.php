@@ -50,6 +50,21 @@ final class ArgumentDefinitionTest extends TestCase
     }
 
     #[Test]
+    public function metadataDefaultsToEmptyArray(): void
+    {
+        $argumentDefinition = new ArgumentDefinition('test', 'string', '', false);
+        self::assertSame([], $argumentDefinition->getMetadata());
+    }
+
+    #[Test]
+    public function metadataIsStored(): void
+    {
+        $metadata = ['source' => 'unit-test', 'flag' => true];
+        $argumentDefinition = new ArgumentDefinition('test', 'string', '', false, null, null, $metadata);
+        self::assertSame($metadata, $argumentDefinition->getMetadata());
+    }
+
+    #[Test]
     public function constructorThrowsExceptionWhenRequiredWithDefaultValue(): void
     {
         $this->expectException(\InvalidArgumentException::class);

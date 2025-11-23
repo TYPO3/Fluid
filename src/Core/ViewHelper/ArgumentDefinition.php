@@ -53,6 +53,13 @@ class ArgumentDefinition
     protected ?bool $escape;
 
     /**
+     * Optional metadata for the argument
+     *
+     * @var array<string, mixed>
+     */
+    protected array $metadata;
+
+    /**
      * Constructor for this argument definition.
      *
      * @param string $name Name of argument
@@ -61,8 +68,9 @@ class ArgumentDefinition
      * @param bool $required true if argument is required
      * @param mixed $defaultValue Default value
      * @param bool|null $escape Whether argument is escaped, or uses default escaping behavior (see class var comment)
+     * @param array<string, mixed> $metadata Optional metadata for the argument
      */
-    public function __construct(string $name, string $type, string $description, bool $required, mixed $defaultValue = null, ?bool $escape = null)
+    public function __construct(string $name, string $type, string $description, bool $required, mixed $defaultValue = null, ?bool $escape = null, array $metadata = [])
     {
         if ($required && $defaultValue !== null) {
             throw new \InvalidArgumentException(
@@ -77,6 +85,7 @@ class ArgumentDefinition
         $this->required = $required;
         $this->defaultValue = $defaultValue;
         $this->escape = $escape;
+        $this->metadata = $metadata;
     }
 
     /**
@@ -135,6 +144,14 @@ class ArgumentDefinition
     public function getEscape(): ?bool
     {
         return $this->escape;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getMetadata(): array
+    {
+        return $this->metadata;
     }
 
     public function isBooleanType(): bool
