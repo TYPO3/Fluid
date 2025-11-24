@@ -422,7 +422,7 @@ class TemplatePaths
     /**
      * Returns a unique identifier for the given file in the format
      * <FileName>_<hash>
-     * The SH1 hash is a checksum that is based on the file path and last modification date
+     * The hash is a checksum that is based on the file path and last modification date
      */
     protected function createIdentifierForFile(?string $pathAndFilename): string
     {
@@ -432,7 +432,7 @@ class TemplatePaths
             $templateModifiedTimestamp = filemtime($pathAndFilename);
             $prefix = str_replace('.', '_', basename($pathAndFilename));
         }
-        return sprintf('%s_%s', $prefix, hash('xxh3', $pathAndFilename . '|' . $templateModifiedTimestamp));
+        return sprintf('template_%s_%s', $prefix, hash('xxh3', $pathAndFilename . '|' . $templateModifiedTimestamp));
     }
 
     /**
