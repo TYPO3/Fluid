@@ -171,13 +171,19 @@ final class TemplatePathsTest extends TestCase
                 __DIR__ . '/Fixtures',
                 'ARandomController',
                 'TestTemplate',
-                'TestTemplate_html_',
+                'template_TestTemplate_html_',
             ],
             [
                 __DIR__ . '/Fixtures',
                 '',
                 'UnparsedTemplateFixture',
-                'UnparsedTemplateFixture_html_',
+                'template_UnparsedTemplateFixture_html_',
+            ],
+            [
+                __DIR__ . '/Fixtures',
+                '',
+                '123Template-foo$=bar',
+                'template_123Template-foo$=bar_', // Special characters are removed in template compiler
             ],
         ];
     }
