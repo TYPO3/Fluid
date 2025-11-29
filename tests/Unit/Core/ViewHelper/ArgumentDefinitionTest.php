@@ -50,18 +50,20 @@ final class ArgumentDefinitionTest extends TestCase
     }
 
     #[Test]
-    public function metadataDefaultsToEmptyArray(): void
+    public function tagsDefaultsToEmptyArray(): void
     {
         $argumentDefinition = new ArgumentDefinition('test', 'string', '', false);
-        self::assertSame([], $argumentDefinition->getMetadata());
+        self::assertSame([], $argumentDefinition->getTags());
     }
 
     #[Test]
-    public function metadataIsStored(): void
+    public function tagsAreStored(): void
     {
-        $metadata = ['source' => 'unit-test', 'flag' => true];
-        $argumentDefinition = new ArgumentDefinition('test', 'string', '', false, null, null, $metadata);
-        self::assertSame($metadata, $argumentDefinition->getMetadata());
+        $tags = ['something', 'else'];
+        $argumentDefinition = new ArgumentDefinition('test', 'string', '', false, null, null, $tags);
+        self::assertSame($tags, $argumentDefinition->getTags());
+        self::assertTrue($argumentDefinition->hasTag('something'));
+        self::assertFalse($argumentDefinition->hasTag('not-there'));
     }
 
     #[Test]

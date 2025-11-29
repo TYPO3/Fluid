@@ -214,9 +214,9 @@ final class ArgumentViewHelperTest extends AbstractFunctionalTestCase
     }
 
     #[Test]
-    public function argumentMetadataIsStored(): void
+    public function argumentTagsAreStored(): void
     {
-        $templateSource = '<f:argument name="withMeta" type="string" metadata="{foo: \'bar\'}" />';
+        $templateSource = '<f:argument name="withTags" type="string" tags="{0: \'something\', 1: \'else\'}" />';
         $view = new TemplateView();
         $renderingContext = $view->getRenderingContext();
         $parser = $renderingContext->getTemplateParser();
@@ -224,7 +224,7 @@ final class ArgumentViewHelperTest extends AbstractFunctionalTestCase
         $parsingState = $parser->parse($templateSource, 'test_identifier');
         $argumentDefinitions = $parsingState->getArgumentDefinitions();
 
-        self::assertArrayHasKey('withMeta', $argumentDefinitions);
-        self::assertSame(['foo' => 'bar'], $argumentDefinitions['withMeta']->getMetadata());
+        self::assertArrayHasKey('withTags', $argumentDefinitions);
+        self::assertSame(['something', 'else'], $argumentDefinitions['withTags']->getTags());
     }
 }

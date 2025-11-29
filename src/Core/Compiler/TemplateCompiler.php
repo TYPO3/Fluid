@@ -212,7 +212,7 @@ class TemplateCompiler
                 var_export($argumentDefinition->isRequired(), true),
                 var_export($argumentDefinition->getDefaultValue(), true),
                 var_export($argumentDefinition->getEscape(), true),
-                var_export($argumentDefinition->getMetadata(), true),
+                var_export($argumentDefinition->getTags(), true),
             ),
             $argumentDefinitions,
         );
