@@ -53,6 +53,13 @@ class ArgumentDefinition
     protected ?bool $escape;
 
     /**
+     * Optional tags for this argument, that can be used to append additional information to the argument.
+     *
+     * @var string[]
+     */
+    protected array $tags = [];
+
+    /**
      * Constructor for this argument definition.
      *
      * @param string $name Name of argument
@@ -61,8 +68,9 @@ class ArgumentDefinition
      * @param bool $required true if argument is required
      * @param mixed $defaultValue Default value
      * @param bool|null $escape Whether argument is escaped, or uses default escaping behavior (see class var comment)
+     * @param string[] $tags Optional tags for this argument, that can be used to append additional information to the argument.
      */
-    public function __construct(string $name, string $type, string $description, bool $required, mixed $defaultValue = null, ?bool $escape = null)
+    public function __construct(string $name, string $type, string $description, bool $required, mixed $defaultValue = null, ?bool $escape = null, array $tags = [])
     {
         if ($required && $defaultValue !== null) {
             throw new \InvalidArgumentException(
@@ -77,6 +85,7 @@ class ArgumentDefinition
         $this->required = $required;
         $this->defaultValue = $defaultValue;
         $this->escape = $escape;
+        $this->tags = $tags;
     }
 
     /**
@@ -135,6 +144,25 @@ class ArgumentDefinition
     public function getEscape(): ?bool
     {
         return $this->escape;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getTags(): array
+    {
+        return $this->tags;
+    }
+
+    /**
+     * Check if the argument has a specific tag
+     *
+     * @param string $tag Tag to check for
+     * @return bool true if the argument has the tag
+     */
+    public function hasTag(string $tag): bool
+    {
+        return in_array($tag, $this->tags, true);
     }
 
     public function isBooleanType(): bool

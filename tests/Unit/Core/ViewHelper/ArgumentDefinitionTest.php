@@ -50,6 +50,23 @@ final class ArgumentDefinitionTest extends TestCase
     }
 
     #[Test]
+    public function tagsDefaultsToEmptyArray(): void
+    {
+        $argumentDefinition = new ArgumentDefinition('test', 'string', '', false);
+        self::assertSame([], $argumentDefinition->getTags());
+    }
+
+    #[Test]
+    public function tagsAreStored(): void
+    {
+        $tags = ['something', 'else'];
+        $argumentDefinition = new ArgumentDefinition('test', 'string', '', false, null, null, $tags);
+        self::assertSame($tags, $argumentDefinition->getTags());
+        self::assertTrue($argumentDefinition->hasTag('something'));
+        self::assertFalse($argumentDefinition->hasTag('not-there'));
+    }
+
+    #[Test]
     public function constructorThrowsExceptionWhenRequiredWithDefaultValue(): void
     {
         $this->expectException(\InvalidArgumentException::class);
