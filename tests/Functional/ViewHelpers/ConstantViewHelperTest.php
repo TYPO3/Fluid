@@ -12,9 +12,10 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
-use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\BackedEnumExample;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ClassConstantsExample;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\EnumExample;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\IntBackedEnumExample;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\StringBackedEnumExample;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
 final class ConstantViewHelperTest extends AbstractFunctionalTestCase
@@ -60,14 +61,24 @@ final class ConstantViewHelperTest extends AbstractFunctionalTestCase
             ClassConstantsExample::FOO,
         ];
 
-        yield 'Name is backed enum case w/out leading slash' => [
-            'TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\BackedEnumExample::BAR',
-            BackedEnumExample::BAR,
+        yield 'Name is string-backed enum case w/out leading slash' => [
+            'TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\StringBackedEnumExample::BAR',
+            StringBackedEnumExample::BAR,
         ];
 
-        yield 'Name is backed enum case with leading slash' => [
-            '\TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\BackedEnumExample::BAR',
-            BackedEnumExample::BAR,
+        yield 'Name is string-backed enum case with leading slash' => [
+            '\TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\StringBackedEnumExample::BAR',
+            StringBackedEnumExample::BAR,
+        ];
+
+        yield 'Name is int-backed enum case w/out leading slash' => [
+            'TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\IntBackedEnumExample::BAR',
+            IntBackedEnumExample::BAR,
+        ];
+
+        yield 'Name is int-backed enum case with leading slash' => [
+            '\TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\IntBackedEnumExample::BAR',
+            IntBackedEnumExample::BAR,
         ];
 
         yield 'Name is enum case w/out leading slash' => [

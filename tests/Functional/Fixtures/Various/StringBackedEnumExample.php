@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various;
 
-enum BackedEnumExample: string
+enum StringBackedEnumExample: string
 {
-    case BAR = 'bar';
+    case BAR = 'bar value';
 }

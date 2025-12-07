@@ -18,7 +18,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\StrictArgumentProcessor;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ArrayAccessExample;
-use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\BackedEnumExample;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\StringBackedEnumExample;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
 
 final class StrictArgumentProcessorTest extends TestCase
@@ -515,14 +515,14 @@ final class StrictArgumentProcessorTest extends TestCase
         ];
         // Enums
         yield [
-            'type' => BackedEnumExample::class,
-            'value' => BackedEnumExample::BAR,
+            'type' => StringBackedEnumExample::class,
+            'value' => StringBackedEnumExample::BAR,
             'expectedValidity' => true,
-            'expectedProcessedValue' => BackedEnumExample::BAR,
+            'expectedProcessedValue' => StringBackedEnumExample::BAR,
             'expectedProcessedValidity' => true,
         ];
         yield [
-            'type' => BackedEnumExample::class,
+            'type' => StringBackedEnumExample::class,
             'value' => $stdClass,
             'expectedValidity' => false,
             'expectedProcessedValue' => $stdClass,
