@@ -102,6 +102,7 @@ final class ArgumentViewHelper extends AbstractViewHelper implements ViewHelperN
         $this->registerArgument('description', 'string', 'description of the template argument');
         $this->registerArgument('optional', 'boolean', 'true if the defined argument should be optional', false, false);
         $this->registerArgument('default', 'mixed', 'default value for optional argument');
+        $this->registerArgument('tags', 'string[]', 'Optional tags for this argument, that can be used to append additional information to the argument.', false, []);
     }
 
     public function render(): string
@@ -155,6 +156,8 @@ final class ArgumentViewHelper extends AbstractViewHelper implements ViewHelperN
             array_key_exists('description', $evaluatedArguments) ? (string)$evaluatedArguments['description'] : '',
             !$optional,
             $hasDefaultValue ? $evaluatedArguments['default'] : null,
+            null,
+            $evaluatedArguments['tags'] ?? [],
         );
         $parsingState->setArgumentDefinitions($argumentDefinitions);
     }
