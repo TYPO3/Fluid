@@ -12,6 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Component;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\IntBackedEnumExample;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
 final class ComponentRenderingTest extends AbstractFunctionalTestCase
@@ -62,6 +63,9 @@ final class ComponentRenderingTest extends AbstractFunctionalTestCase
             'additional arguments can be provided if delegate allows' => ['<my:additionalArgumentsJson foo="bar" />', '{"foo":"bar","myAdditionalVariable":"my additional value","viewHelperName":"additionalArgumentsJson"}' . "\n"],
             'union type, array provided' => ['<my:unionTypeArgument item="{property: \'foo\'}" />', "\nfoo\n"],
             'union type, string provided' => ['<my:unionTypeArgument item="bar" />', "\nbar\n"],
+            'enum type, enum object provided' => ['<my:enumTypeArgument value="{f:constant(name: \'' . IntBackedEnumExample::class . '::BAR\')}" />', "\nBAR => 123\n"],
+            'enum type, enum name provided' => ['<my:enumTypeArgument value="BAR" />', "\nBAR => 123\n"],
+            'enum type, enum value provided' => ['<my:enumTypeArgument value="123" />', "\nBAR => 123\n"],
         ];
     }
 
