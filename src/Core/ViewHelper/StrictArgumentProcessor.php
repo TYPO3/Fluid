@@ -10,8 +10,11 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 use ArrayAccess;
+use BackedEnum;
+use ReflectionEnum;
 use Stringable;
 use Traversable;
+use UnitEnum;
 
 /**
  * The StrictArgumentProcessor offers an alternative, stricter implementation
@@ -32,6 +35,7 @@ final readonly class StrictArgumentProcessor implements ArgumentProcessorInterfa
         if (!$definition->isRequired() && $value === $definition->getDefaultValue()) {
             return $value;
         }
+        // Scalar values can be type-casted automatically
         // Boolean expressions are evaluated at the parser level, so we just make sure
         // that the input has the correct type
         return match ($definition->getType()) {
@@ -39,7 +43,7 @@ final readonly class StrictArgumentProcessor implements ArgumentProcessorInterfa
             'int', 'integer' => is_scalar($value) ? (int)$value : $value,
             'float', 'double' => is_scalar($value) ? (float)$value : $value,
             'bool', 'boolean' => is_scalar($value) ? (bool)$value : $value,
-            default => $value,
+            default => is_scalar($value) && enum_exists($definition->getType()) ? $this->convertValueToEnum($definition->getType(), $value) : $value,
         };
     }
 
@@ -62,6 +66,34 @@ final readonly class StrictArgumentProcessor implements ArgumentProcessorInterfa
             }
         }
         return false;
+    }
+
+    /**
+     * Attempt to convert a scalar value to a valid enum case if expected type is an enum
+     *
+     * @param class-string<UnitEnum> $type
+     */
+    private function convertValueToEnum(string $type, mixed $value): mixed
+    {
+        // For backed enums, the scalar equivalent is preferred, but the case name can
+        // be used as well
+        if (is_a($type, BackedEnum::class, true)) {
+            // Make sure that tryFrom() can be called without type mismatches
+            $backingType = (string)(new ReflectionEnum($type))->getBackingType();
+            if (
+                ($backingType === 'string' && is_string($value))
+                || ($backingType === 'int' && is_int($value))
+            ) {
+                $enum = $type::tryFrom($value);
+                if ($enum !== null) {
+                    return $enum;
+                }
+            }
+        }
+        // Check if enum case name exists
+        return (is_string($value) && defined("$type::$value"))
+            ? constant("$type::$value")
+            : $value;
     }
 
     /**
