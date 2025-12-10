@@ -62,6 +62,7 @@ final class ComponentRenderingTest extends AbstractFunctionalTestCase
             'additional arguments can be provided if delegate allows' => ['<my:additionalArgumentsJson foo="bar" />', '{"foo":"bar","myAdditionalVariable":"my additional value","viewHelperName":"additionalArgumentsJson"}' . "\n"],
             'union type, array provided' => ['<my:unionTypeArgument item="{property: \'foo\'}" />', "\nfoo\n"],
             'union type, string provided' => ['<my:unionTypeArgument item="bar" />', "\nbar\n"],
+            'enum type with default' => ['<my:enumTypeArgumentWithDefault />', "\nBAR => 123\n"],
         ];
     }
 

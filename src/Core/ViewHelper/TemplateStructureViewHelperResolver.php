@@ -16,6 +16,7 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * 2. Are there any sections?
  * 3. Are there argument definitions?
  * 4. Are there any slots?
+ * 5. PHP constants and enum cases to be used as default values for arguments
  * This prevents the parser from resolving _any_ ViewHelpers (both first and third party).
  * Note that this ViewHelperResolver results in templates that are not feasible for rendering
  * and should thus not be compiled/cached or rendered.
@@ -30,6 +31,7 @@ final class TemplateStructureViewHelperResolver extends ViewHelperResolver
         'section',
         'argument',
         'slot',
+        'constant',
     ];
 
     public function isNamespaceValid(string $namespaceIdentifier): bool
