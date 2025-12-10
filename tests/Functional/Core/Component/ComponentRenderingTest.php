@@ -60,6 +60,7 @@ final class ComponentRenderingTest extends AbstractFunctionalTestCase
             'recursive call of one component' => ['<f:format.trim><my:recursive counter="5" /></f:format.trim>', '54321'],
             'access to variables provided by delegate' => ['<my:additionalVariable />', "my additional value\nadditionalVariable\n"],
             'additional arguments can be provided if delegate allows' => ['<my:additionalArgumentsJson foo="bar" />', '{"foo":"bar","myAdditionalVariable":"my additional value","viewHelperName":"additionalArgumentsJson"}' . "\n"],
+            ['<my:enumTypeArgumentWithDefault />', "\nBAR => 123\n"],
         ];
     }
 
