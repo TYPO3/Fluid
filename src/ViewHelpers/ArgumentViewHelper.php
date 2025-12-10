@@ -34,6 +34,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
  * in any of its arguments is not possible (e. g. you can't define an argument name
  * by using a variable).
  *
+ * Rendering of specific sections will not validate argument constraints. They
+ * will only be evaluated if the template or partial is rendered directly.
+ *
  * Example
  * ========
  *
