@@ -37,8 +37,6 @@ interface ViewHelperResolverDelegateInterface
      * Returns the PHP namespace this delegate has been registered for
      * This string representation will be used to restore the delegate
      * object from the cache in the future.
-     *
-     * @return class-string
      */
     public function getNamespace(): string;
 }
