@@ -26,6 +26,7 @@ final class TemplateValidatorTest extends AbstractFunctionalTestCase
             [$fixturePath . 'InvalidNamespace.fluid.html', 'Unknown Namespace: foo', 0],
             [$fixturePath . 'RequiredArgumentMissing.fluid.html', 'Required argument "each" was not supplied.', 1237823699],
             [$fixturePath . 'RedefinedComponentArgument.fluid.html', 'Template argument "foo" has been defined multiple times.', 1744908509],
+            [$fixturePath . 'AccessToInvalidVariableName.fluid.html', 'Variable identifiers cannot start with a "_": _something.sub', 1765900762],
         ];
     }
 

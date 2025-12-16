@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Variables\InvalidVariableIdentifierException;
 
 /**
  * A node which handles object access. This means it handles structures like {object.accessor.bla}
@@ -34,6 +35,12 @@ final class ObjectAccessorNode extends AbstractNode
      */
     public function __construct(string $objectPath)
     {
+        // TODO consider removing this exception in later Fluid versions. For now it allows the
+        //      TemplateValidator to find occurrances of variables starting with "_" in templates,
+        //      which are no longer allowed since Fluid 5.
+        if (str_starts_with($objectPath, '_') && $objectPath !== '_all') {
+            throw new InvalidVariableIdentifierException('Variable identifiers cannot start with a "_": ' . $objectPath, 1765900762);
+        }
         $this->objectPath = $objectPath;
     }
 
