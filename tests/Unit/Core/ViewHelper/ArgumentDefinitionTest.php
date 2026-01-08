@@ -13,6 +13,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\TestArgumentAnnotation;
 
 final class ArgumentDefinitionTest extends TestCase
 {
@@ -57,5 +58,47 @@ final class ArgumentDefinitionTest extends TestCase
         $this->expectExceptionMessage('ArgumentDefinition "test" cannot have a default value while also being required. Either remove the default or mark it as optional.');
 
         new ArgumentDefinition('test', 'string', 'Test argument', true, 'defaultValue');
+    }
+
+    #[Test]
+    public function annotationsCanBeAttached(): void
+    {
+        $argumentDefinition = new ArgumentDefinition(
+            'foo',
+            'string',
+            '',
+            true,
+            null,
+            null,
+            [new TestArgumentAnnotation('bar')],
+        );
+        self::assertInstanceOf(TestArgumentAnnotation::class, $argumentDefinition->getAnnotations()[0]);
+        self::assertSame('bar', $argumentDefinition->getAnnotations()[0]->foo);
+    }
+
+    public static function annotationsAreValidatedDataProvider(): array
+    {
+        return [
+            [['bar']],
+            [[new \DateTime()]],
+            [[new TestArgumentAnnotation('bar'), 'bar']],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('annotationsAreValidatedDataProvider')]
+    public function annotationsAreValidated(array $annotations): void
+    {
+        self::expectException(\InvalidArgumentException::class);
+        self::expectExceptionCode(1767889972);
+        $argumentDefinition = new ArgumentDefinition(
+            'foo',
+            'string',
+            '',
+            true,
+            null,
+            null,
+            $annotations,
+        );
     }
 }

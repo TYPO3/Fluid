@@ -53,6 +53,13 @@ class ArgumentDefinition
     protected ?bool $escape;
 
     /**
+     * Annotation objects related to the argument, which can be used
+     * to trigger additional processing of the argument
+     * @var ArgumentAnnotationInterface[]
+     */
+    protected array $annotations;
+
+    /**
      * Constructor for this argument definition.
      *
      * @param string $name Name of argument
@@ -61,8 +68,9 @@ class ArgumentDefinition
      * @param bool $required true if argument is required
      * @param mixed $defaultValue Default value
      * @param bool|null $escape Whether argument is escaped, or uses default escaping behavior (see class var comment)
+     * @param ArgumentAnnotationInterface[] $annotations
      */
-    public function __construct(string $name, string $type, string $description, bool $required, mixed $defaultValue = null, ?bool $escape = null)
+    public function __construct(string $name, string $type, string $description, bool $required, mixed $defaultValue = null, ?bool $escape = null, array $annotations = [])
     {
         if ($required && $defaultValue !== null) {
             throw new \InvalidArgumentException(
@@ -71,12 +79,22 @@ class ArgumentDefinition
             );
         }
 
+        foreach ($annotations as $annotation) {
+            if (!$annotation instanceof ArgumentAnnotationInterface) {
+                throw new \InvalidArgumentException(sprintf(
+                    'Argument annotation "%s" does not implement the required ArgumentAnnotationInterface.',
+                    is_object($annotation) ? get_class($annotation) : gettype($annotation),
+                ), 1767889972);
+            }
+        }
+
         $this->name = $name;
         $this->type = $type;
         $this->description = $description;
         $this->required = $required;
         $this->defaultValue = $defaultValue;
         $this->escape = $escape;
+        $this->annotations = $annotations;
     }
 
     /**
@@ -148,5 +166,13 @@ class ArgumentDefinition
     public function getUnionTypes(): array
     {
         return array_map('trim', explode('|', $this->type));
+    }
+
+    /**
+     * @return ArgumentAnnotationInterface[]
+     */
+    public function getAnnotations(): array
+    {
+        return $this->annotations;
     }
 }

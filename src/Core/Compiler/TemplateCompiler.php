@@ -14,6 +14,7 @@ use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentAnnotationInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 
 /**
@@ -205,13 +206,17 @@ class TemplateCompiler
         }
         $argumentDefinitionsCode = array_map(
             static fn(ArgumentDefinition $argumentDefinition): string => sprintf(
-                'new \\TYPO3Fluid\\Fluid\\Core\\ViewHelper\\ArgumentDefinition(%s, %s, %s, %s, %s, %s)',
+                'new \\TYPO3Fluid\\Fluid\\Core\\ViewHelper\\ArgumentDefinition(%s, %s, %s, %s, %s, %s, [%s])',
                 var_export($argumentDefinition->getName(), true),
                 var_export($argumentDefinition->getType(), true),
                 var_export($argumentDefinition->getDescription(), true),
                 var_export($argumentDefinition->isRequired(), true),
                 var_export($argumentDefinition->getDefaultValue(), true),
                 var_export($argumentDefinition->getEscape(), true),
+                implode(', ', array_map(
+                    static fn(ArgumentAnnotationInterface $annotation): string => 'unserialize(' . var_export(serialize($annotation), true) . ')',
+                    $argumentDefinition->getAnnotations(),
+                )),
             ),
             $argumentDefinitions,
         );
