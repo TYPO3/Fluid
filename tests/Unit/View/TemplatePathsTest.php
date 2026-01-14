@@ -223,6 +223,12 @@ final class TemplatePathsTest extends TestCase
                 'lowercaseTemplateFixture',
                 __DIR__ . '/Fixtures/lowercaseTemplateFixture.html',
             ],
+            'lowercase falls back to uppercase' => [
+                [__DIR__ . '/Fixtures'],
+                '',
+                'uppercaseTemplateFixture',
+                __DIR__ . '/Fixtures/UppercaseTemplateFixture.html',
+            ],
             'action includes format' => [
                 [__DIR__ . '/Fixtures'],
                 '',
