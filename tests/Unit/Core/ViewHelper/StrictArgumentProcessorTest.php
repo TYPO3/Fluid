@@ -752,6 +752,20 @@ final class StrictArgumentProcessorTest extends TestCase
             'expectedProcessedValue' => 'foo',
             'expectedProcessedValidity' => true,
         ];
+        yield [
+            'type' => 'int|string|Stringable',
+            'value' => $stringable,
+            'expectedValidity' => true,
+            'expectedProcessedValue' => $stringable,
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => 'int|string',
+            'value' => $stringable,
+            'expectedValidity' => true,
+            'expectedProcessedValue' => $stringable,
+            'expectedProcessedValidity' => true,
+        ];
         // No support for automatic type casting
         yield [
             'type' => 'array|string',
