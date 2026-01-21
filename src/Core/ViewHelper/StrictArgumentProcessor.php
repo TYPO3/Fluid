@@ -35,7 +35,7 @@ final readonly class StrictArgumentProcessor implements ArgumentProcessorInterfa
         // Boolean expressions are evaluated at the parser level, so we just make sure
         // that the input has the correct type
         return match ($definition->getType()) {
-            'string' => is_scalar($value) ? (string)$value : $value,
+            'string' => is_scalar($value) || $value instanceof Stringable ? (string)$value : $value,
             'int', 'integer' => is_scalar($value) ? (int)$value : $value,
             'float', 'double' => is_scalar($value) ? (float)$value : $value,
             'bool', 'boolean' => is_scalar($value) ? (bool)$value : $value,
@@ -67,13 +67,13 @@ final readonly class StrictArgumentProcessor implements ArgumentProcessorInterfa
     /**
      * Check whether the defined type matches the value type
      */
-    private function isValidType(string $type, mixed $value): bool
+    private function isValidType(string $type, mixed $value, bool $allowStringableAsString = false): bool
     {
         if ($type === 'object') {
             return is_object($value);
         }
         if ($type === 'string') {
-            return is_string($value) || $value instanceof Stringable;
+            return is_string($value) || ($allowStringableAsString && $value instanceof Stringable);
         }
         if ($type === 'int' || $type === 'integer') {
             return is_int($value);
@@ -102,7 +102,7 @@ final readonly class StrictArgumentProcessor implements ArgumentProcessorInterfa
                 if ($firstElement === null) {
                     return true;
                 }
-                return $this->isValidType(substr($type, 0, -2), $firstElement);
+                return $this->isValidType(substr($type, 0, -2), $firstElement, true);
             }
             return true;
         }
