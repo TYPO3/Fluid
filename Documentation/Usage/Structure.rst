@@ -53,12 +53,45 @@ associated with your `RenderingContext`:
     $paths->setTemplateRootPaths(['/path/to/templates/']);
     $paths->setLayoutRootPaths(['/path/to/layouts/']);
     $paths->setPartialRootPaths(['/path/to/partials/']);
+    // Render specific template
+    $view->render('myTemplate');
 
 Note that paths are *always defined as arrays*. In the default `TemplatePaths`
 implementation, Fluid supports lookups in multiple template file locations -
 which is very useful if you are rendering template files from another package
 and wish to replace just a few template files. By adding your own template files
 path *last in the paths arrays*, Fluid will check those paths *first*.
+
+.. _template-resolving:
+
+Template Resolving
+------------------
+
+..  versionadded:: Fluid 5.0
+
+When a specific template is requested to be rendered, Fluid creates a list of
+file name alternatives based on the provided template name. This fallback
+chain is then used to determine which file should be rendered.
+
+In the example above, the following chain would be used (first existing file
+wins):
+
+1. /path/to/templates/myTemplate.fluid.html
+2. /path/to/templates/myTemplate.html
+3. /path/to/templates/myTemplate
+4. /path/to/templates/MyTemplate.fluid.html
+5. /path/to/templates/MyTemplate.html
+6. /path/to/templates/MyTemplate
+
+As you can see, this provides backwards compatibility for `.html` files, but
+prefers the `.fluid.html` extension. It also includes a fallback from lowercase
+to uppercase file names.
+
+Note that `html` is the default template format, which can be changed via `TemplatePaths`:
+
+.. code-block:: php
+
+    $paths->setFormat('xml');
 
 .. _templates:
 
@@ -99,9 +132,9 @@ rendering templates in an MVC context, some templates might use layouts and
 others might not. Whether or not you use layouts of course depends on the
 design you are trying to convey.
 
-* `An example Template without a Layout <https://github.com/TYPO3/Fluid/blob/main/examples/Resources/Private/Singles/LayoutLess.html>`__
-* `An example Template with a Layout <https://github.com/TYPO3/Fluid/blob/main/examples/Resources/Private/Templates/Default/Default.html>`__ and the
-  `Layout used by that Template <https://github.com/TYPO3/Fluid/blob/main/examples/Resources/Private/Layouts/Default.html>`__
+* `An example Template without a Layout <https://github.com/TYPO3/Fluid/blob/main/examples/Resources/Private/Singles/LayoutLess.fluid.html>`__
+* `An example Template with a Layout <https://github.com/TYPO3/Fluid/blob/main/examples/Resources/Private/Templates/Default/Default.fluid.html>`__ and the
+  `Layout used by that Template <https://github.com/TYPO3/Fluid/blob/main/examples/Resources/Private/Layouts/Default.fluid.html>`__
 
 .. _layouts:
 
@@ -119,8 +152,8 @@ layout renders with `<f:render>`. In application terms, the rendering engine
 switches to the layout when it detects one and renders it while preserving the
 template's context of controller name and action name.
 
-* `An example Layout <https://github.com/TYPO3/Fluid/blob/main/examples/Resources/Private/Layouts/Default.html>`__ and
-  `Template which uses it <https://github.com/TYPO3/Fluid/blob/main/examples/Resources/Private/Templates/Default/Default.html>`__
+* `An example Layout <https://github.com/TYPO3/Fluid/blob/main/examples/Resources/Private/Layouts/Default.fluid.html>`__ and
+  `Template which uses it <https://github.com/TYPO3/Fluid/blob/main/examples/Resources/Private/Templates/Default/Default.fluid.html>`__
 
 .. _partials:
 
@@ -155,8 +188,8 @@ including inside the Partial itself, by `<f:render partial="NameOfPartial" secti
 Partials without sections can be rendered by just
 `<f:render partial="NameOfPartial" />` (with or without `arguments`).
 
-* `An example of a partial template without sections <https://github.com/TYPO3/Fluid/blob/main/examples/Resources/Private/Partials/FirstPartial.html>`__
-* `An example of a partial template with sections <https://github.com/TYPO3/Fluid/blob/main/examples/Resources/Private/Partials/Structures.html>`__
+* `An example of a partial template without sections <https://github.com/TYPO3/Fluid/blob/main/examples/Resources/Private/Partials/FirstPartial.fluid.html>`__
+* `An example of a partial template with sections <https://github.com/TYPO3/Fluid/blob/main/examples/Resources/Private/Partials/Structures.fluid.html>`__
 
 .. _template-argument-definitions:
 
