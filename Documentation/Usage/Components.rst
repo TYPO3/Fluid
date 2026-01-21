@@ -106,15 +106,15 @@ architecture and enables easier refactoring.
     * :path:`path/to/Components/`
         * :path:`Atom`
             * :path:`Button`
-                * :file:`Button.html`
+                * :file:`Button.fluid.html`
 
 Check out :ref:`components-folder-structure` if you want to adjust this.
 
 The :xml:`<my:atom.button>` component thus would be defined in
-`path/to/Components/Atom/Button/Button.html` like this:
+`path/to/Components/Atom/Button/Button.fluid.html` like this:
 
 ..  code-block:: xml
-    :caption: Button.html (component definition)
+    :caption: Button.fluid.html (component definition)
 
     <f:argument name="variant" type="string" optional="{true}" default="primary" />
 
@@ -135,7 +135,7 @@ been created, it can be imported into any Fluid template and component tags
 can be used:
 
 ..  code-block:: xml
-    :caption: MyTemplate.html
+    :caption: MyTemplate.fluid.html
 
     <html
         xmlns:my="http://typo3.org/ns/Vendor/MyPackage/Components/ComponentCollection"
@@ -175,7 +175,7 @@ Combining Components
 Components can also be nested:
 
 ..  code-block:: xml
-    :caption: MyTemplate.html
+    :caption: MyTemplate.fluid.html
 
     <html
         xmlns:my="http://typo3.org/ns/Vendor/MyPackage/Components/ComponentCollection"
@@ -191,7 +191,7 @@ An alternative approach that prevents the need for nesting would be to call the 
 component from within the `atom.button` component and to extend its argument API accordingly:
 
 ..  code-block:: xml
-    :caption: MyTemplate.html
+    :caption: MyTemplate.fluid.html
 
     <html
         xmlns:my="http://typo3.org/ns/Vendor/MyPackage/Components/ComponentCollection"
@@ -205,7 +205,7 @@ component from within the `atom.button` component and to extend its argument API
 The extended `atom.button` component could look something like this:
 
 ..  code-block:: xml
-    :caption: Button.html (component definition)
+    :caption: Button.fluid.html (component definition)
 
     <html
         xmlns:my="http://typo3.org/ns/Vendor/MyPackage/Components/ComponentCollection"
@@ -265,7 +265,7 @@ which allows you to do just that:
 In your component templates you would then be able to access those tokens:
 
 ..  code-block:: xml
-    :caption: MyComponent.html (component definition)
+    :caption: MyComponent.fluid.html (component definition)
 
     <f:argument name="color" type="string" optional="{true}" default="brand" />
 
@@ -308,7 +308,7 @@ in the collection):
 The following call of the button component would then be valid:
 
 ..  code-block:: xml
-    :caption: MyTemplate.html
+    :caption: MyTemplate.fluid.html
 
     <html
         xmlns:my="http://typo3.org/ns/Vendor/MyPackage/Components/ComponentCollection"
@@ -327,7 +327,7 @@ Alternative Folder Structure
 ============================
 
 If you want to define an alternative folder structure to the default
-`{componentName}/{componentName}.html`, you can do so by providing a custom
+`{componentName}/{componentName}.fluid.html`, you can do so by providing a custom
 implementation of :php:`resolveTemplateName()` in your :php:`ComponentCollection`.
 The following example skips the additional folder per component:
 
@@ -349,10 +349,10 @@ The following example skips the additional folder per component:
         }
     }
 
-`<my:atom.button>` will then be resolved to `path/to/Components/Atom/Button.html`.
+`<my:atom.button>` will then be resolved to `path/to/Components/Atom/Button.fluid.html`.
 
 ..  directory-tree::
 
     * :path:`path/to/Components/`
         * :path:`Atom`
-            * :path:`Button.html`
+            * :path:`Button.fluid.html`

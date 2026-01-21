@@ -30,7 +30,7 @@ you need to be aware of `TemplateView`, the `RenderingContext` and `TemplatePath
 *   `TemplatePaths`, which is usually a sub-object of the rendering context. It provides multiple
     ways to define the location(s) to your template files.
 
-To render a template file called `MyTemplate.html`, which is located in `/path/to/templates/`,
+To render a template file called `MyTemplate.fluid.html`, which is located in `/path/to/templates/`,
 you first create a `TemplateView` object:
 
 .. code-block:: php
@@ -50,15 +50,7 @@ Finally, you can render the desired template:
 
     $view->render('MyTemplate');
 
-By default, `.html` is used as file extension. If you want to change this, you can specify a different
-format in `TemplatePaths`:
-
-.. code-block:: php
-
-    $view->getRenderingContext()->getTemplatePaths()->setFormat('xml');
-    $view->render('MyTemplate');
-
-Which would then render `MyTemplate.xml`.
+By default, `.fluid.html` is used as file extension.
 
 .. _assign-variables:
 
