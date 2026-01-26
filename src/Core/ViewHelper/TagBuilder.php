@@ -164,7 +164,9 @@ class TagBuilder
     {
         $this->ignoreEmptyAttributes = $ignoreEmptyAttributes;
         if ($ignoreEmptyAttributes) {
-            $this->attributes = array_filter($this->attributes, function ($item) { return trim((string)$item) !== ''; });
+            $this->attributes = array_filter($this->attributes, function ($item) {
+                return trim((string)$item) !== '';
+            });
         }
     }
 
