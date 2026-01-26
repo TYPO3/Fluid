@@ -471,6 +471,15 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     public function validateAdditionalArguments(array $arguments)
     {
         if (!empty($arguments)) {
+            if ($this->argumentDefinitions === []) {
+                throw new Exception(
+                    sprintf(
+                        'Undeclared arguments passed to ViewHelper %s: %s. No arguments are allowed.',
+                        get_class($this),
+                        implode(', ', array_keys($arguments)),
+                    ),
+                );
+            }
             throw new Exception(
                 sprintf(
                     'Undeclared arguments passed to ViewHelper %s: %s. Valid arguments are: %s',
