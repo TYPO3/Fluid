@@ -20,6 +20,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolverDelegateInterface;
  * the abstract method getTemplatePaths(), as defined in ComponentTemplateResolverInterface.
  *
  * @api
+ * @todo since this change might be breaking if custom resolveTemplateName() has been
+ *       implemented, add basic implementation of ComponentListProviderInterface with Fluid 6
+ * @see TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ComponentCollections\ListComponentCollection
  */
 abstract class AbstractComponentCollection implements ViewHelperResolverDelegateInterface, ComponentDefinitionProviderInterface, ComponentTemplateResolverInterface
 {

@@ -18,6 +18,7 @@ use TYPO3Fluid\Fluid\Core\Component\ComponentRenderer;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\UnresolvableViewHelperException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ComponentCollections\ListComponentCollection;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 
@@ -222,5 +223,34 @@ final class AbstractComponentCollectionTest extends AbstractFunctionalTestCase
             }
         };
         self::assertSame(get_class($subject), $subject->getNamespace());
+    }
+
+    #[Test]
+    public function getAvailableComponents(): void
+    {
+        $subject = new ListComponentCollection();
+        $availableComponents = $subject->getAvailableComponents();
+        sort($availableComponents);
+        self::assertSame(
+            [
+                'additionalArguments',
+                'additionalArgumentsJson',
+                'additionalVariable',
+                'booleanArgument',
+                'enumTypeArgumentWithDefault',
+                'globalNamespaceUsage',
+                'localNamespaceImport',
+                'namedSlots',
+                'namespace.test',
+                'nested.subComponent',
+                'rawVariable',
+                'recursive',
+                'slotComponent',
+                'testComponent',
+                'unionTypeArgument',
+                'unresolvableLocalNamespaceImport',
+            ],
+            $availableComponents,
+        );
     }
 }

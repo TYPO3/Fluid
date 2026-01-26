@@ -7,33 +7,34 @@ declare(strict_types=1);
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\Core\Component;
+namespace TYPO3Fluid\Fluid\Core\Definition;
 
 use TYPO3Fluid\Fluid\Core\Definition\Annotation\ViewHelperAnnotationInterface;
-use TYPO3Fluid\Fluid\Core\Definition\ViewHelperDefinitionInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 
 /**
- * Definition of a component in the context of a namespace
+ * Definition of a ViewHelper in the context of a namespace
  *
  * @api
  */
-final readonly class ComponentDefinition implements ViewHelperDefinitionInterface
+final readonly class ViewHelperDefinition implements ViewHelperDefinitionInterface
 {
     /**
      * @param array<string, ArgumentDefinition> $argumentDefinitions
-     * @param string[] $availableSlots
+     * @param ViewHelperAnnotationInterface[] $annotations
      */
     public function __construct(
         private string $name,
         private array $argumentDefinitions,
         private bool $additionalArgumentsAllowed,
-        private array $availableSlots,
-    ) {}
+        private string $documentation = '',
+        private array $annotations = [],
+    ) {
+    }
 
     /**
-     * Returns the name of the component, as it would be used in the template
-     * (e. g. "atom.button")
+     * Returns the name of the ViewHelper, as it would be used in the template
+     * (e. g. "format.date")
      */
     public function getName(): string
     {
@@ -53,17 +54,9 @@ final readonly class ComponentDefinition implements ViewHelperDefinitionInterfac
         return $this->additionalArgumentsAllowed;
     }
 
-    /**
-     * @return string[]
-     */
-    public function getAvailableSlots(): array
-    {
-        return $this->availableSlots;
-    }
-
     public function getDocumentation(): string
     {
-        return '';
+        return $this->documentation;
     }
 
     /**
@@ -71,6 +64,6 @@ final readonly class ComponentDefinition implements ViewHelperDefinitionInterfac
      */
     public function getAnnotations(): array
     {
-        return [];
+        return $this->annotations;
     }
 }

@@ -12,8 +12,11 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Schema;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use TYPO3Fluid\Fluid\Core\Component\ComponentDefinitionProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolverDelegateInterface;
 use TYPO3Fluid\Fluid\Schema\ViewHelperMetadataFactory;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ComponentCollections\BasicComponentCollection;
 use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\Sub\ArbitraryArgumentsViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\Sub\DeprecatedViewHelper;
@@ -25,7 +28,7 @@ use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\WrongDirectoryViewHelper;
 
 final class ViewHelperMetadataFactoryTest extends TestCase
 {
-    public static function createObjectDataProvider(): iterable
+    public static function createFromViewHelperClassDataProvider(): iterable
     {
         return [
             'WithoutDocumentationViewHelper' => [
@@ -72,8 +75,8 @@ final class ViewHelperMetadataFactoryTest extends TestCase
     }
 
     #[Test]
-    #[DataProvider('createObjectDataProvider')]
-    public function createObject(
+    #[DataProvider('createFromViewHelperClassDataProvider')]
+    public function createFromViewHelperClass(
         string $className,
         string $namespace,
         string $name,
@@ -98,7 +101,7 @@ final class ViewHelperMetadataFactoryTest extends TestCase
         );
     }
 
-    public static function createObjectFailureDataProvider(): iterable
+    public static function createFromViewHelperClassFailureDataProvider(): iterable
     {
         return [
             'NonexistentViewHelper' => ['TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers\\NonexistentViewHelper'],
@@ -110,10 +113,63 @@ final class ViewHelperMetadataFactoryTest extends TestCase
     }
 
     #[Test]
-    #[DataProvider('createObjectFailureDataProvider')]
-    public function createObjectFailure(string $className): void
+    #[DataProvider('createFromViewHelperClassFailureDataProvider')]
+    public function createFromViewHelperClassFailure(string $className): void
     {
         self::expectException(\InvalidArgumentException::class);
         (new ViewHelperMetadataFactory())->createFromViewhelperClass($className);
+    }
+
+    public static function createFromComponentDefinitionDataProvider(): iterable
+    {
+        return [
+            [
+                new BasicComponentCollection(),
+                'nested.subComponent',
+                'nested.subComponent',
+                '',
+                'http://typo3.org/ns/TYPO3Fluid/Fluid/Tests/Functional/Fixtures/ComponentCollections/BasicComponentCollection',
+                [],
+                false,
+                ['identifier' => new ArgumentDefinition('identifier', 'string', '', false, 'sub')],
+            ],
+            [
+                new BasicComponentCollection(),
+                'namedSlots',
+                'namedSlots',
+                'Available slots: test1, test2, default',
+                'http://typo3.org/ns/TYPO3Fluid/Fluid/Tests/Functional/Fixtures/ComponentCollections/BasicComponentCollection',
+                [],
+                false,
+                [],
+            ],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('createFromComponentDefinitionDataProvider')]
+    public function createFromComponentDefinition(
+        ViewHelperResolverDelegateInterface&ComponentDefinitionProviderInterface $componentCollection,
+        string $name,
+        string $expectedTagName,
+        string $expectedDocumentation,
+        string $expectedXmlNamespace,
+        array $expectedDocTags,
+        bool $expectedAllowsArbitraryArguments,
+        array $expectedArgumentDefinitions,
+    ): void {
+        $object = (new ViewHelperMetadataFactory())->createFromComponentDefinition(
+            $componentCollection,
+            $componentCollection->getComponentDefinition($name),
+        );
+        self::assertNull($object->className);
+        self::assertSame($componentCollection::class, $object->namespace);
+        self::assertNull($object->name);
+        self::assertSame($expectedTagName, $object->tagName);
+        self::assertSame($expectedDocumentation, $object->documentation);
+        self::assertSame($expectedXmlNamespace, $object->xmlNamespace);
+        self::assertSame($expectedDocTags, $object->docTags);
+        self::assertSame($expectedAllowsArbitraryArguments, $object->allowsArbitraryArguments);
+        self::assertEquals($expectedArgumentDefinitions, $object->argumentDefinitions);
     }
 }
