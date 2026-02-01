@@ -272,17 +272,18 @@ class TemplatePaths
      * Sanitize a path, ensuring it is absolute and
      * if a directory, suffixed by a trailing slash.
      *
-     * @todo $path should really be string. Array handling should not be part of this method, and other types
-     *       (such as bool) should really not be passed to this method in the first place. Further refactoring
-     *       is necessary to guarantee this.
+     * @todo Change $path from "mixed" to "string" in Fluid 6. The method signature has only been changed to
+     *       accommodate for an override of this method in TYPO3, which is no longer present. Fluid itself
+     *       never passed anything else to this method other than strings.
      * @param mixed $path
      * @return string|string[]
      */
     protected function sanitizePath(mixed $path): string|array
     {
+        // @todo remove this in Fluid 6
         if (is_array($path)) {
             $paths = array_map([$this, 'sanitizePath'], $path);
-            return array_unique($paths);
+            return $paths;
         }
         if (($wrapper = parse_url((string)$path, PHP_URL_SCHEME)) && in_array($wrapper, stream_get_wrappers())) {
             return $path;
@@ -305,7 +306,7 @@ class TemplatePaths
      */
     protected function sanitizePaths(array $paths): array
     {
-        return array_unique(array_map([$this, 'sanitizePath'], $paths));
+        return array_map([$this, 'sanitizePath'], $paths);
     }
 
     /**
