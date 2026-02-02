@@ -67,7 +67,7 @@ final class ReplaceViewHelper extends AbstractViewHelper
         $value = $this->arguments['value'] ?? $this->renderChildren();
         $search = $this->arguments['search'];
         $replace = $this->arguments['replace'];
-        if ($value === null || (!is_scalar($value) && !$value instanceof \Stringable)) {
+        if ($value !== null && !is_scalar($value) && !$value instanceof \Stringable) {
             throw new \InvalidArgumentException('A stringable value must be provided.', 1710441987);
         }
         if ($search === null) {
