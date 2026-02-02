@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\Parser\UnsafeHTML;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -38,6 +39,9 @@ final class EscapingNode extends AbstractNode
     public function evaluate(RenderingContextInterface $renderingContext): mixed
     {
         $evaluated = $this->node->evaluate($renderingContext);
+        if ($evaluated instanceof UnsafeHTML) {
+            return (string)$evaluated;
+        }
         if (is_string($evaluated) || (is_object($evaluated) && method_exists($evaluated, '__toString'))) {
             return htmlspecialchars((string)$evaluated, ENT_QUOTES);
         }
@@ -65,6 +69,7 @@ final class EscapingNode extends AbstractNode
         if ($configuration['execution'] !== '\'\'') {
             $configuration['execution'] = sprintf(
                 'call_user_func_array( function ($var) { '
+                . 'if ($var instanceof ' . UnsafeHTML::class . ') { return (string)$var; }'
                 . 'return (is_string($var) || (is_object($var) && method_exists($var, \'__toString\')) '
                 . '? htmlspecialchars((string) $var, ENT_QUOTES) : $var); }, [%s])',
                 $configuration['execution'],

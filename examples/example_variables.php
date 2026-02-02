@@ -13,6 +13,7 @@
  * how dynamic variable access works.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\UnsafeHTMLString;
 use TYPO3Fluid\FluidExamples\Helper\ExampleHelper;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -56,6 +57,8 @@ $view->assignMultiple([
     '123numericprefix' => 'Numeric prefixed variable',
     // A variable whose value refers to another variable name
     'dynamicVariableName' => 'foobar',
+    // An UnsafeHTML variable that will not be escaped when rendered
+    'unsafeHTML' => new UnsafeHTMLString('<strong>Safe HTML String</strong>'),
 ]);
 
 // Assigning the template path and filename to be rendered. Doing this overrides

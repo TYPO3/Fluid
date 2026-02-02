@@ -167,6 +167,9 @@ final class ExamplesTest extends AbstractFunctionalTestCase
                     'Received $array.baz with value 42',
                     'Received $array.xyz.foobar with value Escaped sub-string',
                     'Received $myVariable with value Nice string',
+                    'Received $unsafeHTML with unescaped value <strong>Safe HTML String</strong>',
+                    'Received $unsafeHTML with format.raw <strong>Safe HTML String</strong>',
+                    'Received $unsafeHTML with format.htmlspecialchars &lt;strong&gt;Safe HTML String&lt;/strong&gt;',
                 ],
             ],
             'example_variableprovider.php' => [

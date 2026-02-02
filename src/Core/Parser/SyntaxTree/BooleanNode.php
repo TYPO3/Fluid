@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
+use TYPO3Fluid\Fluid\Core\Parser\UnsafeHTML;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -126,6 +127,10 @@ final class BooleanNode extends AbstractNode
         }
         if (is_numeric($value)) {
             return (bool)((float)$value);
+        }
+        if ($value instanceof UnsafeHTML) {
+            // unpack UnsafeHTML to string, as it may be empty
+            $value = (string)$value;
         }
         if (is_string($value)) {
             if (strlen($value) === 0) {
