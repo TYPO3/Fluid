@@ -20,12 +20,6 @@ final class ReplaceViewHelperTest extends AbstractFunctionalTestCase
 {
     public static function throwsExceptionForInvalidArgumentDataProvider(): iterable
     {
-        yield 'without value' => [
-            '<f:replace search="foo" replace="bar" />',
-            [],
-            1710441987,
-            'A stringable value must be provided.',
-        ];
         yield 'array as value' => [
             '{value -> f:replace(search: \'foo\', replace: \'bar\')}',
             ['value' => [1, 2, 3]],
@@ -130,6 +124,11 @@ final class ReplaceViewHelperTest extends AbstractFunctionalTestCase
         yield 'search and replace in empty string' => [
             '<f:replace value="{value}" search="foo" replace="bar" />',
             ['value' => ''],
+            '',
+        ];
+        yield 'with null as value' => [
+            '<f:replace search="foo" replace="bar" value="{null}" />',
+            [],
             '',
         ];
     }
