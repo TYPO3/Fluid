@@ -38,7 +38,8 @@ Direct access of numeric prefixed variable: {123numericprefix}
 		xyz: '{
 			foobar: \'Escaped sub-string\'
 		}'
-	}
+	},
+	unsafeHTML: unsafeHTML
 }"/>
 
 </f:section>
@@ -51,4 +52,7 @@ Received $array.printf with formatted string {array.printf -> f:format.printf(ar
 Received $array.baz with value {array.baz}
 Received $array.xyz.foobar with value {array.xyz.foobar}
 Received $myVariable with value {myVariable}
+Received $unsafeHTML with unescaped value {unsafeHTML}
+Received $unsafeHTML with format.raw {unsafeHTML -> f:format.raw()}
+Received $unsafeHTML with format.htmlspecialchars {unsafeHTML -> f:format.htmlspecialchars()}
 </f:section>

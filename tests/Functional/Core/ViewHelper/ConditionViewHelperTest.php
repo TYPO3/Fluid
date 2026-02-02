@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Core\ViewHelper;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3Fluid\Fluid\Core\Parser\UnsafeHTMLString;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
 use TYPO3Fluid\Fluid\View\TemplateView;
@@ -78,6 +79,7 @@ final class ConditionViewHelperTest extends AbstractFunctionalTestCase
             'foo' => 'bar',
         ];
         $emptyCountable = new \SplObjectStorage();
+        $htmlString = new UnsafeHTMLString('baz');
 
         return [
             // simple assignments
@@ -93,6 +95,12 @@ final class ConditionViewHelperTest extends AbstractFunctionalTestCase
             ['{test1} === {test2}', true, ['test1' => 'abc', 'test2' => 'abc']],
             ['{test1} === {test2}', false, ['test1' => 1, 'test2' => true]],
             ['{test1} == {test2}', true, ['test1' => 1, 'test2' => true]],
+
+            // conditions with UnsafeHTMLString
+            ['{test}', true, ['test' => $htmlString]],
+            ['{test} == \'baz\'', true, ['test' => $htmlString]],
+            ['{test1} === {test2}', false, ['test1' => 'baz', 'test2' => $htmlString]],
+            ['{test1} == {test2}', true, ['test1' => 'baz', 'test2' => $htmlString]],
 
             // conditions with objects
             ['{user1} == {user1}', true, ['user1' => $user1]],
