@@ -37,12 +37,6 @@ parameters:
 			path: src/Core/Variables/JSONVariableProvider.php
 
 		-
-			message: '#^Parameter \#1 \$array of function array_unique expects an array of values castable to string, array\<array\<string\>\|string\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/View/TemplatePaths.php
-
-		-
 			message: '#^Variable \$iterationData might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1

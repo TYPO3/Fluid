@@ -49,6 +49,8 @@ final class TemplatePathsTest extends TestCase
             [['/foo/bar/baz', 'C:\\foo\\bar\\baz'], ['/foo/bar/baz', 'C:/foo/bar/baz']],
             [[__FILE__, __DIR__], [strtr(__FILE__, '\\', '/'), strtr(__DIR__, '\\', '/') . '/']],
             [['', 'composer.json'], ['', strtr(getcwd(), '\\', '/') . '/composer.json']],
+            [['/path/to/original', '/path/to/override'], ['/path/to/original', '/path/to/override']],
+            [['/path/to/original', '/path/to/override', '/path/to/original'], ['/path/to/original', '/path/to/override', '/path/to/original']],
         ];
     }
 
@@ -270,6 +272,13 @@ final class TemplatePathsTest extends TestCase
                 '',
                 'InBoth',
                 __DIR__ . '/Fixtures/TemplateResolving/Templates2/InBoth.html',
+            ],
+            // Use case: "Moving" a template path by adding it twice to the chain
+            'reorder template path chain' => [
+                [__DIR__ . '/Fixtures/TemplateResolving/Templates1', __DIR__ . '/Fixtures/TemplateResolving/Templates2', __DIR__ . '/Fixtures/TemplateResolving/Templates1'],
+                '',
+                'InBoth',
+                __DIR__ . '/Fixtures/TemplateResolving/Templates1/InBoth.html',
             ],
             'non-existent path is skipped' => [
                 [__DIR__ . '/Fixtures/TemplateResolving/Templates1', __DIR__ . '/Fixtures/TemplateResolving/TemplatesFoo'],
