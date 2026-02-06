@@ -543,7 +543,7 @@ class TemplateParser
                 $this->escapingEnabled = $escapingEnabledBackup;
             }
         }
-        $this->abortIfRequiredArgumentsAreMissing($argumentDefinitions, $argumentsObjectTree);
+        $this->abortIfRequiredArgumentsAreMissing($argumentDefinitions, $argumentsObjectTree, $viewHelperNode->getUninitializedViewHelper()->getContentArgumentName());
         $viewHelperNode->getUninitializedViewHelper()->validateAdditionalArguments($undeclaredArguments);
         return $argumentsObjectTree + $undeclaredArguments;
     }
@@ -816,7 +816,7 @@ class TemplateParser
             }
         }
         if ($viewHelperNode instanceof ViewHelperNode) {
-            $this->abortIfRequiredArgumentsAreMissing($argumentDefinitions, $arrayToBuild);
+            $this->abortIfRequiredArgumentsAreMissing($argumentDefinitions, $arrayToBuild, $viewHelperNode->getUninitializedViewHelper()->getContentArgumentName());
             $viewHelperNode->getUninitializedViewHelper()->validateAdditionalArguments($undeclaredArguments);
         }
         return $arrayToBuild + $undeclaredArguments;
@@ -851,10 +851,14 @@ class TemplateParser
      * @param NodeInterface[] $actualArguments Actual arguments
      * @throws Exception
      */
-    protected function abortIfRequiredArgumentsAreMissing(array $expectedArguments, array $actualArguments): void
+    protected function abortIfRequiredArgumentsAreMissing(array $expectedArguments, array $actualArguments, ?string $contentArgumentName): void
     {
         $actualArgumentNames = array_keys($actualArguments);
         foreach ($expectedArguments as $name => $expectedArgument) {
+            if ($name === $contentArgumentName) {
+                continue;
+            }
+
             if ($expectedArgument->isRequired() && !in_array($name, $actualArgumentNames)) {
                 throw new Exception('Required argument "' . $name . '" was not supplied.', 1237823699);
             }
