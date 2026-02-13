@@ -183,7 +183,7 @@ class BooleanParser
             $y = $this->parseAndToken();
 
             if ($this->compileToCode === true) {
-                $x = '(' . $x . ' || ' . $y . ')';
+                $x = '(' . $this->compileCheckForUnsafeHTML($x) . ' || ' . $this->compileCheckForUnsafeHTML($y) . ')';
                 continue;
             }
             $x = $this->evaluateOr($x, $y);
@@ -205,7 +205,7 @@ class BooleanParser
             $y = $this->parseCompareToken();
 
             if ($this->compileToCode === true) {
-                $x = '(' . $x . ' && ' . $y . ')';
+                $x = '(' . $this->compileCheckForUnsafeHTML($x) . ' && ' . $this->compileCheckForUnsafeHTML($y) . ')';
                 continue;
             }
             $x = $this->evaluateAnd($x, $y);
@@ -243,7 +243,7 @@ class BooleanParser
             $x = $this->parseNotToken();
 
             if ($this->compileToCode === true) {
-                return '!(' . $x . ')';
+                return '!(' . $this->compileCheckForUnsafeHTML($x) . ')';
             }
             return $this->evaluateNot($x);
         }
@@ -321,7 +321,7 @@ class BooleanParser
      */
     protected function evaluateAnd(mixed $x, mixed $y): bool
     {
-        return $x && $y;
+        return $this->checkForUnsafeHtml($x) && $this->checkForUnsafeHtml($y);
     }
 
     /**
@@ -329,7 +329,7 @@ class BooleanParser
      */
     protected function evaluateOr(mixed $x, mixed $y): bool
     {
-        return $x || $y;
+        return $this->checkForUnsafeHtml($x) || $this->checkForUnsafeHtml($y);
     }
 
     /**
@@ -337,7 +337,7 @@ class BooleanParser
      */
     protected function evaluateNot(mixed $x): bool
     {
-        return !$x;
+        return !$this->checkForUnsafeHtml($x);
     }
 
     /**
@@ -348,24 +348,32 @@ class BooleanParser
     protected function evaluateCompare(mixed $x, mixed $y, string $comparator)
     {
         if ($this->compileToCode === true) {
-            return sprintf('(%s %s %s)', $x, $comparator, $y);
+            // UnsafeHTML will not be unpacked here, so the === can be used to check for it.
+            if ($comparator === '===' || $comparator === '!==') {
+                return sprintf('(%s %s %s)', $x, $comparator, $y);
+            }
+            return sprintf('(%s %s %s)', $this->compileCheckForUnsafeHTML($x), $comparator, $this->compileCheckForUnsafeHTML($y));
         }
+
+        // UnsafeHTML will not be unpacked here, so the === can be used to check for it.
+        switch ($comparator) {
+            case '===':
+                return $x === $y;
+
+            case '!==':
+                return $x !== $y;
+        }
+
+        $x = $this->checkForUnsafeHtml($x);
+        $y = $this->checkForUnsafeHtml($y);
 
         switch ($comparator) {
             case '==':
                 $x = ($x == $y);
                 break;
 
-            case '===':
-                $x = ($x === $y);
-                break;
-
             case '!=':
                 $x = ($x != $y);
-                break;
-
-            case '!==':
-                $x = ($x !== $y);
                 break;
 
             case '<=':
@@ -435,6 +443,19 @@ class BooleanParser
         }
 
         return trim($x, '\'"');
+    }
+
+    protected function checkForUnsafeHtml(mixed $x): mixed
+    {
+        if ($x instanceof UnsafeHTML) {
+            return (string)$x;
+        }
+        return $x;
+    }
+
+    protected function compileCheckForUnsafeHTML(string $x): string
+    {
+        return '(' . $x . ' instanceof \\' . UnsafeHTML::class . ' ? (string)' . $x . ' : ' . $x . ')';
     }
 
     public static function convertNodeToBoolean(mixed $value)
