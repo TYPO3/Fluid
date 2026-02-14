@@ -71,3 +71,19 @@ The following variable names are **reserved** and *must not* be used:
 *   `true`
 *   `false`
 *   `null`
+
+..  versionadded:: Fluid 5.0
+
+Starting with Fluid 5, all variable names starting with an underscore are reserved
+for internal purposes as well. Note that this only affects the primary variable name,
+not the name of array keys or object properties.
+
+..  code-block:: html
+
+    <!-- invalid variable access -->
+    {_temp}
+    {_somethingElse}
+
+    <!-- valid variable access -->
+    {data._something}
+    {myArray._myKey}
