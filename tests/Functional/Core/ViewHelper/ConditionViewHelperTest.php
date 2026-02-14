@@ -80,6 +80,7 @@ final class ConditionViewHelperTest extends AbstractFunctionalTestCase
         ];
         $emptyCountable = new \SplObjectStorage();
         $htmlString = new UnsafeHTMLString('baz');
+        $emptyHtmlString = new UnsafeHTMLString('');
 
         return [
             // simple assignments
@@ -98,9 +99,50 @@ final class ConditionViewHelperTest extends AbstractFunctionalTestCase
 
             // conditions with UnsafeHTMLString
             ['{test}', true, ['test' => $htmlString]],
+            ['!{test}', false, ['test' => $htmlString]],
+
             ['{test} == \'baz\'', true, ['test' => $htmlString]],
             ['{test1} === {test2}', false, ['test1' => 'baz', 'test2' => $htmlString]],
             ['{test1} == {test2}', true, ['test1' => 'baz', 'test2' => $htmlString]],
+            ['{test} != \'baz\'', false, ['test' => $htmlString]],
+            ['{test1} !== {test2}', true, ['test1' => 'baz', 'test2' => $htmlString]],
+            ['{test1} != {test2}', false, ['test1' => 'baz', 'test2' => $htmlString]],
+
+            ['{test1} < {test2}', true, ['test1' => 'a', 'test2' => $htmlString]],
+            ['{test1} < {test2}', false, ['test1' => 'z', 'test2' => $htmlString]],
+            ['{test1} < {test2}', false, ['test1' => 'baz', 'test2' => $htmlString]],
+            ['{test1} > {test2}', false, ['test1' => 'a', 'test2' => $htmlString]],
+            ['{test1} > {test2}', true, ['test1' => 'z', 'test2' => $htmlString]],
+            ['{test1} > {test2}', false, ['test1' => 'baz', 'test2' => $htmlString]],
+
+            ['{test1} <= {test2}', true, ['test1' => 'a', 'test2' => $htmlString]],
+            ['{test1} <= {test2}', false, ['test1' => 'z', 'test2' => $htmlString]],
+            ['{test1} <= {test2}', true, ['test1' => 'baz', 'test2' => $htmlString]],
+            ['{test1} >= {test2}', false, ['test1' => 'a', 'test2' => $htmlString]],
+            ['{test1} >= {test2}', true, ['test1' => 'z', 'test2' => $htmlString]],
+            ['{test1} >= {test2}', true, ['test1' => 'baz', 'test2' => $htmlString]],
+
+            ['{test1} % {test2}', false, ['test1' => '0', 'test2' => new UnsafeHTMLString('2')]],
+            ['{test1} % {test2}', true, ['test1' => '1', 'test2' => new UnsafeHTMLString('2')]],
+            ['{test1} % {test2}', false, ['test1' => '2', 'test2' => new UnsafeHTMLString('2')]],
+            ['{test1} % {test2}', true, ['test1' => '3', 'test2' => new UnsafeHTMLString('2')]],
+            ['{test1} % {test2}', false, ['test1' => '4', 'test2' => new UnsafeHTMLString('2')]],
+
+            ['{test}', false, ['test' => $emptyHtmlString]],
+            ['!{test}', true, ['test' => $emptyHtmlString]],
+            ['{test1} || {test2}', false, ['test1' => $emptyHtmlString, 'test2' => '']],
+            ['{test1} || {test2}', false, ['test1' => $emptyHtmlString, 'test2' => $emptyHtmlString]],
+            ['{test1} || {test2}', false, ['test1' => '', 'test2' => $emptyHtmlString]],
+            ['{test1} || {test2}', true, ['test1' => $htmlString, 'test2' => '']],
+            ['{test1} || {test2}', true, ['test1' => '', 'test2' => $htmlString]],
+
+            ['{test1} && {test2}', false, ['test1' => $emptyHtmlString, 'test2' => '']],
+            ['{test1} && {test2}', false, ['test1' => $emptyHtmlString, 'test2' => $emptyHtmlString]],
+            ['{test1} && {test2}', false, ['test1' => '', 'test2' => $emptyHtmlString]],
+
+            ['{test1} && {test2}', true, ['test1' => $htmlString, 'test2' => 'abc']],
+            ['{test1} && {test2}', true, ['test1' => $htmlString, 'test2' => $htmlString]],
+            ['{test1} && {test2}', true, ['test1' => 'abc', 'test2' => $htmlString]],
 
             // conditions with objects
             ['{user1} == {user1}', true, ['user1' => $user1]],
