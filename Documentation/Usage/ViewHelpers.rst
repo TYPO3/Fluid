@@ -142,6 +142,8 @@ this would be the result:
 Boolean attributes
 ------------------
 
+..  versionadded:: Fluid 4.0
+
 You can use the boolean literals `{true}` and `{false}` to enable or disable
 attributes of tag-based ViewHelpers:
 
