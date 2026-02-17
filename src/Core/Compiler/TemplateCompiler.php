@@ -204,15 +204,7 @@ class TemplateCompiler
             return '';
         }
         $argumentDefinitionsCode = array_map(
-            static fn(ArgumentDefinition $argumentDefinition): string => sprintf(
-                'new \\TYPO3Fluid\\Fluid\\Core\\ViewHelper\\ArgumentDefinition(%s, %s, %s, %s, %s, %s)',
-                var_export($argumentDefinition->getName(), true),
-                var_export($argumentDefinition->getType(), true),
-                var_export($argumentDefinition->getDescription(), true),
-                var_export($argumentDefinition->isRequired(), true),
-                var_export($argumentDefinition->getDefaultValue(), true),
-                var_export($argumentDefinition->getEscape(), true),
-            ),
+            static fn(ArgumentDefinition $argumentDefinition): string => $argumentDefinition->compile(),
             $argumentDefinitions,
         );
         return 'public function getArgumentDefinitions(): array {' . chr(10)
