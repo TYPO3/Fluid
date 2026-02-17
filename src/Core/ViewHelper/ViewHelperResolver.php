@@ -360,6 +360,10 @@ class ViewHelperResolver
      * the final method called when creating ViewHelper classes -
      * overriding this method allows custom constructors, dependency
      * injections etc. to be performed on the ViewHelper instance.
+     *
+     * @template T of ViewHelperInterface
+     * @param class-string<T> $viewHelperClassName
+     * @return T
      */
     public function createViewHelperInstanceFromClassName(string $viewHelperClassName): ViewHelperInterface
     {
