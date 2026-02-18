@@ -258,6 +258,31 @@ final class SchemaGeneratorTest extends TestCase
                 . '</xsd:element>'
                 . '</xsd:schema>' . "\n",
             ],
+            'component' => [
+                'http://typo3.org/ns/Vendor/Package/Components',
+                [
+                    new ViewHelperMetadata(
+                        null,
+                        'Vendor\\Package',
+                        null,
+                        'myComponent',
+                        'Available slots: default',
+                        'http://typo3.org/ns/Vendor/Package/Components',
+                        [],
+                        [],
+                        false,
+                    ),
+                ],
+                '<?xml version="1.0" encoding="UTF-8"?>' . "\n"
+                . '<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://typo3.org/ns/Vendor/Package/Components">'
+                . '<xsd:element name="myComponent">'
+                . '<xsd:annotation><xsd:documentation><![CDATA[Available slots: default]]></xsd:documentation></xsd:annotation>'
+                . '<xsd:complexType mixed="true">'
+                . '<xsd:sequence><xsd:any minOccurs="0"/></xsd:sequence>'
+                . '</xsd:complexType>'
+                . '</xsd:element>'
+                . '</xsd:schema>' . "\n",
+            ],
         ];
     }
 
