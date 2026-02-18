@@ -25,7 +25,7 @@ use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\WrongDirectoryViewHelper;
 
 final class ViewHelperMetadataFactoryTest extends TestCase
 {
-    public static function createObjectDataProvider(): iterable
+    public static function createFromViewHelperClassDataProvider(): iterable
     {
         return [
             'WithoutDocumentationViewHelper' => [
@@ -72,8 +72,8 @@ final class ViewHelperMetadataFactoryTest extends TestCase
     }
 
     #[Test]
-    #[DataProvider('createObjectDataProvider')]
-    public function createObject(
+    #[DataProvider('createFromViewHelperClassDataProvider')]
+    public function createFromViewHelperClass(
         string $className,
         string $namespace,
         string $name,
@@ -98,7 +98,7 @@ final class ViewHelperMetadataFactoryTest extends TestCase
         );
     }
 
-    public static function createObjectFailureDataProvider(): iterable
+    public static function createFromViewHelperClassFailureDataProvider(): iterable
     {
         return [
             'NonexistentViewHelper' => ['TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers\\NonexistentViewHelper'],
@@ -110,8 +110,8 @@ final class ViewHelperMetadataFactoryTest extends TestCase
     }
 
     #[Test]
-    #[DataProvider('createObjectFailureDataProvider')]
-    public function createObjectFailure(string $className): void
+    #[DataProvider('createFromViewHelperClassFailureDataProvider')]
+    public function createFromViewHelperClassFailure(string $className): void
     {
         self::expectException(\InvalidArgumentException::class);
         (new ViewHelperMetadataFactory())->createFromViewhelperClass($className);
