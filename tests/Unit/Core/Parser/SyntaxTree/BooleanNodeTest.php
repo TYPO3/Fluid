@@ -481,7 +481,7 @@ final class BooleanNodeTest extends TestCase
     }
 
     #[Test]
-    public function objectsAreComparedStrictly(): void
+    public function objectsAreComparedLoosely(): void
     {
         $renderingContext = new RenderingContext();
         $renderingContext->getVariableProvider()->add('object1', new \stdClass());
@@ -493,11 +493,11 @@ final class BooleanNodeTest extends TestCase
         $rootNode->addChildNode(new ObjectAccessorNode('object2'));
 
         $booleanNode = new BooleanNode($rootNode);
-        self::assertFalse($booleanNode->evaluate($renderingContext));
+        self::assertTrue($booleanNode->evaluate($renderingContext));
     }
 
     #[Test]
-    public function objectsAreComparedStrictlyInUnequalComparison(): void
+    public function objectsAreComparedLooselyInUnequalComparison(): void
     {
         $renderingContext = new RenderingContext();
         $renderingContext->getVariableProvider()->add('object1', new \stdClass());
@@ -510,7 +510,7 @@ final class BooleanNodeTest extends TestCase
         $rootNode->addChildNode(new ObjectAccessorNode('object2'));
 
         $booleanNode = new BooleanNode($rootNode);
-        self::assertTrue($booleanNode->evaluate($renderingContext));
+        self::assertFalse($booleanNode->evaluate($renderingContext));
     }
 
     public static function getStandardInputTypes(): array
