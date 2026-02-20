@@ -46,6 +46,17 @@ jobs:
       - name: Phpunit
         run: vendor/bin/phpunit
 
+      - name: Infection
+        run: vendor/bin/infection
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: Infection results ${{ matrix.php }}
+          path: infection.html
+
+      - name: cleanup after Infection
+        run: git clean -f
+
       - name: Documentation integrity
         run: |
           # Generate ViewHelper documentation
