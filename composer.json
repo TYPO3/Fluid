@@ -13,12 +13,16 @@
         "ext-mbstring": "*"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "infection/extension-installer": true
+        }
     },
     "require-dev": {
         "ext-json": "*",
         "ext-simplexml": "*",
         "friendsofphp/php-cs-fixer": "^3.94.2",
+        "infection/infection": "^0.32.6",
         "phpstan/phpstan": "^2.1.40",
         "phpstan/phpstan-phpunit": "^2.0.16",
         "phpunit/phpunit": "^11.5.55 || ^12.5.14 || ^13.0.5",

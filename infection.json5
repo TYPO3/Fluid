@@ -1,0 +1,20 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "src"
+        ]
+    },
+    "mutators": {
+        "@default": true,
+        // for now we disable these mutators as they cause too many false positives:
+        "PublicVisibility": false,
+        "ProtectedVisibility": false,
+        "MBString": false,
+    },
+    "threads": "max",
+    "initialTestsPhpOptions": "-d xdebug.mode=coverage",
+    "logs": {
+        "html": "infection.html"
+    }
+}
