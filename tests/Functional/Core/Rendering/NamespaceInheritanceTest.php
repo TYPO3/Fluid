@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Rendering;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
@@ -123,6 +124,7 @@ final class NamespaceInheritanceTest extends AbstractFunctionalTestCase
 
     #[Test]
     #[DataProvider('namespacesDefinedInTemplateCannotBeUsedInLayoutAndPartialsDataProvider')]
+    #[Depends('namespacesDefinedInTemplateCannotBeUsedInLayoutAndPartialsUncached')]
     public function namespacesDefinedInTemplateCannotBeUsedInLayoutAndPartialsCached(string $source, array $initialNamespaces, array $variables, array $expectedNamespaces, string $expectedResult): void
     {
         self::expectException(UnknownNamespaceException::class);
@@ -213,6 +215,7 @@ final class NamespaceInheritanceTest extends AbstractFunctionalTestCase
 
     #[Test]
     #[DataProvider('templatesCanUseNamespacesTheyDefinedDataProvider')]
+    #[Depends('namespacesDefinedInTemplateCannotBeUsedInLayoutAndPartialsCached')]
     public function templatesCanUseNamespacesTheyDefined(string $source, array $initialNamespaces, array $variables, array $expectedNamespaces, string $expectedResult): void
     {
         // Uncached
