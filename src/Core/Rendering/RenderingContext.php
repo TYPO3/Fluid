@@ -15,6 +15,7 @@ use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\MathExpressionNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\NullcoalescingExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\EscapingModifierTemplateProcessor;
@@ -113,6 +114,7 @@ class RenderingContext implements RenderingContextInterface
     protected $expressionNodeTypes = [
         CastingExpressionNode::class,
         MathExpressionNode::class,
+        NullcoalescingExpressionNode::class,
         TernaryExpressionNode::class,
     ];
 
