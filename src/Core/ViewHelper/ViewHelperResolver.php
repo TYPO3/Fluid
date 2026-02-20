@@ -451,10 +451,10 @@ class ViewHelperResolver
                 if ($namespace === null) {
                     continue;
                 }
-                $this->resolverDelegates[$namespace] ??= $this->createResolverDelegateInstanceFromClassName($namespace);
+                $delegate = $this->getResolverDelegate($namespace);
                 try {
-                    $this->resolverDelegates[$namespace]->resolveViewHelperClassName($methodIdentifier);
-                    return $this->resolverDelegates[$namespace];
+                    $delegate->resolveViewHelperClassName($methodIdentifier);
+                    return $delegate;
                 } catch (UnresolvableViewHelperException $e) {
                 }
             }
@@ -505,9 +505,23 @@ class ViewHelperResolver
     }
 
     /**
+     * Returns a resolver delegate instance. This should be preferred over
+     * createResolverDelegateInstanceFromClassName() because the internal
+     * runtime cache is used to fetch the shared delegate objects, which
+     * prevents duplicate object creation.
+     */
+    public function getResolverDelegate(string $delegateClassName): ViewHelperResolverDelegateInterface
+    {
+        $this->resolverDelegates[$delegateClassName] ??= $this->createResolverDelegateInstanceFromClassName($delegateClassName);
+        return $this->resolverDelegates[$delegateClassName];
+    }
+
+    /**
      * Creates a ViewHelperResolver delegate object based on a ViewHelper
      * namespace string. This can be overridden by frameworks to implement
      * dependency injection or custom fallback logic.
+     *
+     * @todo mark protected with Fluid 6
      */
     public function createResolverDelegateInstanceFromClassName(string $delegateClassName): ViewHelperResolverDelegateInterface
     {
@@ -548,9 +562,9 @@ class ViewHelperResolver
                 if ($namespace === null) {
                     continue;
                 }
-                $this->resolverDelegates[$namespace] ??= $this->createResolverDelegateInstanceFromClassName($namespace);
+                $delegate = $this->getResolverDelegate($namespace);
                 try {
-                    return $this->resolverDelegates[$namespace]->resolveViewHelperClassName($methodIdentifier);
+                    return $delegate->resolveViewHelperClassName($methodIdentifier);
                 } catch (UnresolvableViewHelperException $e) {
                     $lastException = $e;
                 }

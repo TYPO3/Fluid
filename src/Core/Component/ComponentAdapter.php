@@ -187,7 +187,7 @@ final class ComponentAdapter implements ViewHelperInterface
         // cached templates
         $resolverDelegate = $this->getComponentDefinitionProvider();
         $convertedViewHelperExecutionCode = sprintf(
-            '$renderingContext->getViewHelperResolver()->createResolverDelegateInstanceFromClassName(%s)->getComponentRenderer()->renderComponent(%s, %s, %s, $renderingContext)',
+            '$renderingContext->getViewHelperResolver()->getResolverDelegate(%s)->getComponentRenderer()->renderComponent(%s, %s, %s, $renderingContext)',
             var_export($resolverDelegate->getNamespace(), true),
             var_export($this->viewHelperNode->getName(), true),
             $argumentsVariableName,
