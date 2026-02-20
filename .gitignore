@@ -5,3 +5,4 @@ composer.lock
 vendor
 examples/cache/
 /Documentation-GENERATED-temp/
+infection.html
