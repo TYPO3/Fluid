@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Component;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
@@ -127,6 +128,7 @@ final class ComponentRenderingTest extends AbstractFunctionalTestCase
 
     #[Test]
     #[DataProvider('basicComponentCollectionValidatesArgumentsCachedDataProvider')]
+    #[Depends('basicComponentCollectionValidatesArgumentsUncached')]
     public function basicComponentCollectionValidatesArgumentsCached(string $source, int $expectedExceptionCode): void
     {
         self::expectExceptionCode($expectedExceptionCode);

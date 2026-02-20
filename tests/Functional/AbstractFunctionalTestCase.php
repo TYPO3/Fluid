@@ -38,7 +38,8 @@ abstract class AbstractFunctionalTestCase extends TestCase
 
     public function setUp(): void
     {
-        self::$cachePath = sys_get_temp_dir() . '/' . 'fluid-functional-tests-' . hash('xxh3', __CLASS__);
+        // we add microtime() to allow parallel execution of tests.
+        self::$cachePath = sys_get_temp_dir() . '/' . 'fluid-functional-tests-' . hash('xxh3', __CLASS__ . $this->nameWithDataSet() . microtime());
         mkdir(self::$cachePath);
         self::$cache = (new SimpleFileCache(self::$cachePath));
     }

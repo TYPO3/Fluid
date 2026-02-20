@@ -11,11 +11,11 @@ declare(strict_types=1);
 use TYPO3Fluid\Fluid\Tools\ConsoleRunner;
 
 if (file_exists(__DIR__ . '/../autoload.php')) {
-    $autoloader = require_once __DIR__ . '/../autoload.php';
+    $autoloader = require __DIR__ . '/../autoload.php';
 } elseif (file_exists(__DIR__ . '/../vendor/autoload.php')) {
-    $autoloader = require_once __DIR__ . '/../vendor/autoload.php';
+    $autoloader = require __DIR__ . '/../vendor/autoload.php';
 } elseif (file_exists(__DIR__ . '/../../../autoload.php')) {
-    $autoloader = require_once __DIR__ . '/../../../autoload.php';
+    $autoloader = require __DIR__ . '/../../../autoload.php';
 }
 
 $runner = new ConsoleRunner();
