@@ -8,6 +8,10 @@ Components
 
 ..  versionadded:: Fluid 4.3
 
+    You can run `composer show typo3fluid/fluid` to determine the  Fluid
+    version you are using. Fluid 4.3 is automatically shipped with 
+    TYPO3 v13.4.
+
 Fluid's components are custom HTML-like tags based on Fluid templates that you can
 reuse throughout your project. The concept is similar to popular frontend
 frameworks like React and Vue or native Web Components, but they are server-rendered
