@@ -256,6 +256,25 @@ final class ViewHelperResolverTest extends TestCase
         self::assertInstanceOf($expectedInstanceOf, $result);
     }
 
+    #[DataProvider('createResolverDelegateInstanceFromClassNameDataProvider')]
+    #[Test]
+    public function getResolverDelegateReturnsValidInstance(string $resolverClassName, string $expectedInstanceOf): void
+    {
+        $subject = new ViewHelperResolver();
+        $result = $subject->getResolverDelegate($resolverClassName);
+        self::assertInstanceOf($expectedInstanceOf, $result);
+    }
+
+    #[Test]
+    public function getResolverDelegateSharesInstances(): void
+    {
+        $subject = new ViewHelperResolver();
+        self::assertSame(
+            $subject->getResolverDelegate(TestViewHelperResolverDelegate::class),
+            $subject->getResolverDelegate(TestViewHelperResolverDelegate::class),
+        );
+    }
+
     public static function getResponsibleDelegateDataProvider(): iterable
     {
         return [
