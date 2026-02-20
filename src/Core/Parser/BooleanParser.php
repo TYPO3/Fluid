@@ -347,14 +347,6 @@ class BooleanParser
      */
     protected function evaluateCompare(mixed $x, mixed $y, string $comparator)
     {
-        // enfore strong comparison for comparing two objects
-        if ($comparator === '==' && is_object($x) && is_object($y)) {
-            $comparator = '===';
-        }
-        if ($comparator === '!=' && is_object($x) && is_object($y)) {
-            $comparator = '!==';
-        }
-
         if ($this->compileToCode === true) {
             return sprintf('(%s %s %s)', $x, $comparator, $y);
         }

@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use stdClass;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -432,6 +433,16 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
             ['verdict' => true],
             true,
         ];
+        yield 'object comparison ==' => [
+            '<f:if condition="{obj1} == {obj2}" />',
+            ['obj1' => new stdClass(), 'obj2' => new stdClass()],
+            true,
+        ];
+        yield 'object comparison ===' => [
+            '<f:if condition="{obj1} === {obj2}" />',
+            ['obj1' => new stdClass(), 'obj2' => new stdClass()],
+            false,
+        ];
 
         yield 'inline syntax, then argument, verdict true' => [
             '{f:if(condition:\'{verdict}\', then:\'thenArgument\')}',
@@ -595,12 +606,12 @@ final class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
         $view->assignMultiple($variables);
         $view->getRenderingContext()->setCache(self::$cache);
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($template);
-        self::assertSame($expected, $view->render());
+        self::assertSame($expected, $view->render(), 'uncached');
 
         $view = new TemplateView();
         $view->assignMultiple($variables);
         $view->getRenderingContext()->setCache(self::$cache);
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($template);
-        self::assertSame($expected, $view->render());
+        self::assertSame($expected, $view->render(), 'cached');
     }
 }
