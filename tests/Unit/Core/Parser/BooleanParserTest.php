@@ -12,6 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
@@ -104,6 +105,20 @@ final class BooleanParserTest extends TestCase
             ['{foo}', true, ['foo' => true]],
             ['{foo} == FALSE', true, ['foo' => false]],
             ['!{foo}', true, ['foo' => false]],
+
+            ['{obj1} == {obj2}', true, ['obj1' => new stdClass(), 'obj2' => new stdClass()]],
+            ['{obj1} != {obj2}', false, ['obj1' => new stdClass(), 'obj2' => new stdClass()]],
+            ['{obj1} === {obj2}', false, ['obj1' => new stdClass(), 'obj2' => new stdClass()]],
+            ['{obj1} !== {obj2}', true, ['obj1' => new stdClass(), 'obj2' => new stdClass()]],
+
+            ['{foo}', false, ['foo' => new UnsafeHTMLString('')]],
+            ["{foo} == ''", true, ['foo' => new UnsafeHTMLString('')]],
+            ['{foo}', true, ['foo' => new UnsafeHTMLString('test')]],
+            ['{foo} == FALSE', false, ['foo' => new UnsafeHTMLString('test')]],
+            ['{foo} == TRUE', true, ['foo' => new UnsafeHTMLString('test')]],
+            ["{foo} == 'test'", true, ['foo' => new UnsafeHTMLString('test')]],
+            ['{foo} === TRUE', false, ['foo' => new UnsafeHTMLString('0')]],
+            ['{foo} === \'0\'', false, ['foo' => new UnsafeHTMLString('0')]],
 
             /*
              * @todo This should work but doesn't at the moment. This is probably related to the boolean
