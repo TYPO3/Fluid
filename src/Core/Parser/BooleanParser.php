@@ -31,14 +31,20 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  *                      parseBracketToken: takes care of any '()' parts and restarts the cycle
  *                          parseStringToken: takes care of any strings
  *                              evaluateTerm: evaluate terms from true/false/numeric/context
+ *
+ * @todo mark as final with Fluid 6
  */
 class BooleanParser
 {
     /**
      * List of comparators to check in the parseCompareToken if the current
      * part of the expression is a comparator and needs to be compared
+     *
+     * @todo convert to array in Fluid 6
      */
     public const COMPARATORS = '==,===,!==,!=,<=,>=,<,>,%';
+
+    protected const STRICT_COMPARATORS = ['===', '!=='];
 
     /**
      * Regex to parse a expression into tokens
@@ -219,12 +225,19 @@ class BooleanParser
      *
      * @return mixed
      */
-    protected function parseCompareToken()
+    protected function parseCompareToken(bool $strictComparison = false)
     {
-        $x = $this->parseNotToken();
+        $startCursor = $this->cursor;
+        $x = $this->parseNotToken($strictComparison);
         while (in_array($comparator = $this->peek(), explode(',', static::COMPARATORS))) {
             $this->consume($comparator);
-            $y = $this->parseNotToken();
+            // If a strict comparator is used, the comparison token needs to be re-parsed
+            // because $x shouldn't get preprocessed by convertNodeToBoolean()
+            if (!$strictComparison && in_array($comparator, static::STRICT_COMPARATORS)) {
+                $this->cursor = $startCursor;
+                return $this->parseCompareToken(true);
+            }
+            $y = $this->parseNotToken($strictComparison);
             $x = $this->evaluateCompare($x, $y, $comparator);
         }
         return $x;
@@ -236,11 +249,11 @@ class BooleanParser
      *
      * @return mixed
      */
-    protected function parseNotToken()
+    protected function parseNotToken(bool $strictComparison = false)
     {
         if ($this->peek() === '!') {
             $this->consume('!');
-            $x = $this->parseNotToken();
+            $x = $this->parseNotToken($strictComparison);
 
             if ($this->compileToCode === true) {
                 return '!(' . $x . ')';
@@ -248,7 +261,7 @@ class BooleanParser
             return $this->evaluateNot($x);
         }
 
-        return $this->parseBracketToken();
+        return $this->parseBracketToken($strictComparison);
     }
 
     /**
@@ -257,7 +270,7 @@ class BooleanParser
      *
      * @return mixed
      */
-    protected function parseBracketToken()
+    protected function parseBracketToken(bool $strictComparison = false)
     {
         $t = $this->peek();
         if ($t === '(') {
@@ -267,7 +280,7 @@ class BooleanParser
             return $result;
         }
 
-        return $this->parseStringToken();
+        return $this->parseStringToken($strictComparison);
     }
 
     /**
@@ -276,7 +289,7 @@ class BooleanParser
      *
      * @return mixed
      */
-    protected function parseStringToken()
+    protected function parseStringToken(bool $strictComparison = false)
     {
         $t = $this->peek();
         if ($t === '\'' || $t === '"') {
@@ -296,10 +309,10 @@ class BooleanParser
             if ($this->compileToCode === true) {
                 return $string;
             }
-            return $this->evaluateTerm($string, $this->context);
+            return $this->evaluateTerm($string, $this->context, $strictComparison);
         }
 
-        return $this->parseTermToken();
+        return $this->parseTermToken($strictComparison);
     }
 
     /**
@@ -309,11 +322,11 @@ class BooleanParser
      *
      * @return mixed
      */
-    protected function parseTermToken()
+    protected function parseTermToken(bool $strictComparison = false)
     {
         $t = $this->peek();
         $this->consume($t);
-        return $this->evaluateTerm($t, $this->context);
+        return $this->evaluateTerm($t, $this->context, $strictComparison);
     }
 
     /**
@@ -398,13 +411,17 @@ class BooleanParser
      *
      * @return mixed
      */
-    protected function evaluateTerm(string $x, array $context)
+    protected function evaluateTerm(string $x, array $context, bool $strictComparison = false)
     {
         if (isset($context[$x]) || (mb_strpos($x, '{') === 0 && mb_substr($x, -1) === '}')) {
             if ($this->compileToCode === true) {
-                return BooleanParser::class . '::convertNodeToBoolean($context["' . trim($x, '{}') . '"])';
+                return $strictComparison
+                    ? '$context["' . trim($x, '{}') . '"]'
+                    : BooleanParser::class . '::convertNodeToBoolean($context["' . trim($x, '{}') . '"])';
             }
-            return self::convertNodeToBoolean($context[trim($x, '{}')]);
+            return $strictComparison
+                ? $context[trim($x, '{}')]
+                : self::convertNodeToBoolean($context[trim($x, '{}')]);
         }
 
         if (is_numeric($x)) {
@@ -441,6 +458,9 @@ class BooleanParser
     {
         if ($value instanceof \Countable) {
             return count($value) > 0;
+        }
+        if ($value instanceof UnsafeHTML) {
+            return (string)$value;
         }
         return $value;
     }
