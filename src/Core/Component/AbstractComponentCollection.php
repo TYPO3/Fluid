@@ -9,10 +9,12 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Core\Component;
 
+use ReflectionMethod;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateStructureViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\UnresolvableViewHelperException;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolverDelegateInterface;
+use TYPO3Fluid\Fluid\View\TemplatePaths;
 
 /**
  * Base class for a collection of components: Fluid templates that can be called with Fluid's
@@ -21,7 +23,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolverDelegateInterface;
  *
  * @api
  */
-abstract class AbstractComponentCollection implements ViewHelperResolverDelegateInterface, ComponentDefinitionProviderInterface, ComponentTemplateResolverInterface
+abstract class AbstractComponentCollection implements ViewHelperResolverDelegateInterface, ComponentDefinitionProviderInterface, ComponentTemplateResolverInterface, ComponentListProviderInterface
 {
     /**
      * Runtime cache for component definitions. This mainly speeds up uncached templates since we
@@ -32,11 +34,13 @@ abstract class AbstractComponentCollection implements ViewHelperResolverDelegate
     private array $componentDefinitionsCache = [];
 
     /**
-     * Overwrite this method if you want to use a different folder structure for component templates
+     * Overwrite this method if you want to use a different folder structure for component templates.
+     * Note that getAvailableComponents() might need adjustment as well to get consistent results.
      *
      * @param string $viewHelperName  ViewHelper tag name from a template, e. g. atom.button
      * @return string                 Component template name to be used for this ViewHelper,
      *                                without format suffix, e. g. Atom/Button/Button
+     * @see getAvailableComponents()
      */
     public function resolveTemplateName(string $viewHelperName): string
     {
@@ -44,6 +48,59 @@ abstract class AbstractComponentCollection implements ViewHelperResolverDelegate
         $name = array_pop($fragments);
         $path = implode('/', $fragments);
         return ($path !== '' ? $path . '/' : '') . $name . '/' . $name;
+    }
+
+    /**
+     * Discovers all available components in the collection. Note that this default implementation
+     * assumes the same folder structure as the default implementation of resolveTemplateName().
+     *
+     * @return string[]
+     * @see resolveTemplateName()
+     */
+    public function getAvailableComponents(): array
+    {
+        /**
+         * To not return an inconsistent result for existing component collections that use a different
+         * folder structure by overriding resolveTemplateName(), we check if that method has been
+         * overridden and then default to an empty array. In those cases, a custom getAvailableComponents()
+         * needs to be implemented by the component collection.
+         *
+         * @todo remove this in Fluid 6 and add notice to changelog that getAvailableComponents()
+         *       and resolveTemplateName() must be implemented consistently.
+         */
+        if ((new ReflectionMethod($this, 'resolveTemplateName'))->getDeclaringClass()->getName() !== self::class) {
+            return [];
+        }
+        $availableTemplates = $this->getTemplatePaths()->resolveAvailableTemplateFiles(null);
+        $fallbackFileExtension = '.' . $this->getTemplatePaths()->getFormat();
+        $fullFileExtension = '.' . TemplatePaths::FLUID_EXTENSION . $fallbackFileExtension;
+        $availableComponents = [];
+        foreach ($availableTemplates as $templatePath) {
+            // Remove file extension
+            if (str_ends_with($templatePath, $fullFileExtension)) {
+                $templatePath = substr($templatePath, 0, -strlen($fullFileExtension));
+            } elseif (str_ends_with($templatePath, $fallbackFileExtension)) {
+                $templatePath = substr($templatePath, 0, -strlen($fallbackFileExtension));
+            }
+            // Remove template root path
+            foreach ($this->getTemplatePaths()->getTemplateRootPaths() as $rootPath) {
+                if (str_starts_with($templatePath, $rootPath)) {
+                    $templatePath = substr($templatePath, strlen($rootPath));
+                    break;
+                }
+            }
+            // Convert template name into ViewHelper name and validate directory structure
+            // (resolveTemplateName() in reverse)
+            $fragments = explode('/', $templatePath);
+            $name1 = array_pop($fragments);
+            $name2 = array_pop($fragments);
+            if ($name1 !== $name2) {
+                continue;
+            }
+            $fragments[] = $name2;
+            $availableComponents[] = implode('.', array_map(lcfirst(...), $fragments));
+        }
+        return $availableComponents;
     }
 
     /**
