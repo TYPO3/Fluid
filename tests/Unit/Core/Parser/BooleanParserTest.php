@@ -12,6 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
@@ -105,6 +106,11 @@ final class BooleanParserTest extends TestCase
             ['{foo}', true, ['foo' => true]],
             ['{foo} == FALSE', true, ['foo' => false]],
             ['!{foo}', true, ['foo' => false]],
+
+            ['{obj1} == {obj2}', true, ['obj1' => new stdClass(), 'obj2' => new stdClass()]],
+            ['{obj1} != {obj2}', false, ['obj1' => new stdClass(), 'obj2' => new stdClass()]],
+            ['{obj1} === {obj2}', false, ['obj1' => new stdClass(), 'obj2' => new stdClass()]],
+            ['{obj1} !== {obj2}', true, ['obj1' => new stdClass(), 'obj2' => new stdClass()]],
 
             ['{foo}', false, ['foo' => new UnsafeHTMLString('')]],
             ["{foo} == ''", true, ['foo' => new UnsafeHTMLString('')]],
