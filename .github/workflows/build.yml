@@ -46,6 +46,9 @@ jobs:
       - name: Phpunit
         run: vendor/bin/phpunit
 
+      - name: Infection
+        run: vendor/bin/infection
+
       - name: Documentation integrity
         run: |
           # Generate ViewHelper documentation
