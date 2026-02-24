@@ -12,6 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use TYPO3Fluid\Fluid\Core\Definition\Annotation\Annotation;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 
 final class ArgumentDefinitionTest extends TestCase
@@ -23,13 +24,14 @@ final class ArgumentDefinitionTest extends TestCase
         $description = 'Example desc';
         $type = 'string';
         $isRequired = true;
-        $isMethodParameter = true;
-        $argumentDefinition = new ArgumentDefinition($name, $type, $description, $isRequired, null);
+        $annotations = [new Annotation(['see' => 'https://example.com']), new Annotation(['deprecated' => 'since 2.0.0, will be removed in 2.0.0'])];
+        $argumentDefinition = new ArgumentDefinition($name, $type, $description, $isRequired, null, null, $annotations);
 
         self::assertEquals($argumentDefinition->getName(), $name, 'Name could not be retrieved correctly.');
         self::assertEquals($argumentDefinition->getDescription(), $description, 'Description could not be retrieved correctly.');
         self::assertEquals($argumentDefinition->getType(), $type, 'Type could not be retrieved correctly');
         self::assertEquals($argumentDefinition->isRequired(), $isRequired, 'Required flag could not be retrieved correctly.');
+        self::assertSame($argumentDefinition->getAnnotations(), $annotations);
     }
 
     public static function determinesBooleanCorrectlyDataProvider(): array
@@ -57,5 +59,21 @@ final class ArgumentDefinitionTest extends TestCase
         $this->expectExceptionMessage('ArgumentDefinition "test" cannot have a default value while also being required. Either remove the default or mark it as optional.');
 
         new ArgumentDefinition('test', 'string', 'Test argument', true, 'defaultValue');
+    }
+
+    public static function compilationCreatesEqualObjectDataProvider(): array
+    {
+        return [
+            [new ArgumentDefinition('test', 'bool', 'description', false, 'default', null)],
+            [new ArgumentDefinition('test', 'bool', 'description', true, null, true, [new Annotation(['see' => 'https://example.com', 'something' => 'else'])])],
+            [new ArgumentDefinition('test', 'bool', 'description', false, 'default', false, [new Annotation(['see' => 'https://example.com']), new Annotation(['deprecated' => 'since 2.0.0, will be removed in 2.0.0'])])],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('compilationCreatesEqualObjectDataProvider')]
+    public function compilationCreatesEqualObject(ArgumentDefinition $argumentDefinition): void
+    {
+        self::assertEquals($argumentDefinition, eval('return ' . $argumentDefinition->compile() . ';'));
     }
 }

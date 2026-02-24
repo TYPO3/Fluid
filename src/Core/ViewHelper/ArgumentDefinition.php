@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
+use TYPO3Fluid\Fluid\Core\Definition\Annotation\ArgumentAnnotationInterface;
+
 /**
  * Argument definition of each view helper argument
  *
@@ -31,6 +33,8 @@ class ArgumentDefinition
         *                argument as actual argument or as tag content, but wants neither to be escaped).
         */
         protected ?bool $escape = null,
+        /** @var ArgumentAnnotationInterface[] */
+        protected array $annotations = [],
     ) {
         if ($required && $defaultValue !== null) {
             throw new \InvalidArgumentException(
@@ -70,6 +74,14 @@ class ArgumentDefinition
         return $this->escape;
     }
 
+    /**
+     * @return ArgumentAnnotationInterface[]
+     */
+    public function getAnnotations(): array
+    {
+        return $this->annotations;
+    }
+
     public function isBooleanType(): bool
     {
         return $this->getType() === 'bool' || $this->getType() === 'boolean';
@@ -89,13 +101,17 @@ class ArgumentDefinition
     public function compile(): string
     {
         return sprintf(
-            'new ' . static::class . '(%s, %s, %s, %s, %s, %s)',
+            'new ' . static::class . '(%s, %s, %s, %s, %s, %s, [%s])',
             var_export($this->getName(), true),
             var_export($this->getType(), true),
             var_export($this->getDescription(), true),
             var_export($this->isRequired(), true),
             var_export($this->getDefaultValue(), true),
             var_export($this->getEscape(), true),
+            implode(',', array_map(
+                static fn(ArgumentAnnotationInterface $annotation): string => $annotation->compile(),
+                $this->getAnnotations(),
+            )),
         );
     }
 }
