@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
+use TYPO3Fluid\Fluid\Core\Definition\Annotation\ArgumentAnnotationInterface;
+
 /**
  * Argument definition of each view helper argument
  */
@@ -52,6 +54,8 @@ class ArgumentDefinition
      */
     protected ?bool $escape;
 
+    protected array $annotations;
+
     /**
      * Constructor for this argument definition.
      *
@@ -61,8 +65,9 @@ class ArgumentDefinition
      * @param bool $required true if argument is required
      * @param mixed $defaultValue Default value
      * @param bool|null $escape Whether argument is escaped, or uses default escaping behavior (see class var comment)
+     * @param ArgumentAnnotationInterface[] $annotations
      */
-    public function __construct(string $name, string $type, string $description, bool $required, mixed $defaultValue = null, ?bool $escape = null)
+    public function __construct(string $name, string $type, string $description, bool $required, mixed $defaultValue = null, ?bool $escape = null, array $annotations = [])
     {
         $this->name = $name;
         $this->type = $type;
@@ -70,6 +75,7 @@ class ArgumentDefinition
         $this->required = $required;
         $this->defaultValue = $defaultValue;
         $this->escape = $escape;
+        $this->annotations = $annotations;
     }
 
     /**
@@ -136,18 +142,30 @@ class ArgumentDefinition
     }
 
     /**
+     * @return ArgumentAnnotationInterface[]
+     */
+    public function getAnnotations(): array
+    {
+        return $this->annotations;
+    }
+
+    /**
      * @internal Only to be used by TemplateCompiler
      */
     public function compile(): string
     {
         return sprintf(
-            'new ' . static::class . '(%s, %s, %s, %s, %s, %s)',
+            'new ' . static::class . '(%s, %s, %s, %s, %s, %s, [%s])',
             var_export($this->getName(), true),
             var_export($this->getType(), true),
             var_export($this->getDescription(), true),
             var_export($this->isRequired(), true),
             var_export($this->getDefaultValue(), true),
             var_export($this->getEscape(), true),
+            implode(',', array_map(
+                static fn(ArgumentAnnotationInterface $annotation): string => $annotation->compile(),
+                $this->getAnnotations(),
+            )),
         );
     }
 }
