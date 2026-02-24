@@ -134,4 +134,20 @@ class ArgumentDefinition
     {
         return $this->getType() === 'bool' || $this->getType() === 'boolean';
     }
+
+    /**
+     * @internal Only to be used by TemplateCompiler
+     */
+    public function compile(): string
+    {
+        return sprintf(
+            'new ' . static::class . '(%s, %s, %s, %s, %s, %s)',
+            var_export($this->getName(), true),
+            var_export($this->getType(), true),
+            var_export($this->getDescription(), true),
+            var_export($this->isRequired(), true),
+            var_export($this->getDefaultValue(), true),
+            var_export($this->getEscape(), true),
+        );
+    }
 }
