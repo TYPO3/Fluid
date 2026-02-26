@@ -9,9 +9,11 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Schema;
 
+use TYPO3Fluid\Fluid\Core\Component\ComponentDefinition;
 use TYPO3Fluid\Fluid\Core\Parser\Patterns;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolverDelegateInterface;
 
 /**
  * @internal
@@ -80,6 +82,25 @@ final class ViewHelperMetadataFactory
             docTags: $docTags,
             argumentDefinitions: (new \ReflectionClass($className))->newInstanceWithoutConstructor()->prepareArguments(),
             allowsArbitraryArguments: is_subclass_of($className, AbstractTagBasedViewHelper::class),
+        );
+    }
+
+    public function createFromComponentDefinition(
+        ViewHelperResolverDelegateInterface $componentCollection,
+        ComponentDefinition $componentDefinition,
+    ): ViewHelperMetadata {
+        return new ViewHelperMetadata(
+            className: null,
+            namespace: $componentCollection->getNamespace(),
+            name: null,
+            tagName: $componentDefinition->getName(),
+            documentation: ($componentDefinition->getAvailableSlots() !== [])
+                ? 'Available slots: ' . implode(', ', $componentDefinition->getAvailableSlots())
+                : '',
+            xmlNamespace: $this->generateXmlNamespace($componentCollection->getNamespace()),
+            docTags: [],
+            argumentDefinitions: $componentDefinition->getArgumentDefinitions(),
+            allowsArbitraryArguments: $componentDefinition->additionalArgumentsAllowed(),
         );
     }
 

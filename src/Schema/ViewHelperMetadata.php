@@ -21,9 +21,9 @@ final class ViewHelperMetadata
      * @param array<string, ArgumentDefinition> $argumentDefinitions
      */
     public function __construct(
-        public readonly string $className,
+        public readonly ?string $className,
         public readonly string $namespace,
-        public readonly string $name,
+        public readonly ?string $name,
         public readonly string $tagName,
         public readonly string $documentation,
         public readonly string $xmlNamespace,
