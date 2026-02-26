@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Core\Component;
 
+use TYPO3Fluid\Fluid\Core\Definition\Annotation\ViewHelperAnnotationInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 
 /**
@@ -16,15 +17,15 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
  */
 final readonly class ComponentDefinition
 {
-    /**
-     * @param array<string, ArgumentDefinition> $argumentDefinitions
-     * @param string[] $availableSlots
-     */
     public function __construct(
         private string $name,
+        /** @var array<string, ArgumentDefinition> */
         private array $argumentDefinitions,
         private bool $additionalArgumentsAllowed,
+        /** @var string[] */
         private array $availableSlots,
+        /** @var ViewHelperAnnotationInterface[] */
+        private array $annotations = [],
     ) {}
 
     public function getName(): string
@@ -51,5 +52,13 @@ final readonly class ComponentDefinition
     public function getAvailableSlots(): array
     {
         return $this->availableSlots;
+    }
+
+    /**
+     * @return ViewHelperAnnotationInterface[]
+     */
+    public function getAnnotations(): array
+    {
+        return $this->annotations;
     }
 }
