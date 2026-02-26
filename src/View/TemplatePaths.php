@@ -240,32 +240,32 @@ class TemplatePaths
     /**
      * @return string[]
      */
-    public function resolveAvailableTemplateFiles(?string $controllerName, ?string $format = null): array
+    public function resolveAvailableTemplateFiles(?string $controllerName, ?string $format = null, bool $stripFileExtension = false): array
     {
         $paths = $this->getTemplateRootPaths();
         foreach ($paths as $index => $path) {
             $paths[$index] = rtrim($path . ($controllerName ?? ''), '/') . '/';
         }
         $scanner = new TemplateFinder();
-        return $scanner->findTemplatesByFileExtension($paths, $format ?: $this->getFormat());
+        return $scanner->findTemplatesByFileExtension($paths, $format ?: $this->getFormat(), $stripFileExtension);
     }
 
     /**
      * @return string[]
      */
-    public function resolveAvailablePartialFiles(?string $format = null): array
+    public function resolveAvailablePartialFiles(?string $format = null, bool $stripFileExtension = false): array
     {
         $scanner = new TemplateFinder();
-        return $scanner->findTemplatesByFileExtension($this->getPartialRootPaths(), $format ?: $this->getFormat());
+        return $scanner->findTemplatesByFileExtension($this->getPartialRootPaths(), $format ?: $this->getFormat(), $stripFileExtension);
     }
 
     /**
      * @return string[]
      */
-    public function resolveAvailableLayoutFiles(?string $format = null): array
+    public function resolveAvailableLayoutFiles(?string $format = null, bool $stripFileExtension = false): array
     {
         $scanner = new TemplateFinder();
-        return $scanner->findTemplatesByFileExtension($this->getLayoutRootPaths(), $format ?: $this->getFormat());
+        return $scanner->findTemplatesByFileExtension($this->getLayoutRootPaths(), $format ?: $this->getFormat(), $stripFileExtension);
     }
 
     /**

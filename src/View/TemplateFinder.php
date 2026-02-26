@@ -42,7 +42,7 @@ final readonly class TemplateFinder
      * @param string[] $paths
      * @return string[]
      */
-    public function findTemplatesByFileExtension(array $paths, string $fileExtension): array
+    public function findTemplatesByFileExtension(array $paths, string $fileExtension, bool $stripFileExtension = false): array
     {
         if ($paths === []) {
             return [];
@@ -51,7 +51,10 @@ final readonly class TemplateFinder
             $this->createFileIterator($paths),
             fn(SplFileInfo $file): bool => str_ends_with($file->getBasename(), '.' . $fileExtension),
         );
-        return array_keys(iterator_to_array($filterIterator));
+        $files = array_keys(iterator_to_array($filterIterator));
+        return $stripFileExtension
+            ? array_map(fn($file) => $this->stripFileExtension($file, $fileExtension), $files)
+            : $files;
     }
 
     /**
@@ -66,5 +69,16 @@ final readonly class TemplateFinder
             $appendIterator->append($recursiveIterator);
         }
         return $appendIterator;
+    }
+
+    private function stripFileExtension(string $path, string $fileExtension): string
+    {
+        $fileExtension = '.' . $fileExtension;
+        $fluidExtension = '.' . TemplatePaths::FLUID_EXTENSION;
+        $path = substr($path, 0, - strlen($fileExtension));
+        if (str_ends_with($path, $fluidExtension)) {
+            $path = substr($path, 0, - strlen($fluidExtension));
+        }
+        return $path;
     }
 }
