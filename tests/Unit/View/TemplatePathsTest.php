@@ -112,6 +112,13 @@ final class TemplatePathsTest extends TestCase
         );
         self::assertSame(
             [
+                $examplesPath . 'Resources/Private/Layouts/Default',
+                $examplesPath . 'Resources/Private/Layouts/Dynamic',
+            ],
+            $this->sortTemplatePaths($instance->resolveAvailableLayoutFiles(null, true)),
+        );
+        self::assertSame(
+            [
                 $examplesPath . 'Resources/Private/Templates/Default/Default.fluid.html',
                 $examplesPath . 'Resources/Private/Templates/Default/Nested/Default.fluid.html',
                 $examplesPath . 'Resources/Private/Templates/Other/Default.fluid.html',
@@ -121,12 +128,30 @@ final class TemplatePathsTest extends TestCase
         );
         self::assertSame(
             [
+                $examplesPath . 'Resources/Private/Templates/Default/Default',
+                $examplesPath . 'Resources/Private/Templates/Default/Nested/Default',
+                $examplesPath . 'Resources/Private/Templates/Other/Default',
+                $examplesPath . 'Resources/Private/Templates/Other/List',
+            ],
+            $this->sortTemplatePaths($instance->resolveAvailableTemplateFiles(null, null, true)),
+        );
+        self::assertSame(
+            [
                 $examplesPath . 'Resources/Private/Partials/EscapingModifierPartial.fluid.html',
                 $examplesPath . 'Resources/Private/Partials/FirstPartial.fluid.html',
                 $examplesPath . 'Resources/Private/Partials/SecondPartial.fluid.html',
                 $examplesPath . 'Resources/Private/Partials/Structures.fluid.html',
             ],
             $this->sortTemplatePaths($instance->resolveAvailablePartialFiles(null)),
+        );
+        self::assertSame(
+            [
+                $examplesPath . 'Resources/Private/Partials/EscapingModifierPartial',
+                $examplesPath . 'Resources/Private/Partials/FirstPartial',
+                $examplesPath . 'Resources/Private/Partials/SecondPartial',
+                $examplesPath . 'Resources/Private/Partials/Structures',
+            ],
+            $this->sortTemplatePaths($instance->resolveAvailablePartialFiles(null, true)),
         );
     }
 
