@@ -174,13 +174,60 @@ final class TemplatePathsTest extends TestCase
         fclose($stream);
     }
 
+    public static function resolveFileInPathsThrowsExceptionIfFileNotFoundDataProvider(): array
+    {
+        return [
+            [
+                'notfound',
+                [
+                    '/found/notfound.fluid.html',
+                    '/found/notfound.html',
+                    '/found/notfound',
+                    '/found/Notfound.fluid.html',
+                    '/found/Notfound.html',
+                    '/found/Notfound',
+                    '/not/notfound.fluid.html',
+                    '/not/notfound.html',
+                    '/not/notfound',
+                    '/not/Notfound.fluid.html',
+                    '/not/Notfound.html',
+                    '/not/Notfound',
+                ],
+            ],
+            [
+                'notfound.html',
+                [
+                    '/found/notfound.html.fluid.html',
+                    '/found/notfound.html.html',
+                    '/found/notfound.html',
+                    '/found/Notfound.html.fluid.html',
+                    '/found/Notfound.html.html',
+                    '/found/Notfound.html',
+                    '/not/notfound.html.fluid.html',
+                    '/not/notfound.html.html',
+                    '/not/notfound.html',
+                    '/not/Notfound.html.fluid.html',
+                    '/not/Notfound.html.html',
+                    '/not/Notfound.html',
+                ],
+            ],
+        ];
+    }
+
     #[Test]
-    public function testResolveFileInPathsThrowsExceptionIfFileNotFound(): void
+    #[DataProvider('resolveFileInPathsThrowsExceptionIfFileNotFoundDataProvider')]
+    public function testResolveFileInPathsThrowsExceptionIfFileNotFound(string $requestedTemplate, array $expectedEvaluatedTemplatePaths): void
     {
         $this->expectException(InvalidTemplateResourceException::class);
+        $this->expectExceptionCode(1225709595);
         $instance = new TemplatePaths();
         $method = new \ReflectionMethod($instance, 'resolveFileInPaths');
-        $method->invoke($instance, ['/not/', '/found/'], 'notfound.html', 'html');
+        try {
+            $method->invoke($instance, ['/not/', '/found/'], $requestedTemplate, 'html');
+        } catch (InvalidTemplateResourceException $e) {
+            self::assertEquals($expectedEvaluatedTemplatePaths, $e->evaluatedTemplatePaths);
+            throw $e;
+        }
     }
 
     #[Test]

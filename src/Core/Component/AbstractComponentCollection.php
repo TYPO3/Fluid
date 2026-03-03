@@ -179,12 +179,12 @@ abstract class AbstractComponentCollection implements ViewHelperResolverDelegate
         $expectedTemplateName = $this->resolveTemplateName($viewHelperName);
         try {
             $this->getTemplatePaths()->resolveTemplateFileForControllerAndActionAndFormat('Default', $expectedTemplateName, null, true);
-        } catch (InvalidTemplateResourceException) {
+        } catch (InvalidTemplateResourceException $e) {
             throw new UnresolvableViewHelperException(sprintf(
-                'Based on your spelling, the system would load the component template "%s.%s" in "%s", however this file does not exist.',
+                'The component template "%s" in format ".%s" could not be found in the configured template paths. %s',
                 $expectedTemplateName,
                 $this->getTemplatePaths()->getFormat(),
-                implode(', ', $this->getTemplatePaths()->getTemplateRootPaths()),
+                $e->evaluatedTemplatePaths !== [] ? 'The following file paths were evaluated: "' . implode('", "', $e->evaluatedTemplatePaths) . '"' : 'No paths configured.',
             ), 1748511297);
         }
         return ComponentAdapter::class;

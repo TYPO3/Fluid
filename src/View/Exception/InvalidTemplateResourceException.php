@@ -7,6 +7,7 @@
 
 namespace TYPO3Fluid\Fluid\View\Exception;
 
+use Throwable;
 use TYPO3Fluid\Fluid\View;
 
 /**
@@ -14,4 +15,16 @@ use TYPO3Fluid\Fluid\View;
  *
  * @api
  */
-class InvalidTemplateResourceException extends View\Exception {}
+class InvalidTemplateResourceException extends View\Exception
+{
+    public function __construct(
+        string $message,
+        int $code,
+        ?Throwable $previous = null,
+        public readonly string $templateName = '',
+        /** @var string[] */
+        public readonly array $evaluatedTemplatePaths = [],
+    ) {
+        parent::__construct($message, $code, $previous);
+    }
+}

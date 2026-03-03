@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\View;
 
+use TYPO3Fluid\Fluid\View\Exception\InvalidLayoutException;
+use TYPO3Fluid\Fluid\View\Exception\InvalidPartialException;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 
 /**
@@ -201,8 +203,11 @@ class TemplatePaths
             // @todo always throw exception in Fluid 6
             if ($throwOnError && $this->templatePathAndFilename !== 'php://stdin' && !file_exists($this->templatePathAndFilename)) {
                 throw new InvalidTemplateResourceException(
-                    'Specified template file "' . $this->templatePathAndFilename . '" does not exist.',
+                    'The specified template file "' . $this->templatePathAndFilename . '" does not exist.',
                     1772556162,
+                    null,
+                    basename($this->templatePathAndFilename),
+                    [$this->templatePathAndFilename],
                 );
             }
             return $this->templatePathAndFilename;
@@ -215,6 +220,8 @@ class TemplatePaths
         if (array_key_exists($cacheIdentifier, $this->resolvedFiles[self::NAME_TEMPLATES])) {
             return $this->resolvedFiles[self::NAME_TEMPLATES][$cacheIdentifier];
         }
+
+        $evaluatedTemplatePaths = [];
 
         // Use controller name as path suffix if specified and resolve template
         if ($controller !== '') {
@@ -229,6 +236,7 @@ class TemplatePaths
                     $format,
                 );
             } catch (InvalidTemplateResourceException $error) {
+                $evaluatedTemplatePaths = $error->evaluatedTemplatePaths;
             }
         }
 
@@ -240,22 +248,18 @@ class TemplatePaths
                 $format,
             );
         } catch (InvalidTemplateResourceException $error) {
+            $evaluatedTemplatePaths = array_merge($evaluatedTemplatePaths, $error->evaluatedTemplatePaths);
         }
 
         // @todo always throw exception in Fluid 6
         if ($throwOnError) {
-            throw new InvalidTemplateResourceException(
-                sprintf(
-                    'Tried resolving a template file for controller action "%s->%s" in format ".%s", but none of the paths '
-                    . 'contained the expected template file (%s). %s',
-                    $controller,
-                    $action,
-                    $format,
-                    $controller . '/' . $action . '.' . $format,
-                    count($this->getTemplateRootPaths()) ? 'The following paths were checked: ' . implode(', ', $this->getTemplateRootPaths()) : 'No paths configured.',
-                ),
-                1257246929,
-            );
+            throw new InvalidTemplateResourceException(sprintf(
+                'Tried resolving a template file for controller action "%s->%s" in format ".%s", but none of the paths contained a suitable candidate. %s',
+                $controller,
+                $action,
+                $format,
+                $evaluatedTemplatePaths !== [] ? 'The following file paths were evaluated: "' . implode('", "', $evaluatedTemplatePaths) . '"' : 'No paths configured.',
+            ), 1257246929, null, $controller . '/' . $action, $evaluatedTemplatePaths);
         }
         return null;
     }
@@ -365,7 +369,7 @@ class TemplatePaths
      *
      * @param string $layoutName Name of the layout to use. If none given, use "Default"
      * @return string Path and filename of layout file
-     * @throws InvalidTemplateResourceException
+     * @throws InvalidLayoutException
      */
     public function getLayoutSource(string $layoutName = 'Default'): string
     {
@@ -456,7 +460,7 @@ class TemplatePaths
      *
      * @param string $layoutName Name of the layout to use. If none given, use "Default"
      * @return string Path and filename of layout files
-     * @throws Exception\InvalidTemplateResourceException
+     * @throws InvalidLayoutException
      */
     public function getLayoutPathAndFilename(string $layoutName = 'Default'): string
     {
@@ -466,7 +470,16 @@ class TemplatePaths
         $layoutKey = $layoutName . '.' . $this->getFormat();
         if (!array_key_exists($layoutKey, $this->resolvedFiles[self::NAME_LAYOUTS])) {
             $paths = $this->getLayoutRootPaths();
-            $this->resolvedFiles[self::NAME_LAYOUTS][$layoutKey] = $this->resolveFileInPaths($paths, $layoutName, $this->getFormat());
+            try {
+                $this->resolvedFiles[self::NAME_LAYOUTS][$layoutKey] = $this->resolveFileInPaths($paths, $layoutName, $this->getFormat());
+            } catch (InvalidTemplateResourceException $e) {
+                throw new InvalidLayoutException(sprintf(
+                    'Tried resolving a template file for layout "%s" in format ".%s", but none of the paths contained a suitable candidate. %s',
+                    $layoutName,
+                    $this->getFormat(),
+                    $e->evaluatedTemplatePaths !== [] ? 'The following file paths were evaluated: "' . implode('", "', $e->evaluatedTemplatePaths) . '"' : 'No paths configured.',
+                ), 1772564027, null, $layoutName, $e->evaluatedTemplatePaths);
+            }
         }
         return $this->resolvedFiles[self::NAME_LAYOUTS][$layoutKey];
     }
@@ -493,7 +506,7 @@ class TemplatePaths
      *
      * @param string $partialName The name of the partial
      * @return string contents of the partial template
-     * @throws InvalidTemplateResourceException
+     * @throws InvalidPartialException
      */
     public function getPartialSource(string $partialName): string
     {
@@ -506,14 +519,23 @@ class TemplatePaths
      *
      * @param string $partialName The name of the partial
      * @return string the full path which should be used. The path definitely exists.
-     * @throws InvalidTemplateResourceException
+     * @throws InvalidPartialException
      */
     public function getPartialPathAndFilename(string $partialName): string
     {
         $partialKey = $partialName . '.' . $this->getFormat();
         if (!array_key_exists($partialKey, $this->resolvedFiles[self::NAME_PARTIALS])) {
             $paths = $this->getPartialRootPaths();
-            $this->resolvedFiles[self::NAME_PARTIALS][$partialKey] = $this->resolveFileInPaths($paths, $partialName, $this->getFormat());
+            try {
+                $this->resolvedFiles[self::NAME_PARTIALS][$partialKey] = $this->resolveFileInPaths($paths, $partialName, $this->getFormat());
+            } catch (InvalidTemplateResourceException $e) {
+                throw new InvalidPartialException(sprintf(
+                    'Tried resolving a template file for partial "%s" in format ".%s", but none of the paths contained a suitable candidate. %s',
+                    $partialName,
+                    $this->getFormat(),
+                    $e->evaluatedTemplatePaths !== [] ? 'The following file paths were evaluated: "' . implode('", "', $e->evaluatedTemplatePaths) . '"' : 'No paths configured.',
+                ), 1772564387, null, $partialName, $e->evaluatedTemplatePaths);
+            }
         }
         return $this->resolvedFiles[self::NAME_PARTIALS][$partialKey];
     }
@@ -522,7 +544,7 @@ class TemplatePaths
      * Selects the template file that best matches the input template name from the available paths.
      *
      * @param string[] $paths
-     * @throws \TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException
+     * @throws InvalidTemplateResourceException
      */
     protected function resolveFileInPaths(array $paths, string $fileName, string $format): string
     {
@@ -553,7 +575,7 @@ class TemplatePaths
             'The Fluid template file "%s" could not be loaded. Tried paths: "%s"',
             $fileName,
             implode('", "', $possibleTemplates),
-        ), 1225709595);
+        ), 1225709595, null, $fileName, $possibleTemplates);
     }
 
     protected function clearResolvedIdentifiersAndTemplates(?string $type = null): void
