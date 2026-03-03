@@ -14,6 +14,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateStructureViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\UnresolvableViewHelperException;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolverDelegateInterface;
+use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 
 /**
  * Base class for a collection of components: Fluid templates that can be called with Fluid's
@@ -176,7 +177,9 @@ abstract class AbstractComponentCollection implements ViewHelperResolverDelegate
     final public function resolveViewHelperClassName(string $viewHelperName): string
     {
         $expectedTemplateName = $this->resolveTemplateName($viewHelperName);
-        if (!$this->getTemplatePaths()->resolveTemplateFileForControllerAndActionAndFormat('Default', $expectedTemplateName)) {
+        try {
+            $this->getTemplatePaths()->resolveTemplateFileForControllerAndActionAndFormat('Default', $expectedTemplateName, null, true);
+        } catch (InvalidTemplateResourceException) {
             throw new UnresolvableViewHelperException(sprintf(
                 'Based on your spelling, the system would load the component template "%s.%s" in "%s", however this file does not exist.',
                 $expectedTemplateName,
