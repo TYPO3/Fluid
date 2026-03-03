@@ -14,10 +14,14 @@ use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Component\AbstractComponentCollection;
 use TYPO3Fluid\Fluid\Core\Component\ComponentAdapter;
 use TYPO3Fluid\Fluid\Core\Component\ComponentDefinition;
+use TYPO3Fluid\Fluid\Core\Component\ComponentListProviderInterface;
 use TYPO3Fluid\Fluid\Core\Component\ComponentRenderer;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\UnresolvableViewHelperException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ComponentCollections\BasicComponentCollection;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ComponentCollections\CustomPathStructureComponentCollection;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ComponentCollections\CustomPathStructureWithListComponentCollection;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 
@@ -222,5 +226,68 @@ final class AbstractComponentCollectionTest extends AbstractFunctionalTestCase
             }
         };
         self::assertSame(get_class($subject), $subject->getNamespace());
+    }
+
+    public static function getAvailableComponentsDataProvider(): array
+    {
+        return [
+            [
+                new BasicComponentCollection(),
+                [
+                    'additionalArguments',
+                    'additionalArgumentsJson',
+                    'additionalVariable',
+                    'booleanArgument',
+                    'enumTypeArgumentWithDefault',
+                    'globalNamespaceUsage',
+                    'localNamespaceImport',
+                    'namedSlots',
+                    'namespace.test',
+                    'nested.subComponent',
+                    'rawVariable',
+                    'recursive',
+                    'slotComponent',
+                    'testComponent',
+                    'unionTypeArgument',
+                    'unresolvableLocalNamespaceImport',
+                ],
+            ],
+            // @todo this will change with Fluid 6, see AbstractComponentCollection for details
+            [
+                new CustomPathStructureComponentCollection(),
+                [],
+            ],
+            [
+                new CustomPathStructureWithListComponentCollection(),
+                [
+                    'additionalArguments.additionalArguments',
+                    'additionalArgumentsJson.additionalArgumentsJson',
+                    'additionalVariable.additionalVariable',
+                    'booleanArgument.booleanArgument',
+                    'enumTypeArgumentWithDefault.enumTypeArgumentWithDefault',
+                    'globalNamespaceUsage.globalNamespaceUsage',
+                    'localNamespaceImport.localNamespaceImport',
+                    'namedSlots.namedSlots',
+                    'namespace.test.test',
+                    'nested.subComponent.subComponent',
+                    'rawVariable.rawVariable',
+                    'recursive.recursive',
+                    'slotComponent.slotComponent',
+                    'templateInvalidStructure',
+                    'testComponent.testComponent',
+                    'unionTypeArgument.unionTypeArgument',
+                    'unresolvableLocalNamespaceImport.unresolvableLocalNamespaceImport',
+                ],
+            ],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('getAvailableComponentsDataProvider')]
+    public function getAvailableComponents(ComponentListProviderInterface $componentCollection, array $expectedComponents): void
+    {
+        $availableComponents = $componentCollection->getAvailableComponents();
+        sort($availableComponents);
+        self::assertSame($expectedComponents, $availableComponents);
     }
 }
