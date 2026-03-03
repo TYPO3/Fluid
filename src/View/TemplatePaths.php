@@ -55,6 +55,7 @@ class TemplatePaths
      * Holds already resolved identifiers for template files
      *
      * @var array<string, string[]>
+     * @todo check why this is only used for partials and if it's really necessary
      */
     protected array $resolvedIdentifiers = [
         self::NAME_TEMPLATES => [],
@@ -63,7 +64,7 @@ class TemplatePaths
     ];
 
     /**
-     * Holds already resolved identifiers for template files
+     * Holds already resolved paths for template files
      *
      * @var array<string, string[]>
      */
@@ -192,19 +193,27 @@ class TemplatePaths
      * already be, given that it is the same way
      * TypoScript path configurations work).
      * @api
+     * @todo remove $throwOnError with Fluid 6 and always throw exception; change return type to "string"
      */
-    public function resolveTemplateFileForControllerAndActionAndFormat(string $controller, string $action, ?string $format = null): ?string
+    public function resolveTemplateFileForControllerAndActionAndFormat(string $controller, string $action, ?string $format = null, bool $throwOnError = false): ?string
     {
         if ($this->templatePathAndFilename !== null) {
+            // @todo always throw exception in Fluid 6
+            if ($throwOnError && $this->templatePathAndFilename !== 'php://stdin' && !file_exists($this->templatePathAndFilename)) {
+                throw new InvalidTemplateResourceException(
+                    'Specified template file "' . $this->templatePathAndFilename . '" does not exist.',
+                    1772556162,
+                );
+            }
             return $this->templatePathAndFilename;
         }
 
         // Generate runtime cache identifier to check if template has already been resolved
         $format = $format ?: $this->getFormat();
         $controller = trim(str_replace('\\', '/', $controller), '/');
-        $identifier = $controller . '/' . $action . '.' . $format;
-        if (array_key_exists($identifier, $this->resolvedFiles[self::NAME_TEMPLATES])) {
-            return $this->resolvedFiles[self::NAME_TEMPLATES][$identifier];
+        $cacheIdentifier = $controller . '/' . $action . '.' . $format;
+        if (array_key_exists($cacheIdentifier, $this->resolvedFiles[self::NAME_TEMPLATES])) {
+            return $this->resolvedFiles[self::NAME_TEMPLATES][$cacheIdentifier];
         }
 
         // Use controller name as path suffix if specified and resolve template
@@ -214,7 +223,7 @@ class TemplatePaths
                 $this->getTemplateRootPaths(),
             );
             try {
-                return $this->resolvedFiles[self::NAME_TEMPLATES][$identifier] = $this->resolveFileInPaths(
+                return $this->resolvedFiles[self::NAME_TEMPLATES][$cacheIdentifier] = $this->resolveFileInPaths(
                     $controllerTemplatePaths,
                     $action,
                     $format,
@@ -225,7 +234,7 @@ class TemplatePaths
 
         // Resolve template based on action name
         try {
-            return $this->resolvedFiles[self::NAME_TEMPLATES][$identifier] = $this->resolveFileInPaths(
+            return $this->resolvedFiles[self::NAME_TEMPLATES][$cacheIdentifier] = $this->resolveFileInPaths(
                 $this->getTemplateRootPaths(),
                 $action,
                 $format,
@@ -233,8 +242,22 @@ class TemplatePaths
         } catch (InvalidTemplateResourceException $error) {
         }
 
-        // No template found, still add to runtime cache
-        return $this->resolvedFiles[self::NAME_TEMPLATES][$identifier] = null;
+        // @todo always throw exception in Fluid 6
+        if ($throwOnError) {
+            throw new InvalidTemplateResourceException(
+                sprintf(
+                    'Tried resolving a template file for controller action "%s->%s" in format ".%s", but none of the paths '
+                    . 'contained the expected template file (%s). %s',
+                    $controller,
+                    $action,
+                    $format,
+                    $controller . '/' . $action . '.' . $format,
+                    count($this->getTemplateRootPaths()) ? 'The following paths were checked: ' . implode(', ', $this->getTemplateRootPaths()) : 'No paths configured.',
+                ),
+                1257246929,
+            );
+        }
+        return null;
     }
 
     /**
@@ -357,6 +380,8 @@ class TemplatePaths
      * @param string $controller
      * @param string $action Name of the action. If null, will be taken from request.
      * @return string template identifier
+     * @todo check if there are valid use cases when templatePathAndFilename=null; Otherwise, throw
+     *       exception in Fluid 6 if invalid template is supplied
      */
     public function getTemplateIdentifier(?string $controller = 'Default', ?string $action = 'Default'): string
     {
@@ -401,22 +426,7 @@ class TemplatePaths
             rewind($this->templateSource);
             return $this->templateSource = stream_get_contents($this->templateSource);
         }
-        $templateReference = $this->resolveTemplateFileForControllerAndActionAndFormat($controller, $action);
-        if (!file_exists((string)$templateReference) && $templateReference !== 'php://stdin') {
-            $format = $this->getFormat();
-            throw new InvalidTemplateResourceException(
-                sprintf(
-                    'Tried resolving a template file for controller action "%s->%s" in format ".%s", but none of the paths '
-                    . 'contained the expected template file (%s). %s',
-                    $controller,
-                    $action,
-                    $format,
-                    $templateReference === null ? $controller . '/' . $action . '.' . $format : $templateReference,
-                    count($this->getTemplateRootPaths()) ? 'The following paths were checked: ' . implode(', ', $this->getTemplateRootPaths()) : 'No paths configured.',
-                ),
-                1257246929,
-            );
-        }
+        $templateReference = $this->resolveTemplateFileForControllerAndActionAndFormat($controller, $action, null, true);
         return file_get_contents($templateReference);
     }
 
