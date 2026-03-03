@@ -12,7 +12,8 @@ Assign a variable in PHP:
 
     $this->view->assign('title', 'An example title');
 
-Output it in a Fluid template:
+In the template's HTML code, wrap the variable name into curly
+braces to output it:
 
 ..  code-block:: html
 
@@ -24,13 +25,42 @@ The result:
 
     <h1>An example title</h1>
 
-In the template's HTML code, wrap the variable name into curly
-braces to output it.
+.. _variable-escaping:
+
+Output Escaping for Variables
+=============================
+
+By default, Fluid escapes the output of variables to prevent cross-site-scripting
+attacks. If a variable contains characters that have special meaning in HTML, such
+as `<` or `>`, these will be replaced with the matching HTML entities, such as
+`&lt;` or `&gt;`.
+
+This can be avoided by passing the variable to a ViewHelper that disables output
+escaping, such as `<f:format.raw> <https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-format-raw>`_.
+
+..  important::
+    Be extra careful when using `<f:format.raw>` in your template. Make sure that all
+    user-provided input is escaped properly!
+
+The following variable:
+
+..  code-block:: php
+
+    $this->view->assign('title', 'An <b>example</b> title');
+
+would be escaped automatically in a template, unless wrapped in `<f:format.raw>`:
+
+..  code-block:: html
+    {title}
+    Result: An &lt;b&gt;example&lt;/b&gt; title
+
+    <f:format.raw>{title}</f:format.raw>
+    Result: An <b>example</b> title
 
 .. _variable-all:
 
 Special _all Variable
-=========================
+=====================
 
 The special variable `{_all}` contains an array with all variables that are currently
 defined in your template. This can be helpful for debugging purposes, but also if you
