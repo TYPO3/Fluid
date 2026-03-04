@@ -12,8 +12,8 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
+use TYPO3Fluid\Fluid\View\Exception\InvalidPartialException;
 use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
-use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
 final class RenderViewHelperTest extends AbstractFunctionalTestCase
@@ -43,8 +43,8 @@ final class RenderViewHelperTest extends AbstractFunctionalTestCase
     #[Test]
     public function exceptionForMissingPartial(): void
     {
-        $this->expectException(InvalidTemplateResourceException::class);
-        $this->expectExceptionCode(1225709595);
+        $this->expectException(InvalidPartialException::class);
+        $this->expectExceptionCode(1772564387);
         $template = '<f:render partial="non-existent" />';
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);
