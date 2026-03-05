@@ -48,6 +48,7 @@ final readonly class TemplateValidator
                 $parsedTemplate = $renderingContext->getTemplateParser()->parse(
                     $templatePaths->getTemplateSource(),
                     $templateIdentifier,
+                    $template,
                 );
             } catch (\Exception $e) {
                 $errors[] = $e;

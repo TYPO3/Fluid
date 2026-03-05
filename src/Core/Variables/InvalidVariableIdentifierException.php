@@ -9,4 +9,6 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Core\Variables;
 
-class InvalidVariableIdentifierException extends \Exception {}
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
+
+class InvalidVariableIdentifierException extends Exception {}

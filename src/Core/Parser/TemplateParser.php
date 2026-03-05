@@ -103,7 +103,7 @@ class TemplateParser
      * @param string $templateIdentifier If the template has an identifying string it can be passed here to improve error reporting.
      * @throws Exception
      */
-    public function parse(string $templateString, string $templateIdentifier = ''): ParsingState
+    public function parse(string $templateString, string $templateIdentifier = '', ?string $originalTemplatePath = null): ParsingState
     {
         try {
             $this->reset();
@@ -113,20 +113,20 @@ class TemplateParser
             $splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
             $parsingState = $this->buildObjectTree($this->createParsingState($templateIdentifier), $splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
         } catch (Exception $error) {
-            throw $this->createParsingRelatedExceptionWithContext($error, $templateIdentifier);
+            throw $this->createParsingRelatedExceptionWithContext($error, $originalTemplatePath ?? $templateIdentifier);
         }
         $this->parsedTemplates[$templateIdentifier] = $parsingState;
         return $parsingState;
     }
 
-    public function createParsingRelatedExceptionWithContext(\Exception $error, string $templateIdentifier): \Exception
+    public function createParsingRelatedExceptionWithContext(\Exception $error, string $templateIdentifierOrPath): \Exception
     {
         list($line, $character, $templateCode) = $this->getCurrentParsingPointers();
         $exceptionClass = get_class($error);
         return new $exceptionClass(
             sprintf(
                 'Fluid parse error in template %s, line %d at character %d. Error: %s (error code %d). Template source chunk: %s',
-                $templateIdentifier,
+                $templateIdentifierOrPath,
                 $line,
                 $character,
                 $error->getMessage(),
@@ -141,7 +141,7 @@ class TemplateParser
     /**
      * @param \Closure $templateSourceClosure Closure which returns the template source if needed
      */
-    public function getOrParseAndStoreTemplate(string $templateIdentifier, \Closure $templateSourceClosure): ParsedTemplateInterface
+    public function getOrParseAndStoreTemplate(string $templateIdentifier, \Closure $templateSourceClosure, ?string $originalTemplatePath = null): ParsedTemplateInterface
     {
         $compiler = $this->renderingContext->getTemplateCompiler();
         if (isset($this->parsedTemplates[$templateIdentifier])) {
@@ -149,10 +149,10 @@ class TemplateParser
         } elseif ($compiler->has($templateIdentifier)) {
             $parsedTemplate = $compiler->get($templateIdentifier);
             if ($parsedTemplate instanceof UncompilableTemplateInterface) {
-                $parsedTemplate = $this->parseTemplateSource($templateIdentifier, $templateSourceClosure);
+                $parsedTemplate = $this->parseTemplateSource($templateIdentifier, $templateSourceClosure, $originalTemplatePath);
             }
         } else {
-            $parsedTemplate = $this->parseTemplateSource($templateIdentifier, $templateSourceClosure);
+            $parsedTemplate = $this->parseTemplateSource($templateIdentifier, $templateSourceClosure, $originalTemplatePath);
             try {
                 $compiler->store($templateIdentifier, $parsedTemplate);
             } catch (StopCompilingException $stop) {
@@ -164,11 +164,12 @@ class TemplateParser
         return $parsedTemplate;
     }
 
-    protected function parseTemplateSource(string $templateIdentifier, \Closure $templateSourceClosure): ParsingState
+    protected function parseTemplateSource(string $templateIdentifier, \Closure $templateSourceClosure, ?string $originalTemplatePath): ParsingState
     {
         return $this->parse(
             $templateSourceClosure($this, $this->renderingContext->getTemplatePaths()),
             $templateIdentifier,
+            $originalTemplatePath,
         );
     }
 

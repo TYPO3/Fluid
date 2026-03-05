@@ -158,6 +158,7 @@ abstract class AbstractComponentCollection implements ViewHelperResolverDelegate
             $parsedTemplate = $renderingContext->getTemplateParser()->parse(
                 $this->getTemplatePaths()->getTemplateSource('Default', $templateName),
                 $this->getTemplatePaths()->getTemplateIdentifier('Default', $templateName),
+                $this->getTemplatePaths()->resolveTemplateFileForControllerAndActionAndFormat('Default', $templateName),
             );
             $this->componentDefinitionsCache[$viewHelperName] = new ComponentDefinition(
                 $viewHelperName,
