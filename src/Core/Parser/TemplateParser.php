@@ -111,7 +111,11 @@ class TemplateParser
             $templateString = $this->preProcessTemplateSource($templateString);
 
             $splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
-            $parsingState = $this->buildObjectTree($this->createParsingState($templateIdentifier), $splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
+            $parsingState = $this->buildObjectTree(
+                $this->createParsingState($templateIdentifier, $originalTemplatePath),
+                $splitTemplate,
+                self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS,
+            );
         } catch (Exception $error) {
             throw $this->createParsingRelatedExceptionWithContext($error, $originalTemplatePath ?? $templateIdentifier);
         }
@@ -154,11 +158,11 @@ class TemplateParser
         } else {
             $parsedTemplate = $this->parseTemplateSource($templateIdentifier, $templateSourceClosure, $originalTemplatePath);
             try {
-                $compiler->store($templateIdentifier, $parsedTemplate);
+                $compiler->store($templateIdentifier, $parsedTemplate, $originalTemplatePath);
             } catch (StopCompilingException $stop) {
                 $this->renderingContext->getErrorHandler()->handleCompilerError($stop);
                 $parsedTemplate->setCompilable(false);
-                $compiler->store($templateIdentifier, $parsedTemplate);
+                $compiler->store($templateIdentifier, $parsedTemplate, $originalTemplatePath);
             }
         }
         return $parsedTemplate;
@@ -599,7 +603,11 @@ class TemplateParser
         //       should be applied to the global state, while others should only
         //       affect the local state. Maybe it's also possible to get rid
         //       of the local state altogether.
-        $innerState = $this->buildObjectTree($this->createParsingState(''), $splitArgument, self::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS);
+        $innerState = $this->buildObjectTree(
+            $this->createParsingState('', $state->getOriginalTemplatePath()),
+            $splitArgument,
+            self::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS,
+        );
         // This can be removed once the outer-inner-state issue is resolved
         $state->setAvailableSlots(array_unique(array_merge(
             $state->getAvailableSlots(),
@@ -833,12 +841,13 @@ class TemplateParser
         $state->getNodeFromStack()->addChildNode($node);
     }
 
-    protected function createParsingState(string $templateIdentifier): ParsingState
+    protected function createParsingState(string $templateIdentifier, ?string $originalTemplatePath = null): ParsingState
     {
         $rootNode = new RootNode();
         $variableProvider = $this->renderingContext->getVariableProvider();
         $state = new ParsingState();
         $state->setIdentifier($templateIdentifier);
+        $state->setOriginalTemplatePath($originalTemplatePath);
         $state->setRootNode($rootNode);
         $state->pushNodeToStack($rootNode);
         $state->setVariableProvider($variableProvider->getScopeCopy($variableProvider->getAll()));

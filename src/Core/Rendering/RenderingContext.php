@@ -83,6 +83,8 @@ class RenderingContext implements RenderingContextInterface
      */
     protected $controllerAction;
 
+    protected ?string $originalTemplatePath = null;
+
     /**
      * @var TemplateParser
      */
@@ -434,6 +436,16 @@ class RenderingContext implements RenderingContextInterface
     public function setControllerAction($action)
     {
         $this->controllerAction = $action;
+    }
+
+    public function setOriginalTemplatePath(?string $originalTemplatePath): void
+    {
+        $this->originalTemplatePath = $originalTemplatePath;
+    }
+
+    public function getOriginalTemplatePath(): ?string
+    {
+        return $this->originalTemplatePath;
     }
 
     public function __clone(): void

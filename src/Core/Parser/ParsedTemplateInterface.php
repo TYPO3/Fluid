@@ -25,6 +25,8 @@ interface ParsedTemplateInterface
 
     public function getIdentifier(): string;
 
+    public function getOriginalTemplatePath(): ?string;
+
     /**
      * @return ArgumentDefinition[]
      */

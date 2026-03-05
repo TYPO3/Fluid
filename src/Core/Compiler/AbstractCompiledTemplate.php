@@ -29,6 +29,11 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
         return static::class;
     }
 
+    public function getOriginalTemplatePath(): ?string
+    {
+        return null;
+    }
+
     public function getVariableContainer(): VariableProviderInterface
     {
         return new StandardVariableProvider();
