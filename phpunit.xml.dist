@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <phpunit
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
     cacheDirectory=".phpunit.cache"
     cacheResult="false"
     colors="true"
@@ -13,8 +13,6 @@
     failOnNotice="true"
     failOnRisky="true"
     failOnWarning="true"
-    executionOrder="random"
-    resolveDependencies="true"
 >
     <testsuites>
         <testsuite name="Unit">
