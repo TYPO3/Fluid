@@ -75,9 +75,9 @@ final class TemplatePathsTest extends TestCase
     public static function getGetterAndSetterTestValues(): array
     {
         return [
-            ['layoutRootPaths', ['foo' => 'bar']],
-            ['templateRootPaths', ['foo' => 'bar']],
-            ['partialRootPaths', ['foo' => 'bar']],
+            ['layoutRootPaths', ['foo' => '/bar']],
+            ['templateRootPaths', ['foo' => '/bar']],
+            ['partialRootPaths', ['foo' => '/bar']],
         ];
     }
 
@@ -87,8 +87,7 @@ final class TemplatePathsTest extends TestCase
     {
         $getter = 'get' . ucfirst($property);
         $setter = 'set' . ucfirst($property);
-        $subject = $this->getMockBuilder(TemplatePaths::class)->onlyMethods(['sanitizePath'])->getMock();
-        $subject->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
+        $subject = new TemplatePaths();
         $subject->$setter($value);
         self::assertSame($value, $subject->$getter());
     }

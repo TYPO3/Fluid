@@ -28,7 +28,7 @@ final class AbstractTemplateViewTest extends TestCase
     public function getRenderingContextReturnsPreviouslySetRenderingContext(): void
     {
         $renderingContext = $this->createMock(RenderingContextInterface::class);
-        $renderingContext->expects(self::once())->method('getViewHelperVariableContainer')->willReturn($this->createMock(ViewHelperVariableContainer::class));
+        $renderingContext->expects(self::once())->method('getViewHelperVariableContainer')->willReturn(self::createStub(ViewHelperVariableContainer::class));
         $subject = new AbstractTemplateViewTestFixture();
         $subject->setRenderingContext($renderingContext);
         self::assertSame($renderingContext, $subject->getRenderingContext());
@@ -38,8 +38,8 @@ final class AbstractTemplateViewTest extends TestCase
     public function getViewHelperResolverReturnsViewHelperResolverFromRenderingContext(): void
     {
         $renderingContext = $this->createMock(RenderingContextInterface::class);
-        $renderingContext->expects(self::any())->method('getViewHelperVariableContainer')->willReturn($this->createMock(ViewHelperVariableContainer::class));
-        $viewHelperResolver = $this->createMock(ViewHelperResolver::class);
+        $renderingContext->expects(self::once())->method('getViewHelperVariableContainer')->willReturn(self::createStub(ViewHelperVariableContainer::class));
+        $viewHelperResolver = self::createStub(ViewHelperResolver::class);
         $renderingContext->expects(self::once())->method('getViewHelperResolver')->willReturn($viewHelperResolver);
         $subject = new AbstractTemplateViewTestFixture();
         $subject->setRenderingContext($renderingContext);
@@ -50,9 +50,9 @@ final class AbstractTemplateViewTest extends TestCase
     public function assignAddsValueToTemplateVariableContainer(): void
     {
         $renderingContext = $this->createMock(RenderingContextInterface::class);
-        $renderingContext->expects(self::any())->method('getViewHelperVariableContainer')->willReturn($this->createMock(ViewHelperVariableContainer::class));
+        $renderingContext->expects(self::once())->method('getViewHelperVariableContainer')->willReturn(self::createStub(ViewHelperVariableContainer::class));
         $variableProvider = $this->createMock(VariableProviderInterface::class);
-        $renderingContext->expects(self::any())->method('getVariableProvider')->willReturn($variableProvider);
+        $renderingContext->expects(self::atLeastOnce())->method('getVariableProvider')->willReturn($variableProvider);
         $subject = new AbstractTemplateViewTestFixture();
         $subject->setRenderingContext($renderingContext);
         $series = [
@@ -71,9 +71,9 @@ final class AbstractTemplateViewTest extends TestCase
     public function assignCanOverridePreviouslyAssignedValues(): void
     {
         $renderingContext = $this->createMock(RenderingContextInterface::class);
-        $renderingContext->expects(self::any())->method('getViewHelperVariableContainer')->willReturn($this->createMock(ViewHelperVariableContainer::class));
+        $renderingContext->expects(self::once())->method('getViewHelperVariableContainer')->willReturn(self::createStub(ViewHelperVariableContainer::class));
         $variableProvider = $this->createMock(VariableProviderInterface::class);
-        $renderingContext->expects(self::any())->method('getVariableProvider')->willReturn($variableProvider);
+        $renderingContext->expects(self::atLeastOnce())->method('getVariableProvider')->willReturn($variableProvider);
         $subject = new AbstractTemplateViewTestFixture();
         $subject->setRenderingContext($renderingContext);
         $series = [
@@ -92,9 +92,9 @@ final class AbstractTemplateViewTest extends TestCase
     public function assignMultipleAddsValuesToTemplateVariableContainer(): void
     {
         $renderingContext = $this->createMock(RenderingContextInterface::class);
-        $renderingContext->expects(self::any())->method('getViewHelperVariableContainer')->willReturn($this->createMock(ViewHelperVariableContainer::class));
+        $renderingContext->expects(self::once())->method('getViewHelperVariableContainer')->willReturn(self::createStub(ViewHelperVariableContainer::class));
         $variableProvider = $this->createMock(VariableProviderInterface::class);
-        $renderingContext->expects(self::any())->method('getVariableProvider')->willReturn($variableProvider);
+        $renderingContext->expects(self::atLeastOnce())->method('getVariableProvider')->willReturn($variableProvider);
         $subject = new AbstractTemplateViewTestFixture();
         $subject->setRenderingContext($renderingContext);
         $series = [
@@ -114,9 +114,9 @@ final class AbstractTemplateViewTest extends TestCase
     public function assignMultipleCanOverridePreviouslyAssignedValues(): void
     {
         $renderingContext = $this->createMock(RenderingContextInterface::class);
-        $renderingContext->expects(self::any())->method('getViewHelperVariableContainer')->willReturn($this->createMock(ViewHelperVariableContainer::class));
+        $renderingContext->expects(self::once())->method('getViewHelperVariableContainer')->willReturn(self::createStub(ViewHelperVariableContainer::class));
         $variableProvider = $this->createMock(VariableProviderInterface::class);
-        $renderingContext->expects(self::any())->method('getVariableProvider')->willReturn($variableProvider);
+        $renderingContext->expects(self::atLeastOnce())->method('getVariableProvider')->willReturn($variableProvider);
         $subject = new AbstractTemplateViewTestFixture();
         $subject->setRenderingContext($renderingContext);
         $series = [
@@ -138,12 +138,11 @@ final class AbstractTemplateViewTest extends TestCase
         $this->expectException(InvalidSectionException::class);
 
         $renderingContext = $this->createMock(RenderingContextInterface::class);
-        $renderingContext->expects(self::any())->method('getViewHelperVariableContainer')->willReturn($this->createMock(ViewHelperVariableContainer::class));
-        $renderingContext->expects(self::any())->method('getErrorHandler')->willReturn(new StandardErrorHandler());
-        $renderingContext->expects(self::any())->method('getViewHelperResolver')->willReturn(new ViewHelperResolver());
+        $renderingContext->expects(self::once())->method('getViewHelperVariableContainer')->willReturn(self::createStub(ViewHelperVariableContainer::class));
+        $renderingContext->expects(self::once())->method('getErrorHandler')->willReturn(new StandardErrorHandler());
         $parsedTemplate = $this->createMock(AbstractCompiledTemplate::class);
         $parsedTemplate->expects(self::once())->method('isCompiled')->willReturn(false);
-        $parsedTemplate->expects(self::any())->method('getVariableContainer')->willReturn(new StandardVariableProvider(['sections' => []]));
+        $parsedTemplate->expects(self::once())->method('getVariableContainer')->willReturn(new StandardVariableProvider(['sections' => []]));
         $subject = $this->getMockBuilder(AbstractTemplateView::class)->onlyMethods(['getCurrentParsedTemplate', 'getCurrentRenderingType'])->getMock();
         $subject->setRenderingContext($renderingContext);
         $subject->expects(self::once())->method('getCurrentRenderingType')->willReturn(3);
@@ -157,12 +156,10 @@ final class AbstractTemplateViewTest extends TestCase
         $this->expectException(InvalidSectionException::class);
 
         $renderingContext = $this->createMock(RenderingContextInterface::class);
-        $renderingContext->expects(self::any())->method('getViewHelperVariableContainer')->willReturn($this->createMock(ViewHelperVariableContainer::class));
-        $renderingContext->expects(self::any())->method('getErrorHandler')->willReturn(new StandardErrorHandler());
-        $renderingContext->expects(self::any())->method('getViewHelperResolver')->willReturn(new ViewHelperResolver());
+        $renderingContext->expects(self::once())->method('getViewHelperVariableContainer')->willReturn(self::createStub(ViewHelperVariableContainer::class));
+        $renderingContext->expects(self::once())->method('getErrorHandler')->willReturn(new StandardErrorHandler());
         $parsedTemplate = $this->createMock(AbstractCompiledTemplate::class);
         $parsedTemplate->expects(self::once())->method('isCompiled')->willReturn(true);
-        $parsedTemplate->expects(self::any())->method('getVariableContainer')->willReturn(new StandardVariableProvider(['sections' => []]));
         $subject = $this->getMockBuilder(AbstractTemplateView::class)->onlyMethods(['getCurrentParsedTemplate', 'getCurrentRenderingType'])->getMock();
         $subject->setRenderingContext($renderingContext);
         $subject->expects(self::once())->method('getCurrentRenderingType')->willReturn(3);
@@ -174,9 +171,7 @@ final class AbstractTemplateViewTest extends TestCase
     public function renderSectionOnCompiledTemplateDoesNotThrowExceptionWhenIgnoreUnknownIsTrue(): void
     {
         $renderingContext = $this->createMock(RenderingContextInterface::class);
-        $renderingContext->expects(self::any())->method('getViewHelperVariableContainer')->willReturn($this->createMock(ViewHelperVariableContainer::class));
-        $renderingContext->expects(self::any())->method('getErrorHandler')->willReturn(new StandardErrorHandler());
-        $renderingContext->expects(self::any())->method('getViewHelperResolver')->willReturn(new ViewHelperResolver());
+        $renderingContext->expects(self::once())->method('getViewHelperVariableContainer')->willReturn(self::createStub(ViewHelperVariableContainer::class));
         $parsedTemplate = $this->createMock(AbstractCompiledTemplate::class);
         $parsedTemplate->expects(self::once())->method('isCompiled')->willReturn(true);
         $subject = $this->getMockBuilder(AbstractTemplateView::class)->onlyMethods(['getCurrentParsedTemplate', 'getCurrentRenderingType'])->getMock();

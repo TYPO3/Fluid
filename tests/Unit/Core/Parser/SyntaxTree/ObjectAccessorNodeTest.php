@@ -34,17 +34,14 @@ final class ObjectAccessorNodeTest extends TestCase
         ];
     }
 
-    /**
-     * @param mixed $expected
-     */
     #[DataProvider('getEvaluateTestValues')]
     #[Test]
-    public function testEvaluateGetsExpectedValue(array $variables, string $path, $expected): void
+    public function testEvaluateGetsExpectedValue(array $variables, string $path, mixed $expected): void
     {
         $node = new ObjectAccessorNode($path);
         $renderingContext = $this->createMock(RenderingContextInterface::class);
         $variableContainer = new StandardVariableProvider($variables);
-        $renderingContext->expects(self::any())->method('getVariableProvider')->willReturn($variableContainer);
+        $renderingContext->expects(self::once())->method('getVariableProvider')->willReturn($variableContainer);
         $value = $node->evaluate($renderingContext);
         self::assertSame($expected, $value);
     }
@@ -56,7 +53,7 @@ final class ObjectAccessorNodeTest extends TestCase
         $renderingContext = $this->createMock(RenderingContextInterface::class);
         $variableContainer = $this->createMock(StandardVariableProvider::class);
         $variableContainer->expects(self::once())->method('getByPath')->with('foo.bar')->willReturn('foo');
-        $renderingContext->expects(self::any())->method('getVariableProvider')->willReturn($variableContainer);
+        $renderingContext->expects(self::once())->method('getVariableProvider')->willReturn($variableContainer);
         $value = $node->evaluate($renderingContext);
         self::assertEquals('foo', $value);
     }

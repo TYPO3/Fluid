@@ -43,8 +43,8 @@ final class AbstractViewHelperTest extends TestCase
     #[Test]
     public function setRenderingContextShouldSetInnerVariables(): void
     {
-        $templateVariableContainer = $this->createMock(VariableProviderInterface::class);
-        $viewHelperVariableContainer = $this->createMock(ViewHelperVariableContainer::class);
+        $templateVariableContainer = self::createStub(VariableProviderInterface::class);
+        $viewHelperVariableContainer = self::createStub(ViewHelperVariableContainer::class);
         $renderingContext = new RenderingContext();
         $renderingContext->setVariableProvider($templateVariableContainer);
         $renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);

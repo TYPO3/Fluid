@@ -65,7 +65,7 @@ final class RenderingContextTest extends TestCase
     #[Test]
     public function gettersReturnPreviouslySetObjects(string $property, string $expected): void
     {
-        $expected = $this->createMock($expected);
+        $expected = self::createStub($expected);
         $subject = new RenderingContext();
         $setter = 'set' . ucfirst($property);
         $subject->$setter($expected);
@@ -76,7 +76,7 @@ final class RenderingContextTest extends TestCase
     #[Test]
     public function getTemplateProcessorsReturnsPreviouslySetTemplateProcessor(): void
     {
-        $processors = [$this->createMock(TemplateProcessorInterface::class), $this->createMock(TemplateProcessorInterface::class)];
+        $processors = [self::createStub(TemplateProcessorInterface::class), self::createStub(TemplateProcessorInterface::class)];
         $subject = new RenderingContext();
         $subject->setTemplateProcessors($processors);
         self::assertSame($processors, $subject->getTemplateProcessors());
@@ -93,7 +93,7 @@ final class RenderingContextTest extends TestCase
     public function isCacheEnabledReturnsTrueIfCacheIsEnabled(): void
     {
         $subject = new RenderingContext();
-        $subject->setCache($this->createMock(FluidCacheInterface::class));
+        $subject->setCache(self::createStub(FluidCacheInterface::class));
         self::assertTrue($subject->isCacheEnabled());
     }
 
