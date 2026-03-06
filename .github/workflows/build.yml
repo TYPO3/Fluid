@@ -46,6 +46,9 @@ jobs:
       - name: Phpunit
         run: vendor/bin/phpunit
 
+      - name: Phpunit random order
+        run: vendor/bin/phpunit --order-by random
+
       - name: Documentation integrity
         run: |
           # Generate ViewHelper documentation
