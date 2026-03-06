@@ -11,8 +11,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Fixtures\AbstractTagBasedViewHelperTestFixture;
 
 final class AbstractTagBasedViewHelperTest extends TestCase
 {
@@ -21,7 +21,7 @@ final class AbstractTagBasedViewHelperTest extends TestCase
     {
         $tagBuilder = $this->createMock(TagBuilder::class);
         $tagBuilder->expects(self::once())->method('render')->willReturn('foobar');
-        $subject = $this->getMockBuilder(AbstractTagBasedViewHelper::class)->onlyMethods([])->getMock();
+        $subject = new AbstractTagBasedViewHelperTestFixture();
         $subject->setTagBuilder($tagBuilder);
         self::assertEquals('foobar', $subject->render());
     }

@@ -73,10 +73,9 @@ final class EscapingModifierTemplateProcessorTest extends TestCase
     public function testThrowsExceptionOnMultipleDefinitions(string $templateSource): void
     {
         $this->expectException(Exception::class);
-        $subject = new EscapingModifierTemplateProcessor();
         $context = new RenderingContext();
-        $parser = $this->getMockBuilder(TemplateParser::class)->onlyMethods(['setEscapingEnabled'])->getMock();
-        $context->setTemplateParser($parser);
+        $context->setTemplateParser(new TemplateParser());
+        $subject = new EscapingModifierTemplateProcessor();
         $subject->setRenderingContext($context);
         $subject->preProcessSource($templateSource);
     }

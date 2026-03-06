@@ -26,10 +26,10 @@ final class ViewHelperNodeTest extends TestCase
         $renderingContextMock = $this->createMock(RenderingContextInterface::class);
         $viewHelperResolverMock = $this->createMock(ViewHelperResolver::class);
         $renderingContextMock->expects(self::once())->method('getViewHelperResolver')->willReturn($viewHelperResolverMock);
-        $viewHelperResolverMock->expects(self::any())->method('resolveViewHelperClassName')->with('f', 'vh')->willReturn(TestViewHelper::class);
-        $viewHelperResolverMock->expects(self::any())->method('createViewHelperInstanceFromClassName')->with(TestViewHelper::class)->willReturn(new TestViewHelper());
-        $viewHelperResolverMock->expects(self::any())->method('getArgumentDefinitionsForViewHelper')->willReturn([]);
-        $arguments = [$this->createMock(NodeInterface::class)];
+        $viewHelperResolverMock->expects(self::once())->method('resolveViewHelperClassName')->with('f', 'vh')->willReturn(TestViewHelper::class);
+        $viewHelperResolverMock->expects(self::once())->method('createViewHelperInstanceFromClassName')->with(TestViewHelper::class)->willReturn(new TestViewHelper());
+        $viewHelperResolverMock->expects(self::once())->method('getArgumentDefinitionsForViewHelper')->willReturn([]);
+        $arguments = [self::createStub(NodeInterface::class)];
         $subject = new ViewHelperNode($renderingContextMock, 'f', 'vh', $arguments);
         self::assertSame($arguments, $subject->getArguments());
     }
@@ -40,13 +40,13 @@ final class ViewHelperNodeTest extends TestCase
         $renderingContextMock = $this->createMock(RenderingContextInterface::class);
         $viewHelperResolverMock = $this->createMock(ViewHelperResolver::class);
         $renderingContextMock->expects(self::once())->method('getViewHelperResolver')->willReturn($viewHelperResolverMock);
-        $viewHelperResolverMock->expects(self::any())->method('resolveViewHelperClassName')->with('f', 'vh')->willReturn(TestViewHelper::class);
-        $viewHelperResolverMock->expects(self::any())->method('createViewHelperInstanceFromClassName')->with(TestViewHelper::class)->willReturn(new TestViewHelper());
-        $viewHelperResolverMock->expects(self::any())->method('getArgumentDefinitionsForViewHelper')->willReturn([]);
+        $viewHelperResolverMock->expects(self::once())->method('resolveViewHelperClassName')->with('f', 'vh')->willReturn(TestViewHelper::class);
+        $viewHelperResolverMock->expects(self::once())->method('createViewHelperInstanceFromClassName')->with(TestViewHelper::class)->willReturn(new TestViewHelper());
+        $viewHelperResolverMock->expects(self::once())->method('getArgumentDefinitionsForViewHelper')->willReturn([]);
         $viewHelperInvokerMock = $this->createMock(ViewHelperInvoker::class);
         $renderingContextMock->expects(self::once())->method('getViewHelperInvoker')->willReturn($viewHelperInvokerMock);
         $viewHelperInvokerMock->expects(self::once())->method('invoke')->willReturn('test');
-        $subject = new ViewHelperNode($renderingContextMock, 'f', 'vh', [$this->createMock(NodeInterface::class)]);
+        $subject = new ViewHelperNode($renderingContextMock, 'f', 'vh', [self::createStub(NodeInterface::class)]);
         $result = $subject->evaluate($renderingContextMock);
         self::assertSame('test', $result);
     }

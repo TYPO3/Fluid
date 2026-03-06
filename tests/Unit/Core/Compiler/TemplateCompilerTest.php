@@ -23,7 +23,7 @@ final class TemplateCompilerTest extends TestCase
     public function getRenderingContextReturnsPreviouslySetRenderingContext(): void
     {
         $subject = new TemplateCompiler();
-        $renderingContextMock = $this->createMock(RenderingContextInterface::class);
+        $renderingContextMock = self::createStub(RenderingContextInterface::class);
         $subject->setRenderingContext($renderingContextMock);
         self::assertSame($renderingContextMock, $subject->getRenderingContext());
     }
@@ -87,7 +87,7 @@ final class TemplateCompilerTest extends TestCase
     #[Test]
     public function getRenderingContextGetsPreviouslySetRenderingContext(): void
     {
-        $renderingContextMock = $this->createMock(RenderingContextInterface::class);
+        $renderingContextMock = self::createStub(RenderingContextInterface::class);
         $subject = new TemplateCompiler();
         $subject->setRenderingContext($renderingContextMock);
         self::assertSame($renderingContextMock, $subject->getRenderingContext());

@@ -41,9 +41,3 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: src/ViewHelpers/ForViewHelper.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: tests/Functional/ViewHelpers/StaticCacheable/NotSharedStaticCompilableViewHelperTest.php

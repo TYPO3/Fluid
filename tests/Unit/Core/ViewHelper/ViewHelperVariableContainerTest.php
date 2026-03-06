@@ -82,7 +82,7 @@ final class ViewHelperVariableContainerTest extends TestCase
     public function getViewReturnsPreviouslySetView(): void
     {
         $subject = new ViewHelperVariableContainer();
-        $view = $this->createMock(ViewInterface::class);
+        $view = self::createStub(ViewInterface::class);
         $subject->setView($view);
         self::assertSame($view, $subject->getView());
     }
