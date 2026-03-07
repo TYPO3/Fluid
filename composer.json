@@ -23,7 +23,7 @@
         "phpstan/phpstan-phpunit": "^2.0.16",
         "phpunit/phpunit": "^11.5.55 || ^12.5.14 || ^13.0.5",
         "psr/container": "^2.0.2",
-        "t3docs/fluid-documentation-generator": "^4.4.1"
+        "t3docs/fluid-documentation-generator": "^4.4.2"
     },
     "suggest": {
         "ext-json": "PHP JSON is needed when using JSONVariableProvider: A relatively rare use case",
