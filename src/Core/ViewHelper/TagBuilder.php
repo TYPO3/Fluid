@@ -9,8 +9,6 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
-use InvalidArgumentException;
-
 /**
  * Tag builder. Can be easily accessed in AbstractTagBasedViewHelper
  *
@@ -200,7 +198,7 @@ class TagBuilder
         // which might even be desired functionality.
         // Please be extremely careful when using user-provided content as attribute name!
         if (preg_match('/[^0-9A-Za-z!#\$%()*+,\.:;?@\\[\]\^_`{|}~-]/', $attributeName)) {
-            throw new InvalidArgumentException('Invalid attribute name provided: ' . $attributeName, 1721982367);
+            throw new \InvalidArgumentException('Invalid attribute name provided: ' . $attributeName, 1721982367);
         }
 
         if (is_iterable($attributeValue)) {
