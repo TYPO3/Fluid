@@ -166,6 +166,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
                     function ($parent, TemplatePaths $paths) use ($layoutName) {
                         return $paths->getLayoutSource($layoutName);
                     },
+                    $layoutRenderingContext->getTemplatePaths()->getLayoutPathAndFilename($layoutName),
                 );
             } catch (PassthroughSourceException $error) {
                 return $error->getSource();
@@ -291,6 +292,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
                 function ($parent, TemplatePaths $paths) use ($partialName) {
                     return $paths->getPartialSource($partialName);
                 },
+                $templatePaths->getPartialPathAndFilename($partialName),
             );
         } catch (PassthroughSourceException $error) {
             return $error->getSource();
@@ -380,6 +382,8 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
             function ($parent, TemplatePaths $paths) use ($controllerName, $actionName) {
                 return $paths->getTemplateSource($controllerName, $actionName);
             },
+            // @todo $controllerName and $actionName should never be null, see also TemplatePaths
+            $templatePaths->resolveTemplateFileForControllerAndActionAndFormat($controllerName ?? '', $actionName ?? ''),
         );
         if ($parsedTemplate->isCompiled()) {
             $parsedTemplate->addCompiledNamespaces($this->baseRenderingContext);
