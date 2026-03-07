@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 
 /**
  * The MergeViewHelper merges two arrays into one, optionally recursively.
@@ -72,7 +73,7 @@ final class MergeViewHelper extends AbstractViewHelper
         $array = $this->arguments['array'] ?? $this->renderChildren();
         if (!is_iterable($array)) {
             $givenType = get_debug_type($array);
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentValueException(
                 'The argument "array" was registered with type "array", but is of type "'
                 . $givenType . '" in view helper "' . static::class . '".',
                 1755316529,
@@ -83,7 +84,7 @@ final class MergeViewHelper extends AbstractViewHelper
         $with = $this->arguments['with'] ?? [];
         if (!is_iterable($with)) {
             $givenType = get_debug_type($with);
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentValueException(
                 'The argument "with" was registered with type "array", but is of type "'
                 . $givenType . '" in view helper "' . static::class . '".',
                 1755316530,

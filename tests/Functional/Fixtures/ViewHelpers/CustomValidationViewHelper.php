@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperArgumentsValidatedEventInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 
@@ -30,7 +31,7 @@ final class CustomValidationViewHelper extends AbstractViewHelper implements Vie
     public static function argumentsValidatedEvent(array $arguments, array $argumentDefinitions, ViewHelperInterface $viewHelper): void
     {
         if (!isset($arguments['arg1']) && (!isset($arguments['arg2']) || !isset($arguments['arg3']))) {
-            throw new \InvalidArgumentException('ViewHelper must either be called with arg1 or with both arg2 and arg3.', 1755274666);
+            throw new InvalidArgumentValueException('ViewHelper must either be called with arg1 or with both arg2 and arg3.', 1755274666);
         }
     }
 }

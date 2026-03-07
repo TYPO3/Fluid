@@ -9,8 +9,8 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Variables\ScopedVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 
 /**
  * Loop ViewHelper which can be used to iterate over arrays.
@@ -90,16 +90,13 @@ class ForViewHelper extends AbstractViewHelper
         $this->registerArgument('iteration', 'string', 'The name of the variable to store iteration information (index, cycle, total, isFirst, isLast, isEven, isOdd)');
     }
 
-    /**
-     * @throws ViewHelper\Exception
-     */
     public function render(): string
     {
         if (!isset($this->arguments['each'])) {
             return '';
         }
         if (is_object($this->arguments['each']) && !$this->arguments['each'] instanceof \Traversable) {
-            throw new ViewHelper\Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
+            throw new InvalidArgumentValueException('ForViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
         }
         if ($this->arguments['reverse'] === true) {
             $this->arguments['each'] = array_reverse(iterator_to_array($this->arguments['each']), true);

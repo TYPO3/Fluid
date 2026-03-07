@@ -37,7 +37,7 @@ class ArgumentDefinition
         protected array $annotations = [],
     ) {
         if ($required && $defaultValue !== null) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentDefinitionException(
                 sprintf('ArgumentDefinition "%s" cannot have a default value while also being required. Either remove the default or mark it as optional.', $name),
                 1754235900,
             );

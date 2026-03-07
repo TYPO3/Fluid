@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Core\ViewHelper;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Variables\Fixtures\UserRoleBackedEnum;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Variables\Fixtures\UserRoleEnum;
@@ -325,7 +326,7 @@ final class TagBasedViewHelperTest extends AbstractFunctionalTestCase
     #[Test]
     public function throwsErrorForInvalidArgumentTypes(string $source): void
     {
-        self::expectException(\InvalidArgumentException::class);
+        self::expectException(InvalidArgumentValueException::class);
 
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);

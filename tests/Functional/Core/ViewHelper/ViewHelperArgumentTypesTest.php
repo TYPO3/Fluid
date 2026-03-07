@@ -12,6 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Core\ViewHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use stdClass;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\Objects\WithCamelCaseGetter;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\Objects\WithProperties;
@@ -204,7 +205,7 @@ final class ViewHelperArgumentTypesTest extends AbstractFunctionalTestCase
     #[Test]
     public function invalidUnionTypeThrowsException(string $source, array $variables, int $expectedExceptionCode): void
     {
-        self::expectException(\InvalidArgumentException::class);
+        self::expectException(InvalidArgumentValueException::class);
         self::expectExceptionCode($expectedExceptionCode);
 
         $view = new TemplateView();

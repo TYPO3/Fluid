@@ -12,6 +12,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
 use Stringable;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 
 /**
  * The ContainsViewHelper checks if a provided string or array contains
@@ -88,7 +89,7 @@ final class ContainsViewHelper extends AbstractConditionViewHelper
     {
         if (!is_scalar($value) && !$value instanceof Stringable) {
             $givenType = get_debug_type($value);
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentValueException(
                 'If the argument "subject" is a string, then "value" must be scalar, but it is of type "'
                 . $givenType . '" in view helper "' . static::class . '".',
                 1754978401,
@@ -101,7 +102,7 @@ final class ContainsViewHelper extends AbstractConditionViewHelper
     {
         if (!is_iterable($subject)) {
             $givenType = get_debug_type($subject);
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentValueException(
                 'The argument "subject" must be either a scalar value or an array/iterator, but is of type "'
                 . $givenType . '" in view helper "' . static::class . '".',
                 1754978402,

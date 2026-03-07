@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Core\ViewHelper;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -62,7 +63,7 @@ final class ViewHelperEventsTest extends AbstractFunctionalTestCase
     #[DataProvider('argumentsValidatedEventThrowsExceptionDataProvider')]
     public function argumentsValidatedEventThrowsException(string $template): void
     {
-        self::expectException(\InvalidArgumentException::class);
+        self::expectException(InvalidArgumentValueException::class);
         self::expectExceptionCode(1755274666);
         $view = new TemplateView();
         $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');

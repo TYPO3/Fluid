@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ArrayAccessExample;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\IterableExample;
@@ -70,7 +71,7 @@ final class ReplaceViewHelperTest extends AbstractFunctionalTestCase
     #[Test]
     public function throwsExceptionForInvalidArgument(string $template, array $variables, int $exceptionCode, string $exceptionMessage): void
     {
-        self::expectException(\InvalidArgumentException::class);
+        self::expectException(InvalidArgumentValueException::class);
         self::expectExceptionCode($exceptionCode);
         self::expectExceptionMessage($exceptionMessage);
         $view = new TemplateView();

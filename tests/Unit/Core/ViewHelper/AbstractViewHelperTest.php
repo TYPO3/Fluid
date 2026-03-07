@@ -17,7 +17,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
+use TYPO3Fluid\Fluid\Core\ViewHelper\UndeclaredArgumentException;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 
 final class AbstractViewHelperTest extends TestCase
@@ -80,7 +80,7 @@ final class AbstractViewHelperTest extends TestCase
     #[Test]
     public function validateAdditionalArgumentsThrowsExceptionIfNotEmpty(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(UndeclaredArgumentException::class);
         $subject = new class () extends AbstractViewHelper {
             public function render(): string
             {

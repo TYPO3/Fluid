@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ArrayAccessExample;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\IterableExample;
@@ -184,7 +185,7 @@ final class ShuffleViewHelperTest extends AbstractFunctionalTestCase
     #[Test]
     public function renderInvalid(array $arguments, string $src, int $exceptionCode): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentValueException::class);
         $this->expectExceptionCode($exceptionCode);
 
         $view = new TemplateView();

@@ -11,7 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers\Format;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -85,7 +85,7 @@ final class CaseViewHelperTest extends AbstractFunctionalTestCase
     #[Test]
     public function viewHelperThrowsExceptionIfIncorrectModeIsGiven(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidArgumentValueException::class);
         $this->expectExceptionCode(1358349150);
         $view = new TemplateView();
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource('<f:format.case value="foo" mode="invalid" />');

@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ClassConstantsExample;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\EnumExample;
@@ -23,7 +24,7 @@ final class ConstantViewHelperTest extends AbstractFunctionalTestCase
     #[Test]
     public function renderThrowsExceptionOnNonStringValue(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentValueException::class);
         $name = new \stdClass();
         $view = new TemplateView();
         $view->assignMultiple(['name' => $name]);

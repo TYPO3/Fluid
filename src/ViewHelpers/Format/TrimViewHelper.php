@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 
 /**
  * This ViewHelper strips whitespace (or other characters) from the beginning and end of a string.
@@ -115,7 +115,7 @@ final class TrimViewHelper extends AbstractViewHelper
             self::SIDE_BOTH => trim($value, $characters),
             self::SIDE_LEFT, self::SIDE_START => ltrim($value, $characters),
             self::SIDE_RIGHT, self::SIDE_END => rtrim($value, $characters),
-            default => throw new Exception(
+            default => throw new InvalidArgumentValueException(
                 'The side "' . $side . '" supplied to Fluid\'s format.trim ViewHelper is not supported.',
                 1669191560,
             ),
