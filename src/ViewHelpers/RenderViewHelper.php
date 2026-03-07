@@ -10,6 +10,8 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
+use TYPO3Fluid\Fluid\Core\ViewHelper\MissingArgumentException;
 
 /**
  * A ViewHelper to render a section, a partial, a specified section in a partial
@@ -146,7 +148,7 @@ class RenderViewHelper extends AbstractViewHelper
         $content = '';
         if ($delegate !== null) {
             if (!is_a($delegate, ParsedTemplateInterface::class, true)) {
-                throw new \InvalidArgumentException(sprintf('Cannot render %s - must implement ParsedTemplateInterface!', $delegate));
+                throw new InvalidArgumentValueException(sprintf('Cannot render %s - must implement ParsedTemplateInterface!', $delegate));
             }
             $this->renderingContext = clone $this->renderingContext;
             $this->renderingContext->getVariableProvider()->setSource($variables);
@@ -156,7 +158,7 @@ class RenderViewHelper extends AbstractViewHelper
         } elseif ($section !== null) {
             $content = $view->renderSection($section, $variables, $optional);
         } elseif (!$optional) {
-            throw new \InvalidArgumentException('ViewHelper f:render called without either argument section, partial or delegate and optional flag is false');
+            throw new MissingArgumentException('ViewHelper f:render called without either argument section, partial or delegate and optional flag is false');
         }
         // Replace empty content with default value. If default is
         // not set, null is returned and cast to a new, empty string

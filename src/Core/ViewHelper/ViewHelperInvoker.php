@@ -61,7 +61,7 @@ class ViewHelperInvoker
                     $value = $renderingContext->getArgumentProcessor()->process($arguments[$argumentName], $argumentDefinition);
                     if (!$renderingContext->getArgumentProcessor()->isValid($value, $argumentDefinition)) {
                         $givenType = is_object($value) ? get_class($value) : gettype($value);
-                        throw new \InvalidArgumentException(sprintf(
+                        throw new InvalidArgumentValueException(sprintf(
                             'The argument "%s" was registered with type "%s", but is of type "%s" in view helper "%s".',
                             $argumentName,
                             $argumentDefinition->getType(),

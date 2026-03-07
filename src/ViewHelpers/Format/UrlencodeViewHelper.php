@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 
 use Stringable;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 
 /**
  * Encodes the given string according to http://www.faqs.org/rfcs/rfc3986.html
@@ -65,10 +66,10 @@ final class UrlencodeViewHelper extends AbstractViewHelper
     {
         $value = $this->renderChildren();
         if (is_array($value)) {
-            throw new \InvalidArgumentException('Specified array cannot be converted to string.', 1700821579);
+            throw new InvalidArgumentValueException('Specified array cannot be converted to string.', 1700821579);
         }
         if (is_object($value) && !($value instanceof Stringable)) {
-            throw new \InvalidArgumentException('Specified object cannot be converted to string.', 1700821578);
+            throw new InvalidArgumentValueException('Specified object cannot be converted to string.', 1700821578);
         }
         return rawurlencode((string)$value);
     }

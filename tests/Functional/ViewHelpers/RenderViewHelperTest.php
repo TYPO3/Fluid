@@ -11,6 +11,8 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
+use TYPO3Fluid\Fluid\Core\ViewHelper\MissingArgumentException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\Exception\InvalidPartialException;
 use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
@@ -21,7 +23,7 @@ final class RenderViewHelperTest extends AbstractFunctionalTestCase
     #[Test]
     public function exceptionForOptionalSetToFalseAndNoTargetGiven(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(MissingArgumentException::class);
         $template = '<f:render optional="false"/>';
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);
@@ -32,7 +34,7 @@ final class RenderViewHelperTest extends AbstractFunctionalTestCase
     #[Test]
     public function exceptionForInvalidDelegate(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentValueException::class);
         $template = '<f:render delegate="TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture"/>';
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);

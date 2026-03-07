@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 
 /**
  * The SplitViewHelper splits a string by the specified separator, which
@@ -77,7 +78,7 @@ final class SplitViewHelper extends AbstractViewHelper
     {
         $value = $this->arguments['value'] ?? $this->renderChildren();
         if (!is_string($value)) {
-            throw new \InvalidArgumentException('Value to be split must be a string: ' . $value, 1705250408);
+            throw new InvalidArgumentValueException('Value to be split must be a string: ' . $value, 1705250408);
         }
         return explode($this->arguments['separator'], $value, $this->arguments['limit']);
     }

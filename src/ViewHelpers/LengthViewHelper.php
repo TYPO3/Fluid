@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 
 /**
  * The LengthViewHelper returns the length of a given string.
@@ -73,7 +74,7 @@ final class LengthViewHelper extends AbstractViewHelper
 
         if (!is_scalar($value)) {
             $givenType = get_debug_type($value);
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentValueException(
                 'The argument "value" was registered with type "string", but is of type "'
                 . $givenType . '" in view helper "' . static::class . '".',
                 1754637887,

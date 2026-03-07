@@ -11,6 +11,7 @@ namespace TYPO3\CMS\Fluid\Tests\Functional\ViewHelpers;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -123,7 +124,7 @@ final class MergeViewHelperTest extends AbstractFunctionalTestCase
     #[Test]
     public function renderInvalid(array $arguments, string $src, int $expectedExceptionCode): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentValueException::class);
         $this->expectExceptionCode($expectedExceptionCode);
 
         $view = new TemplateView();

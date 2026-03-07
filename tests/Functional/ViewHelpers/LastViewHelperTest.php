@@ -11,6 +11,7 @@ namespace TYPO3\CMS\Fluid\Tests\Functional\ViewHelpers;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ArrayAccessExample;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\IterableExample;
@@ -99,7 +100,7 @@ final class LastViewHelperTest extends AbstractFunctionalTestCase
     #[Test]
     public function renderInvalid(array $arguments, string $src): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentValueException::class);
         $this->expectExceptionCode(1712221620);
 
         $view = new TemplateView();

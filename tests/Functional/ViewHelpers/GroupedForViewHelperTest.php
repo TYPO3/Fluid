@@ -11,7 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ArrayAccessExample;
 use TYPO3Fluid\Fluid\View\TemplateView;
@@ -21,7 +21,7 @@ final class GroupedForViewHelperTest extends AbstractFunctionalTestCase
     #[Test]
     public function renderThrowsExceptionWhenEachIsNotTraversable(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidArgumentValueException::class);
         $this->expectExceptionCode(1253108907);
         $source = '<f:groupedFor each="{items}" as="group" groupBy="by"></f:groupedFor>';
 
@@ -35,7 +35,7 @@ final class GroupedForViewHelperTest extends AbstractFunctionalTestCase
     #[Test]
     public function renderThrowsExceptionWhenEachIsOneDimensionalArray(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidArgumentValueException::class);
         $this->expectExceptionCode(1253120365);
         $source = '<f:groupedFor each="{items}" as="group" groupBy="by"></f:groupedFor>';
 
