@@ -26,6 +26,11 @@ final class ParsedTemplateImplementationFixture implements ParsedTemplateInterfa
         return 'myIdentifier';
     }
 
+    public function getOriginalTemplatePath(): string
+    {
+        return 'path/to/template.fluid.html';
+    }
+
     public function getArgumentDefinitions(): array
     {
         return [];

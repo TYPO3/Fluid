@@ -26,6 +26,7 @@ use TYPO3Fluid\Fluid\View;
 class ParsingState implements ParsedTemplateInterface
 {
     protected string $identifier;
+    protected ?string $originalTemplatePath = null;
     protected string|NodeInterface|null $layoutName = null;
 
     /**
@@ -66,6 +67,16 @@ class ParsingState implements ParsedTemplateInterface
     public function getIdentifier(): string
     {
         return $this->identifier;
+    }
+
+    public function setOriginalTemplatePath(?string $originalTemplatePath): void
+    {
+        $this->originalTemplatePath = $originalTemplatePath;
+    }
+
+    public function getOriginalTemplatePath(): ?string
+    {
+        return $this->originalTemplatePath;
     }
 
     /**
