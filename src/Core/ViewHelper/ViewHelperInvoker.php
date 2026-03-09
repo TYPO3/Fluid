@@ -95,6 +95,9 @@ class ViewHelperInvoker
             }
             return $viewHelper->initializeArgumentsAndRender();
         } catch (Exception $error) {
+            if (method_exists($renderingContext, 'getOriginalTemplatePath')) {
+                return $renderingContext->getErrorHandler()->handleViewHelperError($error, $renderingContext->getOriginalTemplatePath());
+            }
             return $renderingContext->getErrorHandler()->handleViewHelperError($error);
         }
     }

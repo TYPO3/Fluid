@@ -29,8 +29,18 @@ class StandardErrorHandler implements ErrorHandlerInterface
         throw $error;
     }
 
-    public function handleViewHelperError(\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error): string
+    public function handleViewHelperError(\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error, ?string $originalTemplatePath = null): string
     {
+        if ($originalTemplatePath !== null) {
+            throw new \TYPO3Fluid\Fluid\Core\ViewHelper\Exception(sprintf(
+                '%s in %s: %s (%s:%d)',
+                get_class($error),
+                $originalTemplatePath,
+                $error->getMessage(),
+                $error->getFile(),
+                $error->getLine(),
+            ), $error->getCode(), $error);
+        }
         throw $error;
     }
 

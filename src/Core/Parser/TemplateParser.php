@@ -248,7 +248,7 @@ class TemplateParser
                 } catch (\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error) {
                     $this->textHandler(
                         $state,
-                        $this->renderingContext->getErrorHandler()->handleViewHelperError($error),
+                        $this->renderingContext->getErrorHandler()->handleViewHelperError($error, $state->getOriginalTemplatePath()),
                     );
                 } catch (Exception $error) {
                     $this->textHandler(
@@ -361,7 +361,7 @@ class TemplateParser
         } catch (\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error) {
             $this->textHandler(
                 $state,
-                $this->renderingContext->getErrorHandler()->handleViewHelperError($error),
+                $this->renderingContext->getErrorHandler()->handleViewHelperError($error, $state->getOriginalTemplatePath()),
             );
         } catch (Exception $error) {
             $this->textHandler(
@@ -689,7 +689,7 @@ class TemplateParser
                 } catch (\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error) {
                     $this->textHandler(
                         $state,
-                        $this->renderingContext->getErrorHandler()->handleViewHelperError($error),
+                        $this->renderingContext->getErrorHandler()->handleViewHelperError($error, $state->getOriginalTemplatePath()),
                     );
                 } catch (Exception $error) {
                     $this->textHandler(
