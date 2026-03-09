@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 
 /**
  * Modifies the case of an input string to upper- or lowercase or capitalization.
@@ -110,7 +110,6 @@ final class CaseViewHelper extends AbstractViewHelper
 
     /**
      * Changes the case of the input string
-     * @throws Exception
      */
     public function render(): string
     {
@@ -142,7 +141,7 @@ final class CaseViewHelper extends AbstractViewHelper
                 $output = mb_convert_case($value, MB_CASE_TITLE, 'utf-8');
                 break;
             default:
-                throw new Exception('The case mode "' . $mode . '" supplied to Fluid\'s format.case ViewHelper is not supported.', 1358349150);
+                throw new InvalidArgumentValueException('The case mode "' . $mode . '" supplied to Fluid\'s format.case ViewHelper is not supported.', 1358349150);
         }
         return $output;
     }

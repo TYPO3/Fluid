@@ -14,6 +14,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3Fluid\Fluid\Core\Definition\Annotation\Annotation;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentDefinitionException;
 
 final class ArgumentDefinitionTest extends TestCase
 {
@@ -54,7 +55,7 @@ final class ArgumentDefinitionTest extends TestCase
     #[Test]
     public function constructorThrowsExceptionWhenRequiredWithDefaultValue(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentDefinitionException::class);
         $this->expectExceptionCode(1754235900);
         $this->expectExceptionMessage('ArgumentDefinition "test" cannot have a default value while also being required. Either remove the default or mark it as optional.');
 

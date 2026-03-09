@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 
 /**
  * The MaxViewHelper returns the maximum element from an array
@@ -40,7 +41,7 @@ final class MaxViewHelper extends AbstractViewHelper
         $value = $this->arguments['value'] ?? $this->renderChildren();
         if ($value === null || !is_iterable($value)) {
             $givenType = get_debug_type($value);
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentValueException(
                 'The argument "value" was registered with type "array", but is of type "'
                 . $givenType . '" in view helper "' . static::class . '".',
                 1756178710,

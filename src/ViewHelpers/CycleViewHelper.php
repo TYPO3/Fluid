@@ -11,6 +11,7 @@ use TYPO3Fluid\Fluid\Core\Variables\ScopedVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 
 /**
  * This ViewHelper cycles through the specified values.
@@ -112,7 +113,7 @@ class CycleViewHelper extends AbstractViewHelper
             return iterator_to_array($values, false);
         }
 
-        throw new ViewHelper\Exception('CycleViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
+        throw new InvalidArgumentValueException('CycleViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
     }
 
     protected static function initializeIndex(string $as, ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer): int

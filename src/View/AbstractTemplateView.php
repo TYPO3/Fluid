@@ -17,6 +17,8 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentProcessorInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
+use TYPO3Fluid\Fluid\Core\ViewHelper\MissingArgumentException;
 use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
@@ -417,7 +419,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
             if ($variableProvider->exists($argumentName)) {
                 $processedValue = $argumentProcessor->process($variableProvider->get($argumentName), $argumentDefinition);
                 if (!$argumentProcessor->isValid($processedValue, $argumentDefinition)) {
-                    throw new Exception(sprintf(
+                    throw new InvalidArgumentValueException(sprintf(
                         'The argument "%s" for %s "%s" is registered with type "%s", but the provided value is of type "%s".',
                         $argumentName,
                         $renderingTypeLabel,
@@ -428,7 +430,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
                 }
                 $variableProvider->add($argumentName, $processedValue);
             } elseif ($argumentDefinition->isRequired()) {
-                throw new Exception(sprintf(
+                throw new MissingArgumentException(sprintf(
                     'The argument "%s" for %s "%s" is required, but was not provided.',
                     $argumentName,
                     $renderingTypeLabel,

@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 
 /**
  * The RangeViewHelper returns an array containing a range of integers.
@@ -93,7 +94,7 @@ final class RangeViewHelper extends AbstractViewHelper
     {
         $step = $this->arguments['step'];
         if ($step === 0) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentValueException(
                 'The argument "step" cannot be 0 in view helper "' . static::class . '".',
                 1754596304,
             );

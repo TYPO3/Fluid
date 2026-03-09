@@ -11,7 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers\Format;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -107,7 +107,7 @@ final class TrimViewHelperTest extends AbstractFunctionalTestCase
     #[Test]
     public function viewHelperThrowsExceptionIfIncorrectModeIsGiven(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidArgumentValueException::class);
         $this->expectExceptionCode(1669191560);
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);

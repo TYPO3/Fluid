@@ -7,8 +7,8 @@
 
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
-use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 
 /**
  * This ViewHelper counts elements of the specified array or countable object.
@@ -64,7 +64,7 @@ class CountViewHelper extends AbstractViewHelper
             return 0;
         }
         if (!$countable instanceof \Countable && !is_array($countable)) {
-            throw new ViewHelper\Exception(
+            throw new InvalidArgumentValueException(
                 sprintf(
                     'Subject given to f:count() is not countable (type: %s)',
                     is_object($countable) ? get_class($countable) : gettype($countable),

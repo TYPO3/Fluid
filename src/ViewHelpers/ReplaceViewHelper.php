@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 
 /**
  * The ReplaceViewHelper replaces one or multiple strings with other
@@ -68,11 +69,11 @@ final class ReplaceViewHelper extends AbstractViewHelper
         $search = $this->arguments['search'];
         $replace = $this->arguments['replace'];
         if ($value !== null && !is_scalar($value) && !$value instanceof \Stringable) {
-            throw new \InvalidArgumentException('A stringable value must be provided.', 1710441987);
+            throw new InvalidArgumentValueException('A stringable value must be provided.', 1710441987);
         }
         if ($search === null) {
             if (!is_iterable($replace)) {
-                throw new \InvalidArgumentException(sprintf(
+                throw new InvalidArgumentValueException(sprintf(
                     'Argument "replace" must be iterable to be used without "search" argument, "%s" given instead.',
                     get_debug_type($replace),
                 ), 1710441988);
@@ -84,13 +85,13 @@ final class ReplaceViewHelper extends AbstractViewHelper
             $replace = array_values($replace);
         } else {
             if (!is_iterable($search) && !is_scalar($search)) {
-                throw new \InvalidArgumentException(sprintf(
+                throw new InvalidArgumentValueException(sprintf(
                     'Argument "search" must be either iterable or scalar, "%s" given instead.',
                     get_debug_type($search),
                 ), 1710441989);
             }
             if (!is_iterable($replace) && !is_scalar($replace)) {
-                throw new \InvalidArgumentException(sprintf(
+                throw new InvalidArgumentValueException(sprintf(
                     'Argument "replace" must be either iterable or scalar, "%s" given instead.',
                     get_debug_type($replace),
                 ), 1710441990);
@@ -100,7 +101,7 @@ final class ReplaceViewHelper extends AbstractViewHelper
             $replace = is_iterable($replace) ? iterator_to_array($replace) : [$replace];
 
             if (\count($search) !== \count($replace)) {
-                throw new \InvalidArgumentException('Count of "search" and "replace" arguments must be the same.', 1710441991);
+                throw new InvalidArgumentValueException('Count of "search" and "replace" arguments must be the same.', 1710441991);
             }
         }
         return str_replace($search, $replace, (string)$value);

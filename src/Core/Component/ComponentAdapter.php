@@ -17,6 +17,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolverDelegateInterface;
 use TYPO3Fluid\Fluid\ViewHelpers\FragmentViewHelper;
@@ -97,7 +98,7 @@ final class ComponentAdapter implements ViewHelperInterface
             return;
         }
         if (!$this->getComponentDefinitionProvider()->getComponentDefinition($this->viewHelperNode->getName())->additionalArgumentsAllowed()) {
-            throw new Exception(sprintf(
+            throw new InvalidArgumentValueException(sprintf(
                 'Invalid arguments supplied to component <%s:%s>: %s',
                 $this->viewHelperNode->getNamespace(),
                 $this->viewHelperNode->getName(),

@@ -11,6 +11,8 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
+use TYPO3Fluid\Fluid\Core\ViewHelper\MissingArgumentException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -107,10 +109,12 @@ final class ArgumentViewHelperTest extends AbstractFunctionalTestCase
         return [
             'required argument not provided' => [
                 [],
+                MissingArgumentException::class,
                 1746637334,
             ],
             'invalid type provided' => [
                 ['title' => 'My title', 'user' => ['firstName' => 'Jane', 'lastName' => 'Doe']],
+                InvalidArgumentValueException::class,
                 1746637333,
             ],
         ];
@@ -118,9 +122,9 @@ final class ArgumentViewHelperTest extends AbstractFunctionalTestCase
 
     #[Test]
     #[DataProvider('templateWithInvalidArgumentsDataProvider')]
-    public function templateWithInvalidArguments(array $variables, int $expectedExceptionCode): void
+    public function templateWithInvalidArguments(array $variables, string $expectedException, int $expectedExceptionCode): void
     {
-        self::expectException(\TYPO3Fluid\Fluid\View\Exception::class);
+        self::expectException($expectedException);
         self::expectExceptionCode($expectedExceptionCode);
         $templatePath = __DIR__ . '/../Fixtures/Templates/TemplateWithArgumentDefinitions.html';
         $view = new TemplateView();
@@ -132,9 +136,9 @@ final class ArgumentViewHelperTest extends AbstractFunctionalTestCase
 
     #[Test]
     #[DataProvider('templateWithInvalidArgumentsDataProvider')]
-    public function partialWithInvalidArguments(array $variables, int $expectedExceptionCode): void
+    public function partialWithInvalidArguments(array $variables, string $expectedException, int $expectedExceptionCode): void
     {
-        self::expectException(\TYPO3Fluid\Fluid\View\Exception::class);
+        self::expectException($expectedException);
         self::expectExceptionCode($expectedExceptionCode);
         $templateSource = '<f:render partial="PartialWithArgumentDefinitions" arguments="{_all}" />';
         $partialRootPath = __DIR__ . '/../Fixtures/Partials/';
@@ -166,9 +170,9 @@ final class ArgumentViewHelperTest extends AbstractFunctionalTestCase
 
     #[Test]
     #[DataProvider('templateWithInvalidArgumentsDataProvider')]
-    public function layoutWithInvalidArguments(array $variables, int $expectedExceptionCode): void
+    public function layoutWithInvalidArguments(array $variables, string $expectedException, int $expectedExceptionCode): void
     {
-        self::expectException(\TYPO3Fluid\Fluid\View\Exception::class);
+        self::expectException($expectedException);
         self::expectExceptionCode($expectedExceptionCode);
         $templateSource = '<f:layout name="LayoutWithArgumentDefinitions" />';
         $layoutRootPath = __DIR__ . '/../Fixtures/Layouts/';

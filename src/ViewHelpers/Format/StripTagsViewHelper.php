@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 
 use Stringable;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 
 /**
  * Removes tags from the given string (applying PHPs :php:`strip_tags()` function)
@@ -95,10 +96,10 @@ final class StripTagsViewHelper extends AbstractViewHelper
         $value = $this->renderChildren();
         $allowedTags = $this->arguments['allowedTags'];
         if (is_array($value)) {
-            throw new \InvalidArgumentException('Specified array cannot be converted to string.', 1700819707);
+            throw new InvalidArgumentValueException('Specified array cannot be converted to string.', 1700819707);
         }
         if (is_object($value) && !($value instanceof Stringable)) {
-            throw new \InvalidArgumentException('Specified object cannot be converted to string.', 1700819706);
+            throw new InvalidArgumentValueException('Specified object cannot be converted to string.', 1700819706);
         }
         return strip_tags((string)$value, $allowedTags);
     }

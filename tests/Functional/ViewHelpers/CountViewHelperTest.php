@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -19,7 +20,7 @@ final class CountViewHelperTest extends AbstractFunctionalTestCase
     #[Test]
     public function renderThrowsExceptionIfSubjectIsNotCountable(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentValueException::class);
         $value = new \stdClass();
         $view = new TemplateView();
         $view->assignMultiple(['value' => $value]);

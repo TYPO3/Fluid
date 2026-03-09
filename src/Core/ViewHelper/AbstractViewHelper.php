@@ -296,14 +296,13 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * overridden by any ViewHelper that desires this support and this inherited
      * method must not be called, obviously.
      *
-     * @throws Exception
      * @param array<string, mixed> $arguments
      */
     public function validateAdditionalArguments(array $arguments): void
     {
         if (!empty($arguments)) {
             if ($this->argumentDefinitions === []) {
-                throw new Exception(
+                throw new UndeclaredArgumentException(
                     sprintf(
                         'Undeclared arguments passed to ViewHelper %s: %s. No arguments are allowed.',
                         get_class($this),
@@ -311,7 +310,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                     ),
                 );
             }
-            throw new Exception(
+            throw new UndeclaredArgumentException(
                 sprintf(
                     'Undeclared arguments passed to ViewHelper %s: %s. Valid arguments are: %s',
                     get_class($this),
