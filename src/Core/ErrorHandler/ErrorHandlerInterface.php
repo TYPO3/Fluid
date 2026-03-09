@@ -9,6 +9,11 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Core\ErrorHandler;
 
+/**
+ * @todo consider extending in Fluid 6 to provide additional context for exceptions,
+ *       such as the original template file. This is already provided for handleViewHelperError()
+ *       which currently leads to phpstan issues in the baseline.
+ */
 interface ErrorHandlerInterface
 {
     /**
