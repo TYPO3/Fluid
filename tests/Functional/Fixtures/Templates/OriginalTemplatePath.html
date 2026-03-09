@@ -1,0 +1,9 @@
+<f:layout name="OriginalTemplatePathLayout" />
+
+<f:section name="main">
+    |Template before: <test:originalTemplatePath />|
+    <f:render partial="OriginalTemplatePathPartial" />
+    |Template after: <test:originalTemplatePath />|
+    {f:if(condition: '{test:originalTemplatePath()}', then: '|Template inline: {test:originalTemplatePath()}|')}
+</f:section>
+

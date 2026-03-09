@@ -174,6 +174,12 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
                 return $error->getSource();
             }
             $this->startRendering(self::RENDERING_LAYOUT, $parsedTemplate, $layoutRenderingContext);
+            // Layout is a special case because the rendering stack contains the parsed template,
+            // not the parsed layout, so the wrong original template path would be set in layout files
+            // @todo decide if this method should be added to RenderingContextInterface in Fluid 6
+            if (method_exists($layoutRenderingContext, 'setOriginalTemplatePath')) {
+                $layoutRenderingContext->setOriginalTemplatePath($parsedLayout->getOriginalTemplatePath());
+            }
             try {
                 $this->processAndValidateTemplateVariables(
                     $parsedLayout,
@@ -338,6 +344,10 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
      */
     protected function startRendering($type, ParsedTemplateInterface $template, RenderingContextInterface $context)
     {
+        // @todo decide if this method should be added to RenderingContextInterface in Fluid 6
+        if (method_exists($context, 'setOriginalTemplatePath')) {
+            $context->setOriginalTemplatePath($template->getOriginalTemplatePath());
+        }
         $this->renderingStack[] = ['type' => $type, 'parsedTemplate' => $template, 'renderingContext' => $context];
     }
 

@@ -107,7 +107,7 @@ class TemplateCompiler
         $this->currentlyProcessingState = null;
     }
 
-    public function store(string $identifier, ParsingState $parsingState): ?string
+    public function store(string $identifier, ParsingState $parsingState, ?string $originalTemplatePath = null): ?string
     {
         if ($this->isDisabled()) {
             $parsingState->setCompilable(false);
@@ -142,6 +142,9 @@ class TemplateCompiler
         $templateCode = sprintf(
             '<?php' . chr(10)
             . '%s {' . chr(10)
+            . '    public function getOriginalTemplatePath(): ?string {' . chr(10)
+                . '        return %s;' . chr(10)
+                . '    }' . chr(10)
             . '    public function getLayoutName(\\TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface $renderingContext): ?string {' . chr(10)
             . '        %s;' . chr(10)
             . '    }' . chr(10)
@@ -156,6 +159,7 @@ class TemplateCompiler
             . '    %s' . chr(10)
             . '}' . chr(10),
             'class ' . $identifier . ' extends \TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate',
+            var_export($originalTemplatePath, true),
             $this->generateCodeForLayoutName($storedLayoutName),
             ($parsingState->hasLayout() ? 'true' : 'false'),
             var_export($this->renderingContext->getViewHelperResolver()->getLocalNamespaces(), true),
