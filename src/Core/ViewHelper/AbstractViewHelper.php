@@ -308,6 +308,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                         get_class($this),
                         implode(', ', array_keys($arguments)),
                     ),
+                    1773227090,
                 );
             }
             throw new UndeclaredArgumentException(
@@ -317,6 +318,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                     implode(', ', array_keys($arguments)),
                     implode(', ', array_keys($this->argumentDefinitions)),
                 ),
+                1773227091,
             );
         }
     }
