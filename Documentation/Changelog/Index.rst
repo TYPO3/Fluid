@@ -6,7 +6,8 @@
 Changelog
 =========
 
-The Changelog lists notable deprecation and breaking changes.
+This Changelog lists notable deprecation and breaking changes. The full list of changes is available
+`in the Fluid releases on GitHub <https://github.com/TYPO3/Fluid/releases>`_.
 
 .. toctree::
     :maxdepth: 2
