@@ -139,6 +139,13 @@ final class TernaryExpressionNodeTest extends AbstractFunctionalTestCase
                 ['foo' => false],
                 'no',
             ],
+            // @todo Currently, undefined variables are treated as strings, which doesn't feel right.
+            //       This should evaluate to "no"
+            'unset variable evaluates to false' => [
+                '{foo ? \'yes\' : \'no\'}',
+                [],
+                'yes',
+            ],
 
             'variable negated set to true evaluates to true' => [
                 '{!foo ? \'yes\' : \'no\'}',
