@@ -78,7 +78,8 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
                 $viewHelperResolver->addLocalNamespace($set[1], $namespacePhp);
             }
             if (strpos($matches[0], 'data-namespace-typo3-fluid="true"')) {
-                $templateSource = str_replace($matches[0], '', $templateSource);
+                $removedNewlines = substr_count($matches[0], "\n");
+                $templateSource = str_replace($matches[0], str_repeat("\n", $removedNewlines), $templateSource);
                 $closingTagName = $matches[1];
                 $closingTag = '</' . $closingTagName . '>';
                 if (strpos($templateSource, $closingTag)) {
@@ -93,7 +94,8 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
                     }
                 }
                 if (count($namespaceAttributesToRemove)) {
-                    // @todo: Broken preg_replace, see tests
+                    // @todo: Broken preg_replace, see tests; when this is addressed, newlines need to be
+                    //        considered here as well to keep line numbers consistent in the parser
                     $matchWithRemovedNamespaceAttributes = preg_replace('/(?:\\s*+xmlns:(?:' . implode('|', $namespaceAttributesToRemove) . ')\\s*+)++/', ' ', $matches[0]);
                     $templateSource = str_replace($matches[0], $matchWithRemovedNamespaceAttributes, $templateSource);
                 }
