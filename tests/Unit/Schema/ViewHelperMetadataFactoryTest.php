@@ -21,6 +21,7 @@ use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\Sub\ArbitraryArgumentsViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\Sub\DeprecatedViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\WithDocumentationViewHelper;
+use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\WithMultipleLinksViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\WithoutClassSuffix;
 use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\WithoutDocumentationViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Schema\Fixtures\ViewHelpers\WithoutInterfaceViewHelper;
@@ -49,6 +50,16 @@ final class ViewHelperMetadataFactoryTest extends TestCase
                 "This is an example documentation with multiple lines\nof text.\n\nExamples\n========\n\nWe usually have some examples\n\n::\n   <demo:withDocumentation value=\"test\" />",
                 'http://typo3.org/ns/TYPO3Fluid/Fluid/Tests/Unit/Schema/Fixtures/ViewHelpers',
                 ['@internal' => ''],
+                false,
+            ],
+            'WithMultipleLinksViewHelper' => [
+                WithMultipleLinksViewHelper::class,
+                'TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers',
+                'WithMultipleLinksViewHelper',
+                'withMultipleLinks',
+                '',
+                'http://typo3.org/ns/TYPO3Fluid/Fluid/Tests/Unit/Schema/Fixtures/ViewHelpers',
+                ['@see' => 'https://example.com/third'],
                 false,
             ],
             'DeprecatedViewHelper' => [
