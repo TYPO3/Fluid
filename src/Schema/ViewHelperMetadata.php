@@ -17,7 +17,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 final class ViewHelperMetadata
 {
     /**
-     * @param array<string, string> $docTags
+     * @param array<string, string|array> $docTags
      * @param array<string, ArgumentDefinition> $argumentDefinitions
      */
     public function __construct(

@@ -23,7 +23,13 @@ final class ViewHelperMetadataFactory
     private const NAMESPACE_NAME_DIVIDER = 'ViewHelpers';
     private const CLASS_SUFFIX = 'ViewHelper';
 
-    public function createFromViewhelperClass(string $className): ViewHelperMetadata
+    /**
+     * @param bool $collectMultiplePhpDoc  If set to true, all phpdoc annotations of a certain type are collected as array
+     *                                     instead of just the last one as string
+     * @throws \InvalidArgumentException
+     * @return ViewHelperMetadata
+     */
+    public function createFromViewhelperClass(string $className, bool $collectMultiplePhpDoc = false): ViewHelperMetadata
     {
         if (!class_exists($className)) {
             throw new \InvalidArgumentException('The specified ViewHelper class does not exist: ' . $className);
@@ -59,15 +65,28 @@ final class ViewHelperMetadataFactory
             // Collect phpdoc tags
             $docTags = [];
             $currentTag = null;
-            foreach ($parts as $part) {
-                if (str_starts_with($part, '@')) {
-                    $docTags[$part] = '';
-                    $currentTag = $part;
-                } else {
-                    $docTags[$currentTag] .= $part;
+            if ($collectMultiplePhpDoc) {
+                foreach ($parts as $part) {
+                    if (str_starts_with($part, '@')) {
+                        $docTags[$part][] = '';
+                        $currentTag = $part;
+                    } else {
+                        end($docTags[$currentTag]);
+                        $docTags[$currentTag][key($docTags[$currentTag])] .= $part;
+                    }
                 }
+                $docTags = array_map(fn(array $items) => array_map(trim(...), $items), $docTags);
+            } else {
+                foreach ($parts as $part) {
+                    if (str_starts_with($part, '@')) {
+                        $docTags[$part] = '';
+                        $currentTag = $part;
+                    } else {
+                        $docTags[$currentTag] .= $part;
+                    }
+                }
+                $docTags = array_map(trim(...), $docTags);
             }
-            $docTags = array_map(trim(...), $docTags);
         }
 
         [$namespace, $name] = $this->splitClassName($className);
