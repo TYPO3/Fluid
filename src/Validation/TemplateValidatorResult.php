@@ -10,11 +10,12 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Validation;
 
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+use TYPO3Fluid\Fluid\Core\TemplateLocationException;
 
 /**
  * @internal
  */
-final readonly class TemplateValidatorResult
+final readonly class TemplateValidatorResult implements \JsonSerializable
 {
     /**
      * @param \Exception[] $errors
@@ -49,5 +50,20 @@ final readonly class TemplateValidatorResult
     public function canBeCompiled(): bool
     {
         return $this->errors === [] && $this->parsedTemplate?->isCompilable();
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'identifier' => $this->identifier,
+            'path' => $this->path,
+            'errors' => array_map(fn($e) => [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'message' => $e->getMessage(),
+                ...($e instanceof TemplateLocationException ? ['templateLocation' => get_object_vars($e->getTemplateLocation())] : []),
+            ], $this->errors),
+            'deprecations' => array_map(fn($deprecation) => get_object_vars($deprecation), $this->deprecations),
+        ];
     }
 }
