@@ -35,13 +35,13 @@ final class ViewHelperFinder
     /**
      * @return ViewHelperMetadata[]
      */
-    public function findViewHelpersInComposerProject(ClassLoader $autoloader): array
+    public function findViewHelpersInComposerProject(ClassLoader $autoloader, bool $collectMultiplePhpDoc = false): array
     {
         $this->lastErrors = [];
         $viewHelpers = [];
         foreach ($autoloader->getPrefixesPsr4() as $namespace => $paths) {
             foreach ($paths as $path) {
-                $viewHelpers = array_merge($viewHelpers, $this->findViewHelperFilesInPath($namespace, $path));
+                $viewHelpers = array_merge($viewHelpers, $this->findViewHelperFilesInPath($namespace, $path, $collectMultiplePhpDoc));
             }
         }
         return $viewHelpers;
@@ -56,9 +56,11 @@ final class ViewHelperFinder
     }
 
     /**
+     * @param bool $collectMultiplePhpDoc  If set to true, all phpdoc annotations of a certain type are collected as array
+     *                                     instead of just the last one as string
      * @return ViewHelperMetadata[]
      */
-    private function findViewHelperFilesInPath(string $namespace, string $path): array
+    private function findViewHelperFilesInPath(string $namespace, string $path, bool $collectMultiplePhpDoc): array
     {
         if (!is_dir($path)) {
             return [];
@@ -90,7 +92,7 @@ final class ViewHelperFinder
             }
 
             try {
-                $viewHelpers[] = $this->viewHelperMetadataFactory->createFromViewhelperClass($className);
+                $viewHelpers[] = $this->viewHelperMetadataFactory->createFromViewhelperClass($className, $collectMultiplePhpDoc);
             } catch (\InvalidArgumentException) {
                 // Just ignore this class
             } catch (\Throwable $t) {

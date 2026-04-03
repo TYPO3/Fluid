@@ -33,6 +33,7 @@ final class ViewHelperMetadataFactoryTest extends TestCase
     {
         return [
             'WithoutDocumentationViewHelper' => [
+                false,
                 WithoutDocumentationViewHelper::class,
                 'TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers',
                 'WithoutDocumentationViewHelper',
@@ -43,6 +44,7 @@ final class ViewHelperMetadataFactoryTest extends TestCase
                 false,
             ],
             'WithDocumentationViewHelper' => [
+                false,
                 WithDocumentationViewHelper::class,
                 'TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers',
                 'WithDocumentationViewHelper',
@@ -52,7 +54,8 @@ final class ViewHelperMetadataFactoryTest extends TestCase
                 ['@internal' => ''],
                 false,
             ],
-            'WithMultipleLinksViewHelper' => [
+            'WithMultipleLinksViewHelper, only collect one' => [
+                false,
                 WithMultipleLinksViewHelper::class,
                 'TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers',
                 'WithMultipleLinksViewHelper',
@@ -62,7 +65,19 @@ final class ViewHelperMetadataFactoryTest extends TestCase
                 ['@see' => 'https://example.com/third'],
                 false,
             ],
+            'WithMultipleLinksViewHelper, collect all' => [
+                true,
+                WithMultipleLinksViewHelper::class,
+                'TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers',
+                'WithMultipleLinksViewHelper',
+                'withMultipleLinks',
+                '',
+                'http://typo3.org/ns/TYPO3Fluid/Fluid/Tests/Unit/Schema/Fixtures/ViewHelpers',
+                ['@see' => ['https://example.com/first', 'https://example.com/second', 'https://example.com/third']],
+                false,
+            ],
             'DeprecatedViewHelper' => [
+                false,
                 DeprecatedViewHelper::class,
                 'TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers',
                 'Sub\\DeprecatedViewHelper',
@@ -73,6 +88,7 @@ final class ViewHelperMetadataFactoryTest extends TestCase
                 false,
             ],
             'ArbitraryArgumentsViewHelper' => [
+                false,
                 ArbitraryArgumentsViewHelper::class,
                 'TYPO3Fluid\\Fluid\\Tests\\Unit\\Schema\\Fixtures\\ViewHelpers',
                 'Sub\\ArbitraryArgumentsViewHelper',
@@ -88,6 +104,7 @@ final class ViewHelperMetadataFactoryTest extends TestCase
     #[Test]
     #[DataProvider('createFromViewHelperClassDataProvider')]
     public function createFromViewHelperClass(
+        bool $collectMultiplePhpDoc,
         string $className,
         string $namespace,
         string $name,
@@ -97,7 +114,7 @@ final class ViewHelperMetadataFactoryTest extends TestCase
         array $docTags,
         bool $allowsArbitraryArguments,
     ): void {
-        $object = (new ViewHelperMetadataFactory())->createFromViewHelperClass($className);
+        $object = (new ViewHelperMetadataFactory())->createFromViewHelperClass($className, $collectMultiplePhpDoc);
         self::assertSame($className, $object->className);
         self::assertSame($namespace, $object->namespace);
         self::assertSame($name, $object->name);
