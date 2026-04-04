@@ -12,10 +12,10 @@
 Contains ViewHelper `<f:contains>`
 ==================================
 
-.. ..  note::
-..     This reference is part of the documentation of Fluid Standalone.
-..     If you are working with Fluid in TYPO3 CMS, please refer to
-..     :doc:`TYPO3's ViewHelper reference <t3viewhelper:Global/Contains>` instead.
+..  note::
+    This reference is part of the documentation of Fluid Standalone.
+    If you are working with Fluid in TYPO3 CMS, please refer to
+    :doc:`TYPO3's ViewHelper reference <t3viewhelper:Global/Contains>` instead.
 
 ..  typo3:viewhelper:: contains
     :source: ../Fluid.json
