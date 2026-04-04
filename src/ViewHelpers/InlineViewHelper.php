@@ -29,6 +29,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * You can use this to pass smaller and dynamic pieces of Fluid code
  * to templates, as an alternative to creating new partial templates.
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-inline
  */
 class InlineViewHelper extends AbstractViewHelper
 {

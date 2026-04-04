@@ -54,6 +54,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * Result::
  *
  *    {foo: 1, bar: 2}
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-merge
  */
 final class MergeViewHelper extends AbstractViewHelper
 {

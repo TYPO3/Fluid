@@ -66,6 +66,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  * Output::
  *
  *       It Works!
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-contains
  */
 final class ContainsViewHelper extends AbstractConditionViewHelper
 {

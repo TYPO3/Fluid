@@ -24,6 +24,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * Output::
  *
  *      1
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-min
  */
 final class MinViewHelper extends AbstractViewHelper
 {

@@ -18,6 +18,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * @see \TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-case
  */
 class CaseViewHelper extends AbstractViewHelper
 {

@@ -146,6 +146,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *     If no expression matched, the contents inside the final "else" tag are displayed.
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-if
  * @todo: Declare final with next major
  */
 class IfViewHelper extends AbstractConditionViewHelper

@@ -61,6 +61,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *    {text -> f:format.stripTags(allowedTags: "<p><span><div><script>")}
  *
  * Text with p, span, div and script Tags inside, all other tags are removed.
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-format-striptags
  */
 final class StripTagsViewHelper extends AbstractViewHelper
 {

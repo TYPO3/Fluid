@@ -75,6 +75,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
  *    <f:render partial="MyPartial" arguments="{title: 'My title', user: {firstName: 'Jane', lastName: 'Doe'}}" />
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-argument
  */
 final class ArgumentViewHelper extends AbstractViewHelper implements ViewHelperNodeInitializedEventInterface
 {

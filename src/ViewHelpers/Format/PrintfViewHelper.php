@@ -65,6 +65,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *     We love TYPO3
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-format-printf
  */
 class PrintfViewHelper extends AbstractViewHelper
 {

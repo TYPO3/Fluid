@@ -41,6 +41,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * ::
  *
  *    {f:constant(name: '\Vendor\Package\Enum::CASE')}
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-constant
  */
 class ConstantViewHelper extends AbstractViewHelper
 {

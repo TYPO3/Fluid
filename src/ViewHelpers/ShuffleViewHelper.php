@@ -25,6 +25,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * .. code-block:: text
  *
  *    {0: '2', 1: '3', 2: '1'}
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-shuffle
  */
 final class ShuffleViewHelper extends AbstractViewHelper
 {

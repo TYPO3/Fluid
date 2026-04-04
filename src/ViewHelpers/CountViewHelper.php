@@ -39,6 +39,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *     10 (depending on the number of items in ``{objects}``)
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-count
  */
 class CountViewHelper extends AbstractViewHelper
 {
