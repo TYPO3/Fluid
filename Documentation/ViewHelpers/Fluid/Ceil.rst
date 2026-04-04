@@ -12,10 +12,10 @@
 Ceil ViewHelper `<f:ceil>`
 ==========================
 
-.. ..  note::
-..     This reference is part of the documentation of Fluid Standalone.
-..     If you are working with Fluid in TYPO3 CMS, please refer to
-..     :doc:`TYPO3's ViewHelper reference <t3viewhelper:Global/Ceil>` instead.
+..  note::
+    This reference is part of the documentation of Fluid Standalone.
+    If you are working with Fluid in TYPO3 CMS, please refer to
+    :doc:`TYPO3's ViewHelper reference <t3viewhelper:Global/Ceil>` instead.
 
 ..  typo3:viewhelper:: ceil
     :source: ../Fluid.json
