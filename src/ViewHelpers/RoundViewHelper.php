@@ -77,6 +77,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * .. code-block:: text
  *
  *    123.5
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-round
  */
 final class RoundViewHelper extends AbstractViewHelper
 {

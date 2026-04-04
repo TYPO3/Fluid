@@ -65,6 +65,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
  *     (depending on the value of {menu})
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-section
  */
 class SectionViewHelper extends AbstractViewHelper implements ViewHelperNodeInitializedEventInterface
 {

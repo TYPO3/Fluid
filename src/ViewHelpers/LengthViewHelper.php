@@ -55,6 +55,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  * Output::
  *
  *      13
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-length
  */
 final class LengthViewHelper extends AbstractViewHelper
 {

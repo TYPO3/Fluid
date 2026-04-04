@@ -14,8 +14,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 /**
  * ``f:then`` only has an effect inside of ``f:if``. See the ``f:if`` ViewHelper for documentation.
  *
- * @see \TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-then
+ * @see \TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper
  */
 class ThenViewHelper extends AbstractViewHelper
 {

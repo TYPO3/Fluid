@@ -34,8 +34,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *     Everything inside the "else" tag is displayed if the condition evaluates to false.
  *     Otherwise, nothing is outputted in this example.
  *
- * @see TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-else
+ * @see TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper
  */
 class ElseViewHelper extends AbstractViewHelper
 {

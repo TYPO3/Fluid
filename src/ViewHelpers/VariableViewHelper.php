@@ -30,6 +30,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *     <f:variable name="myvariable"><f:format.htmlspecialchars>{oldvariable}</f:format.htmlspecialchars></f:variable>
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-variable
  */
 class VariableViewHelper extends AbstractViewHelper
 {

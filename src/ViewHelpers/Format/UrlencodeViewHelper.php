@@ -41,6 +41,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *    {text -> f:format.urlencode()}
  *
  * Url encoded text :php:`rawurlencode()` applied.
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-format-urlencode
  */
 final class UrlencodeViewHelper extends AbstractViewHelper
 {
