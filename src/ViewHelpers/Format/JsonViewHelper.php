@@ -45,6 +45,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *    {f:format.json(value: {0: 'bar', 1: 'baz'}, forceObject: true)}
  *
  * ``{"0":"bar","1":"baz"}``
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-format-json
  */
 final class JsonViewHelper extends AbstractViewHelper
 {

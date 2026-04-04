@@ -27,6 +27,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  * .. code-block:: text
  *
  *    {0: '1', 1: '2', 2: '3', 3: '4'}
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-flatten
  */
 final class FlattenViewHelper extends AbstractViewHelper
 {

@@ -53,6 +53,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-alias
  */
 class AliasViewHelper extends AbstractViewHelper
 {

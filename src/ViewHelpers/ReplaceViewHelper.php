@@ -53,6 +53,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  * .. code-block:: text
  *
  *    Hi Fluid
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-replace
  */
 final class ReplaceViewHelper extends AbstractViewHelper
 {

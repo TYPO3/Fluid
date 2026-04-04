@@ -84,6 +84,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *     </ul>
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-groupedfor
  */
 class GroupedForViewHelper extends AbstractViewHelper
 {

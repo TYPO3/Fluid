@@ -90,6 +90,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
  *    <f:argument name="object" type="Vendor\Package\MyObjectA|Vendor\Package\MyObjectB" />
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-argument
  */
 final class ArgumentViewHelper extends AbstractViewHelper implements ViewHelperNodeInitializedEventInterface
 {

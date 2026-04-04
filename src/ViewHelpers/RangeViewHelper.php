@@ -80,6 +80,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  * .. code-block:: text
  *
  *    {0: 5, 1: 3, 2: 1}
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-range
  */
 final class RangeViewHelper extends AbstractViewHelper
 {

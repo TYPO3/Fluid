@@ -113,6 +113,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
  *    </div>
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-fragment
  */
 final class FragmentViewHelper extends AbstractViewHelper implements ViewHelperNodeInitializedEventInterface
 {

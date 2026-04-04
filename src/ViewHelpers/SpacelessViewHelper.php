@@ -38,6 +38,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *     <div><div><div>text
  *
  *     text</div></div></div>
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-spaceless
  */
 class SpacelessViewHelper extends AbstractViewHelper
 {

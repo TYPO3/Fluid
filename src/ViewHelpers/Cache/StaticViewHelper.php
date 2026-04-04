@@ -65,6 +65,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *     <f:if condition="{var}">Also evaluated; is outside static node</f:if>
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-cache-static
  */
 class StaticViewHelper extends AbstractViewHelper
 {

@@ -15,9 +15,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 /**
  * A ViewHelper which specifies the "default" case when used within the ``f:switch`` ViewHelper.
  *
- * @see \TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper
- *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-defaultcase
+ * @see \TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper
  */
 class DefaultCaseViewHelper extends AbstractViewHelper
 {

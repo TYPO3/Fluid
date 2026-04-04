@@ -72,6 +72,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  *    #{f:format.trim(value: my_variable)}#
  *    #{my_variable -> f:format.trim()}#
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-format-trim
  */
 final class TrimViewHelper extends AbstractViewHelper
 {

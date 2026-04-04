@@ -44,6 +44,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *     After
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-comment
  */
 class CommentViewHelper extends AbstractViewHelper
 {

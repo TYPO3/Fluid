@@ -55,6 +55,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *     (Content of ``{string}`` without any conversion/escaping)
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-format-raw
  */
 class RawViewHelper extends AbstractViewHelper
 {

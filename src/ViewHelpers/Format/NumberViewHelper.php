@@ -37,6 +37,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *    </f:format.number>
  *
  * ``423.423,2``
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-format-number
  */
 final class NumberViewHelper extends AbstractViewHelper
 {

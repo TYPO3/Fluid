@@ -64,6 +64,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *     </ul>
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-cycle
  */
 class CycleViewHelper extends AbstractViewHelper
 {

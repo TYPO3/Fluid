@@ -58,6 +58,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * Additional output is also not compilable because of the ViewHelper
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-cache-disable
  */
 class DisableViewHelper extends AbstractViewHelper
 {
