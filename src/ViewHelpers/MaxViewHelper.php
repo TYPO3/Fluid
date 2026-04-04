@@ -24,6 +24,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * Output::
  *
  *      3
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-max
  */
 final class MaxViewHelper extends AbstractViewHelper
 {

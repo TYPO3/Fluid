@@ -103,6 +103,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
  * be respected when rendering using this method. Only the ``render()`` method will be called!
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-render
  */
 class RenderViewHelper extends AbstractViewHelper
 {

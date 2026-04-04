@@ -44,6 +44,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *     "Mr.", "Mrs." or "Mr. / Mrs." (depending on the value of {person.gender})
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-switch
  */
 class SwitchViewHelper extends AbstractViewHelper
 {

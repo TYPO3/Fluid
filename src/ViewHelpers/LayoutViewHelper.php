@@ -33,6 +33,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
  *     (no output)
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-layout
  */
 class LayoutViewHelper extends AbstractViewHelper implements ViewHelperNodeInitializedEventInterface
 {

@@ -37,6 +37,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * .. code-block:: text
  *
  *    123
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-floor
  */
 final class FloorViewHelper extends AbstractViewHelper
 {

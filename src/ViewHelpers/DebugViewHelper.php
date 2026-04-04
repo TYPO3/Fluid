@@ -39,6 +39,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *     the type or class name of {object}
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-debug
  */
 class DebugViewHelper extends AbstractViewHelper
 {

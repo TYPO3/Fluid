@@ -58,6 +58,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * .. code-block:: text
  *
  *    {0: '1', 1: '5,8'}
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-split
  */
 final class SplitViewHelper extends AbstractViewHelper
 {

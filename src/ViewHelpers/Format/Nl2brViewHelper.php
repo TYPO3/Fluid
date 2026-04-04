@@ -35,6 +35,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *    {text_with_linebreaks -> f:format.nl2br()}
  *
  * Text with line breaks replaced by ``<br />``
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-format-nl2br
  */
 final class Nl2brViewHelper extends AbstractViewHelper
 {

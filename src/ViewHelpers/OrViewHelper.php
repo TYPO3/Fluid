@@ -31,6 +31,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * ::
  *
  *     {emptyVariable ?: 'this is an alterative text'}
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-or
  */
 class OrViewHelper extends AbstractViewHelper
 {

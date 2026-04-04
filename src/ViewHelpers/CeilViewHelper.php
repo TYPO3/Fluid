@@ -37,6 +37,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * .. code-block:: text
  *
  *    124
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-ceil
  */
 final class CeilViewHelper extends AbstractViewHelper
 {

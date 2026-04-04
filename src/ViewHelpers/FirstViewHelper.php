@@ -24,6 +24,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * .. code-block:: text
  *
  *    first
+ *
+ * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-first
  */
 final class FirstViewHelper extends AbstractViewHelper
 {

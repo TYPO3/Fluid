@@ -52,6 +52,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *     <![CDATA[(Content of {string} without any conversion/escaping)]]>
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-format-cdata
  */
 class CdataViewHelper extends AbstractViewHelper
 {

@@ -40,6 +40,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *     Text with & " ' < > * replaced by HTML entities (htmlspecialchars applied).
  *
  * @api
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-format-htmlspecialchars
  */
 class HtmlspecialcharsViewHelper extends AbstractViewHelper
 {
