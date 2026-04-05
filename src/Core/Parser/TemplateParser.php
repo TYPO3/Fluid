@@ -123,7 +123,7 @@ class TemplateParser
         return $parsingState;
     }
 
-    public function createParsingRelatedExceptionWithContext(\Exception $error, string $templateIdentifierOrPath): \Exception
+    public function createParsingRelatedExceptionWithContext(Exception $error, string $templateIdentifierOrPath): Exception
     {
         list($line, $character, $templateCode) = $this->getCurrentParsingPointers();
         $exceptionClass = get_class($error);
@@ -139,6 +139,7 @@ class TemplateParser
             ),
             $error->getCode(),
             $error,
+            new TemplateLocation($templateIdentifierOrPath, $line, $character),
         );
     }
 

@@ -13,6 +13,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException;
+use TYPO3Fluid\Fluid\Core\TemplateLocationException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -25,55 +26,79 @@ final class ParsingErrorsTest extends AbstractFunctionalTestCase
                 '<f:section name="Test"></div>',
                 Exception::class,
                 1238169398,
+                1,
+                24,
             ],
             'Unclosed ViewHelperNode cached' => [
                 '<f:section name="Test"></div>',
                 Exception::class,
                 1238169398,
+                1,
+                24,
             ],
             'Missing required argument non-cached' => [
                 '<f:section></f:section>',
                 Exception::class,
                 1237823699,
+                1,
+                1,
             ],
             'Missing required argument cached' => [
                 '<f:section></f:section>',
                 Exception::class,
                 1237823699,
+                1,
+                1,
             ],
             'Argument definition nested in ViewHelper' => [
                 '<f:if condition="{true}"><f:argument name="test" type="string" /></f:if>',
                 Exception::class,
                 1744908510,
+                1,
+                26,
             ],
             'Duplicated argument definition' => [
                 '<f:argument name="test" type="string" /><f:argument name="test" type="int" />',
                 Exception::class,
                 1744908509,
+                1,
+                41,
             ],
             'Uses invalid namespace non-cached' => [
                 '<invalid:section></invalid:section>',
                 UnknownNamespaceException::class,
                 0,
+                1,
+                1,
             ],
             'Uses invalid namespace cached' => [
                 '<invalid:section></invalid:section>',
                 UnknownNamespaceException::class,
                 0,
+                1,
+                1,
             ],
         ];
     }
 
     #[DataProvider('getTemplateCodeFixturesAndExpectations')]
     #[Test]
-    public function testTemplateCodeFixture(string $source, string $expectedException, int $expectedExceptionCode): void
+    public function testTemplateCodeFixture(string $source, string $expectedException, int $expectedExceptionCode, int $expectedLine, int $expectedCharacter): void
     {
         self::expectException($expectedException);
         self::expectExceptionCode($expectedExceptionCode);
-        $view = new TemplateView();
-        $view->getRenderingContext()->setCache(self::$cache);
-        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
-        $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
-        $view->render();
+        try {
+            $view = new TemplateView();
+            $view->getRenderingContext()->setCache(self::$cache);
+            $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+            $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
+            $view->render();
+        } catch (\Exception $e) {
+            self::assertInstanceOf(TemplateLocationException::class, $e);
+            /** @var \Exception&TemplateLocationException $e */
+            self::assertSame($expectedLine, $e->getTemplateLocation()->line);
+            self::assertSame($expectedCharacter, $e->getTemplateLocation()->character);
+            throw $e;
+        }
     }
 }
