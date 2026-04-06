@@ -78,6 +78,16 @@ To perform static analysis, we use PHPStan. You can run it with the following co
 ./vendor/bin/phpstan analyse
 ```
 
+#### Mutation Testing (Infection)
+
+To check how well tests cover behavioral changes in Fluid internals, you can run Infection:
+
+```bash
+./vendor/bin/infection
+```
+
+For more details, see the official Infection documentation: https://infection.github.io/guide/
+
 #### Fluid Documentation Generator
 
 To generate the Fluid documentation, you can use the following commands.
