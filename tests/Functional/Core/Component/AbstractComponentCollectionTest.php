@@ -127,6 +127,15 @@ final class AbstractComponentCollectionTest extends AbstractFunctionalTestCase
                     ['test1', 'test2', 'default'],
                 ),
             ],
+            [
+                'mixedSlots',
+                new ComponentDefinition(
+                    'mixedSlots',
+                    [],
+                    false,
+                    ['outer', 'inner'],
+                ),
+            ],
         ];
     }
 
@@ -241,6 +250,7 @@ final class AbstractComponentCollectionTest extends AbstractFunctionalTestCase
                     'enumTypeArgumentWithDefault',
                     'globalNamespaceUsage',
                     'localNamespaceImport',
+                    'mixedSlots',
                     'namedSlots',
                     'namespace.test',
                     'nested.subComponent',
@@ -267,6 +277,7 @@ final class AbstractComponentCollectionTest extends AbstractFunctionalTestCase
                     'enumTypeArgumentWithDefault.enumTypeArgumentWithDefault',
                     'globalNamespaceUsage.globalNamespaceUsage',
                     'localNamespaceImport.localNamespaceImport',
+                    'mixedSlots.mixedSlots',
                     'namedSlots.namedSlots',
                     'namespace.test.test',
                     'nested.subComponent.subComponent',

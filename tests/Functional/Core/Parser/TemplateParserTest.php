@@ -13,6 +13,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
+use TYPO3Fluid\Fluid\Core\ErrorHandler\TolerantErrorHandler;
 use TYPO3Fluid\Fluid\Core\Parser\Exception as ParserException;
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
@@ -27,6 +29,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception as ViewHelperException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ParserConfigurationAccessRenderingContext;
 
@@ -102,12 +105,91 @@ final class TemplateParserTest extends AbstractFunctionalTestCase
     }
 
     #[Test]
+    public function parseExceptionUsesOriginalTemplatePathForContext(): void
+    {
+        $renderingContext = new RenderingContext();
+        $subject = $renderingContext->getTemplateParser();
+
+        try {
+            $subject->parse('<f:render>', 'identifier-name', '/path/to/original/template.html');
+            self::fail('Expected parse() to throw for invalid template source.');
+        } catch (ParserException $exception) {
+            self::assertStringContainsString(
+                'Fluid parse error in template /path/to/original/template.html',
+                $exception->getMessage(),
+            );
+            self::assertStringNotContainsString(
+                'Fluid parse error in template identifier-name',
+                $exception->getMessage(),
+            );
+            self::assertSame('/path/to/original/template.html', $exception->getTemplateLocation()->identifierOrPath);
+        }
+    }
+
+    #[Test]
+    public function parseExceptionStartsAtFirstLineAndCharacterAfterReset(): void
+    {
+        $renderingContext = new RenderingContext();
+        $subject = $renderingContext->getTemplateParser();
+
+        try {
+            $subject->parse('<f:render>');
+            self::fail('Expected parse() to throw for invalid template source.');
+        } catch (ParserException $exception) {
+            self::assertStringContainsString('line 1 at character 1', $exception->getMessage());
+            self::assertSame(1, $exception->getTemplateLocation()->line);
+            self::assertSame(1, $exception->getTemplateLocation()->character);
+        }
+    }
+
+    #[Test]
+    public function parseExceptionInViewHelperArgumentUsesOuterTemplateChunk(): void
+    {
+        $renderingContext = new RenderingContext();
+        $renderingContext->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers');
+        $subject = $renderingContext->getTemplateParser();
+
+        try {
+            $subject->parse('<test:requiredArgument required="{invalid:foo()}" />');
+            self::fail('Expected parse() to throw for invalid template source.');
+        } catch (ParserException $exception) {
+            self::assertStringContainsString(
+                'Template source chunk: <test:requiredArgument required="{invalid:foo()}" />',
+                $exception->getMessage(),
+            );
+            self::assertStringNotContainsString(
+                'Template source chunk: {invalid:foo()}',
+                $exception->getMessage(),
+            );
+        }
+    }
+
+    #[Test]
+    public function parseExceptionAfterMultilinePreviousBlockUsesLastLineCharacterOffset(): void
+    {
+        $renderingContext = new RenderingContext();
+        $subject = $renderingContext->getTemplateParser();
+
+        try {
+            $subject->parse("long-prefix\nx\n<f:render>");
+            self::fail('Expected parse() to throw for invalid template source.');
+        } catch (ParserException $exception) {
+            self::assertStringContainsString('line 3 at character 2', $exception->getMessage());
+            self::assertStringNotContainsString('line 3 at character 14', $exception->getMessage());
+            self::assertSame(3, $exception->getTemplateLocation()->line);
+            self::assertSame(2, $exception->getTemplateLocation()->character);
+        }
+    }
+
+    #[Test]
     public function providedRequiredViewHelperArgumentThrowsNoException(): void
     {
         $renderingContext = new RenderingContext();
         $renderingContext->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers');
         $subject = $renderingContext->getTemplateParser();
-        self::assertInstanceOf(ParsingState::class, $subject->parse('<test:requiredArgument required="test" />'));
+        $parsedTemplate = $subject->parse('<test:requiredArgument required="test" />', 'identifier-name');
+        self::assertInstanceOf(ParsingState::class, $parsedTemplate);
+        self::assertSame('identifier-name', $parsedTemplate->getIdentifier());
     }
 
     public static function validateAdditionalArgumentsGetsCalledWithUndefinedArgumentsDataProvider(): array
@@ -137,6 +219,62 @@ final class TemplateParserTest extends AbstractFunctionalTestCase
         $renderingContext->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers');
         $subject = $renderingContext->getTemplateParser();
         $subject->parse($source);
+    }
+
+    #[Test]
+    public function parserErrorsThrownAfterInitializationInOpeningTagsAreHandledAsTextByTolerantErrorHandler(): void
+    {
+        $mockInterceptor = self::createMock(InterceptorInterface::class);
+        $mockInterceptor->expects(self::once())
+            ->method('process')
+            ->willThrowException(new ParserException('interceptor failure'));
+        $mockInterceptor->expects(self::once())
+            ->method('getInterceptionPoints')
+            ->willReturn([InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER]);
+
+        $renderingContext = new ParserConfigurationAccessRenderingContext();
+        $renderingContext->setErrorHandler(new TolerantErrorHandler());
+        $renderingContext->parserConfiguration->addInterceptor($mockInterceptor);
+        $renderingContext->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers');
+        $subject = $renderingContext->getTemplateParser();
+
+        $parsedTemplate = $subject->parse('<test:requiredArgument required="test" />');
+
+        /** @var TextNode */
+        $textNode = $parsedTemplate->getRootNode()->getChildNodes()[0];
+        self::assertInstanceOf(TextNode::class, $textNode);
+        self::assertStringContainsString(
+            'Parser error: interceptor failure Offending code: ',
+            $textNode->getText(),
+        );
+    }
+
+    #[Test]
+    public function viewHelperErrorsThrownAfterInitializationInOpeningTagsAreHandledAsTextByTolerantErrorHandler(): void
+    {
+        $mockInterceptor = self::createMock(InterceptorInterface::class);
+        $mockInterceptor->expects(self::once())
+            ->method('process')
+            ->willThrowException(new ViewHelperException('interceptor failure'));
+        $mockInterceptor->expects(self::once())
+            ->method('getInterceptionPoints')
+            ->willReturn([InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER]);
+
+        $renderingContext = new ParserConfigurationAccessRenderingContext();
+        $renderingContext->setErrorHandler(new TolerantErrorHandler());
+        $renderingContext->parserConfiguration->addInterceptor($mockInterceptor);
+        $renderingContext->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers');
+        $subject = $renderingContext->getTemplateParser();
+
+        $parsedTemplate = $subject->parse('<test:requiredArgument required="test" />');
+
+        /** @var TextNode */
+        $textNode = $parsedTemplate->getRootNode()->getChildNodes()[0];
+        self::assertInstanceOf(TextNode::class, $textNode);
+        self::assertStringContainsString(
+            'ViewHelper error: interceptor failure - Offending code: ',
+            $textNode->getText(),
+        );
     }
 
     public static function viewHelperArgumentsGetParsedCorrectlyDataProvider(): iterable
@@ -358,6 +496,21 @@ final class TemplateParserTest extends AbstractFunctionalTestCase
     }
 
     #[Test]
+    public function parseResetsEscapingStateBetweenCalls(): void
+    {
+        $renderingContext = new RenderingContext();
+        $subject = $renderingContext->getTemplateParser();
+
+        $subject->parse('{escaping=false}{foo.bar}');
+        $parsedTemplate = $subject->parse('{foo.bar}');
+
+        /** @var EscapingNode */
+        $escapingNode = $parsedTemplate->getRootNode()->getChildNodes()[0];
+        self::assertInstanceOf(EscapingNode::class, $escapingNode);
+        self::assertInstanceOf(ObjectAccessorNode::class, $escapingNode->getNode());
+    }
+
+    #[Test]
     public function objectAccessorNodesAreRunThroughInterceptors(): void
     {
         $mockEscapingInterceptor = self::createMock(InterceptorInterface::class);
@@ -435,8 +588,14 @@ final class TemplateParserTest extends AbstractFunctionalTestCase
             // Second try with uncompilable flag
             '',
         );
+        $mockErrorHandler = $this->createMock(ErrorHandlerInterface::class);
+        $mockErrorHandler->expects(self::once())
+            ->method('handleCompilerError')
+            ->with(self::isInstanceOf(StopCompilingException::class))
+            ->willReturn('');
 
         $renderingContext = new RenderingContext();
+        $renderingContext->setErrorHandler($mockErrorHandler);
         $renderingContext->setTemplateCompiler($mockCompiler);
         $subject = $renderingContext->getTemplateParser();
         $parsedTemplate = $subject->getOrParseAndStoreTemplate(

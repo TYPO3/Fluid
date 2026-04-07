@@ -1,0 +1,2 @@
+<f:slot name="outer" />
+{f:if(condition: '{f:slot(name: \'inner\')} === {null}', then: 'inner slot missing', else: '{f:slot(name: \'inner\')}')}
