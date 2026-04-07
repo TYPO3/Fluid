@@ -95,13 +95,13 @@ final class NamespaceDetectionTemplateProcessorTest extends AbstractFunctionalTe
             ],
             'supports xmlns detection, multiple' => [
                 ['f' => ['TYPO3Fluid\Fluid\ViewHelpers']],
-                '<html xmlns:x="http://typo3.org/ns/X/Y/ViewHelpers" xmlns:z="http://typo3.org/ns/X/Z/ViewHelpers" data-namespace-typo3-fluid="true">' . PHP_EOL . '</html>',
+                '<html' . PHP_EOL . 'xmlns:x="http://typo3.org/ns/X/Y/ViewHelpers"' . PHP_EOL . 'xmlns:z="http://typo3.org/ns/X/Z/ViewHelpers"' . PHP_EOL . 'data-namespace-typo3-fluid="true"' . PHP_EOL . '>' . PHP_EOL . '</html>' . PHP_EOL,
                 [
                     'f' => ['TYPO3Fluid\Fluid\ViewHelpers'],
                     'x' => ['X\\Y\\ViewHelpers'],
                     'z' => ['X\\Z\\ViewHelpers'],
                 ],
-                PHP_EOL,
+                PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL,
             ],
             'supports expression style namespace detection, camelCase' => [
                 ['f' => ['TYPO3Fluid\Fluid\ViewHelpers']],
