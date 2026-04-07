@@ -63,6 +63,8 @@ final readonly class TemplateValidator
                 $parsedTemplate,
             );
         }
+        // Don't rely on order provided by file system to get predictable results across platforms
+        ksort($results);
         return $results;
     }
 }

@@ -34,6 +34,7 @@ final class ConsoleRunner
     private const COMMAND_RUN = 'run';
     private const COMMAND_SCHEMA = 'schema';
     private const COMMAND_WARMUP = 'warmup';
+    private const COMMAND_ANALYZE = 'analyze';
 
     private const ARGUMENT_HELP = 'help';
     private const ARGUMENT_SOCKET = 'socket';
@@ -50,12 +51,15 @@ final class ConsoleRunner
     private const ARGUMENT_DESTINATION = 'destination';
     private const ARGUMENT_PATH = 'path';
     private const ARGUMENT_EXTENSION = 'extension';
+    private const ARGUMENT_STDIN = 'stdin';
+    private const ARGUMENT_JSON = 'json';
 
     private array $commandDesccriptions = [
         self::COMMAND_HELP => 'Show this help screen',
         self::COMMAND_RUN => 'Run fluid code, either interactively or file-based',
         self::COMMAND_SCHEMA => 'Generate xsd schema files based on all available ViewHelper classes',
         self::COMMAND_WARMUP => 'Warmup template cache',
+        self::COMMAND_ANALYZE => 'Analyze template files',
     ];
 
     private array $argumentDescriptions = [
@@ -83,6 +87,13 @@ final class ConsoleRunner
             self::ARGUMENT_PATH => 'Paths that should be checked for template files for warmup',
             self::ARGUMENT_CACHEDIRECTORY => 'Path to a directory used as cache for compiled Fluid templates',
             self::ARGUMENT_EXTENSION => 'File extensions that should be treated as Fluid templates (default: *.fluid.*)',
+        ],
+        self::COMMAND_ANALYZE => [
+            self::ARGUMENT_TEMPLATEFILE => 'A single template file to analyze',
+            self::ARGUMENT_PATH => 'Paths that should be checked for template files to analyze',
+            self::ARGUMENT_EXTENSION => 'File extensions that should be treated as Fluid templates (default: *.fluid.*)',
+            self::ARGUMENT_STDIN => 'Receive template source from STDIN',
+            self::ARGUMENT_JSON => 'Output results as JSON',
         ],
     ];
 
@@ -117,10 +128,80 @@ final class ConsoleRunner
             case self::COMMAND_WARMUP:
                 return $this->handleWarmupCommand($arguments);
 
+            case self::COMMAND_ANALYZE:
+                return $this->handleAnalyzeCommand($arguments);
+
             case self::COMMAND_RUN:
             default:
                 return $this->handleRunCommand($arguments);
         }
+    }
+
+    private function handleAnalyzeCommand(array $arguments): string
+    {
+        // @todo add argument for global namespaces
+        $template = $arguments[self::ARGUMENT_TEMPLATEFILE] ?? null;
+        $paths = $arguments[self::ARGUMENT_PATH] ?? [];
+        $extension = $arguments[self::ARGUMENT_EXTENSION] ?? null;
+        $stdin = isset($arguments[self::ARGUMENT_STDIN]);
+        $json = isset($arguments[self::ARGUMENT_JSON]);
+
+        if ($paths !== []) {
+            if ($template !== null) {
+                throw new \InvalidArgumentException(
+                    'Argument "template" cannot be used in combination with "paths".',
+                );
+            }
+            $templateScanner = new TemplateFinder();
+            $templates = $extension === null
+                ? $templateScanner->findTemplatesWithFluidFileExtension($paths)
+                : $templateScanner->findTemplatesByFileExtension($paths, $extension);
+        } elseif ($template !== null) {
+            if ($extension !== null) {
+                throw new \InvalidArgumentException(
+                    'Argument "extension" cannot be used in combination with "template".',
+                );
+            }
+            $templates = [$template];
+        } elseif ($stdin) {
+            $template = 'php://stdin';
+            $templates = [$template];
+        } else {
+            throw new \InvalidArgumentException(
+                'No templates provided.',
+            );
+        }
+
+        $templateValidator = new TemplateValidator();
+        $scanResults = $templateValidator->validateTemplateFiles($templates);
+
+        if ($json) {
+            return $template !== null ? json_encode($scanResults[$template]) : json_encode($scanResults);
+        }
+
+        $output = [];
+        if ($template !== null) {
+            foreach ($scanResults[$template]->errors as $error) {
+                $output[] = '[ERROR] ' . $error->getMessage();
+            }
+            foreach ($scanResults[$template]->deprecations as $deprecation) {
+                $output[] = '[DEPRECATION] ' . $deprecation->message;
+            }
+        } else {
+            foreach ($scanResults as $result) {
+                $errors = [];
+                foreach ($result->errors as $error) {
+                    $errors[] = '[ERROR] ' . $result->path . ': ' . $error->getMessage();
+                }
+                foreach ($result->deprecations as $deprecation) {
+                    $errors[] = '[DEPRECATION] ' . $result->path . ': ' . $deprecation->message;
+                }
+                if ($errors !== []) {
+                    $output[] = implode(PHP_EOL, $errors);
+                }
+            }
+        }
+        return implode(PHP_EOL . PHP_EOL, $output) . PHP_EOL;
     }
 
     private function handleHelpCommand(): string
@@ -200,21 +281,11 @@ final class ConsoleRunner
         foreach ($scanResults as $result) {
             $errors = [];
             foreach ($result->errors as $error) {
-                $errors[] = sprintf(
-                    'Parsing error triggered in %s, line %d: %s',
-                    $error->getFile(),
-                    $error->getLine(),
-                    $error->getMessage(),
-                );
+                $errors[] = sprintf('[ERROR] %s: %s', $result->path, $error->getMessage());
             }
 
             foreach ($result->deprecations as $deprecation) {
-                $errors[] = sprintf(
-                    'Deprecation triggered in %s, line %d: %s',
-                    $deprecation->file,
-                    $deprecation->line,
-                    $deprecation->message,
-                );
+                $errors[] = sprintf('[DEPRECATION] %s: %s', $result->path, $deprecation->message);
             }
 
             if ($result->canBeCompiled()) {
@@ -227,19 +298,19 @@ final class ConsoleRunner
                     );
                 } catch (\Exception $e) {
                     $errors[] = sprintf(
-                        'Compilation error triggered in %s, line %s: %s',
+                        '[ERROR] %s: Compilation error triggered in %s, line %d: %s',
+                        $result->path,
                         $e->getFile(),
                         $e->getLine(),
                         $e->getMessage(),
                     );
                 }
             } else {
-                $errors[] = 'Template cannot be compiled.';
+                $errors[] = sprintf('[ERROR] %s: Template cannot be compiled.', $result->path);
             }
 
             if ($errors !== []) {
-                $title = sprintf('Template %s (%s)', $result->path, $result->identifier);
-                $output[] = implode(PHP_EOL . '  ', [$title, ...$errors]);
+                $output[] = implode(PHP_EOL, $errors);
             }
         }
 
