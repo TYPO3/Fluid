@@ -114,7 +114,8 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
                 $viewHelperResolver->addLocalNamespace($set[1], $namespacePhp);
             }
             if (strpos($matches[0], 'data-namespace-typo3-fluid="true"')) {
-                $templateSource = str_replace($matches[0], '', $templateSource);
+                $removedNewlines = substr_count($matches[0], "\n");
+                $templateSource = str_replace($matches[0], str_repeat("\n", $removedNewlines), $templateSource);
                 $closingTagName = $matches[1];
                 $closingTag = '</' . $closingTagName . '>';
                 if (strpos($templateSource, $closingTag)) {
