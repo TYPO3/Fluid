@@ -6,3 +6,4 @@ vendor
 examples/cache/
 /Documentation-GENERATED-temp/
 infection.html
+infection.log

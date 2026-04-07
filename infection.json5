@@ -15,6 +15,7 @@
     "threads": "max",
     "initialTestsPhpOptions": "-d xdebug.mode=coverage",
     "logs": {
-        "html": "infection.html"
+        "html": "infection.html",
+        "text": "infection.log"
     }
 }

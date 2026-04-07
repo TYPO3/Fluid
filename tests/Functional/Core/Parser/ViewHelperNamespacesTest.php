@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Parser;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -153,5 +154,26 @@ final class ViewHelperNamespacesTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($cacheBustingPrefix . $source);
         $output = $view->render();
         self::assertSame($cacheBustingPrefix . $source, $output);
+    }
+
+    #[Test]
+    public function inlineViewHelperSyntaxIgnoredNamespaceDoesNotHideInvalidNamespaceInChain(): void
+    {
+        $source = '{value -> ignored:foo() -> invalid:bar()}';
+
+        foreach ([1, 2] as $_) {
+            $view = new TemplateView();
+            $view->assign('value', 'value');
+            $view->getRenderingContext()->setCache(self::$cache);
+            $view->getRenderingContext()->getViewHelperResolver()->addNamespace('ignored', null);
+            $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+
+            try {
+                $view->render();
+                self::fail('Expected render() to throw for invalid namespace in mixed shorthand chain.');
+            } catch (UnknownNamespaceException $exception) {
+                self::assertStringContainsString('Unknown Namespace: invalid', $exception->getMessage());
+            }
+        }
     }
 }

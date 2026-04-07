@@ -162,6 +162,29 @@ final class ViewHelperArgumentTypesTest extends AbstractFunctionalTestCase
         self::assertSame($expectedValue, $result[$argumentName], 'cached');
     }
 
+    #[Test]
+    public function escapedBooleanArgumentStaysFalseForQuotedEmptyStringVariable(): void
+    {
+        $variables = ['argumentValue' => '""'];
+        $source = '<test:escapedBooleanArgument flag="{argumentValue}" />';
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
+        $view->assignMultiple($variables);
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $result = unserialize($view->render());
+        self::assertFalse($result['flag'], 'uncached');
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
+        $view->assignMultiple($variables);
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $result = unserialize($view->render());
+        self::assertFalse($result['flag'], 'cached');
+    }
+
     public static function unionTypesDataProvider(): array
     {
         return [
