@@ -30,8 +30,9 @@ class Exception extends \TYPO3Fluid\Fluid\Core\Exception implements TemplateLoca
 
     public function getTemplateLocation(): TemplateLocation
     {
-        // @todo remove nullable type with Fluid 6: Each parser exception should point to
-        //       the location of the issue
+        // @todo In the end, every parser exception should point to the location of the issue.
+        //       Once we can guarantee that, we should make $templateLocation non-nullable and
+        //       thus a required constructor argument (breaking change)
         return $this->templateLocation ?? new TemplateLocation('', 1, 1);
     }
 }
