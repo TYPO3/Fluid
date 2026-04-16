@@ -94,7 +94,7 @@ final class RoundViewHelper extends AbstractViewHelper
     {
         $value = $this->arguments['value'] ?? $this->renderChildren();
 
-        if (class_exists(\RoundingMode::class)) {
+        if (\PHP_VERSION_ID >= 80400) {
             $roundingMode = match ($this->arguments['roundingMode']) {
                 'HalfAwayFromZero'  => \RoundingMode::HalfAwayFromZero,
                 'HalfTowardsZero'   => \RoundingMode::HalfTowardsZero,
@@ -107,6 +107,7 @@ final class RoundViewHelper extends AbstractViewHelper
                 default             => \RoundingMode::HalfAwayFromZero,
             };
         } else {
+            // @todo: Remove when PHP < 8.4 is dropped
             $roundingMode = match ($this->arguments['roundingMode']) {
                 'HalfAwayFromZero'  => \PHP_ROUND_HALF_UP,
                 'HalfTowardsZero'   => \PHP_ROUND_HALF_DOWN,
