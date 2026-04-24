@@ -89,6 +89,17 @@ ViewHelpers might be ones that implement `strip_tags`, `nl2br` or other
 string-manipulating PHP functions). And data ViewHelpers may return any type,
 but must be used a bit more carefully.
 
+Tag-based ViewHelpers can now also return the :php:`TagBuilder` instance
+directly instead of rendering it to a string immediately. This is a special
+case compared to arbitrary string-compatible objects: :php:`TagBuilder`
+implements :php:`UnsafeHTML`, so Fluid treats the returned value as HTML output
+that must not be escaped again.
+
+This keeps the structured tag object reusable after the ViewHelper itself has
+finished rendering. For example, an image ViewHelper can return its
+:php:`TagBuilder`, and another layer can still add or remove an attribute afterwards
+before the final output is converted to a string.
+
 In other words: be careful what data types your ViewHelper returns.
 Non-string-compatible values may cause problems if you use the ViewHelper in
 ways that were not intended. Like in PHP, data types must either match or be
