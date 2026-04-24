@@ -50,7 +50,7 @@ final class ViewHelperEscapingTest extends AbstractFunctionalTestCase
         $view = new TemplateView($context);
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($fluidCode);
 
-        return $view->render();
+        return (string)$view->render();
     }
 
     /*
