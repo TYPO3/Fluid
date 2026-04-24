@@ -20,9 +20,8 @@ final class AbstractTagBasedViewHelperTest extends TestCase
     public function renderCallsRenderOnTagBuilder(): void
     {
         $tagBuilder = $this->createMock(TagBuilder::class);
-        $tagBuilder->expects(self::once())->method('render')->willReturn('foobar');
         $subject = new AbstractTagBasedViewHelperTestFixture();
         $subject->setTagBuilder($tagBuilder);
-        self::assertEquals('foobar', $subject->render());
+        self::assertEquals($tagBuilder, $subject->render());
     }
 }

@@ -127,8 +127,8 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         // Skip validation of additional arguments since we want to pass all arguments to the tag
     }
 
-    public function render(): string
+    public function render(): string|TagBuilder
     {
-        return $this->tag->render();
+        return $this->tag;
     }
 }
