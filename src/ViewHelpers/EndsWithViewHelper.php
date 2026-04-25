@@ -25,7 +25,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  * ::
  *
  *      <f:variable name="myString" value="Hello, World!" />
- *      <f:endsWith search="Hello" subject="{myString}">This will be rendered if variable "myString" ends with "World!"</f:endsWith>
+ *      <f:endsWith search="World!" subject="{myString}">This will be rendered if variable "myString" ends with "World!"</f:endsWith>
  *
  * Output::
  *
