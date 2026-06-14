@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
 
 final class TagBasedTestViewHelper extends AbstractTagBasedViewHelper
 {
@@ -20,10 +21,10 @@ final class TagBasedTestViewHelper extends AbstractTagBasedViewHelper
         $this->registerArgument('registeredBooleanArgument', 'boolean', 'boolean argument', false, false);
     }
 
-    public function render(): string
+    public function render(): TagBuilder
     {
         $this->tag->addAttribute('registeredBooleanArgument', $this->arguments['registeredBooleanArgument']);
         $this->tag->setContent($this->renderChildren());
-        return $this->tag->render();
+        return $this->tag;
     }
 }

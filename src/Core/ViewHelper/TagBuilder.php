@@ -9,12 +9,14 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
+use TYPO3Fluid\Fluid\Core\Parser\UnsafeHTML;
+
 /**
  * Tag builder. Can be easily accessed in AbstractTagBasedViewHelper
  *
  * @api
  */
-class TagBuilder
+class TagBuilder implements UnsafeHTML
 {
     /**
      * Name of the Tag to be rendered
@@ -297,5 +299,10 @@ class TagBuilder
             $output .= ' />';
         }
         return $output;
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 }
