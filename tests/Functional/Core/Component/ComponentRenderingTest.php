@@ -12,6 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Component;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
 final class ComponentRenderingTest extends AbstractFunctionalTestCase
@@ -21,6 +22,7 @@ final class ComponentRenderingTest extends AbstractFunctionalTestCase
         return [
             // parameters and escaping
             'defined argument' => ['<my:testComponent title="TITLE" />', "\n\n\nMy test component TITLE\n"],
+            'defined argument, stringable input' => ['<my:testComponent title="{stringableObject}" />', "\n\n\nMy test component STRINGABLE\n"],
             'defined argument with inline HTML escaped correctly' => ['<my:testComponent title="<b>TITLE</b>" />', "\n\n\nMy test component &lt;b&gt;TITLE&lt;/b&gt;\n"],
             'defined argument with predefined HTML variable escaped correctly' => ['<my:testComponent title="{unsafeInput}" />', "\n\n\nMy test component &lt;script&gt;alert(&#039;This JavaScript should not be executed by the browser&#039;)&lt;/script&gt;\n"],
             'defined argument with HTML variable escaped correctly' => ['<f:variable name="myHtml"><b>TITLE</b></f:variable><my:testComponent title="{myHtml}" />', "\n\n\nMy test component &lt;b&gt;TITLE&lt;/b&gt;\n"],
@@ -72,6 +74,7 @@ final class ComponentRenderingTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->setCache(self::$cache);
         $view->getRenderingContext()->getViewHelperResolver()->addNamespace('my', 'TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ComponentCollections\BasicComponentCollection');
         $view->getRenderingContext()->getVariableProvider()->add('unsafeInput', "<script>alert('This JavaScript should not be executed by the browser')</script>");
+        $view->getRenderingContext()->getVariableProvider()->add('stringableObject', new UserWithToString('STRINGABLE'));
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
         self::assertSame($expected, $view->render(), 'uncached');
 
@@ -79,6 +82,7 @@ final class ComponentRenderingTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->setCache(self::$cache);
         $view->getRenderingContext()->getViewHelperResolver()->addNamespace('my', 'TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ComponentCollections\BasicComponentCollection');
         $view->getRenderingContext()->getVariableProvider()->add('unsafeInput', "<script>alert('This JavaScript should not be executed by the browser')</script>");
+        $view->getRenderingContext()->getVariableProvider()->add('stringableObject', new UserWithToString('STRINGABLE'));
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
         self::assertSame($expected, $view->render(), 'cached');
     }
