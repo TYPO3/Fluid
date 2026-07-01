@@ -99,8 +99,18 @@ class ForViewHelper extends AbstractViewHelper
         if (is_object($this->arguments['each']) && !$this->arguments['each'] instanceof \Traversable) {
             throw new InvalidArgumentValueException('ForViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
         }
+        $isKeyValuePair = false;
+        if ($this->arguments['reverse'] === true || (isset($this->arguments['iteration'])) && !is_countable($this->arguments['each'])) {
+            $isKeyValuePair = true;
+            $traversable = $this->arguments['each'];
+            $this->arguments['each'] = [];
+            foreach ($traversable as $key => $singleElement) {
+                // unpack the traversable, but keep duplicate keys.
+                $this->arguments['each'][] = [$key, $singleElement];
+            }
+        }
         if ($this->arguments['reverse'] === true) {
-            $this->arguments['each'] = array_reverse(iterator_to_array($this->arguments['each']), true);
+            $this->arguments['each'] = array_reverse($this->arguments['each'], true);
         }
         if (isset($this->arguments['iteration'])) {
             $iterationData = [
@@ -114,6 +124,9 @@ class ForViewHelper extends AbstractViewHelper
         $this->renderingContext->setVariableProvider(new ScopedVariableProvider($globalVariableProvider, $localVariableProvider));
         $output = '';
         foreach ($this->arguments['each'] as $keyValue => $singleElement) {
+            if ($isKeyValuePair === true) {
+                [$keyValue, $singleElement] = $singleElement;
+            }
             $localVariableProvider->add($this->arguments['as'], $singleElement);
             if (isset($this->arguments['key'])) {
                 $localVariableProvider->add($this->arguments['key'], $keyValue);
