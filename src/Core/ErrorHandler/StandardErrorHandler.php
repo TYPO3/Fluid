@@ -32,13 +32,11 @@ class StandardErrorHandler implements ErrorHandlerInterface
     public function handleViewHelperError(\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error, ?string $originalTemplatePath = null): string
     {
         if ($originalTemplatePath !== null) {
-            throw new \TYPO3Fluid\Fluid\Core\ViewHelper\Exception(sprintf(
-                '%s in %s: %s (%s:%d)',
-                get_class($error),
-                $originalTemplatePath,
+            $exceptionClass = get_class($error);
+            throw new $exceptionClass(sprintf(
+                '%s -> %s',
                 $error->getMessage(),
-                $error->getFile(),
-                $error->getLine(),
+                $originalTemplatePath,
             ), $error->getCode(), $error);
         }
         throw $error;
