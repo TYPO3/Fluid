@@ -184,7 +184,7 @@ qualified PHP class name: The ViewHelper class.
     <my:foo.bar />
 
 The `<my:foo.bar />` ViewHelper would be resolved to the ViewHelper class
-`Vendor\MyPackage\ViewHelpers\Foo\BarViewHelper`.
+:php:`Vendor\MyPackage\ViewHelpers\Foo\BarViewHelper`.
 
 .. _viewhelperresolver-delegates:
 

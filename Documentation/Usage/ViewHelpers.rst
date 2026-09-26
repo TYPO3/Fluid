@@ -285,7 +285,7 @@ in PHP.
 
 Each ViewHelper has a corresponding PHP file, which contains a class that describes the
 ViewHelper's arguments as well as its behavior in the template. Such classes are usually placed
-in the `Vendor\Package\ViewHelpers` PHP namespace (where `Vendor` and `Package` are placeholders
+in the :php:`Vendor\Package\ViewHelpers` PHP namespace (where `Vendor` and `Package` are placeholders
 for actual values) and follow the following naming convention:
 
 *   `f:format.raw` results from the PHP class :php:`TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper`
@@ -316,7 +316,7 @@ Which translated to human terms means that we:
     boolean value (see :ref:`Boolean conditions <boolean-conditions>`).
     Other valid types are `integer`, `string`, `float`, `array`, `object`, `DateTime` and
     other class names. The *array of* syntax can also be used, for example `string[]` or
-    `Vendor\Package\MyClass[]`.
+    :php:`Vendor\Package\MyClass[]`.
 *   Describe the argument's behavior in simple terms.
 *   Define that the argument is not required (the 4th argument is :php:`false`).
 *   Set a default value of :php:`false` (5th argument), if the argument is not
