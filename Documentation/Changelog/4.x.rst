@@ -21,7 +21,7 @@ This Changelog lists notable deprecation and breaking changes. The full list of 
   instead.
 * Deprecation: Classes, interfaces, methods and constants related to cache warmup are deprecated and will be removed in Fluid v5:
     * :php:`TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface::getCacheWarmer()`
-    * :php: `TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache::getCacheWarmer()`
+    * :php:`TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache::getCacheWarmer()`
     * :php:`TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmerInterface`
     * :php:`TYPO3Fluid\Fluid\Core\Cache\StandardCacheWarmer`
     * :php:`TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult`

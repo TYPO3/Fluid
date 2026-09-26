@@ -70,7 +70,7 @@ This Changelog lists notable deprecation and breaking changes. The full list of 
   slightly different behavior within ViewHelpers or exceptions if ViewHelpers didn't validate arguments properly before.
 * Breaking: Classes, interfaces, methods and constants related to cache warmup have been removed:
     * :php:`TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface::getCacheWarmer()`
-    * :php: `TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache::getCacheWarmer()`
+    * :php:`TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache::getCacheWarmer()`
     * :php:`TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmerInterface`
     * :php:`TYPO3Fluid\Fluid\Core\Cache\StandardCacheWarmer`
     * :php:`TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult`
@@ -81,8 +81,8 @@ This Changelog lists notable deprecation and breaking changes. The full list of 
     * :php:`TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::enterWarmupMode()`
     * :php:`TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::isWarmupMode()`
 * Breaking: The `<f:cache.warmup>` ViewHelper has been removed.
-* Breaking: `TYPO3Fluid\Fluid\Core\Parser\TemplateParser::parse()` and
-  `TYPO3Fluid\Fluid\Core\Parser\TemplateParser::createParsingRelatedExceptionWithContext()` no longer
+* Breaking: :php:`TYPO3Fluid\Fluid\Core\Parser\TemplateParser::parse()` and
+  :php:`TYPO3Fluid\Fluid\Core\Parser\TemplateParser::createParsingRelatedExceptionWithContext()` no longer
   allow `null` as template identifier.
 * Breaking: Tag attributes that are set to `null` are now removed from the tag instead of being
   interpreted as empty string in :php:`TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder`.
