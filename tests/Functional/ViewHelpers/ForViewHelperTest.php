@@ -107,6 +107,147 @@ final class ForViewHelperTest extends AbstractFunctionalTestCase
             . '</ul>',
         ];
 
+        $value = new class () implements \IteratorAggregate {
+            public function getIterator(): \Traversable
+            {
+                return new \ArrayIterator([
+                    'first' => 'foo',
+                    'second' => 'bar',
+                ]);
+            }
+        };
+        yield 'iterator total works for non countable traversable' => [
+            '<f:for each="{value}" as="item" iteration="iterator">{item}: {iterator.total}, </f:for>',
+            ['value' => $value],
+            'foo: 2, bar: 2, ',
+        ];
+
+        yield 'generator gets traversed' => [
+            '<f:for each="{value}" as="item">{item} </f:for>',
+            static function () {
+                $value = (static function (): \Generator {
+                    yield 'first' => 'foo';
+                    yield 'second' => 'bar';
+                })();
+                return ['value' => $value];
+            },
+            'foo bar ',
+        ];
+
+        yield 'iterator total works for generator' => [
+            '<f:for each="{value}" as="item" iteration="iterator">{item}: {iterator.total}, </f:for>',
+            static function () {
+                $value = (static function (): \Generator {
+                    yield 'first' => 'foo';
+                    yield 'second' => 'bar';
+                })();
+                return ['value' => $value];
+            },
+            'foo: 2, bar: 2, ',
+        ];
+
+        yield 'iterator last works for generator' => [
+            '<f:for each="{value}" as="item" iteration="iterator">{item}{f:if(condition: iterator.isLast, then: \'!\', else: \', \')}</f:for>',
+            static function () {
+                $value = (static function (): \Generator {
+                    yield 'Lucas';
+                    yield 'Helene';
+                    yield 'Thomas';
+                })();
+                return ['value' => $value];
+            },
+            'Lucas, Helene, Thomas!',
+        ];
+
+        yield 'generator preserves duplicate keys without key argument' => [
+            '<f:for each="{value}" as="item">{item} </f:for>',
+            static function () {
+                $value = (static function (): \Generator {
+                    yield 'duplicate' => 'foo';
+                    yield 'duplicate' => 'bar';
+                })();
+                return ['value' => $value];
+            },
+            'foo bar ',
+        ];
+
+        yield 'iterator preserves duplicate keys from generator' => [
+            '<f:for each="{value}" as="item" key="key" iteration="iterator">{key}: {item} / {iterator.total}, </f:for>',
+            static function () {
+                $value = (static function (): \Generator {
+                    yield 'duplicate' => 'foo';
+                    yield 'duplicate' => 'bar';
+                })();
+                return ['value' => $value];
+            },
+            'duplicate: foo / 2, duplicate: bar / 2, ',
+        ];
+
+        yield 'empty generator with iteration returns empty string' => [
+            '<f:for each="{value}" as="item" iteration="iterator">{item}: {iterator.total}, </f:for>',
+            static function () {
+                $value = (static function (): \Generator {
+                    yield from [];
+                })();
+                return ['value' => $value];
+            },
+            '',
+        ];
+
+        yield 'empty generator with reverse returns empty string' => [
+            '<f:for each="{value}" as="item" reverse="true">{item} </f:for>',
+            static function () {
+                $value = (static function (): \Generator {
+                    yield from [];
+                })();
+                return ['value' => $value];
+            },
+            '',
+        ];
+
+        yield 'reverse preserves duplicate keys from generator' => [
+            '<f:for each="{value}" as="item" key="key" reverse="true">{key}: {item}, </f:for>',
+            static function () {
+                $value = (static function (): \Generator {
+                    yield 'duplicate' => 'foo';
+                    yield 'duplicate' => 'bar';
+                })();
+                return ['value' => $value];
+            },
+            'duplicate: bar, duplicate: foo, ',
+        ];
+
+        yield 'reverse and iteration work for generator' => [
+            '<f:for each="{value}" as="item" reverse="true" iteration="iterator">{item}: {iterator.total} / {iterator.isFirst} / {iterator.isLast}, </f:for>',
+            static function () {
+                $value = (static function (): \Generator {
+                    yield 'first' => 'foo';
+                    yield 'second' => 'bar';
+                })();
+                return ['value' => $value];
+            },
+            'bar: 2 / 1 / , foo: 2 /  / 1, ',
+        ];
+
+        yield 'reverse and iteration preserve duplicate keys from generator' => [
+            '<f:for each="{value}" as="item" key="key" reverse="true" iteration="iterator">{key}: {item} / {iterator.total}, </f:for>',
+            static function () {
+                $value = (static function (): \Generator {
+                    yield 'duplicate' => 'foo';
+                    yield 'duplicate' => 'bar';
+                })();
+                return ['value' => $value];
+            },
+            'duplicate: bar / 2, duplicate: foo / 2, ',
+        ];
+
+        $value = new \ArrayObject(['foo', 'bar']);
+        yield 'iterator metadata works for countable traversable' => [
+            '<f:for each="{value}" as="item" iteration="iterator">{item}: {iterator.total} / {iterator.isFirst} / {iterator.isLast}, </f:for>',
+            ['value' => $value],
+            'foo: 2 / 1 / , bar: 2 /  / 1, ',
+        ];
+
         $value = ['item'];
         yield 'iterator not available if not requested' => [
             '<f:for each="{value}" as="item">Total: {iterator.total}</f:for>',
@@ -200,16 +341,16 @@ final class ForViewHelperTest extends AbstractFunctionalTestCase
 
     #[DataProvider('renderDataProvider')]
     #[Test]
-    public function render(string $template, array $variables, string $expected): void
+    public function render(string $template, array|callable $variables, string $expected): void
     {
         $view = new TemplateView();
-        $view->assignMultiple($variables);
+        $view->assignMultiple(is_callable($variables) ? $variables() : $variables);
         $view->getRenderingContext()->setCache(self::$cache);
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($template);
         self::assertSame($expected, $view->render());
 
         $view = new TemplateView();
-        $view->assignMultiple($variables);
+        $view->assignMultiple(is_callable($variables) ? $variables() : $variables);
         $view->getRenderingContext()->setCache(self::$cache);
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($template);
         self::assertSame($expected, $view->render());
