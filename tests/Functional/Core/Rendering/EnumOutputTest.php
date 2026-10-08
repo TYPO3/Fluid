@@ -58,6 +58,18 @@ final class EnumOutputTest extends AbstractFunctionalTestCase
     }
 
     #[Test]
+    public function explicitHtmlspecialcharsEscapesBackedEnumHtmlValue(): void
+    {
+        $source = 'before <f:format.htmlspecialchars>{enum}</f:format.htmlspecialchars> after';
+        $expected = 'before &lt;b&gt;&amp;&quot;test&quot;&lt;/b&gt; after';
+
+        foreach ([false, true] as $compiled) {
+            $view = $this->createView($source, StringBackedEnumExample::HTML, $compiled);
+            self::assertSame($expected, $view->render(), $compiled ? 'compiled' : 'uncompiled');
+        }
+    }
+
+    #[Test]
     #[DataProvider('enumOutputDataProvider')]
     public function enumArgumentsAndPropertiesRemainAvailable(\UnitEnum $enum, string $raw, string $escaped): void
     {
