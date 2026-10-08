@@ -70,6 +70,9 @@ final class ComponentRenderingTest extends AbstractFunctionalTestCase
             'enum type, enum object provided' => ['<my:enumTypeArgument value="{f:constant(name: \'' . IntBackedEnumExample::class . '::BAR\')}" />', "\nBAR => 123\n"],
             'enum type, enum name provided' => ['<my:enumTypeArgument value="BAR" />', "\nBAR => 123\n"],
             'enum type, enum value provided' => ['<my:enumTypeArgument value="123" />', "\nBAR => 123\n"],
+            'enum type, numeric string variable provided' => ['<f:variable name="enumValue">123</f:variable><my:enumTypeArgument value="{enumValue}" />', "\nBAR => 123\n"],
+            'enum type, qualified enum name provided' => ['<my:enumTypeArgument value="' . IntBackedEnumExample::class . '::BAR" />', "\nBAR => 123\n"],
+            'enum type, qualified enum name with leading backslash provided' => ['<my:enumTypeArgument value="\\' . IntBackedEnumExample::class . '::BAR" />', "\nBAR => 123\n"],
         ];
     }
 

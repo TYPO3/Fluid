@@ -640,6 +640,24 @@ final class StrictArgumentProcessorTest extends TestCase
             'expectedProcessedValue' => IntBackedEnumExample::BAR,
             'expectedProcessedValidity' => true,
         ];
+        foreach (['123', '+123', ' 123 '] as $value) {
+            yield [
+                'type' => IntBackedEnumExample::class,
+                'value' => $value,
+                'expectedValidity' => false,
+                'expectedProcessedValue' => IntBackedEnumExample::BAR,
+                'expectedProcessedValidity' => true,
+            ];
+        }
+        foreach (['0', '123.5', '123.0', '1.23e2', '123foo', (string)PHP_INT_MAX . '0', 123.0, true, false] as $value) {
+            yield [
+                'type' => IntBackedEnumExample::class,
+                'value' => $value,
+                'expectedValidity' => false,
+                'expectedProcessedValue' => $value,
+                'expectedProcessedValidity' => false,
+            ];
+        }
         yield [
             'type' => IntBackedEnumExample::class,
             'value' => 0,
@@ -661,6 +679,27 @@ final class StrictArgumentProcessorTest extends TestCase
             'expectedProcessedValue' => [],
             'expectedProcessedValidity' => false,
         ];
+        // Fully qualified enum case names, with or without a leading backslash
+        foreach ([EnumExample::FOO, StringBackedEnumExample::BAR, IntBackedEnumExample::BAR] as $enum) {
+            foreach ([$enum::class . '::' . $enum->name, '\\' . $enum::class . '::' . $enum->name] as $value) {
+                yield [
+                    'type' => $enum::class,
+                    'value' => $value,
+                    'expectedValidity' => false,
+                    'expectedProcessedValue' => $enum,
+                    'expectedProcessedValidity' => true,
+                ];
+            }
+        }
+        foreach ([IntBackedEnumExample::class . '::INVALIDCASE', StringBackedEnumExample::class . '::BAR', 'NonexistentEnum::BAR', 'DateTime::ATOM'] as $value) {
+            yield [
+                'type' => IntBackedEnumExample::class,
+                'value' => $value,
+                'expectedValidity' => false,
+                'expectedProcessedValue' => $value,
+                'expectedProcessedValidity' => false,
+            ];
+        }
 
         //
         // Iterable

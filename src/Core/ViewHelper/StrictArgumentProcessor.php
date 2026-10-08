@@ -80,20 +80,30 @@ final readonly class StrictArgumentProcessor implements ArgumentProcessorInterfa
         if (is_a($type, BackedEnum::class, true)) {
             // Make sure that tryFrom() can be called without type mismatches
             $backingType = (string)(new ReflectionEnum($type))->getBackingType();
+            $backedValue = $backingType === 'int' && is_string($value)
+                ? filter_var($value, FILTER_VALIDATE_INT)
+                : $value;
             if (
-                ($backingType === 'string' && is_string($value))
-                || ($backingType === 'int' && is_int($value))
+                ($backingType === 'string' && is_string($backedValue))
+                || ($backingType === 'int' && is_int($backedValue))
             ) {
-                $enum = $type::tryFrom($value);
+                $enum = $type::tryFrom($backedValue);
                 if ($enum !== null) {
                     return $enum;
                 }
             }
         }
-        // Check if enum case name exists
-        return (is_string($value) && defined("$type::$value"))
-            ? constant("$type::$value")
-            : $value;
+        // Accept both short and fully qualified enum case names
+        if (is_string($value)) {
+            $constantName = str_contains($value, '::') ? $value : "$type::$value";
+            if (defined($constantName)) {
+                $enum = constant($constantName);
+                if ($enum instanceof $type) {
+                    return $enum;
+                }
+            }
+        }
+        return $value;
     }
 
     /**
