@@ -35,6 +35,14 @@ composition: which implementations of `TemplatePaths` the View requires, if it
 needs a :ref:`custom ViewHelperResolver <viewhelperresolver>`,
 if it must have some default variables, if it should have a default cache, etc.
 
+When Fluid needs to convert an array or a non-stringable object to a string,
+it throws a :php:`TYPO3Fluid\Fluid\Core\Parser\Exception`. For file-based
+templates, the message includes the affected template, partial or layout path.
+Dynamic layout names report the template containing :html:`<f:layout>`.
+Exceptions thrown by application code, including :php:`__toString()` methods,
+propagate unchanged. ViewHelper exceptions continue to use Fluid's configured
+error handler.
+
 ..  deprecated:: 4.4
     Prevously, it was possible to set the layout of a template with the special
     variable `layoutName`. This will no longer work with Fluid 5. Please use the

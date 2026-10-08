@@ -12,6 +12,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\StringConverter;
 
 /**
  * Abstract node in the syntax tree which has been built.
@@ -47,7 +48,7 @@ abstract class AbstractNode implements NodeInterface
         if (count($evaluatedNodes) === 1) {
             return $evaluatedNodes[0];
         }
-        return implode('', array_map($this->castToString(...), $evaluatedNodes));
+        return implode('', array_map(fn(mixed $value): string => $this->castToString($value, $renderingContext), $evaluatedNodes));
     }
 
     /**
@@ -58,21 +59,14 @@ abstract class AbstractNode implements NodeInterface
     {
         $output = $node->evaluate($renderingContext);
         if ($cast) {
-            $output = $this->castToString($output);
+            $output = $this->castToString($output, $renderingContext);
         }
         return $output;
     }
 
-    protected function castToString(mixed $value): string
+    protected function castToString(mixed $value, ?RenderingContextInterface $renderingContext = null): string
     {
-        if (is_object($value) && !method_exists($value, '__toString')) {
-            throw new Parser\Exception('Cannot cast object of type "' . get_class($value) . '" to string.', 1273753083);
-        }
-        if (is_array($value)) {
-            throw new Parser\Exception('Cannot cast an array to string.', 1698750868);
-        }
-        $output = (string)$value;
-        return $output;
+        return StringConverter::castToString($value, $renderingContext);
     }
 
     /**

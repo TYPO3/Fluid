@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\StringConverter;
 
 /**
  * Root node of every syntax tree.
@@ -54,7 +55,7 @@ final class RootNode extends AbstractNode
                     $converted = $childNode->convert($templateCompiler);
 
                     $initializationPhpCode .= $converted['initialization'] . chr(10);
-                    $initializationPhpCode .= sprintf('%s .= %s;', $outputVariableName, $converted['execution']) . chr(10);
+                    $initializationPhpCode .= sprintf('%s .= \\%s::castToString(%s, $renderingContext);', $outputVariableName, StringConverter::class, $converted['execution']) . chr(10);
                 }
 
                 return [
