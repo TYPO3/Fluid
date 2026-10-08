@@ -80,7 +80,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
  * ..  versionchanged:: Fluid 5.0
  *     Union types are supported for component arguments.
  *
- * An argument can allow multiple multiple types. In that case, the component's implementation
+ * An argument can allow multiple types. In that case, the component's implementation
  * needs to make sure that all possible variants are considered. This should be used sparingly
  * since it can complicate the component's implementation code considerably.
  *
