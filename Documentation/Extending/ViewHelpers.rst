@@ -94,6 +94,25 @@ Non-string-compatible values may cause problems if you use the ViewHelper in
 ways that were not intended. Like in PHP, data types must either match or be
 mutually compatible.
 
+.. _structured-tag-output:
+
+Structured Tag Output
+=====================
+
+..  versionadded:: Fluid 5.4
+
+Tag-based ViewHelpers can also return the :php:`TagBuilder` instance
+directly instead of rendering it to a string immediately. This is a special
+case compared to arbitrary string-compatible objects: :php:`TagBuilder`
+implements :php:`UnsafeHTML`, so Fluid treats the returned value as HTML output
+that must not be escaped again.
+
+The advantage of returning the :php:`TagBuilder` object instead of a string is
+that the tag can still be modified after the ViewHelper is finished rendering.
+For example, an image ViewHelper can return its
+:php:`TagBuilder`, and another layer can still add or remove an attribute afterwards
+before the final output is converted to a string.
+
 .. _invoking-viewhelpers:
 
 Invoking other ViewHelpers
