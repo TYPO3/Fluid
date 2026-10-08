@@ -99,21 +99,23 @@ class ForViewHelper extends AbstractViewHelper
         if (is_object($this->arguments['each']) && !$this->arguments['each'] instanceof \Traversable) {
             throw new InvalidArgumentValueException('ForViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
         }
-        if ($this->arguments['reverse'] === true) {
-            $this->arguments['each'] = array_reverse(iterator_to_array($this->arguments['each']), true);
-        }
+        [$items, $canContainDuplicateKeys] = $this->materializeItemsIfNeeded();
         if (isset($this->arguments['iteration'])) {
             $iterationData = [
                 'index' => 0,
                 'cycle' => 1,
-                'total' => count($this->arguments['each']),
+                'total' => count($items),
             ];
         }
         $globalVariableProvider = $this->renderingContext->getVariableProvider();
         $localVariableProvider = new StandardVariableProvider();
         $this->renderingContext->setVariableProvider(new ScopedVariableProvider($globalVariableProvider, $localVariableProvider));
         $output = '';
-        foreach ($this->arguments['each'] as $keyValue => $singleElement) {
+        foreach ($items as $keyValue => $singleElement) {
+            if ($canContainDuplicateKeys) {
+                // Materialized items store the original key separately to preserve duplicate keys.
+                [$keyValue, $singleElement] = $singleElement;
+            }
             $localVariableProvider->add($this->arguments['as'], $singleElement);
             if (isset($this->arguments['key'])) {
                 $localVariableProvider->add($this->arguments['key'], $keyValue);
@@ -131,5 +133,34 @@ class ForViewHelper extends AbstractViewHelper
         }
         $this->renderingContext->setVariableProvider($globalVariableProvider);
         return $output;
+    }
+
+    /**
+     * Materialize items only when reversing or counting requires it.
+     *
+     * @return array{0: iterable, 1: bool} Items and whether they store key-value pairs to preserve duplicate keys
+     */
+    private function materializeItemsIfNeeded(): array
+    {
+        if ($this->arguments['reverse'] !== true) {
+            if (!isset($this->arguments['iteration'])) {
+                // Without reversing or iteration metadata, items can be streamed directly.
+                return [$this->arguments['each'], false];
+            }
+            if (is_countable($this->arguments['each'])) {
+                // Countable items provide the total without buffering their contents.
+                return [$this->arguments['each'], false];
+            }
+        }
+
+        $items = [];
+        foreach ($this->arguments['each'] as $key => $singleElement) {
+            // Store key-value pairs so duplicate keys do not overwrite earlier items.
+            $items[] = [$key, $singleElement];
+        }
+        if ($this->arguments['reverse'] === true) {
+            $items = array_reverse($items, true);
+        }
+        return [$items, true];
     }
 }
