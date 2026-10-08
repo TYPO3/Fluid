@@ -129,7 +129,7 @@ ViewHelper namespaces
 
 There are two syntax variants to import a ViewHelper namespace into a template.
 In the following examples, `blog` is the namespace available within the Fluid template and
-`MyVendor\BlogExample\ViewHelpers` is the PHP namespace to import into Fluid.
+:php:`MyVendor\BlogExample\ViewHelpers` is the PHP namespace to import into Fluid.
 
 By default, the `f` namespace is predefined by Fluid. Depending on your setup,
 additional global namespaces, defined directly via the
