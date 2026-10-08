@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Component;
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\ViewHelpers\SlotViewHelper;
 
@@ -36,14 +35,29 @@ final readonly class ComponentRenderer implements ComponentRendererInterface
         $renderingContext->setViewHelperResolver($renderingContext->getViewHelperResolver()->getScopedCopy());
         $renderingContext->setVariableProvider($renderingContext->getVariableProvider()->getScopeCopy($arguments));
 
-        // Provide slots to SlotViewHelper
-        $renderingContext->setViewHelperVariableContainer(new ViewHelperVariableContainer());
-        $renderingContext->getViewHelperVariableContainer()->addAll(SlotViewHelper::class, $slots);
+        // Provide slots to SlotViewHelper while preserving the parent ViewHelperVariableContainer
+        // so that context set by outer ViewHelpers (e.g. TYPO3's FormViewHelper) remains available
+        // inside components. Slot state is saved and restored to support proper component nesting.
+        $parentVhvc = $parentRenderingContext->getViewHelperVariableContainer();
+        $previousSlots = $parentVhvc->getAll(SlotViewHelper::class);
+        foreach ($slots as $slotName => $slotClosure) {
+            $parentVhvc->addOrUpdate(SlotViewHelper::class, $slotName, $slotClosure);
+        }
+        $renderingContext->setViewHelperVariableContainer($parentVhvc);
 
         // Create Fluid view for component
         // render() call includes validation of provided arguments
         $view = new TemplateView($renderingContext);
         $view->assignMultiple($this->componentResolver->getAdditionalVariables($viewHelperName));
-        return (string)$view->render($this->componentResolver->resolveTemplateName($viewHelperName));
+        $result = (string)$view->render($this->componentResolver->resolveTemplateName($viewHelperName));
+
+        // Restore previous slot state so that outer components can still access their own slots.
+        foreach (array_keys($slots) as $slotName) {
+            $parentVhvc->remove(SlotViewHelper::class, $slotName);
+            if (array_key_exists($slotName, $previousSlots)) {
+                $parentVhvc->addOrUpdate(SlotViewHelper::class, $slotName, $previousSlots[$slotName]);
+            }
+        }
+        return $result;
     }
 }
