@@ -98,9 +98,9 @@ final class ConstantViewHelperTest extends AbstractFunctionalTestCase
     public function render(mixed $name, mixed $expected): void
     {
         $templateSources = [
-            '<f:constant name="{name}" />',
-            '<f:constant>{name}</f:constant>',
-            '{f:constant(name: \'{name}\')}',
+            '<f:format.raw><f:constant name="{name}" /></f:format.raw>',
+            '<f:format.raw><f:constant>{name}</f:constant></f:format.raw>',
+            '<f:format.raw>{f:constant(name: \'{name}\')}</f:format.raw>',
         ];
 
         foreach ($templateSources as $templateSource) {
@@ -108,13 +108,21 @@ final class ConstantViewHelperTest extends AbstractFunctionalTestCase
             $view->assignMultiple(['name' => $name]);
             $view->getRenderingContext()->setCache(self::$cache);
             $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($templateSource);
-            self::assertSame($expected, $view->render());
+            $result = $view->render();
+            if ($expected instanceof \UnitEnum) {
+                self::assertInstanceOf($expected::class, $result);
+            }
+            self::assertSame($expected, $result);
 
             $view = new TemplateView();
             $view->assignMultiple(['name' => $name]);
             $view->getRenderingContext()->setCache(self::$cache);
             $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($templateSource);
-            self::assertSame($expected, $view->render());
+            $result = $view->render();
+            if ($expected instanceof \UnitEnum) {
+                self::assertInstanceOf($expected::class, $result);
+            }
+            self::assertSame($expected, $result);
         }
     }
 }

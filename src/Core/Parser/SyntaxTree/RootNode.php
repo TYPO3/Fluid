@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\Rendering\EnumConverter;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -54,7 +55,11 @@ final class RootNode extends AbstractNode
                     $converted = $childNode->convert($templateCompiler);
 
                     $initializationPhpCode .= $converted['initialization'] . chr(10);
-                    $initializationPhpCode .= sprintf('%s .= %s;', $outputVariableName, $converted['execution']) . chr(10);
+                    $execution = $converted['execution'];
+                    if (!$childNode instanceof TextNode && !$childNode instanceof EscapingNode) {
+                        $execution = sprintf('\\%s::convert(%s)', EnumConverter::class, $execution);
+                    }
+                    $initializationPhpCode .= sprintf('%s .= %s;', $outputVariableName, $execution) . chr(10);
                 }
 
                 return [

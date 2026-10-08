@@ -12,4 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various;
 enum StringBackedEnumExample: string
 {
     case BAR = 'bar value';
+    case EMPTY = '';
+    case HTML = '<b>&"test"</b>';
+    case UNICODE = 'Grüße';
 }

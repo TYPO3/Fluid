@@ -11,8 +11,11 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
 
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\Rendering\EnumConverter;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 
@@ -355,7 +358,11 @@ class TemplateCompiler
                 foreach ($nodes as $childNode) {
                     $converted = $childNode->convert($this);
                     $initializationPhpCode .= $converted['initialization'] . chr(10);
-                    $initializationPhpCode .= sprintf('%s .= %s;', $outputVariableName, $converted['execution']) . chr(10);
+                    $execution = $converted['execution'];
+                    if (!$childNode instanceof TextNode && !$childNode instanceof EscapingNode) {
+                        $execution = sprintf('\\%s::convert(%s)', EnumConverter::class, $execution);
+                    }
+                    $initializationPhpCode .= sprintf('%s .= %s;', $outputVariableName, $execution) . chr(10);
                 }
                 return [
                     'initialization' => $initializationPhpCode,

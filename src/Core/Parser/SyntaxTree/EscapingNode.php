@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\UnsafeHTML;
+use TYPO3Fluid\Fluid\Core\Rendering\EnumConverter;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -38,7 +39,7 @@ final class EscapingNode extends AbstractNode
      */
     public function evaluate(RenderingContextInterface $renderingContext): mixed
     {
-        $evaluated = $this->node->evaluate($renderingContext);
+        $evaluated = EnumConverter::convert($this->node->evaluate($renderingContext));
         if ($evaluated instanceof UnsafeHTML) {
             return (string)$evaluated;
         }
@@ -69,6 +70,7 @@ final class EscapingNode extends AbstractNode
         if ($configuration['execution'] !== '\'\'') {
             $configuration['execution'] = sprintf(
                 'call_user_func_array( function ($var) { '
+                . '$var = \\' . EnumConverter::class . '::convert($var); '
                 . 'if ($var instanceof ' . UnsafeHTML::class . ') { return (string)$var; }'
                 . 'return (is_string($var) || (is_object($var) && method_exists($var, \'__toString\')) '
                 . '? htmlspecialchars((string) $var, ENT_QUOTES) : $var); }, [%s])',

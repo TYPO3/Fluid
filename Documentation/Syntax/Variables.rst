@@ -49,6 +49,32 @@ For example, the following PHP-equivalents would be checked for `{product.name}`
 
 Also, both `ArrayAccess` and the PSR `ContainerInterface` are supported.
 
+.. _variable-access-enums:
+
+Enums
+-----
+
+..  versionadded:: Fluid 5.0
+
+PHP enum cases can be output directly using :html:`{enum}` or
+:html:`<f:constant>`. Backed enums
+output their value: integer values become text, and string values are used
+as-is. Unbacked enums output their case name. Normal HTML escaping applies.
+Backed values such as :php:`0` and :php:`''` are preserved without falling
+back to the case name.
+
+Use :html:`{enum.name}` to explicitly access the case name, or
+:html:`{enum.value}` to access the value of a backed enum. Enum cases remain
+objects when passed as arguments to ViewHelpers or components.
+
+Normal enum output always returns an HTML-escaped string, including when
+the template consists only of :html:`{enum}`.
+
+With :html:`{enum -> f:format.raw()}`, the enum object is preserved when
+this expression is the template's only content. Adding text or whitespace
+converts the enum to its backed value or case name and concatenates it
+without HTML escaping.
+
 ..  _dynamic-properties:
 
 Dynamic keys/properties

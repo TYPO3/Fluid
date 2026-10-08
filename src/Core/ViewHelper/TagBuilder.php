@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
+use TYPO3Fluid\Fluid\Core\Rendering\EnumConverter;
+
 /**
  * Tag builder. Can be easily accessed in AbstractTagBasedViewHelper
  *
@@ -223,11 +225,7 @@ class TagBuilder
                 $attributeValue = $attributeName;
             }
 
-            if ($attributeValue instanceof \BackedEnum) {
-                $attributeValue = (string)$attributeValue->value;
-            } elseif ($attributeValue instanceof \UnitEnum) {
-                $attributeValue = $attributeValue->name;
-            }
+            $attributeValue = EnumConverter::convert($attributeValue);
 
             if (trim((string)$attributeValue) === '' && $this->ignoreEmptyAttributes) {
                 return;

@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser;
+use TYPO3Fluid\Fluid\Core\Rendering\EnumConverter;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -65,6 +66,7 @@ abstract class AbstractNode implements NodeInterface
 
     protected function castToString(mixed $value): string
     {
+        $value = EnumConverter::convert($value);
         if (is_object($value) && !method_exists($value, '__toString')) {
             throw new Parser\Exception('Cannot cast object of type "' . get_class($value) . '" to string.', 1273753083);
         }

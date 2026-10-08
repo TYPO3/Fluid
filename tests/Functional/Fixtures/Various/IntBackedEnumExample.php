@@ -12,4 +12,6 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various;
 enum IntBackedEnumExample: int
 {
     case BAR = 123;
+    case ZERO = 0;
+    case NEGATIVE = -1;
 }
