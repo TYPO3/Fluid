@@ -21,7 +21,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  * Alternatively, you can use a full boolean expression.
  * The entered expression is evaluated as a PHP expression. You can
  * combine multiple expressions via :php:`&&` (logical AND) and
- * :php:`||` (logical OR).
+ * :php:`||` (logical OR), as well as literal ``AND`` and ``OR`` words.
  *
  * An expression can also be prepended with the :php:`!` ("not") character,
  * which will negate that expression.
