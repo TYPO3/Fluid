@@ -144,20 +144,18 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
         }
 
         if (!$parsedTemplate->hasLayout()) {
-            $this->startRendering(self::RENDERING_TEMPLATE, $parsedTemplate, $templateRenderingContext);
-            try {
-                $this->processAndValidateTemplateVariables(
-                    $parsedTemplate,
-                    $templateRenderingContext->getVariableProvider(),
-                    $templateRenderingContext->getArgumentProcessor(),
-                );
-            } catch (Exception $validationError) {
-                return $templateRenderingContext->getErrorHandler()->handleViewError($validationError);
-            }
-            $output = $parsedTemplate->render($templateRenderingContext);
-            $this->stopRendering();
+            $output = $this->renderWithContext(
+                self::RENDERING_TEMPLATE,
+                $parsedTemplate,
+                $templateRenderingContext,
+            );
         } else {
-            $layoutName = (string)$parsedTemplate->getLayoutName($templateRenderingContext);
+            $layoutName = $this->renderWithContext(
+                self::RENDERING_TEMPLATE,
+                $parsedTemplate,
+                $templateRenderingContext,
+                render: fn() => (string)$parsedTemplate->getLayoutName($templateRenderingContext),
+            );
             // Layouts should not inherit ViewHelper namespaces from template, so we need a separate rendering context
             // with its own resolver instance
             $layoutRenderingContext = clone $templateRenderingContext;
@@ -173,24 +171,14 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
             } catch (PassthroughSourceException $error) {
                 return $error->getSource();
             }
-            $this->startRendering(self::RENDERING_LAYOUT, $parsedTemplate, $layoutRenderingContext);
             // Layout is a special case because the rendering stack contains the parsed template,
-            // not the parsed layout, so the wrong original template path would be set in layout files
-            // @todo decide if this method should be added to RenderingContextInterface in Fluid 6
-            if (method_exists($layoutRenderingContext, 'setOriginalTemplatePath')) {
-                $layoutRenderingContext->setOriginalTemplatePath($parsedLayout->getOriginalTemplatePath());
-            }
-            try {
-                $this->processAndValidateTemplateVariables(
-                    $parsedLayout,
-                    $layoutRenderingContext->getVariableProvider(),
-                    $layoutRenderingContext->getArgumentProcessor(),
-                );
-            } catch (Exception $validationError) {
-                return $layoutRenderingContext->getErrorHandler()->handleViewError($validationError);
-            }
-            $output = $parsedLayout->render($layoutRenderingContext);
-            $this->stopRendering();
+            // not the parsed layout. Supply the layout separately for rendering and error reporting.
+            $output = $this->renderWithContext(
+                self::RENDERING_LAYOUT,
+                $parsedTemplate,
+                $layoutRenderingContext,
+                $parsedLayout,
+            );
         }
 
         return $output;
@@ -248,9 +236,12 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
                     new InvalidSectionException('Section "' . $sectionName . '" does not exist.'),
                 );
             }
-            $this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
-            $output = $parsedTemplate->$methodNameOfSection($renderingContext);
-            $this->stopRendering();
+            $output = $this->renderWithContext(
+                $renderingTypeOnNextLevel,
+                $parsedTemplate,
+                $renderingContext,
+                render: fn() => $parsedTemplate->$methodNameOfSection($renderingContext),
+            );
         } else {
             $sections = $parsedTemplate->getVariableContainer()->get(TemplateCompiler::SECTIONS_VARIABLE);
             if (!isset($sections[$sectionName])) {
@@ -270,9 +261,12 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
                 true,
             );
 
-            $this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
-            $output = $section->evaluate($renderingContext);
-            $this->stopRendering();
+            $output = $this->renderWithContext(
+                $renderingTypeOnNextLevel,
+                $parsedTemplate,
+                $renderingContext,
+                render: fn() => $section->evaluate($renderingContext),
+            );
         }
 
         return $output;
@@ -318,23 +312,48 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
             return $renderingContext->getErrorHandler()->handleViewError($error);
         }
         $renderingContext->setVariableProvider($renderingContext->getVariableProvider()->getScopeCopy($variables));
-        $this->startRendering(self::RENDERING_PARTIAL, $parsedPartial, $renderingContext);
-        if ($sectionName !== null) {
-            $output = $this->renderSection($sectionName, $variables, $ignoreUnknown);
-        } else {
+        return $this->renderWithContext(
+            self::RENDERING_PARTIAL,
+            $parsedPartial,
+            $renderingContext,
+            render: $sectionName !== null ? fn() => $this->renderSection($sectionName, $variables, $ignoreUnknown) : null,
+        );
+    }
+
+    /**
+     * @param self::RENDERING_TEMPLATE|self::RENDERING_PARTIAL|self::RENDERING_LAYOUT $type
+     */
+    private function renderWithContext(
+        int $type,
+        ParsedTemplateInterface $template,
+        RenderingContextInterface $context,
+        ?ParsedTemplateInterface $renderedTemplate = null,
+        ?\Closure $render = null,
+    ): mixed {
+        $renderedTemplate ??= $template;
+        $originalTemplatePath = $renderedTemplate->getOriginalTemplatePath();
+        $this->startRendering($type, $template, $context);
+        try {
+            // @todo decide if this method should be added to RenderingContextInterface in Fluid 6
+            if ($originalTemplatePath !== $template->getOriginalTemplatePath() && method_exists($context, 'setOriginalTemplatePath')) {
+                $context->setOriginalTemplatePath($originalTemplatePath);
+            }
+            if ($render !== null) {
+                return $render();
+            }
             try {
                 $this->processAndValidateTemplateVariables(
-                    $parsedPartial,
-                    $renderingContext->getVariableProvider(),
-                    $renderingContext->getArgumentProcessor(),
+                    $renderedTemplate,
+                    $context->getVariableProvider(),
+                    $context->getArgumentProcessor(),
                 );
             } catch (Exception $validationError) {
-                return $renderingContext->getErrorHandler()->handleViewError($validationError);
+                return $context->getErrorHandler()->handleViewError($validationError);
             }
-            $output = $parsedPartial->render($renderingContext);
+            return $renderedTemplate->render($context);
+        } finally {
+            $this->stopRendering();
         }
-        $this->stopRendering();
-        return $output;
     }
 
     /**
