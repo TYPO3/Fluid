@@ -240,7 +240,7 @@ ViewHelper instantiation
 
 The main use case for replacing the :php:`ViewHelperResolver` with a custom
 class is to influence the way Fluid instantiates ViewHelper classes or
-ViewHelperResolver delegates. The concrete implmementation heavily depends on
+ViewHelperResolver delegates. The concrete implementation heavily depends on
 your use case, but in general you would extend the built-in class and
 override the methods you want to customize:
 
