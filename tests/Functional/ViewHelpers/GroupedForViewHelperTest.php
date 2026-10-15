@@ -391,4 +391,47 @@ final class GroupedForViewHelperTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($template);
         self::assertSame($expected, $view->render());
     }
+
+    public static function renderWithRepeatedIteratorKeysDataProvider(): \Generator
+    {
+        $people = static function (): \Generator {
+            yield from [['name' => 'Anna', 'team' => 'A'], ['name' => 'Ben', 'team' => 'B']];
+            yield from [['name' => 'Carl', 'team' => 'A']];
+        };
+        yield 'repeated keys are replaced by positions' => [
+            'valueFactory' => $people,
+            'src' => '<f:groupedFor each="{value}" as="members" groupBy="team" groupKey="team">{team}:<f:for each="{members}" as="member" key="key">{key}={member.name};</f:for> </f:groupedFor>',
+            'expectation' => 'A:0=Anna;2=Carl; B:1=Ben; ',
+        ];
+        yield 'iterator without repeated keys keeps its keys' => [
+            'valueFactory' => static fn(): \ArrayIterator => new \ArrayIterator(['x' => ['name' => 'Anna', 'team' => 'A'], 'y' => ['name' => 'Ben', 'team' => 'B'], 'z' => ['name' => 'Carl', 'team' => 'A']]),
+            'src' => '<f:groupedFor each="{value}" as="members" groupBy="team" groupKey="team">{team}:<f:for each="{members}" as="member" key="key">{key}={member.name};</f:for> </f:groupedFor>',
+            'expectation' => 'A:x=Anna;z=Carl; B:y=Ben; ',
+        ];
+    }
+
+    #[DataProvider('renderWithRepeatedIteratorKeysDataProvider')]
+    #[Test]
+    public function renderWithRepeatedIteratorKeys(\Closure $valueFactory, string $src, mixed $expectation): void
+    {
+        // Generators can't be rewound, so each rendering gets a fresh one. The variable name is unique
+        // per data set, so the first rendering can't reuse a template compiled by another test.
+        $variableName = 'value' . hash('xxh3', (string)$this->dataName());
+        $src = str_replace('{value', '{' . $variableName, $src);
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($src);
+        $templateIdentifier = $view->getRenderingContext()->getTemplatePaths()->getTemplateIdentifier();
+        self::assertFalse($view->getRenderingContext()->getTemplateCompiler()->has($templateIdentifier), 'First rendering must be uncompiled');
+        $view->assign($variableName, $valueFactory());
+        self::assertSame($expectation, $view->render());
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($src);
+        self::assertTrue($view->getRenderingContext()->getTemplateCompiler()->has($templateIdentifier), 'Second rendering must use the compiled template');
+        $view->assign($variableName, $valueFactory());
+        self::assertSame($expectation, $view->render());
+    }
 }

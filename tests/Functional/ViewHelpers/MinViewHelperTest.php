@@ -123,4 +123,64 @@ final class MinViewHelperTest extends AbstractFunctionalTestCase
         $view->assignMultiple($arguments);
         $view->render();
     }
+
+    public static function renderWithRepeatedIteratorKeysDataProvider(): \Generator
+    {
+        $minNumericKeys = static function (): \Generator {
+            yield from [2, 1];
+            yield from [4, 3];
+        };
+        $minStringKeys = static function (): \Generator {
+            yield from ['a' => 2, 'b' => 1];
+            yield from ['a' => 4, 'b' => 3];
+        };
+        $minComposed = static function (): \Generator {
+            yield from (static function (): \Generator {
+                yield 7;
+                yield 'k' => 1;
+            })();
+            yield from [3, 5];
+            yield 'k' => 9;
+        };
+        yield 'repeated numeric keys' => [
+            'valueFactory' => $minNumericKeys,
+            'src' => '{value -> f:min()}',
+            'expectation' => 1,
+        ];
+        yield 'repeated string keys' => [
+            'valueFactory' => $minStringKeys,
+            'src' => '{value -> f:min()}',
+            'expectation' => 1,
+        ];
+        yield 'composed generators' => [
+            'valueFactory' => $minComposed,
+            'src' => '<f:min value="{value}" />',
+            'expectation' => 1,
+        ];
+    }
+
+    #[DataProvider('renderWithRepeatedIteratorKeysDataProvider')]
+    #[Test]
+    public function renderWithRepeatedIteratorKeys(\Closure $valueFactory, string $src, mixed $expectation): void
+    {
+        // Generators can't be rewound, so each rendering gets a fresh one. The variable name is unique
+        // per data set, so the first rendering can't reuse a template compiled by another test.
+        $variableName = 'value' . hash('xxh3', (string)$this->dataName());
+        $src = str_replace('{value', '{' . $variableName, $src);
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($src);
+        $templateIdentifier = $view->getRenderingContext()->getTemplatePaths()->getTemplateIdentifier();
+        self::assertFalse($view->getRenderingContext()->getTemplateCompiler()->has($templateIdentifier), 'First rendering must be uncompiled');
+        $view->assign($variableName, $valueFactory());
+        self::assertSame($expectation, $view->render());
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($src);
+        self::assertTrue($view->getRenderingContext()->getTemplateCompiler()->has($templateIdentifier), 'Second rendering must use the compiled template');
+        $view->assign($variableName, $valueFactory());
+        self::assertSame($expectation, $view->render());
+    }
 }

@@ -82,7 +82,6 @@ final class MergeViewHelper extends AbstractViewHelper
                 1755316529,
             );
         }
-        $array = iterator_to_array($array);
 
         $with = $this->arguments['with'] ?? [];
         if (!is_iterable($with)) {
@@ -93,12 +92,31 @@ final class MergeViewHelper extends AbstractViewHelper
                 1755316530,
             );
         }
-        $with = iterator_to_array($with);
 
+        $arrays = [...self::toArraysToMerge($array), ...self::toArraysToMerge($with)];
         if ($this->arguments['recursive']) {
-            return array_merge_recursive($array, $with);
+            return array_merge_recursive(...$arrays);
         }
 
-        return array_merge($array, $with);
+        return array_merge(...$arrays);
+    }
+
+    /**
+     * Arrays are merged as they are. Iterators are split into arrays with a single entry
+     * each, so that items of iterators which yield the same key more than once are merged
+     * like items of separate arrays instead of overwriting each other.
+     *
+     * @return list<array>
+     */
+    private static function toArraysToMerge(iterable $items): array
+    {
+        if (is_array($items)) {
+            return [$items];
+        }
+        $arrays = [];
+        foreach ($items as $key => $item) {
+            $arrays[] = [$key => $item];
+        }
+        return $arrays;
     }
 }

@@ -150,4 +150,51 @@ final class ReplaceViewHelperTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($template);
         self::assertSame($expected, $view->render());
     }
+
+    public static function renderWithRepeatedIteratorKeysDataProvider(): \Generator
+    {
+        $searchKeys = static function (): \Generator {
+            yield from ['a'];
+            yield from ['b'];
+        };
+        $replaceKeys = static function (): \Generator {
+            yield from ['x'];
+            yield from ['y'];
+        };
+        yield 'search and replace with repeated keys' => [
+            'searchFactory' => $searchKeys,
+            'replaceFactory' => $replaceKeys,
+            'expectation' => 'xy',
+        ];
+        yield 'search with repeated keys' => [
+            'searchFactory' => $searchKeys,
+            'replaceFactory' => static fn(): array => ['x', 'y'],
+            'expectation' => 'xy',
+        ];
+    }
+
+    #[DataProvider('renderWithRepeatedIteratorKeysDataProvider')]
+    #[Test]
+    public function renderWithRepeatedIteratorKeys(\Closure $searchFactory, \Closure $replaceFactory, string $expectation): void
+    {
+        // Generators can't be rewound, so each rendering gets fresh ones. The variable names are unique
+        // per data set, so the first rendering can't reuse a template compiled by another test.
+        $suffix = hash('xxh3', (string)$this->dataName());
+        $src = '{f:replace(value: \'ab\', search: search' . $suffix . ', replace: replace' . $suffix . ')}';
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($src);
+        $templateIdentifier = $view->getRenderingContext()->getTemplatePaths()->getTemplateIdentifier();
+        self::assertFalse($view->getRenderingContext()->getTemplateCompiler()->has($templateIdentifier), 'First rendering must be uncompiled');
+        $view->assignMultiple(['search' . $suffix => $searchFactory(), 'replace' . $suffix => $replaceFactory()]);
+        self::assertSame($expectation, $view->render());
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($src);
+        self::assertTrue($view->getRenderingContext()->getTemplateCompiler()->has($templateIdentifier), 'Second rendering must use the compiled template');
+        $view->assignMultiple(['search' . $suffix => $searchFactory(), 'replace' . $suffix => $replaceFactory()]);
+        self::assertSame($expectation, $view->render());
+    }
 }

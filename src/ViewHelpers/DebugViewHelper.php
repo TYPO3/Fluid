@@ -131,7 +131,7 @@ class DebugViewHelper extends AbstractViewHelper
             return (array)$variable;
         }
         if ($variable instanceof \Iterator) {
-            return iterator_to_array($variable);
+            return self::iteratorToArray($variable);
         }
         if (is_resource($variable)) {
             return stream_get_meta_data($variable);
@@ -153,5 +153,22 @@ class DebugViewHelper extends AbstractViewHelper
             $output[$propertyName] = $standardVariableProvider->getByPath($propertyName);
         }
         return $output;
+    }
+
+    /**
+     * Converts the iterator to an array. If it yields the same key more than once,
+     * the items are keyed by their position instead, so that no item is lost.
+     */
+    private static function iteratorToArray(\Traversable $items): array
+    {
+        $array = [];
+        $list = [];
+        $hasRepeatedKeys = false;
+        foreach ($items as $key => $item) {
+            $hasRepeatedKeys = $hasRepeatedKeys || array_key_exists($key, $array);
+            $array[$key] = $item;
+            $list[] = $item;
+        }
+        return $hasRepeatedKeys ? $list : $array;
     }
 }

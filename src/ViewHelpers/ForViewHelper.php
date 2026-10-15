@@ -99,21 +99,37 @@ class ForViewHelper extends AbstractViewHelper
         if (is_object($this->arguments['each']) && !$this->arguments['each'] instanceof \Traversable) {
             throw new InvalidArgumentValueException('ForViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
         }
-        if ($this->arguments['reverse'] === true) {
-            $this->arguments['each'] = array_reverse(iterator_to_array($this->arguments['each']), true);
+        $each = $this->arguments['each'];
+        $total = null;
+        if ($this->arguments['reverse'] === true || (isset($this->arguments['iteration']) && !is_countable($each))) {
+            // Iterators can yield the same key more than once, so their items are collected as
+            // key/item pairs instead of an array, which would only keep the last item per key
+            $entries = [];
+            foreach ($each as $key => $item) {
+                $entries[] = [$key, $item];
+            }
+            if ($this->arguments['reverse'] === true) {
+                $entries = array_reverse($entries);
+            }
+            $total = count($entries);
+            $each = (static function () use ($entries): \Generator {
+                foreach ($entries as [$key, $item]) {
+                    yield $key => $item;
+                }
+            })();
         }
         if (isset($this->arguments['iteration'])) {
             $iterationData = [
                 'index' => 0,
                 'cycle' => 1,
-                'total' => count($this->arguments['each']),
+                'total' => $total ?? count($each),
             ];
         }
         $globalVariableProvider = $this->renderingContext->getVariableProvider();
         $localVariableProvider = new StandardVariableProvider();
         $this->renderingContext->setVariableProvider(new ScopedVariableProvider($globalVariableProvider, $localVariableProvider));
         $output = '';
-        foreach ($this->arguments['each'] as $keyValue => $singleElement) {
+        foreach ($each as $keyValue => $singleElement) {
             $localVariableProvider->add($this->arguments['as'], $singleElement);
             if (isset($this->arguments['key'])) {
                 $localVariableProvider->add($this->arguments['key'], $keyValue);

@@ -82,6 +82,7 @@ final class ReplaceViewHelper extends AbstractViewHelper
                 ), 1710441988);
             }
 
+            // The keys are the search strings: like in an array, the last replacement per search string is used
             $replace = iterator_to_array($replace);
 
             $search = array_keys($replace);
@@ -100,8 +101,9 @@ final class ReplaceViewHelper extends AbstractViewHelper
                 ), 1710441990);
             }
 
-            $search = is_iterable($search) ? iterator_to_array($search) : [$search];
-            $replace = is_iterable($replace) ? iterator_to_array($replace) : [$replace];
+            // str_replace() pairs search and replace values by their order, keys don't matter
+            $search = is_iterable($search) ? iterator_to_array($search, false) : [$search];
+            $replace = is_iterable($replace) ? iterator_to_array($replace, false) : [$replace];
 
             if (\count($search) !== \count($replace)) {
                 throw new InvalidArgumentValueException('Count of "search" and "replace" arguments must be the same.', 1710441991);
