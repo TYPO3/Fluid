@@ -181,18 +181,25 @@ The following ViewHelper is deprecated as a whole:
 
     use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
     use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-    use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-    use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
+    use TYPO3Fluid\Fluid\Core\ViewHelper\{
+        AbstractViewHelper,
+        ViewHelperNodeInitializedEventInterface,
+    };
 
     /**
      * @deprecated since version 5, will be removed in version 6.
      */
-    final class ObsoleteViewHelper extends AbstractViewHelper implements ViewHelperNodeInitializedEventInterface
+    final class ObsoleteViewHelper extends AbstractViewHelper implements
+        ViewHelperNodeInitializedEventInterface
     {
-        public static function nodeInitializedEvent(ViewHelperNode $node, array $arguments, ParsingState $parsingState): void
-        {
+        public static function nodeInitializedEvent(
+            ViewHelperNode $node,
+            array $arguments,
+            ParsingState $parsingState,
+        ): void {
             trigger_error(
-                '<my:obsolete> is deprecated and will be removed in version 6.',
+                '<my:obsolete> is deprecated'
+                    . ' and will be removed in version 6.',
                 E_USER_DEPRECATED,
             );
         }
@@ -207,22 +214,33 @@ To deprecate an argument, check whether the template uses it. The array
 
     use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
     use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-    use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-    use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
+    use TYPO3Fluid\Fluid\Core\ViewHelper\{
+        AbstractViewHelper,
+        ViewHelperNodeInitializedEventInterface,
+    };
 
-    final class SomeViewHelper extends AbstractViewHelper implements ViewHelperNodeInitializedEventInterface
+    final class SomeViewHelper extends AbstractViewHelper implements
+        ViewHelperNodeInitializedEventInterface
     {
         public function initializeArguments(): void
         {
             // @deprecated since version 5, will be removed in version 6.
-            $this->registerArgument('obsoleteArgument', 'string', 'Deprecated since version 5, will be removed in version 6.');
+            $this->registerArgument(
+                'obsoleteArgument',
+                'string',
+                'Deprecated since version 5, will be removed in version 6.',
+            );
         }
 
-        public static function nodeInitializedEvent(ViewHelperNode $node, array $arguments, ParsingState $parsingState): void
-        {
+        public static function nodeInitializedEvent(
+            ViewHelperNode $node,
+            array $arguments,
+            ParsingState $parsingState,
+        ): void {
             if (array_key_exists('obsoleteArgument', $arguments)) {
                 trigger_error(
-                    'The argument "obsoleteArgument" of <my:some> is deprecated and will be removed in version 6.',
+                    'The argument "obsoleteArgument" of <my:some>'
+                        . ' is deprecated and will be removed in version 6.',
                     E_USER_DEPRECATED,
                 );
             }

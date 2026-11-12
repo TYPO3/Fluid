@@ -18,10 +18,12 @@ reports what it finds:
 *   a variable name that starts with an underscore
 *   a deprecated ViewHelper or ViewHelper argument, if the deprecation is
     triggered while the template is parsed, see
-    :ref:`Deprecating a ViewHelper or an argument <creating-viewhelpers-deprecating>`
+    :ref:`Deprecating a ViewHelper or an argument
+    <creating-viewhelpers-deprecating>`
 
 TYPO3 provides its own command for this purpose, see
-`Check templates with the Fluid analyser <https://docs.typo3.org/permalink/t3coreapi:fluid-analyze-templates>`_.
+`Check templates with the Fluid analyser
+<https://docs.typo3.org/permalink/t3coreapi:fluid-analyze-templates>`_.
 
 .. _analyze-templates-files:
 
@@ -56,13 +58,18 @@ The argument `--template` cannot be combined with `--path` or `--extension`.
 Reading the result
 ==================
 
-The command writes one line per finding, with the path of the template and
-the message:
+The command writes each finding with the path of the template and the
+message. The lines of the following example are wrapped:
 
 ..  code-block:: text
 
-    [ERROR] templates/List.fluid.html: Fluid parse error in template templates/List.fluid.html, line 4 at character 1. Error: Variable identifiers cannot start with a "_": _temp (error code 1765900762). Template source chunk: {_temp}
-    [DEPRECATION] templates/Detail.fluid.html: <my:obsolete> is deprecated and will be removed in version 6.
+    [ERROR] templates/List.fluid.html: Fluid parse error in template
+    templates/List.fluid.html, line 4 at character 1. Error: Variable
+    identifiers cannot start with a "_": _temp (error code 1765900762).
+    Template source chunk: {_temp}
+
+    [DEPRECATION] templates/Detail.fluid.html: <my:obsolete> is deprecated
+    and will be removed in version 6.
 
 The parser stops at the first error in a template. Therefore, the command
 reports at most one error per template. Fix the error and run the command
