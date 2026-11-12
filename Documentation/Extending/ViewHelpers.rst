@@ -159,3 +159,74 @@ the :php:`LayoutViewHelper` and the :php:`ArgumentViewHelper`.
 ..  deprecated:: 4.2
     NodeInitialized event replaces the old `AbstractViewHelper::postParseEvent()` method,
     which will no longer work with Fluid 5.
+
+.. _creating-viewhelpers-deprecating:
+
+Deprecating a ViewHelper or an argument
+=======================================
+
+Trigger the deprecation of a ViewHelper or of one of its arguments in the
+method `nodeInitializedEvent()` of the
+:ref:`NodeInitialized event <nodeinitialized>`. Fluid calls this method while
+it parses a template. The command `analyze` then reports the deprecation for
+every template that uses the ViewHelper or the argument, see
+:ref:`Checking templates for errors <analyze-templates>`.
+
+A deprecation that is triggered in `render()` is not reported this way: the
+command does not render the templates.
+
+The following ViewHelper is deprecated as a whole:
+
+.. code-block:: php
+
+    use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+    use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+    use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+    use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
+
+    /**
+     * @deprecated since version 5, will be removed in version 6.
+     */
+    final class ObsoleteViewHelper extends AbstractViewHelper implements ViewHelperNodeInitializedEventInterface
+    {
+        public static function nodeInitializedEvent(ViewHelperNode $node, array $arguments, ParsingState $parsingState): void
+        {
+            trigger_error(
+                '<my:obsolete> is deprecated and will be removed in version 6.',
+                E_USER_DEPRECATED,
+            );
+        }
+
+        // ...
+    }
+
+To deprecate an argument, check whether the template uses it. The array
+`$arguments` only contains the arguments that the template passes:
+
+.. code-block:: php
+
+    use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+    use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+    use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+    use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperNodeInitializedEventInterface;
+
+    final class SomeViewHelper extends AbstractViewHelper implements ViewHelperNodeInitializedEventInterface
+    {
+        public function initializeArguments(): void
+        {
+            // @deprecated since version 5, will be removed in version 6.
+            $this->registerArgument('obsoleteArgument', 'string', 'Deprecated since version 5, will be removed in version 6.');
+        }
+
+        public static function nodeInitializedEvent(ViewHelperNode $node, array $arguments, ParsingState $parsingState): void
+        {
+            if (array_key_exists('obsoleteArgument', $arguments)) {
+                trigger_error(
+                    'The argument "obsoleteArgument" of <my:some> is deprecated and will be removed in version 6.',
+                    E_USER_DEPRECATED,
+                );
+            }
+        }
+
+        // ...
+    }

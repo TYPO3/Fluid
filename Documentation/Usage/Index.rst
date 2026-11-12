@@ -51,6 +51,14 @@ Usage
         ..  card-footer:: :ref:`Learn about Components <components>`
             :button-style: btn btn-secondary stretched-link
 
+    ..  card:: Checking Templates
+
+        Find syntax errors and deprecations in your templates without
+        rendering them.
+
+        ..  card-footer:: :ref:`Learn about checking templates <analyze-templates>`
+            :button-style: btn btn-secondary stretched-link
+
 .. toctree::
     :hidden:
     :maxdepth: 2
@@ -61,3 +69,4 @@ Usage
     Structure
     ViewHelpers
     Components
+    Analyze
