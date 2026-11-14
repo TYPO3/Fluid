@@ -223,12 +223,17 @@ The extended `atom.button` component could look something like this:
     </button>
 
 ..  note::
+    ..  versionadded:: Fluid 5.2
+
+        A component collection can list its components. TYPO3 uses this
+        since TYPO3 v14.2 to create XSD files for components.
+
     IDEs can autocomplete components and their arguments from XSD files, as
     they do for ViewHelpers. The command `fluid schema` of Fluid standalone
     creates XSD files for ViewHelpers only. The files for components come
     from a framework that knows the component collections of a project.
-    TYPO3 creates them with its command `fluid:schema:generate` since TYPO3
-    v14.2. See :ref:`XSD schema files <xsd-schema>`.
+    TYPO3 creates them with its command `fluid:schema:generate`. See
+    :ref:`XSD schema files <xsd-schema>`.
 
 .. _components-context:
 
