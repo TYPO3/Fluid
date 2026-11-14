@@ -223,8 +223,12 @@ The extended `atom.button` component could look something like this:
     </button>
 
 ..  note::
-    IDE autocomplete for all available components (and their attributes) via XSD files,
-    similar to ViewHelpers, is not implemented yet, but is planned for a future release.
+    IDEs can autocomplete components and their arguments from XSD files, as
+    they do for ViewHelpers. The command `fluid schema` of Fluid standalone
+    creates XSD files for ViewHelpers only. The files for components come
+    from a framework that knows the component collections of a project.
+    TYPO3 creates them with its command `fluid:schema:generate` since TYPO3
+    v14.2. See :ref:`XSD schema files <xsd-schema>`.
 
 .. _components-context:
 
@@ -356,3 +360,54 @@ The following example skips the additional folder per component:
     * :path:`path/to/Components/`
         * :path:`Atom`
             * :path:`Button.fluid.html`
+
+..  _components-folder-structure-list:
+
+Listing the components of an alternative folder structure
+---------------------------------------------------------
+
+..  versionadded:: Fluid 5.2
+
+Tools such as the XSD schema files of TYPO3 ask a collection for all of its
+components with :php:`getAvailableComponents()`. The default implementation
+expects the default folder structure. If your collection overrides
+:php:`resolveTemplateName()`, the default implementation returns an empty
+list, and the tools find no components. Implement
+:php:`getAvailableComponents()` so that it does the reverse of
+:php:`resolveTemplateName()`:
+
+..  code-block:: php
+    :caption: ComponentCollection.php
+
+    namespace Vendor\MyPackage\Components;
+
+    use TYPO3Fluid\Fluid\Core\Component\AbstractComponentCollection;
+
+    final class ComponentCollection extends AbstractComponentCollection
+    {
+        // ...
+
+        public function getAvailableComponents(): array
+        {
+            $templatePaths = $this->getTemplatePaths();
+            $templates = $templatePaths->resolveAvailableTemplateFiles(
+                null,
+                null,
+                true,
+            );
+            $components = [];
+            foreach ($templates as $template) {
+                // Remove the template root path
+                foreach ($templatePaths->getTemplateRootPaths() as $root) {
+                    if (str_starts_with($template, $root)) {
+                        $template = substr($template, strlen($root));
+                        break;
+                    }
+                }
+                // Atom/Button becomes atom.button
+                $fragments = array_map(lcfirst(...), explode('/', $template));
+                $components[] = implode('.', $fragments);
+            }
+            return $components;
+        }
+    }
