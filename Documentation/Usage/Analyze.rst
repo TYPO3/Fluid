@@ -10,8 +10,8 @@ Checking templates for errors
 
 ..  versionadded:: Fluid 5.3
 
-The command `analyze` parses Fluid templates without rendering them. It
-reports what it finds:
+The console command `fluid analyze` parses Fluid templates without rendering
+them. It reports what it finds:
 
 *   a syntax error, for example ViewHelper tags that are nested wrongly
 *   a ViewHelper or a ViewHelper namespace that does not resolve
@@ -21,9 +21,11 @@ reports what it finds:
     :ref:`Deprecating a ViewHelper or an argument
     <creating-viewhelpers-deprecating>`
 
-TYPO3 provides its own command for this purpose, see
-`Check templates with the Fluid analyser
-<https://docs.typo3.org/permalink/t3coreapi:fluid-analyze-templates>`_.
+..  tip::
+    TYPO3 provides its own command for this purpose, which can resolve
+    available templates, global ViewHelpers and components automatically,
+    see `Check templates with the Fluid analyser
+    <https://docs.typo3.org/permalink/t3coreapi:fluid-analyze-templates>`_.
 
 .. _analyze-templates-files:
 
