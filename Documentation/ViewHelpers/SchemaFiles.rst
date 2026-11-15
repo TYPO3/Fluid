@@ -39,3 +39,10 @@ argument. If the directory doesn't exist, it will be created:
 ..  code-block:: bash
 
     ./vendor/bin/fluid schema --destination schemas/
+
+The command creates schema files for ViewHelper classes. It does not know
+the :ref:`component collections <components>` of a project, so it creates
+no schema files for components. A framework that knows them can ask each
+collection for its components with :php:`getAvailableComponents()` and
+create the files. TYPO3 does this with its command `fluid:schema:generate`
+since TYPO3 v14.2.
