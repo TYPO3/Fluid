@@ -7,7 +7,7 @@ declare(strict_types=1);
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\ViewHelpers\Array;
+namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
@@ -42,7 +42,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    <f:array.sort value="{numbers}" />
+ *    <f:sort value="{numbers}" />
  *
  * .. code-block:: php
  *
@@ -56,7 +56,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    <f:array.sort value="{files}" />
+ *    <f:sort value="{files}" />
  *
  * .. code-block:: php
  *
@@ -68,7 +68,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    <f:array.sort value="{numbers}" descending="true" />
+ *    <f:sort value="{numbers}" descending="true" />
  *
  * .. code-block:: php
  *
@@ -82,7 +82,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    <f:for each="{products -> f:array.sort(property: 'price')}" as="product">
+ *    <f:for each="{products -> f:sort(property: 'price')}" as="product">
  *        {product.title}
  *    </f:for>
  *
@@ -91,7 +91,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *    Pen Book
  *
  * @api
- * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-array-sort
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-sort
  */
 final class SortViewHelper extends AbstractViewHelper
 {
