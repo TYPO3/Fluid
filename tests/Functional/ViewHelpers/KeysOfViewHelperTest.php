@@ -17,7 +17,7 @@ use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ArrayAccessExample;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\IterableExample;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-final class KeysViewHelperTest extends AbstractFunctionalTestCase
+final class KeysOfViewHelperTest extends AbstractFunctionalTestCase
 {
     public static function renderValidDataProvider(): \Generator
     {
@@ -25,61 +25,61 @@ final class KeysViewHelperTest extends AbstractFunctionalTestCase
             'arguments' => [
                 'value' => [],
             ],
-            'src' => '<f:keys value="{value}" />',
+            'src' => '<f:keysOf value="{value}" />',
             'expectation' => [],
         ];
         yield 'empty array inline' => [
             'arguments' => [
                 'value' => [],
             ],
-            'src' => '{value -> f:keys()}',
+            'src' => '{value -> f:keysOf()}',
             'expectation' => [],
         ];
         yield 'numeric array' => [
             'arguments' => [
                 'value' => ['a', 'b', 'c'],
             ],
-            'src' => '<f:keys value="{value}" />',
+            'src' => '<f:keysOf value="{value}" />',
             'expectation' => [0, 1, 2],
         ];
         yield 'associative array' => [
             'arguments' => [
                 'value' => ['title' => 'Fluid', 'version' => 5],
             ],
-            'src' => '<f:keys value="{value}" />',
+            'src' => '<f:keysOf value="{value}" />',
             'expectation' => ['title', 'version'],
         ];
         yield 'associative array inline' => [
             'arguments' => [
                 'value' => ['title' => 'Fluid', 'version' => 5],
             ],
-            'src' => '{value -> f:keys()}',
+            'src' => '{value -> f:keysOf()}',
             'expectation' => ['title', 'version'],
         ];
         yield 'mixed keys' => [
             'arguments' => [
                 'value' => [5 => 'a', 'b' => 'b', 10 => 'c'],
             ],
-            'src' => '<f:keys value="{value}" />',
+            'src' => '<f:keysOf value="{value}" />',
             'expectation' => [5, 'b', 10],
         ];
         yield 'array with inline array' => [
             'arguments' => [],
-            'src' => '<f:keys value="{title: \'Fluid\', version: 5}" />',
+            'src' => '<f:keysOf value="{title: \'Fluid\', version: 5}" />',
             'expectation' => ['title', 'version'],
         ];
         yield 'value as tag content' => [
             'arguments' => [
                 'value' => ['a' => 1, 'b' => 2],
             ],
-            'src' => '<f:keys>{value}</f:keys>',
+            'src' => '<f:keysOf>{value}</f:keysOf>',
             'expectation' => ['a', 'b'],
         ];
         yield 'value inline as iterable' => [
             'arguments' => [
                 'value' => new IterableExample(['a' => 1, 'b' => 2]),
             ],
-            'src' => '{value -> f:keys()}',
+            'src' => '{value -> f:keysOf()}',
             'expectation' => ['a', 'b'],
         ];
         yield 'value inline and argument' => [
@@ -87,14 +87,14 @@ final class KeysViewHelperTest extends AbstractFunctionalTestCase
                 'valueInline' => ['a' => 1],
                 'valueArgument' => ['b' => 2],
             ],
-            'src' => '{valueInline -> f:keys(value: valueArgument)}',
+            'src' => '{valueInline -> f:keysOf(value: valueArgument)}',
             'expectation' => ['b'],
         ];
         yield 'keys joined' => [
             'arguments' => [
                 'value' => ['title' => 'Fluid', 'version' => 5],
             ],
-            'src' => '{value -> f:keys() -> f:join(separator: \', \')}',
+            'src' => '{value -> f:keysOf() -> f:join(separator: \', \')}',
             'expectation' => 'title, version',
         ];
     }
@@ -136,17 +136,17 @@ final class KeysViewHelperTest extends AbstractFunctionalTestCase
         };
         yield 'repeated numeric keys' => [
             'valueFactory' => $numericKeys,
-            'src' => '{value -> f:keys()}',
+            'src' => '{value -> f:keysOf()}',
             'expectation' => [0, 1, 0, 1],
         ];
         yield 'repeated string keys' => [
             'valueFactory' => $stringKeys,
-            'src' => '{value -> f:keys()}',
+            'src' => '{value -> f:keysOf()}',
             'expectation' => ['a', 'b', 'a', 'b'],
         ];
         yield 'composed generators' => [
             'valueFactory' => $composed,
-            'src' => '<f:keys value="{value}" />',
+            'src' => '<f:keysOf value="{value}" />',
             'expectation' => [0, 'k', 0, 1, 'k'],
         ];
     }
@@ -180,38 +180,38 @@ final class KeysViewHelperTest extends AbstractFunctionalTestCase
     {
         yield 'invalid string content' => [
             'arguments' => [],
-            'src' => '<f:keys>SOME TEXT</f:keys>',
+            'src' => '<f:keysOf>SOME TEXT</f:keysOf>',
             'exceptionCode' => 1792005150,
         ];
         yield 'invalid string attribute' => [
             'arguments' => [],
-            'src' => '<f:keys value="string" />',
+            'src' => '<f:keysOf value="string" />',
             'exceptionCode' => 1256475113,
         ];
         yield 'invalid string inline' => [
             'arguments' => [
                 'value' => 'string',
             ],
-            'src' => '{value -> f:keys()}',
+            'src' => '{value -> f:keysOf()}',
             'exceptionCode' => 1792005150,
         ];
         yield 'invalid integer attribute' => [
             'arguments' => [
                 'value' => 123,
             ],
-            'src' => '<f:keys value="{value}" />',
+            'src' => '<f:keysOf value="{value}" />',
             'exceptionCode' => 1256475113,
         ];
         yield 'undefined value' => [
             'arguments' => [],
-            'src' => '<f:keys value="{undefinedVariable}" />',
+            'src' => '<f:keysOf value="{undefinedVariable}" />',
             'exceptionCode' => 1792005150,
         ];
         yield 'arrayaccess inline' => [
             'arguments' => [
                 'value' => new ArrayAccessExample(['foo' => 'bar']),
             ],
-            'src' => '{value -> f:keys()}',
+            'src' => '{value -> f:keysOf()}',
             'exceptionCode' => 1792005150,
         ];
     }

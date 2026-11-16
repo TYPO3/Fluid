@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 
 /**
- * The KeysViewHelper returns all keys of an array.
+ * The KeysOfViewHelper returns all keys of an array.
  *
  * This ViewHelper mimicks PHP's :php:`array_keys()` function.
  *
@@ -27,7 +27,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    <f:keys value="{config}" />
+ *    <f:keysOf value="{config}" />
  *
  * .. code-block:: php
  *
@@ -39,16 +39,16 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    {config -> f:keys() -> f:join(separator: ', ')}
+ *    {config -> f:keysOf() -> f:join(separator: ', ')}
  *
  * .. code-block:: text
  *
  *    title, version
  *
  * @api
- * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-keys
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-keysof
  */
-final class KeysViewHelper extends AbstractViewHelper
+final class KeysOfViewHelper extends AbstractViewHelper
 {
     public function initializeArguments(): void
     {
