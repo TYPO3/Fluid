@@ -15,6 +15,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ArrayAccessExample;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\IterableExample;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\Objects\WithEverything;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\Objects\WithProperties;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithoutToString;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
 final class KeysOfViewHelperTest extends AbstractFunctionalTestCase
@@ -96,6 +99,64 @@ final class KeysOfViewHelperTest extends AbstractFunctionalTestCase
             ],
             'src' => '{value -> f:keysOf() -> f:join(separator: \', \')}',
             'expectation' => 'title, version',
+        ];
+        yield 'object with getters' => [
+            'arguments' => [
+                'value' => new WithEverything(),
+            ],
+            'src' => '<f:keysOf value="{value}" />',
+            'expectation' => ['privateValue', 'protectedValue', 'publicValue'],
+        ];
+        yield 'object with getters inline' => [
+            'arguments' => [
+                'value' => new WithEverything(),
+            ],
+            'src' => '{value -> f:keysOf()}',
+            'expectation' => ['privateValue', 'protectedValue', 'publicValue'],
+        ];
+        yield 'object without getters only has public properties' => [
+            'arguments' => [
+                'value' => new WithProperties(),
+            ],
+            'src' => '{value -> f:keysOf()}',
+            'expectation' => ['publicValue'],
+        ];
+        yield 'object with is and has methods' => [
+            'arguments' => [
+                'value' => new class () {
+                    public static int $instances = 0;
+                    public string $uninitialized;
+                    protected bool $active = true;
+                    protected array $children = [];
+                    protected string $internal = 'internal';
+
+                    public function isActive(): bool
+                    {
+                        return $this->active;
+                    }
+
+                    public function hasChildren(): bool
+                    {
+                        return $this->children !== [];
+                    }
+                },
+            ],
+            'src' => '{value -> f:keysOf()}',
+            'expectation' => ['active', 'children'],
+        ];
+        yield 'object with inherited properties' => [
+            'arguments' => [
+                'value' => new class ('Anna') extends UserWithoutToString {},
+            ],
+            'src' => '{value -> f:keysOf()}',
+            'expectation' => ['name'],
+        ];
+        yield 'object with dynamic properties' => [
+            'arguments' => [
+                'value' => (object)['title' => 'Fluid', 'version' => 5],
+            ],
+            'src' => '{value -> f:keysOf()}',
+            'expectation' => ['title', 'version'],
         ];
     }
 
@@ -186,7 +247,7 @@ final class KeysOfViewHelperTest extends AbstractFunctionalTestCase
         yield 'invalid string attribute' => [
             'arguments' => [],
             'src' => '<f:keysOf value="string" />',
-            'exceptionCode' => 1256475113,
+            'exceptionCode' => 1792005150,
         ];
         yield 'invalid string inline' => [
             'arguments' => [
@@ -200,7 +261,7 @@ final class KeysOfViewHelperTest extends AbstractFunctionalTestCase
                 'value' => 123,
             ],
             'src' => '<f:keysOf value="{value}" />',
-            'exceptionCode' => 1256475113,
+            'exceptionCode' => 1792005150,
         ];
         yield 'undefined value' => [
             'arguments' => [],
@@ -212,7 +273,14 @@ final class KeysOfViewHelperTest extends AbstractFunctionalTestCase
                 'value' => new ArrayAccessExample(['foo' => 'bar']),
             ],
             'src' => '{value -> f:keysOf()}',
-            'exceptionCode' => 1792005150,
+            'exceptionCode' => 1794819223,
+        ];
+        yield 'arrayaccess attribute' => [
+            'arguments' => [
+                'value' => new ArrayAccessExample(['foo' => 'bar']),
+            ],
+            'src' => '<f:keysOf value="{value}" />',
+            'exceptionCode' => 1794819223,
         ];
     }
 
