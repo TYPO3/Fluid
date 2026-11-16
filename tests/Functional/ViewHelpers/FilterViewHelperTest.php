@@ -185,6 +185,49 @@ final class FilterViewHelperTest extends AbstractFunctionalTestCase
             'src' => '<f:for each="{value -> f:filter(property: \'top\')}" as="item">[{item.title}]</f:for>',
             'expectation' => '[A][C]',
         ];
+        yield 'object' => [
+            'arguments' => [
+                'value' => (object)['title' => 'Fluid', 'subtitle' => '', 'hidden' => false, 'version' => 5],
+            ],
+            'src' => '<f:filter value="{value}" />',
+            'expectation' => ['Fluid', 5],
+        ];
+        yield 'object inline with preserveKeys' => [
+            'arguments' => [
+                'value' => (object)['title' => 'Fluid', 'subtitle' => '', 'hidden' => false, 'version' => 5],
+            ],
+            'src' => '{value -> f:filter(preserveKeys: true)}',
+            'expectation' => ['title' => 'Fluid', 'version' => 5],
+        ];
+        yield 'object uses getters before properties' => [
+            'arguments' => [
+                'value' => new class () {
+                    public string $title = 'Fluid';
+                    public string $subtitle = '';
+                    protected string $description = 'Templating';
+                    protected string $internal = 'internal';
+
+                    public function getTitle(): string
+                    {
+                        return '';
+                    }
+
+                    public function getDescription(): string
+                    {
+                        return $this->description;
+                    }
+                },
+            ],
+            'src' => '{value -> f:filter(preserveKeys: true)}',
+            'expectation' => ['description' => 'Templating'],
+        ];
+        yield 'object with property' => [
+            'arguments' => [
+                'value' => (object)['first' => ['title' => 'A', 'top' => true], 'second' => ['title' => 'B', 'top' => false]],
+            ],
+            'src' => '{value -> f:filter(property: \'top\', preserveKeys: true)}',
+            'expectation' => ['first' => ['title' => 'A', 'top' => true]],
+        ];
     }
 
     #[DataProvider('renderValidDataProvider')]
@@ -279,7 +322,7 @@ final class FilterViewHelperTest extends AbstractFunctionalTestCase
         yield 'invalid string attribute' => [
             'arguments' => [],
             'src' => '<f:filter value="string" />',
-            'exceptionCode' => 1256475113,
+            'exceptionCode' => 1792005210,
         ];
         yield 'invalid string inline' => [
             'arguments' => [
@@ -293,7 +336,7 @@ final class FilterViewHelperTest extends AbstractFunctionalTestCase
                 'value' => 123,
             ],
             'src' => '<f:filter value="{value}" />',
-            'exceptionCode' => 1256475113,
+            'exceptionCode' => 1792005210,
         ];
         yield 'undefined value' => [
             'arguments' => [],
@@ -305,7 +348,14 @@ final class FilterViewHelperTest extends AbstractFunctionalTestCase
                 'value' => new ArrayAccessExample(['foo' => 'bar']),
             ],
             'src' => '{value -> f:filter()}',
-            'exceptionCode' => 1792005210,
+            'exceptionCode' => 1794820133,
+        ];
+        yield 'arrayaccess attribute' => [
+            'arguments' => [
+                'value' => new ArrayAccessExample(['foo' => 'bar']),
+            ],
+            'src' => '<f:filter value="{value}" />',
+            'exceptionCode' => 1794820133,
         ];
         yield 'scalar items with property' => [
             'arguments' => [
