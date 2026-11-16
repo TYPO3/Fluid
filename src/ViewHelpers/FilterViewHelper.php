@@ -7,7 +7,7 @@ declare(strict_types=1);
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\ViewHelpers\Array;
+namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
@@ -41,7 +41,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    <f:array.filter value="{values}" />
+ *    <f:filter value="{values}" />
  *
  * .. code-block:: php
  *
@@ -55,7 +55,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    <f:array.filter value="{news}" property="top" />
+ *    <f:filter value="{news}" property="top" />
  *
  * .. code-block:: php
  *
@@ -69,12 +69,12 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    <f:for each="{news -> f:array.filter(property: 'top')}" as="item">
+ *    <f:for each="{news -> f:filter(property: 'top')}" as="item">
  *        <h2>{item.title}</h2>
  *    </f:for>
  *
  * @api
- * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-array-filter
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-filter
  */
 final class FilterViewHelper extends AbstractViewHelper
 {

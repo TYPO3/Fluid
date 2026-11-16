@@ -7,7 +7,7 @@ declare(strict_types=1);
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers\Array;
+namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -36,138 +36,138 @@ final class FilterViewHelperTest extends AbstractFunctionalTestCase
             'arguments' => [
                 'value' => [],
             ],
-            'src' => '<f:array.filter value="{value}" />',
+            'src' => '<f:filter value="{value}" />',
             'expectation' => [],
         ];
         yield 'empty array inline' => [
             'arguments' => [
                 'value' => [],
             ],
-            'src' => '{value -> f:array.filter()}',
+            'src' => '{value -> f:filter()}',
             'expectation' => [],
         ];
         yield 'empty values are removed' => [
             'arguments' => [
                 'value' => ['a', '', null, 'b', 0, false, [], '0'],
             ],
-            'src' => '<f:array.filter value="{value}" />',
+            'src' => '<f:filter value="{value}" />',
             'expectation' => ['a', 'b'],
         ];
         yield 'empty values are removed inline' => [
             'arguments' => [
                 'value' => ['a', '', null, 'b', 0],
             ],
-            'src' => '{value -> f:array.filter()}',
+            'src' => '{value -> f:filter()}',
             'expectation' => ['a', 'b'],
         ];
         yield 'values are evaluated like conditions' => [
             'arguments' => [
                 'value' => ['false', 'FALSE', '0.0', 0.0, $emptyCountable, 'true', 1, -1, 0.5, [0], $countable, $object],
             ],
-            'src' => '<f:array.filter value="{value}" />',
+            'src' => '<f:filter value="{value}" />',
             'expectation' => ['true', 1, -1, 0.5, [0], $countable, $object],
         ];
         yield 'keys are reset by default' => [
             'arguments' => [
                 'value' => ['a' => 'x', 'b' => '', 'c' => 'y'],
             ],
-            'src' => '<f:array.filter value="{value}" />',
+            'src' => '<f:filter value="{value}" />',
             'expectation' => ['x', 'y'],
         ];
         yield 'preserveKeys disabled' => [
             'arguments' => [
                 'value' => ['a' => 'x', 'b' => '', 'c' => 'y'],
             ],
-            'src' => '<f:array.filter value="{value}" preserveKeys="false" />',
+            'src' => '<f:filter value="{value}" preserveKeys="false" />',
             'expectation' => ['x', 'y'],
         ];
         yield 'preserveKeys enabled' => [
             'arguments' => [
                 'value' => ['a' => 'x', 'b' => '', 'c' => 'y'],
             ],
-            'src' => '<f:array.filter value="{value}" preserveKeys="true" />',
+            'src' => '<f:filter value="{value}" preserveKeys="true" />',
             'expectation' => ['a' => 'x', 'c' => 'y'],
         ];
         yield 'preserveKeys enabled inline' => [
             'arguments' => [
                 'value' => ['x', '', 'y'],
             ],
-            'src' => '{value -> f:array.filter(preserveKeys: true)}',
+            'src' => '{value -> f:filter(preserveKeys: true)}',
             'expectation' => [0 => 'x', 2 => 'y'],
         ];
         yield 'property of arrays' => [
             'arguments' => [
                 'value' => $news,
             ],
-            'src' => '<f:array.filter value="{value}" property="top" />',
+            'src' => '<f:filter value="{value}" property="top" />',
             'expectation' => [$news[0], $news[2]],
         ];
         yield 'property of arrays inline' => [
             'arguments' => [
                 'value' => $news,
             ],
-            'src' => '{value -> f:array.filter(property: \'top\')}',
+            'src' => '{value -> f:filter(property: \'top\')}',
             'expectation' => [$news[0], $news[2]],
         ];
         yield 'property with preserveKeys enabled' => [
             'arguments' => [
                 'value' => $news,
             ],
-            'src' => '<f:array.filter value="{value}" property="top" preserveKeys="true" />',
+            'src' => '<f:filter value="{value}" property="top" preserveKeys="true" />',
             'expectation' => [0 => $news[0], 2 => $news[2]],
         ];
         yield 'property of objects with getters' => [
             'arguments' => [
                 'value' => [$anna, $nobody],
             ],
-            'src' => '<f:array.filter value="{value}" property="name" />',
+            'src' => '<f:filter value="{value}" property="name" />',
             'expectation' => [$anna],
         ];
         yield 'property of objects with is methods' => [
             'arguments' => [
                 'value' => [$nobody, $anna],
             ],
-            'src' => '<f:array.filter value="{value}" property="named" />',
+            'src' => '<f:filter value="{value}" property="named" />',
             'expectation' => [$anna],
         ];
         yield 'nested property path' => [
             'arguments' => [
                 'value' => [['author' => $anna], ['author' => $nobody], ['author' => ['name' => 'Ben']]],
             ],
-            'src' => '<f:array.filter value="{value}" property="author.name" />',
+            'src' => '<f:filter value="{value}" property="author.name" />',
             'expectation' => [['author' => $anna], ['author' => ['name' => 'Ben']]],
         ];
         yield 'missing property removes item' => [
             'arguments' => [
                 'value' => [['top' => true], ['title' => 'B']],
             ],
-            'src' => '<f:array.filter value="{value}" property="top" />',
+            'src' => '<f:filter value="{value}" property="top" />',
             'expectation' => [['top' => true]],
         ];
         yield 'property with empty countable' => [
             'arguments' => [
                 'value' => [['tags' => $emptyCountable], ['tags' => $countable]],
             ],
-            'src' => '<f:array.filter value="{value}" property="tags" />',
+            'src' => '<f:filter value="{value}" property="tags" />',
             'expectation' => [['tags' => $countable]],
         ];
         yield 'array with inline array' => [
             'arguments' => [],
-            'src' => '<f:array.filter value="{0: \'a\', 1: \'\', 2: \'b\'}" />',
+            'src' => '<f:filter value="{0: \'a\', 1: \'\', 2: \'b\'}" />',
             'expectation' => ['a', 'b'],
         ];
         yield 'value as tag content' => [
             'arguments' => [
                 'value' => ['a', '', 'b'],
             ],
-            'src' => '<f:array.filter>{value}</f:array.filter>',
+            'src' => '<f:filter>{value}</f:filter>',
             'expectation' => ['a', 'b'],
         ];
         yield 'value inline as iterable' => [
             'arguments' => [
                 'value' => new IterableExample(['a', '', 'b']),
             ],
-            'src' => '{value -> f:array.filter()}',
+            'src' => '{value -> f:filter()}',
             'expectation' => ['a', 'b'],
         ];
         yield 'value inline and argument' => [
@@ -175,14 +175,14 @@ final class FilterViewHelperTest extends AbstractFunctionalTestCase
                 'valueInline' => ['a', ''],
                 'valueArgument' => ['', 'b'],
             ],
-            'src' => '{valueInline -> f:array.filter(value: valueArgument)}',
+            'src' => '{valueInline -> f:filter(value: valueArgument)}',
             'expectation' => ['b'],
         ];
         yield 'used as iteration subject' => [
             'arguments' => [
                 'value' => $news,
             ],
-            'src' => '<f:for each="{value -> f:array.filter(property: \'top\')}" as="item">[{item.title}]</f:for>',
+            'src' => '<f:for each="{value -> f:filter(property: \'top\')}" as="item">[{item.title}]</f:for>',
             'expectation' => '[A][C]',
         ];
     }
@@ -224,22 +224,22 @@ final class FilterViewHelperTest extends AbstractFunctionalTestCase
         };
         yield 'repeated numeric keys' => [
             'valueFactory' => $numericKeys,
-            'src' => '{value -> f:array.filter()}',
+            'src' => '{value -> f:filter()}',
             'expectation' => [2, 1, 4, 3],
         ];
         yield 'repeated string keys' => [
             'valueFactory' => $stringKeys,
-            'src' => '{value -> f:array.filter()}',
+            'src' => '{value -> f:filter()}',
             'expectation' => [2, 1, 4, 3],
         ];
         yield 'composed generators' => [
             'valueFactory' => $composed,
-            'src' => '<f:array.filter value="{value}" />',
+            'src' => '<f:filter value="{value}" />',
             'expectation' => ['a', 'b', 'c', 'd', 'e'],
         ];
         yield 'repeated keys with preserveKeys use the last item per key' => [
             'valueFactory' => $numericKeys,
-            'src' => '{value -> f:array.filter(preserveKeys: true)}',
+            'src' => '{value -> f:filter(preserveKeys: true)}',
             'expectation' => [0 => 4, 1 => 3],
         ];
     }
@@ -273,45 +273,45 @@ final class FilterViewHelperTest extends AbstractFunctionalTestCase
     {
         yield 'invalid string content' => [
             'arguments' => [],
-            'src' => '<f:array.filter>SOME TEXT</f:array.filter>',
+            'src' => '<f:filter>SOME TEXT</f:filter>',
             'exceptionCode' => 1792005210,
         ];
         yield 'invalid string attribute' => [
             'arguments' => [],
-            'src' => '<f:array.filter value="string" />',
+            'src' => '<f:filter value="string" />',
             'exceptionCode' => 1256475113,
         ];
         yield 'invalid string inline' => [
             'arguments' => [
                 'value' => 'string',
             ],
-            'src' => '{value -> f:array.filter()}',
+            'src' => '{value -> f:filter()}',
             'exceptionCode' => 1792005210,
         ];
         yield 'invalid integer attribute' => [
             'arguments' => [
                 'value' => 123,
             ],
-            'src' => '<f:array.filter value="{value}" />',
+            'src' => '<f:filter value="{value}" />',
             'exceptionCode' => 1256475113,
         ];
         yield 'undefined value' => [
             'arguments' => [],
-            'src' => '<f:array.filter value="{undefinedVariable}" />',
+            'src' => '<f:filter value="{undefinedVariable}" />',
             'exceptionCode' => 1792005210,
         ];
         yield 'arrayaccess inline' => [
             'arguments' => [
                 'value' => new ArrayAccessExample(['foo' => 'bar']),
             ],
-            'src' => '{value -> f:array.filter()}',
+            'src' => '{value -> f:filter()}',
             'exceptionCode' => 1792005210,
         ];
         yield 'scalar items with property' => [
             'arguments' => [
                 'value' => [['top' => true], 'B'],
             ],
-            'src' => '<f:array.filter value="{value}" property="top" />',
+            'src' => '<f:filter value="{value}" property="top" />',
             'exceptionCode' => 1792005211,
         ];
     }
