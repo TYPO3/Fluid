@@ -78,14 +78,14 @@ final class FilterViewHelperTest extends AbstractFunctionalTestCase
             'arguments' => [
                 'value' => ['a' => 'x', 'b' => '', 'c' => 'y'],
             ],
-            'src' => '<f:filter value="{value}" preserveKeys="false" />',
+            'src' => '<f:filter value="{value}" preserveKeys="{false}" />',
             'expectation' => ['x', 'y'],
         ];
         yield 'preserveKeys enabled' => [
             'arguments' => [
                 'value' => ['a' => 'x', 'b' => '', 'c' => 'y'],
             ],
-            'src' => '<f:filter value="{value}" preserveKeys="true" />',
+            'src' => '<f:filter value="{value}" preserveKeys="{true}" />',
             'expectation' => ['a' => 'x', 'c' => 'y'],
         ];
         yield 'preserveKeys enabled inline' => [
@@ -113,7 +113,7 @@ final class FilterViewHelperTest extends AbstractFunctionalTestCase
             'arguments' => [
                 'value' => $news,
             ],
-            'src' => '<f:filter value="{value}" property="top" preserveKeys="true" />',
+            'src' => '<f:filter value="{value}" property="top" preserveKeys="{true}" />',
             'expectation' => [0 => $news[0], 2 => $news[2]],
         ];
         yield 'property of objects with getters' => [
