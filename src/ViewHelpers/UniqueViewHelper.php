@@ -49,7 +49,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    <f:unique value="{tags}" preserveKeys="true" />
+ *    <f:unique value="{tags}" preserveKeys="{true}" />
  *
  * .. code-block:: php
  *

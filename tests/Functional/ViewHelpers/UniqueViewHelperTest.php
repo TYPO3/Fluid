@@ -120,14 +120,14 @@ final class UniqueViewHelperTest extends AbstractFunctionalTestCase
             'arguments' => [
                 'value' => ['a' => 'x', 'b' => 'y', 'c' => 'x'],
             ],
-            'src' => '<f:unique value="{value}" preserveKeys="false" />',
+            'src' => '<f:unique value="{value}" preserveKeys="{false}" />',
             'expectation' => ['x', 'y'],
         ];
         yield 'preserveKeys enabled' => [
             'arguments' => [
                 'value' => ['a' => 'x', 'b' => 'y', 'c' => 'x'],
             ],
-            'src' => '<f:unique value="{value}" preserveKeys="true" />',
+            'src' => '<f:unique value="{value}" preserveKeys="{true}" />',
             'expectation' => ['a' => 'x', 'b' => 'y'],
         ];
         yield 'preserveKeys enabled inline' => [
