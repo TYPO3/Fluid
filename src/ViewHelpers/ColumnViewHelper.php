@@ -7,7 +7,7 @@ declare(strict_types=1);
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\ViewHelpers\Array;
+namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
@@ -35,7 +35,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    <f:array.column value="{users}" property="name" />
+ *    <f:column value="{users}" property="name" />
  *
  * .. code-block:: php
  *
@@ -47,7 +47,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    <f:array.column value="{users}" property="name" indexProperty="id" />
+ *    <f:column value="{users}" property="name" indexProperty="id" />
  *
  * .. code-block:: php
  *
@@ -59,14 +59,14 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    {users -> f:array.column(property: 'name') -> f:join(separator: ', ')}
+ *    {users -> f:column(property: 'name') -> f:join(separator: ', ')}
  *
  * .. code-block:: text
  *
  *    Anna, Ben
  *
  * @api
- * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-array-column
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-column
  */
 final class ColumnViewHelper extends AbstractViewHelper
 {
