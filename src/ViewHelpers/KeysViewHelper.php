@@ -7,7 +7,7 @@ declare(strict_types=1);
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\ViewHelpers\Array;
+namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
@@ -27,7 +27,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    <f:array.keys value="{config}" />
+ *    <f:keys value="{config}" />
  *
  * .. code-block:: php
  *
@@ -39,14 +39,14 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    {config -> f:array.keys() -> f:join(separator: ', ')}
+ *    {config -> f:keys() -> f:join(separator: ', ')}
  *
  * .. code-block:: text
  *
  *    title, version
  *
  * @api
- * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-array-keys
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-keys
  */
 final class KeysViewHelper extends AbstractViewHelper
 {
