@@ -15,6 +15,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ArrayAccessExample;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\IterableExample;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\Objects\WithEverything;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\Objects\WithProperties;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
 use TYPO3Fluid\Fluid\View\TemplateView;
@@ -235,6 +237,79 @@ final class ValuesOfViewHelperTest extends AbstractFunctionalTestCase
             'src' => '<f:valuesOf value="{value}" indexProperty="id" />',
             'expectation' => [3 => ['id' => 3, 'name' => 'Anna'], 7 => ['id' => 7, 'name' => 'Ben']],
         ];
+        yield 'object uses getters before properties' => [
+            'arguments' => [
+                'value' => new WithEverything(),
+            ],
+            'src' => '<f:valuesOf value="{value}" />',
+            'expectation' => [
+                'privateValue@getPrivateValue()',
+                'protectedValue@getProtectedValue()',
+                'publicValue@getPublicValue()',
+            ],
+        ];
+        yield 'object uses getters before properties inline' => [
+            'arguments' => [
+                'value' => new WithEverything(),
+            ],
+            'src' => '{value -> f:valuesOf()}',
+            'expectation' => [
+                'privateValue@getPrivateValue()',
+                'protectedValue@getProtectedValue()',
+                'publicValue@getPublicValue()',
+            ],
+        ];
+        yield 'object without getters only has public properties' => [
+            'arguments' => [
+                'value' => new WithProperties(),
+            ],
+            'src' => '{value -> f:valuesOf()}',
+            'expectation' => ['publicValue'],
+        ];
+        yield 'object with is and has methods' => [
+            'arguments' => [
+                'value' => new class () {
+                    public static int $instances = 0;
+                    public string $uninitialized;
+                    protected bool $active = true;
+                    protected array $children = [];
+                    protected string $internal = 'internal';
+
+                    public function isActive(): bool
+                    {
+                        return $this->active;
+                    }
+
+                    public function hasChildren(): bool
+                    {
+                        return $this->children !== [];
+                    }
+                },
+            ],
+            'src' => '{value -> f:valuesOf()}',
+            'expectation' => [true, false],
+        ];
+        yield 'object with inherited properties' => [
+            'arguments' => [
+                'value' => new class ('Anna') extends UserWithoutToString {},
+            ],
+            'src' => '{value -> f:valuesOf()}',
+            'expectation' => ['Anna'],
+        ];
+        yield 'object with dynamic properties' => [
+            'arguments' => [
+                'value' => (object)['title' => 'Fluid', 'version' => 5],
+            ],
+            'src' => '{value -> f:valuesOf()}',
+            'expectation' => ['Fluid', 5],
+        ];
+        yield 'object with property' => [
+            'arguments' => [
+                'value' => (object)['first' => ['name' => 'Anna'], 'second' => new UserWithoutToString('Ben')],
+            ],
+            'src' => '{value -> f:valuesOf(property: \'name\')}',
+            'expectation' => ['Anna', 'Ben'],
+        ];
     }
 
     #[Test]
@@ -286,7 +361,7 @@ final class ValuesOfViewHelperTest extends AbstractFunctionalTestCase
         yield 'invalid string attribute' => [
             'arguments' => [],
             'src' => '<f:valuesOf value="string" property="name" />',
-            'exceptionCode' => 1256475113,
+            'exceptionCode' => 1792005200,
         ];
         yield 'invalid string inline' => [
             'arguments' => [
@@ -300,7 +375,7 @@ final class ValuesOfViewHelperTest extends AbstractFunctionalTestCase
                 'value' => 123,
             ],
             'src' => '<f:valuesOf value="{value}" property="name" />',
-            'exceptionCode' => 1256475113,
+            'exceptionCode' => 1792005200,
         ];
         yield 'undefined value' => [
             'arguments' => [],
@@ -312,7 +387,14 @@ final class ValuesOfViewHelperTest extends AbstractFunctionalTestCase
                 'value' => new ArrayAccessExample(['foo' => 'bar']),
             ],
             'src' => '{value -> f:valuesOf(property: \'name\')}',
-            'exceptionCode' => 1792005200,
+            'exceptionCode' => 1794819224,
+        ];
+        yield 'arrayaccess attribute' => [
+            'arguments' => [
+                'value' => new ArrayAccessExample(['foo' => 'bar']),
+            ],
+            'src' => '<f:valuesOf value="{value}" />',
+            'exceptionCode' => 1794819224,
         ];
         yield 'scalar items' => [
             'arguments' => [

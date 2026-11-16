@@ -29,6 +29,12 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  * This ViewHelper mimicks PHP's :php:`array_values()` and
  * :php:`array_column()` functions.
  *
+ * For an object, it returns the values of all properties that can be
+ * accessed in templates, the same way as ``{object.name}`` works: a getter
+ * method like ``getName()``, ``isActive()`` or ``hasChildren()`` is used if
+ * available, otherwise the public property. Iterable objects, for example an
+ * ``ObjectStorage``, are treated like arrays.
+ *
  * Examples
  * ========
  *
@@ -44,6 +50,21 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  * .. code-block:: php
  *
  *    ['Fluid', 5]
+ *
+ *
+ * Values of an object
+ * -------------------
+ *
+ * Given ``user`` is an object with a public ``$name`` property and a
+ * protected ``$email`` property with a ``getEmail()`` method:
+ *
+ * ::
+ *
+ *    <f:valuesOf value="{user}" />
+ *
+ * .. code-block:: php
+ *
+ *    ['Anna', 'anna@example.com']
  *
  *
  * Values of a property
@@ -90,7 +111,7 @@ final class ValuesOfViewHelper extends AbstractViewHelper
 {
     public function initializeArguments(): void
     {
-        $this->registerArgument('value', 'array', 'The array to get the values from. If a property is given, an array of arrays or objects.');
+        $this->registerArgument('value', 'mixed', 'The array, iterable or object to get the values from. If a property is given, its items must be arrays or objects.');
         $this->registerArgument('property', 'string', 'Name or path of the property whose values should be returned, e.g. "title" or "author.name". If omitted, the items themselves are returned.');
         $this->registerArgument('indexProperty', 'string', 'Name or path of the property whose values should be used as keys of the resulting array');
     }
@@ -101,11 +122,20 @@ final class ValuesOfViewHelper extends AbstractViewHelper
     public function render(): array
     {
         $value = $this->arguments['value'] ?? $this->renderChildren();
-        if ($value === null || !is_iterable($value)) {
-            $givenType = get_debug_type($value);
+        if ($value instanceof \ArrayAccess && !is_iterable($value)) {
             throw new InvalidArgumentValueException(
-                'The argument "value" was registered with type "array", but is of type "'
-                . $givenType . '" in view helper "' . static::class . '".',
+                'The values of an object with array access can\'t be determined, but the argument "value" is of type "'
+                . get_debug_type($value) . '" in view helper "' . static::class . '".',
+                1794819224,
+            );
+        }
+        if (is_object($value) && !is_iterable($value)) {
+            $value = self::getAccessiblePropertyValues($value);
+        }
+        if (!is_iterable($value)) {
+            throw new InvalidArgumentValueException(
+                'The argument "value" must be an array, an iterable or an object, but is of type "'
+                . get_debug_type($value) . '" in view helper "' . static::class . '".',
                 1792005200,
             );
         }
@@ -145,5 +175,38 @@ final class ValuesOfViewHelper extends AbstractViewHelper
             $result[$index] = $column;
         }
         return $result;
+    }
+
+    /**
+     * Returns the values of all properties that can be accessed in templates,
+     * following the same rules as StandardVariableProvider::getByPath()
+     *
+     * @return array<string, mixed>
+     */
+    private static function getAccessiblePropertyValues(object $object): array
+    {
+        $provider = new StandardVariableProvider();
+        $provider->setSource($object);
+        $values = [];
+        for ($class = new \ReflectionObject($object); $class !== false; $class = $class->getParentClass()) {
+            foreach ($class->getProperties() as $property) {
+                $name = $property->getName();
+                if (array_key_exists($name, $values) || $property->isStatic()) {
+                    continue;
+                }
+                if (self::hasGetter($object, $name) || ($property->isPublic() && $property->isInitialized($object))) {
+                    $values[$name] = $provider->getByPath($name);
+                }
+            }
+        }
+        return $values;
+    }
+
+    private static function hasGetter(object $object, string $name): bool
+    {
+        $upperCaseName = ucfirst($name);
+        return method_exists($object, 'get' . $upperCaseName)
+            || method_exists($object, 'is' . $upperCaseName)
+            || method_exists($object, 'has' . $upperCaseName);
     }
 }
