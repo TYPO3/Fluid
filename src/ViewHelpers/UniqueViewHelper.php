@@ -7,7 +7,7 @@ declare(strict_types=1);
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\ViewHelpers\Array;
+namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
@@ -37,7 +37,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    <f:array.unique value="{tags}" />
+ *    <f:unique value="{tags}" />
  *
  * .. code-block:: php
  *
@@ -49,7 +49,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    <f:array.unique value="{tags}" preserveKeys="true" />
+ *    <f:unique value="{tags}" preserveKeys="true" />
  *
  * .. code-block:: php
  *
@@ -61,14 +61,14 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    {tags -> f:array.unique() -> f:join(separator: ', ')}
+ *    {tags -> f:unique() -> f:join(separator: ', ')}
  *
  * .. code-block:: text
  *
  *    php, fluid, typo3
  *
  * @api
- * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-array-unique
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-unique
  */
 final class UniqueViewHelper extends AbstractViewHelper
 {
