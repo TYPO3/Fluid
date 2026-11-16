@@ -290,6 +290,48 @@ final class SortViewHelperTest extends AbstractFunctionalTestCase
             'src' => '<f:for each="{value -> f:sort(property: \'price\')}" as="item">[{item.title}]</f:for>',
             'expectation' => '[Pen][Cup][Book]',
         ];
+        yield 'object' => [
+            'arguments' => [
+                'value' => (object)['large' => 100, 'small' => 9, 'medium' => 11],
+            ],
+            'src' => '<f:sort value="{value}" />',
+            'expectation' => [9, 11, 100],
+        ];
+        yield 'object inline with preserveKeys' => [
+            'arguments' => [
+                'value' => (object)['large' => 100, 'small' => 9, 'medium' => 11],
+            ],
+            'src' => '{value -> f:sort(preserveKeys: true)}',
+            'expectation' => ['small' => 9, 'medium' => 11, 'large' => 100],
+        ];
+        yield 'object uses getters before properties' => [
+            'arguments' => [
+                'value' => new class () {
+                    public int $first = 1;
+                    protected int $second = 2;
+                    protected int $internal = 0;
+
+                    public function getFirst(): int
+                    {
+                        return 3;
+                    }
+
+                    public function getSecond(): int
+                    {
+                        return $this->second;
+                    }
+                },
+            ],
+            'src' => '{value -> f:sort(preserveKeys: true)}',
+            'expectation' => ['second' => 2, 'first' => 3],
+        ];
+        yield 'object with property' => [
+            'arguments' => [
+                'value' => (object)['book' => ['price' => 12], 'pen' => ['price' => 2.5]],
+            ],
+            'src' => '{value -> f:sort(property: \'price\', preserveKeys: true)}',
+            'expectation' => ['pen' => ['price' => 2.5], 'book' => ['price' => 12]],
+        ];
     }
 
     #[DataProvider('renderValidDataProvider')]
@@ -384,7 +426,7 @@ final class SortViewHelperTest extends AbstractFunctionalTestCase
         yield 'invalid string attribute' => [
             'arguments' => [],
             'src' => '<f:sort value="string" />',
-            'exceptionCode' => 1256475113,
+            'exceptionCode' => 1792005220,
         ];
         yield 'invalid string inline' => [
             'arguments' => [
@@ -398,7 +440,7 @@ final class SortViewHelperTest extends AbstractFunctionalTestCase
                 'value' => 123,
             ],
             'src' => '<f:sort value="{value}" />',
-            'exceptionCode' => 1256475113,
+            'exceptionCode' => 1792005220,
         ];
         yield 'undefined value' => [
             'arguments' => [],
@@ -410,7 +452,14 @@ final class SortViewHelperTest extends AbstractFunctionalTestCase
                 'value' => new ArrayAccessExample(['foo' => 'bar']),
             ],
             'src' => '{value -> f:sort()}',
-            'exceptionCode' => 1792005220,
+            'exceptionCode' => 1794820193,
+        ];
+        yield 'arrayaccess attribute' => [
+            'arguments' => [
+                'value' => new ArrayAccessExample(['foo' => 'bar']),
+            ],
+            'src' => '<f:sort value="{value}" />',
+            'exceptionCode' => 1794820193,
         ];
         yield 'scalar items with property' => [
             'arguments' => [
