@@ -7,7 +7,7 @@ declare(strict_types=1);
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers\Array;
+namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -17,7 +17,7 @@ use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ArrayAccessExample;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\IterableExample;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-final class RandomViewHelperTest extends AbstractFunctionalTestCase
+final class RandomItemViewHelperTest extends AbstractFunctionalTestCase
 {
     public static function renderSingleResultDataProvider(): \Generator
     {
@@ -25,54 +25,54 @@ final class RandomViewHelperTest extends AbstractFunctionalTestCase
             'arguments' => [
                 'value' => [],
             ],
-            'src' => '<f:array.random value="{value}" />',
+            'src' => '<f:randomItem value="{value}" />',
             'expectation' => null,
         ];
         yield 'empty array inline' => [
             'arguments' => [
                 'value' => [],
             ],
-            'src' => '{value -> f:array.random()}',
+            'src' => '{value -> f:randomItem()}',
             'expectation' => null,
         ];
         yield 'single item' => [
             'arguments' => [
                 'value' => ['a'],
             ],
-            'src' => '<f:array.random value="{value}" />',
+            'src' => '<f:randomItem value="{value}" />',
             'expectation' => 'a',
         ];
         yield 'single item inline' => [
             'arguments' => [
                 'value' => ['a'],
             ],
-            'src' => '{value -> f:array.random()}',
+            'src' => '{value -> f:randomItem()}',
             'expectation' => 'a',
         ];
         yield 'single item of associative array returns value' => [
             'arguments' => [
                 'value' => ['key' => 'a'],
             ],
-            'src' => '<f:array.random value="{value}" />',
+            'src' => '<f:randomItem value="{value}" />',
             'expectation' => 'a',
         ];
         yield 'single item as tag content' => [
             'arguments' => [
                 'value' => ['a'],
             ],
-            'src' => '<f:array.random>{value}</f:array.random>',
+            'src' => '<f:randomItem>{value}</f:randomItem>',
             'expectation' => 'a',
         ];
         yield 'single item inline as iterable' => [
             'arguments' => [
                 'value' => new IterableExample(['a']),
             ],
-            'src' => '{value -> f:array.random()}',
+            'src' => '{value -> f:randomItem()}',
             'expectation' => 'a',
         ];
         yield 'single item with inline array' => [
             'arguments' => [],
-            'src' => '<f:array.random value="{0: \'a\'}" />',
+            'src' => '<f:randomItem value="{0: \'a\'}" />',
             'expectation' => 'a',
         ];
         yield 'value inline and argument' => [
@@ -80,14 +80,14 @@ final class RandomViewHelperTest extends AbstractFunctionalTestCase
                 'valueInline' => ['a'],
                 'valueArgument' => ['b'],
             ],
-            'src' => '{valueInline -> f:array.random(value: valueArgument)}',
+            'src' => '{valueInline -> f:randomItem(value: valueArgument)}',
             'expectation' => 'b',
         ];
         yield 'single item used in text' => [
             'arguments' => [
                 'value' => ['Teaser A'],
             ],
-            'src' => 'Today: {value -> f:array.random()}',
+            'src' => 'Today: {value -> f:randomItem()}',
             'expectation' => 'Today: Teaser A',
         ];
     }
@@ -113,19 +113,19 @@ final class RandomViewHelperTest extends AbstractFunctionalTestCase
     {
         yield 'numeric array' => [
             'value' => ['a', 'b', 'c'],
-            'src' => '<f:array.random value="{value}" />',
+            'src' => '<f:randomItem value="{value}" />',
         ];
         yield 'numeric array inline' => [
             'value' => ['a', 'b', 'c'],
-            'src' => '{value -> f:array.random()}',
+            'src' => '{value -> f:randomItem()}',
         ];
         yield 'associative array' => [
             'value' => ['x' => 'a', 'y' => 'b', 'z' => 'c'],
-            'src' => '<f:array.random value="{value}" />',
+            'src' => '<f:randomItem value="{value}" />',
         ];
         yield 'iterable' => [
             'value' => new IterableExample(['a', 'b', 'c']),
-            'src' => '{value -> f:array.random()}',
+            'src' => '{value -> f:randomItem()}',
         ];
     }
 
@@ -159,7 +159,7 @@ final class RandomViewHelperTest extends AbstractFunctionalTestCase
             yield from [2, 1];
             yield from [4, 3];
         };
-        $src = '{repeatedKeys -> f:array.random()}';
+        $src = '{repeatedKeys -> f:randomItem()}';
         $selectedItems = [];
         for ($i = 0; $i < 200; $i++) {
             // Generators can't be rewound, so each rendering gets a fresh one
@@ -181,38 +181,38 @@ final class RandomViewHelperTest extends AbstractFunctionalTestCase
     {
         yield 'invalid string content' => [
             'arguments' => [],
-            'src' => '<f:array.random>SOME TEXT</f:array.random>',
+            'src' => '<f:randomItem>SOME TEXT</f:randomItem>',
             'exceptionCode' => 1792005190,
         ];
         yield 'invalid string attribute' => [
             'arguments' => [],
-            'src' => '<f:array.random value="string" />',
+            'src' => '<f:randomItem value="string" />',
             'exceptionCode' => 1256475113,
         ];
         yield 'invalid string inline' => [
             'arguments' => [
                 'value' => 'string',
             ],
-            'src' => '{value -> f:array.random()}',
+            'src' => '{value -> f:randomItem()}',
             'exceptionCode' => 1792005190,
         ];
         yield 'invalid integer attribute' => [
             'arguments' => [
                 'value' => 123,
             ],
-            'src' => '<f:array.random value="{value}" />',
+            'src' => '<f:randomItem value="{value}" />',
             'exceptionCode' => 1256475113,
         ];
         yield 'undefined value' => [
             'arguments' => [],
-            'src' => '<f:array.random value="{undefinedVariable}" />',
+            'src' => '<f:randomItem value="{undefinedVariable}" />',
             'exceptionCode' => 1792005190,
         ];
         yield 'arrayaccess inline' => [
             'arguments' => [
                 'value' => new ArrayAccessExample(['foo' => 'bar']),
             ],
-            'src' => '{value -> f:array.random()}',
+            'src' => '{value -> f:randomItem()}',
             'exceptionCode' => 1792005190,
         ];
     }

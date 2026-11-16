@@ -7,13 +7,13 @@ declare(strict_types=1);
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\ViewHelpers\Array;
+namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 
 /**
- * The RandomViewHelper returns a random item of an array. For an empty
+ * The RandomItemViewHelper returns a random item of an array. For an empty
  * array, ``null`` is returned.
  *
  * This ViewHelper uses PHP's :php:`array_rand()` function. A new item is
@@ -31,7 +31,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    <f:array.random value="{teasers}" />
+ *    <f:randomItem value="{teasers}" />
  *
  * .. code-block:: text
  *
@@ -43,12 +43,12 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    <f:variable name="teaser" value="{teasers -> f:array.random()}" />
+ *    <f:variable name="teaser" value="{teasers -> f:randomItem()}" />
  *
  * @api
- * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-array-random
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-randomitem
  */
-final class RandomViewHelper extends AbstractViewHelper
+final class RandomItemViewHelper extends AbstractViewHelper
 {
     public function initializeArguments(): void
     {
