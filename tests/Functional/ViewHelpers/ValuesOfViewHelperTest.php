@@ -193,6 +193,70 @@ final class ValuesOfViewHelperTest extends AbstractFunctionalTestCase
             'src' => '{value -> f:valuesOf(property: \'name\') -> f:join(separator: \', \')}',
             'expectation' => 'Anna, Ben',
         ];
+        yield 'without property' => [
+            'arguments' => [
+                'value' => ['first' => 'Anna', 'second' => 'Ben'],
+            ],
+            'src' => '<f:valuesOf value="{value}" />',
+            'expectation' => ['Anna', 'Ben'],
+        ];
+        yield 'without property inline' => [
+            'arguments' => [
+                'value' => ['first' => 'Anna', 'second' => 'Ben'],
+            ],
+            'src' => '{value -> f:valuesOf()}',
+            'expectation' => ['Anna', 'Ben'],
+        ];
+        yield 'without property on an empty array' => [
+            'arguments' => [
+                'value' => [],
+            ],
+            'src' => '<f:valuesOf value="{value}" />',
+            'expectation' => [],
+        ];
+        yield 'without property keeps items of any type' => [
+            'arguments' => [
+                'value' => [3 => 'Anna', 7 => 2, 9 => ['name' => 'Ben'], 11 => null],
+            ],
+            'src' => '<f:valuesOf value="{value}" />',
+            'expectation' => ['Anna', 2, ['name' => 'Ben'], null],
+        ];
+        yield 'without property on an iterable' => [
+            'arguments' => [
+                'value' => new IterableExample(['first' => 'Anna', 'second' => 'Ben']),
+            ],
+            'src' => '{value -> f:valuesOf()}',
+            'expectation' => ['Anna', 'Ben'],
+        ];
+        yield 'without property but with indexProperty' => [
+            'arguments' => [
+                'value' => $users,
+            ],
+            'src' => '<f:valuesOf value="{value}" indexProperty="id" />',
+            'expectation' => [3 => ['id' => 3, 'name' => 'Anna'], 7 => ['id' => 7, 'name' => 'Ben']],
+        ];
+    }
+
+    #[Test]
+    public function renderWithoutPropertyKeepsAllItemsOfIteratorsWithRepeatedKeys(): void
+    {
+        $valueFactory = static function (): \Generator {
+            yield from ['Anna', 'Ben'];
+            yield from ['Chris', 'Dana'];
+        };
+        $src = '{repeatedKeys -> f:valuesOf()}';
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($src);
+        $view->assign('repeatedKeys', $valueFactory());
+        self::assertSame(['Anna', 'Ben', 'Chris', 'Dana'], $view->render());
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($src);
+        $view->assign('repeatedKeys', $valueFactory());
+        self::assertSame(['Anna', 'Ben', 'Chris', 'Dana'], $view->render());
     }
 
     #[DataProvider('renderValidDataProvider')]
@@ -255,6 +319,13 @@ final class ValuesOfViewHelperTest extends AbstractFunctionalTestCase
                 'value' => [['name' => 'Anna'], 'Ben'],
             ],
             'src' => '<f:valuesOf value="{value}" property="name" />',
+            'exceptionCode' => 1792005201,
+        ];
+        yield 'scalar items with indexProperty only' => [
+            'arguments' => [
+                'value' => [['id' => 3], 'Ben'],
+            ],
+            'src' => '<f:valuesOf value="{value}" indexProperty="id" />',
             'exceptionCode' => 1792005201,
         ];
         yield 'indexProperty with array values' => [
