@@ -19,7 +19,7 @@ use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-final class ColumnViewHelperTest extends AbstractFunctionalTestCase
+final class ValuesOfViewHelperTest extends AbstractFunctionalTestCase
 {
     public static function renderValidDataProvider(): \Generator
     {
@@ -31,56 +31,56 @@ final class ColumnViewHelperTest extends AbstractFunctionalTestCase
             'arguments' => [
                 'value' => [],
             ],
-            'src' => '<f:column value="{value}" property="name" />',
+            'src' => '<f:valuesOf value="{value}" property="name" />',
             'expectation' => [],
         ];
         yield 'empty array inline' => [
             'arguments' => [
                 'value' => [],
             ],
-            'src' => '{value -> f:column(property: \'name\')}',
+            'src' => '{value -> f:valuesOf(property: \'name\')}',
             'expectation' => [],
         ];
         yield 'array of arrays' => [
             'arguments' => [
                 'value' => $users,
             ],
-            'src' => '<f:column value="{value}" property="name" />',
+            'src' => '<f:valuesOf value="{value}" property="name" />',
             'expectation' => ['Anna', 'Ben'],
         ];
         yield 'array of arrays inline' => [
             'arguments' => [
                 'value' => $users,
             ],
-            'src' => '{value -> f:column(property: \'name\')}',
+            'src' => '{value -> f:valuesOf(property: \'name\')}',
             'expectation' => ['Anna', 'Ben'],
         ];
         yield 'keys of the original array are not preserved' => [
             'arguments' => [
                 'value' => ['first' => ['name' => 'Anna'], 'second' => ['name' => 'Ben']],
             ],
-            'src' => '<f:column value="{value}" property="name" />',
+            'src' => '<f:valuesOf value="{value}" property="name" />',
             'expectation' => ['Anna', 'Ben'],
         ];
         yield 'objects with getters' => [
             'arguments' => [
                 'value' => [new UserWithoutToString('Anna'), new UserWithoutToString('Ben')],
             ],
-            'src' => '<f:column value="{value}" property="name" />',
+            'src' => '<f:valuesOf value="{value}" property="name" />',
             'expectation' => ['Anna', 'Ben'],
         ];
         yield 'objects with is methods' => [
             'arguments' => [
                 'value' => [new UserWithoutToString('Anna'), new UserWithoutToString('')],
             ],
-            'src' => '<f:column value="{value}" property="named" />',
+            'src' => '<f:valuesOf value="{value}" property="named" />',
             'expectation' => [true, false],
         ];
         yield 'objects with public properties' => [
             'arguments' => [
                 'value' => [(object)['name' => 'Anna'], (object)['name' => 'Ben']],
             ],
-            'src' => '<f:column value="{value}" property="name" />',
+            'src' => '<f:valuesOf value="{value}" property="name" />',
             'expectation' => ['Anna', 'Ben'],
         ];
         yield 'nested property path' => [
@@ -90,42 +90,42 @@ final class ColumnViewHelperTest extends AbstractFunctionalTestCase
                     ['author' => ['name' => 'Ben']],
                 ],
             ],
-            'src' => '<f:column value="{value}" property="author.name" />',
+            'src' => '<f:valuesOf value="{value}" property="author.name" />',
             'expectation' => ['Anna', 'Ben'],
         ];
         yield 'missing property results in null' => [
             'arguments' => [
                 'value' => [['name' => 'Anna'], ['id' => 7]],
             ],
-            'src' => '<f:column value="{value}" property="name" />',
+            'src' => '<f:valuesOf value="{value}" property="name" />',
             'expectation' => ['Anna', null],
         ];
         yield 'property values are not modified' => [
             'arguments' => [
                 'value' => [['data' => [1, 2]], ['data' => 3.5], ['data' => false]],
             ],
-            'src' => '<f:column value="{value}" property="data" />',
+            'src' => '<f:valuesOf value="{value}" property="data" />',
             'expectation' => [[1, 2], 3.5, false],
         ];
         yield 'indexProperty' => [
             'arguments' => [
                 'value' => $users,
             ],
-            'src' => '<f:column value="{value}" property="name" indexProperty="id" />',
+            'src' => '<f:valuesOf value="{value}" property="name" indexProperty="id" />',
             'expectation' => [3 => 'Anna', 7 => 'Ben'],
         ];
         yield 'indexProperty inline' => [
             'arguments' => [
                 'value' => $users,
             ],
-            'src' => '{value -> f:column(property: \'name\', indexProperty: \'id\')}',
+            'src' => '{value -> f:valuesOf(property: \'name\', indexProperty: \'id\')}',
             'expectation' => [3 => 'Anna', 7 => 'Ben'],
         ];
         yield 'indexProperty with string values' => [
             'arguments' => [
                 'value' => [['code' => 'de', 'label' => 'German'], ['code' => 'en', 'label' => 'English']],
             ],
-            'src' => '<f:column value="{value}" property="label" indexProperty="code" />',
+            'src' => '<f:valuesOf value="{value}" property="label" indexProperty="code" />',
             'expectation' => ['de' => 'German', 'en' => 'English'],
         ];
         yield 'indexProperty with stringable objects' => [
@@ -135,47 +135,47 @@ final class ColumnViewHelperTest extends AbstractFunctionalTestCase
                     ['author' => new UserWithToString('Ben'), 'title' => 'Second'],
                 ],
             ],
-            'src' => '<f:column value="{value}" property="title" indexProperty="author" />',
+            'src' => '<f:valuesOf value="{value}" property="title" indexProperty="author" />',
             'expectation' => ['Anna' => 'First', 'Ben' => 'Second'],
         ];
         yield 'indexProperty with missing values appends items' => [
             'arguments' => [
                 'value' => [['id' => 3, 'name' => 'Anna'], ['name' => 'Ben']],
             ],
-            'src' => '<f:column value="{value}" property="name" indexProperty="id" />',
+            'src' => '<f:valuesOf value="{value}" property="name" indexProperty="id" />',
             'expectation' => [3 => 'Anna', 4 => 'Ben'],
         ];
         yield 'indexProperty with duplicate values uses last item' => [
             'arguments' => [
                 'value' => [['id' => 3, 'name' => 'Anna'], ['id' => 3, 'name' => 'Ben']],
             ],
-            'src' => '<f:column value="{value}" property="name" indexProperty="id" />',
+            'src' => '<f:valuesOf value="{value}" property="name" indexProperty="id" />',
             'expectation' => [3 => 'Ben'],
         ];
         yield 'undefined indexProperty variable' => [
             'arguments' => [
                 'value' => $users,
             ],
-            'src' => '<f:column value="{value}" property="name" indexProperty="{undefinedVariable}" />',
+            'src' => '<f:valuesOf value="{value}" property="name" indexProperty="{undefinedVariable}" />',
             'expectation' => ['Anna', 'Ben'],
         ];
         yield 'array with inline array' => [
             'arguments' => [],
-            'src' => '<f:column value="{0: {name: \'Anna\'}, 1: {name: \'Ben\'}}" property="name" />',
+            'src' => '<f:valuesOf value="{0: {name: \'Anna\'}, 1: {name: \'Ben\'}}" property="name" />',
             'expectation' => ['Anna', 'Ben'],
         ];
         yield 'value as tag content' => [
             'arguments' => [
                 'value' => $users,
             ],
-            'src' => '<f:column property="name">{value}</f:column>',
+            'src' => '<f:valuesOf property="name">{value}</f:valuesOf>',
             'expectation' => ['Anna', 'Ben'],
         ];
         yield 'value inline as iterable' => [
             'arguments' => [
                 'value' => new IterableExample($users),
             ],
-            'src' => '{value -> f:column(property: \'name\')}',
+            'src' => '{value -> f:valuesOf(property: \'name\')}',
             'expectation' => ['Anna', 'Ben'],
         ];
         yield 'value inline and argument' => [
@@ -183,14 +183,14 @@ final class ColumnViewHelperTest extends AbstractFunctionalTestCase
                 'valueInline' => [['name' => 'Anna']],
                 'valueArgument' => [['name' => 'Ben']],
             ],
-            'src' => '{valueInline -> f:column(value: valueArgument, property: \'name\')}',
+            'src' => '{valueInline -> f:valuesOf(value: valueArgument, property: \'name\')}',
             'expectation' => ['Ben'],
         ];
         yield 'values joined' => [
             'arguments' => [
                 'value' => $users,
             ],
-            'src' => '{value -> f:column(property: \'name\') -> f:join(separator: \', \')}',
+            'src' => '{value -> f:valuesOf(property: \'name\') -> f:join(separator: \', \')}',
             'expectation' => 'Anna, Ben',
         ];
     }
@@ -216,66 +216,66 @@ final class ColumnViewHelperTest extends AbstractFunctionalTestCase
     {
         yield 'invalid string content' => [
             'arguments' => [],
-            'src' => '<f:column property="name">SOME TEXT</f:column>',
+            'src' => '<f:valuesOf property="name">SOME TEXT</f:valuesOf>',
             'exceptionCode' => 1792005200,
         ];
         yield 'invalid string attribute' => [
             'arguments' => [],
-            'src' => '<f:column value="string" property="name" />',
+            'src' => '<f:valuesOf value="string" property="name" />',
             'exceptionCode' => 1256475113,
         ];
         yield 'invalid string inline' => [
             'arguments' => [
                 'value' => 'string',
             ],
-            'src' => '{value -> f:column(property: \'name\')}',
+            'src' => '{value -> f:valuesOf(property: \'name\')}',
             'exceptionCode' => 1792005200,
         ];
         yield 'invalid integer attribute' => [
             'arguments' => [
                 'value' => 123,
             ],
-            'src' => '<f:column value="{value}" property="name" />',
+            'src' => '<f:valuesOf value="{value}" property="name" />',
             'exceptionCode' => 1256475113,
         ];
         yield 'undefined value' => [
             'arguments' => [],
-            'src' => '<f:column value="{undefinedVariable}" property="name" />',
+            'src' => '<f:valuesOf value="{undefinedVariable}" property="name" />',
             'exceptionCode' => 1792005200,
         ];
         yield 'arrayaccess inline' => [
             'arguments' => [
                 'value' => new ArrayAccessExample(['foo' => 'bar']),
             ],
-            'src' => '{value -> f:column(property: \'name\')}',
+            'src' => '{value -> f:valuesOf(property: \'name\')}',
             'exceptionCode' => 1792005200,
         ];
         yield 'scalar items' => [
             'arguments' => [
                 'value' => [['name' => 'Anna'], 'Ben'],
             ],
-            'src' => '<f:column value="{value}" property="name" />',
+            'src' => '<f:valuesOf value="{value}" property="name" />',
             'exceptionCode' => 1792005201,
         ];
         yield 'indexProperty with array values' => [
             'arguments' => [
                 'value' => [['id' => [3], 'name' => 'Anna']],
             ],
-            'src' => '<f:column value="{value}" property="name" indexProperty="id" />',
+            'src' => '<f:valuesOf value="{value}" property="name" indexProperty="id" />',
             'exceptionCode' => 1792005202,
         ];
         yield 'indexProperty with float values' => [
             'arguments' => [
                 'value' => [['id' => 3.5, 'name' => 'Anna']],
             ],
-            'src' => '<f:column value="{value}" property="name" indexProperty="id" />',
+            'src' => '<f:valuesOf value="{value}" property="name" indexProperty="id" />',
             'exceptionCode' => 1792005202,
         ];
         yield 'indexProperty with non-stringable objects' => [
             'arguments' => [
                 'value' => [['author' => new UserWithoutToString('Anna'), 'title' => 'First']],
             ],
-            'src' => '<f:column value="{value}" property="title" indexProperty="author" />',
+            'src' => '<f:valuesOf value="{value}" property="title" indexProperty="author" />',
             'exceptionCode' => 1792005202,
         ];
     }

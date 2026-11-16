@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
 
 /**
- * The ColumnViewHelper returns the values of a single property from all
+ * The ValuesOfViewHelper returns the values of a single property from all
  * items of an array. The items can be arrays or objects. Properties are
  * accessed the same way as variables in templates, so getter methods and
  * nested property paths like ``author.name`` are supported. If an item
@@ -35,7 +35,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    <f:column value="{users}" property="name" />
+ *    <f:valuesOf value="{users}" property="name" />
  *
  * .. code-block:: php
  *
@@ -47,7 +47,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    <f:column value="{users}" property="name" indexProperty="id" />
+ *    <f:valuesOf value="{users}" property="name" indexProperty="id" />
  *
  * .. code-block:: php
  *
@@ -59,16 +59,16 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\InvalidArgumentValueException;
  *
  * ::
  *
- *    {users -> f:column(property: 'name') -> f:join(separator: ', ')}
+ *    {users -> f:valuesOf(property: 'name') -> f:join(separator: ', ')}
  *
  * .. code-block:: text
  *
  *    Anna, Ben
  *
  * @api
- * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-column
+ * @see https://docs.typo3.org/permalink/fluid:typo3fluid-fluid-valuesof
  */
-final class ColumnViewHelper extends AbstractViewHelper
+final class ValuesOfViewHelper extends AbstractViewHelper
 {
     public function initializeArguments(): void
     {
