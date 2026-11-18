@@ -18,6 +18,8 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\StrictArgumentProcessor;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ArrayAccessExample;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\EnumExample;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\IntBackedEnumExample;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\StringBackedEnumExample;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
 
@@ -513,7 +515,53 @@ final class StrictArgumentProcessorTest extends TestCase
             'expectedProcessedValue' => $stdClass,
             'expectedProcessedValidity' => false,
         ];
+
+        //
         // Enums
+        //
+        yield [
+            'type' => EnumExample::class,
+            'value' => EnumExample::FOO,
+            'expectedValidity' => true,
+            'expectedProcessedValue' => EnumExample::FOO,
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => EnumExample::class,
+            'value' => 'FOO',
+            'expectedValidity' => false,
+            'expectedProcessedValue' => EnumExample::FOO,
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => EnumExample::class,
+            'value' => 'INVALIDCASE',
+            'expectedValidity' => false,
+            'expectedProcessedValue' => 'INVALIDCASE',
+            'expectedProcessedValidity' => false,
+        ];
+        yield [
+            'type' => EnumExample::class,
+            'value' => '',
+            'expectedValidity' => false,
+            'expectedProcessedValue' => '',
+            'expectedProcessedValidity' => false,
+        ];
+        yield [
+            'type' => EnumExample::class,
+            'value' => $stdClass,
+            'expectedValidity' => false,
+            'expectedProcessedValue' => $stdClass,
+            'expectedProcessedValidity' => false,
+        ];
+        yield [
+            'type' => EnumExample::class,
+            'value' => [],
+            'expectedValidity' => false,
+            'expectedProcessedValue' => [],
+            'expectedProcessedValidity' => false,
+        ];
+        // string-backed enums
         yield [
             'type' => StringBackedEnumExample::class,
             'value' => StringBackedEnumExample::BAR,
@@ -523,11 +571,135 @@ final class StrictArgumentProcessorTest extends TestCase
         ];
         yield [
             'type' => StringBackedEnumExample::class,
+            'value' => 'BAR',
+            'expectedValidity' => false,
+            'expectedProcessedValue' => StringBackedEnumExample::BAR,
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => StringBackedEnumExample::class,
+            'value' => 'INVALIDCASE',
+            'expectedValidity' => false,
+            'expectedProcessedValue' => 'INVALIDCASE',
+            'expectedProcessedValidity' => false,
+        ];
+        yield [
+            'type' => StringBackedEnumExample::class,
+            'value' => 'bar value',
+            'expectedValidity' => false,
+            'expectedProcessedValue' => StringBackedEnumExample::BAR,
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => StringBackedEnumExample::class,
+            'value' => '',
+            'expectedValidity' => false,
+            'expectedProcessedValue' => '',
+            'expectedProcessedValidity' => false,
+        ];
+        yield [
+            'type' => StringBackedEnumExample::class,
             'value' => $stdClass,
             'expectedValidity' => false,
             'expectedProcessedValue' => $stdClass,
             'expectedProcessedValidity' => false,
         ];
+        yield [
+            'type' => StringBackedEnumExample::class,
+            'value' => [],
+            'expectedValidity' => false,
+            'expectedProcessedValue' => [],
+            'expectedProcessedValidity' => false,
+        ];
+        // int-backed enums
+        yield [
+            'type' => IntBackedEnumExample::class,
+            'value' => IntBackedEnumExample::BAR,
+            'expectedValidity' => true,
+            'expectedProcessedValue' => IntBackedEnumExample::BAR,
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => IntBackedEnumExample::class,
+            'value' => 'BAR',
+            'expectedValidity' => false,
+            'expectedProcessedValue' => IntBackedEnumExample::BAR,
+            'expectedProcessedValidity' => true,
+        ];
+        yield [
+            'type' => IntBackedEnumExample::class,
+            'value' => 'INVALIDCASE',
+            'expectedValidity' => false,
+            'expectedProcessedValue' => 'INVALIDCASE',
+            'expectedProcessedValidity' => false,
+        ];
+        yield [
+            'type' => IntBackedEnumExample::class,
+            'value' => 123,
+            'expectedValidity' => false,
+            'expectedProcessedValue' => IntBackedEnumExample::BAR,
+            'expectedProcessedValidity' => true,
+        ];
+        foreach (['123', '+123', ' 123 '] as $value) {
+            yield [
+                'type' => IntBackedEnumExample::class,
+                'value' => $value,
+                'expectedValidity' => false,
+                'expectedProcessedValue' => IntBackedEnumExample::BAR,
+                'expectedProcessedValidity' => true,
+            ];
+        }
+        foreach (['0', '123.5', '123.0', '1.23e2', '123foo', (string)PHP_INT_MAX . '0', 123.0, true, false] as $value) {
+            yield [
+                'type' => IntBackedEnumExample::class,
+                'value' => $value,
+                'expectedValidity' => false,
+                'expectedProcessedValue' => $value,
+                'expectedProcessedValidity' => false,
+            ];
+        }
+        yield [
+            'type' => IntBackedEnumExample::class,
+            'value' => 0,
+            'expectedValidity' => false,
+            'expectedProcessedValue' => 0,
+            'expectedProcessedValidity' => false,
+        ];
+        yield [
+            'type' => IntBackedEnumExample::class,
+            'value' => $stdClass,
+            'expectedValidity' => false,
+            'expectedProcessedValue' => $stdClass,
+            'expectedProcessedValidity' => false,
+        ];
+        yield [
+            'type' => IntBackedEnumExample::class,
+            'value' => [],
+            'expectedValidity' => false,
+            'expectedProcessedValue' => [],
+            'expectedProcessedValidity' => false,
+        ];
+        // Fully qualified enum case names, with or without a leading backslash
+        foreach ([EnumExample::FOO, StringBackedEnumExample::BAR, IntBackedEnumExample::BAR] as $enum) {
+            foreach ([$enum::class . '::' . $enum->name, '\\' . $enum::class . '::' . $enum->name] as $value) {
+                yield [
+                    'type' => $enum::class,
+                    'value' => $value,
+                    'expectedValidity' => false,
+                    'expectedProcessedValue' => $enum,
+                    'expectedProcessedValidity' => true,
+                ];
+            }
+        }
+        foreach ([IntBackedEnumExample::class . '::INVALIDCASE', StringBackedEnumExample::class . '::BAR', 'NonexistentEnum::BAR', 'DateTime::ATOM'] as $value) {
+            yield [
+                'type' => IntBackedEnumExample::class,
+                'value' => $value,
+                'expectedValidity' => false,
+                'expectedProcessedValue' => $value,
+                'expectedProcessedValidity' => false,
+            ];
+        }
 
         //
         // Iterable

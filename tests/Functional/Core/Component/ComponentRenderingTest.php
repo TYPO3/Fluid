@@ -13,6 +13,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\IntBackedEnumExample;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -66,6 +67,12 @@ final class ComponentRenderingTest extends AbstractFunctionalTestCase
             'union type, array provided' => ['<my:unionTypeArgument item="{property: \'foo\'}" />', "\nfoo\n"],
             'union type, string provided' => ['<my:unionTypeArgument item="bar" />', "\nbar\n"],
             'enum type with default' => ['<my:enumTypeArgumentWithDefault />', "\nBAR => 123\n"],
+            'enum type, enum object provided' => ['<my:enumTypeArgument value="{f:constant(name: \'' . IntBackedEnumExample::class . '::BAR\')}" />', "\nBAR => 123\n"],
+            'enum type, enum name provided' => ['<my:enumTypeArgument value="BAR" />', "\nBAR => 123\n"],
+            'enum type, enum value provided' => ['<my:enumTypeArgument value="123" />', "\nBAR => 123\n"],
+            'enum type, numeric string variable provided' => ['<f:variable name="enumValue">123</f:variable><my:enumTypeArgument value="{enumValue}" />', "\nBAR => 123\n"],
+            'enum type, qualified enum name provided' => ['<my:enumTypeArgument value="' . IntBackedEnumExample::class . '::BAR" />', "\nBAR => 123\n"],
+            'enum type, qualified enum name with leading backslash provided' => ['<my:enumTypeArgument value="\\' . IntBackedEnumExample::class . '::BAR" />', "\nBAR => 123\n"],
         ];
     }
 
