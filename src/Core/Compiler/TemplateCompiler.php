@@ -14,6 +14,7 @@ use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\StringConverter;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 
 /**
@@ -177,7 +178,7 @@ class TemplateCompiler
             $convertedCode = $storedLayoutNameArgument->convert($this);
             $initialization = $convertedCode['initialization'];
             $execution = $convertedCode['execution'];
-            return $initialization . chr(10) . 'return ' . $execution;
+            return $initialization . chr(10) . sprintf('return \\%s::castToString(%s, originalTemplatePath: $this->getOriginalTemplatePath())', StringConverter::class, $execution);
         }
         return 'return (string)\'' . $storedLayoutNameArgument . '\'';
     }
@@ -355,7 +356,7 @@ class TemplateCompiler
                 foreach ($nodes as $childNode) {
                     $converted = $childNode->convert($this);
                     $initializationPhpCode .= $converted['initialization'] . chr(10);
-                    $initializationPhpCode .= sprintf('%s .= %s;', $outputVariableName, $converted['execution']) . chr(10);
+                    $initializationPhpCode .= sprintf('%s .= \\%s::castToString(%s, $renderingContext);', $outputVariableName, StringConverter::class, $converted['execution']) . chr(10);
                 }
                 return [
                     'initialization' => $initializationPhpCode,

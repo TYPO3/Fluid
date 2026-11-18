@@ -12,6 +12,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\StringConverter;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\View;
@@ -228,7 +229,9 @@ class ParsingState implements ParsedTemplateInterface
      */
     public function getLayoutName(RenderingContextInterface $renderingContext): ?string
     {
-        return $this->layoutName instanceof NodeInterface ? $this->layoutName->evaluate($renderingContext) : $this->layoutName;
+        return $this->layoutName instanceof NodeInterface
+            ? StringConverter::castToString($this->layoutName->evaluate($renderingContext), originalTemplatePath: $this->getOriginalTemplatePath())
+            : $this->layoutName;
     }
 
     /**
