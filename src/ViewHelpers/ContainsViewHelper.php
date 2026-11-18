@@ -111,6 +111,6 @@ final class ContainsViewHelper extends AbstractConditionViewHelper
                 1754978402,
             );
         }
-        return in_array($value, iterator_to_array($subject));
+        return in_array($value, iterator_to_array($subject, false));
     }
 }

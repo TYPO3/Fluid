@@ -214,4 +214,69 @@ final class ForViewHelperTest extends AbstractFunctionalTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($template);
         self::assertSame($expected, $view->render());
     }
+
+    public static function renderWithRepeatedIteratorKeysDataProvider(): \Generator
+    {
+        $numericKeys = static function (): \Generator {
+            yield from [2, 1];
+            yield from [4, 3];
+        };
+        $stringKeys = static function (): \Generator {
+            yield from ['a' => 2, 'b' => 1];
+            yield from ['a' => 4, 'b' => 3];
+        };
+        $composed = static function (): \Generator {
+            yield from (static function (): \Generator {
+                yield 'a';
+                yield 'k' => 'b';
+            })();
+            yield from ['c', 'd'];
+            yield 'k' => 'e';
+        };
+        yield 'reverse with repeated numeric keys' => [
+            'valueFactory' => $numericKeys,
+            'src' => '<f:for each="{value}" as="item" key="key" reverse="true">{key}:{item},</f:for>',
+            'expectation' => '1:3,0:4,1:1,0:2,',
+        ];
+        yield 'reverse with repeated string keys' => [
+            'valueFactory' => $stringKeys,
+            'src' => '<f:for each="{value}" as="item" key="key" reverse="true">{key}:{item},</f:for>',
+            'expectation' => 'b:3,a:4,b:1,a:2,',
+        ];
+        yield 'iteration with repeated numeric keys' => [
+            'valueFactory' => $numericKeys,
+            'src' => '<f:for each="{value}" as="item" key="key" iteration="i">{i.cycle}/{i.total} {key}:{item},</f:for>',
+            'expectation' => '1/4 0:2,2/4 1:1,3/4 0:4,4/4 1:3,',
+        ];
+        yield 'reverse and iteration with composed generators' => [
+            'valueFactory' => $composed,
+            'src' => '<f:for each="{value}" as="item" key="key" reverse="true" iteration="i">{i.cycle}/{i.total} {key}:{item},</f:for>',
+            'expectation' => '1/5 k:e,2/5 1:d,3/5 0:c,4/5 k:b,5/5 0:a,',
+        ];
+    }
+
+    #[DataProvider('renderWithRepeatedIteratorKeysDataProvider')]
+    #[Test]
+    public function renderWithRepeatedIteratorKeys(\Closure $valueFactory, string $src, mixed $expectation): void
+    {
+        // Generators can't be rewound, so each rendering gets a fresh one. The variable name is unique
+        // per data set, so the first rendering can't reuse a template compiled by another test.
+        $variableName = 'value' . hash('xxh3', (string)$this->dataName());
+        $src = str_replace('{value', '{' . $variableName, $src);
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($src);
+        $templateIdentifier = $view->getRenderingContext()->getTemplatePaths()->getTemplateIdentifier();
+        self::assertFalse($view->getRenderingContext()->getTemplateCompiler()->has($templateIdentifier), 'First rendering must be uncompiled');
+        $view->assign($variableName, $valueFactory());
+        self::assertSame($expectation, $view->render());
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($src);
+        self::assertTrue($view->getRenderingContext()->getTemplateCompiler()->has($templateIdentifier), 'Second rendering must use the compiled template');
+        $view->assign($variableName, $valueFactory());
+        self::assertSame($expectation, $view->render());
+    }
 }

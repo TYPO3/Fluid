@@ -50,7 +50,7 @@ final class MinViewHelper extends AbstractViewHelper
                 1756016877,
             );
         }
-        $value = iterator_to_array($value);
+        $value = iterator_to_array($value, false);
         return $value === [] ? null : min($value);
     }
 }

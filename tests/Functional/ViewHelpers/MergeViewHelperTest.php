@@ -139,4 +139,65 @@ final class MergeViewHelperTest extends AbstractFunctionalTestCase
         $view->assignMultiple($arguments);
         $view->render();
     }
+
+    public static function renderWithRepeatedIteratorKeysDataProvider(): \Generator
+    {
+        $numericKeys = static function (): \Generator {
+            yield from [2, 1];
+            yield from [4, 3];
+        };
+        $stringKeys = static function (): \Generator {
+            yield from ['a' => 2, 'b' => 1];
+            yield from ['a' => 4, 'b' => 3];
+        };
+        $nestedStringValues = static function (): \Generator {
+            yield from ['a' => [1]];
+            yield from ['a' => [2]];
+        };
+        yield 'repeated numeric keys' => [
+            'valueFactory' => $numericKeys,
+            'src' => '{value -> f:merge(with: {0: 5})}',
+            'expectation' => [2, 1, 4, 3, 5],
+        ];
+        yield 'repeated numeric keys in with' => [
+            'valueFactory' => $numericKeys,
+            'src' => '<f:merge array="{0: 1}" with="{value}" />',
+            'expectation' => [1, 2, 1, 4, 3],
+        ];
+        yield 'repeated string keys use the last item per key' => [
+            'valueFactory' => $stringKeys,
+            'src' => '{value -> f:merge(with: {c: 5})}',
+            'expectation' => ['a' => 4, 'b' => 3, 'c' => 5],
+        ];
+        yield 'repeated string keys are merged recursively' => [
+            'valueFactory' => $nestedStringValues,
+            'src' => '{value -> f:merge(with: {a: {0: 3}}, recursive: true)}',
+            'expectation' => ['a' => [1, 2, 3]],
+        ];
+    }
+
+    #[DataProvider('renderWithRepeatedIteratorKeysDataProvider')]
+    #[Test]
+    public function renderWithRepeatedIteratorKeys(\Closure $valueFactory, string $src, mixed $expectation): void
+    {
+        // Generators can't be rewound, so each rendering gets a fresh one. The variable name is unique
+        // per data set, so the first rendering can't reuse a template compiled by another test.
+        $variableName = 'value' . hash('xxh3', (string)$this->dataName());
+        $src = str_replace('{value', '{' . $variableName, $src);
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($src);
+        $templateIdentifier = $view->getRenderingContext()->getTemplatePaths()->getTemplateIdentifier();
+        self::assertFalse($view->getRenderingContext()->getTemplateCompiler()->has($templateIdentifier), 'First rendering must be uncompiled');
+        $view->assign($variableName, $valueFactory());
+        self::assertSame($expectation, $view->render());
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($src);
+        self::assertTrue($view->getRenderingContext()->getTemplateCompiler()->has($templateIdentifier), 'Second rendering must use the compiled template');
+        $view->assign($variableName, $valueFactory());
+        self::assertSame($expectation, $view->render());
+    }
 }

@@ -47,7 +47,7 @@ final class FirstViewHelper extends AbstractViewHelper
                 1712220569,
             );
         }
-        $value = iterator_to_array($value);
+        $value = iterator_to_array($value, false);
         return array_shift($value);
     }
 }

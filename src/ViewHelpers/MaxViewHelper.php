@@ -50,7 +50,7 @@ final class MaxViewHelper extends AbstractViewHelper
                 1756178710,
             );
         }
-        $value = iterator_to_array($value);
+        $value = iterator_to_array($value, false);
         return $value === [] ? null : max($value);
     }
 }

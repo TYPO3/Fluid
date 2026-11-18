@@ -51,7 +51,7 @@ final class ShuffleViewHelper extends AbstractViewHelper
                 1750881571,
             );
         }
-        $value = iterator_to_array($value);
+        $value = iterator_to_array($value, false);
 
         shuffle($value);
 

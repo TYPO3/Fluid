@@ -115,7 +115,7 @@ class GroupedForViewHelper extends AbstractViewHelper
             if (!$each instanceof \Traversable) {
                 throw new InvalidArgumentValueException('GroupedForViewHelper only supports arrays and objects implementing \Traversable interface', 1253108907);
             }
-            $each = iterator_to_array($each);
+            $each = self::iteratorToArray($each);
         }
         $groups = static::groupElements($each, $groupBy);
         $globalVariableProvider = $this->renderingContext->getVariableProvider();
@@ -163,5 +163,22 @@ class GroupedForViewHelper extends AbstractViewHelper
             $groups['values'][$currentGroupIndex][$key] = $value;
         }
         return $groups;
+    }
+
+    /**
+     * Converts the iterator to an array. If it yields the same key more than once,
+     * the items are keyed by their position instead, so that no item is lost.
+     */
+    private static function iteratorToArray(\Traversable $items): array
+    {
+        $array = [];
+        $list = [];
+        $hasRepeatedKeys = false;
+        foreach ($items as $key => $item) {
+            $hasRepeatedKeys = $hasRepeatedKeys || array_key_exists($key, $array);
+            $array[$key] = $item;
+            $list[] = $item;
+        }
+        return $hasRepeatedKeys ? $list : $array;
     }
 }

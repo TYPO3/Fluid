@@ -52,7 +52,7 @@ final class FlattenViewHelper extends AbstractViewHelper
                 1750878602,
             );
         }
-        $value = iterator_to_array($value);
+        $value = iterator_to_array($value, false);
 
         return $this->flatten($value);
     }

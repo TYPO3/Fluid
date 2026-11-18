@@ -47,7 +47,7 @@ final class LastViewHelper extends AbstractViewHelper
                 1712221620,
             );
         }
-        $value = iterator_to_array($value);
+        $value = iterator_to_array($value, false);
         return array_pop($value);
     }
 }

@@ -83,7 +83,7 @@ final class JoinViewHelper extends AbstractViewHelper
                 1256475113,
             );
         }
-        $value = iterator_to_array($value);
+        $value = iterator_to_array($value, false);
         if (\count($value) < 2) {
             return (string)array_pop($value);
         }
